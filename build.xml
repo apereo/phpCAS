@@ -1,0 +1,113 @@
+<project name="phpcas-devel" default="dist" basedir=".">
+
+  <property file="build.properties"/>
+
+  <taskdef name="doxygen" 
+           classname="org.doxygen.tools.DoxygenTask"
+           classpath="utils/ant_doxygen.jar"/>
+
+  <!-- compute current date -->
+  <tstamp>
+    <format property="date" pattern="d-MMMM-yyyy HH:mma" locale="en"/>
+  </tstamp>
+
+  <!-- ==========================================================
+       Create ready-to-distribute archives
+  -->  
+  <target name="dist" description="Create ready-to-export archives">
+    <mkdir dir="tmp"/>
+
+    <!-- copy text files to tmp directory -->
+    <copy todir="tmp">
+      <fileset dir="." includes="README COPYRIGHT"/>
+    </copy>
+
+    <!-- copy source files and examples to tmp directory -->
+    <copy todir="tmp">
+      <fileset dir="." includes="source/**/*php examples/*.php"/>
+      <filterchain>
+        <expandproperties/>
+      </filterchain>
+    </copy>
+
+    <!-- copy docs files to tmp directory -->
+    <copy todir="tmp">
+      <fileset dir="." includes="docs/*" excludes="docs/*.pdf docs/Templates docs/Templates/**/*"/>
+      <filterchain>
+        <expandproperties/>
+        <tokenfilter>
+          <replaceregex pattern="&lt;!--.*--&gt;" replace="&lt;!-- --&gt;" flags="g"/> 
+        </tokenfilter>
+      </filterchain>
+    </copy>
+
+  	<!-- copy images to tmp directory -->
+    <copy todir="tmp">
+      <fileset dir="." includes="docs/**/*"  excludes="docs/* docs/Templates docs/Templates/**/*"/>
+    </copy>
+
+    <!-- check for the doxygen program, and fail is not found -->
+    <echo message="checking for doxygen..."/>
+    <fail message="please set ${doxygen.path} in build.properties" unless="doxygen.path"/>
+    <available file="${doxygen.path}" type="file" property="doxygen.present"/>
+    <fail message="doxygen program not found (${doxygen.path})" unless="doxygen.present"/>
+
+    <!-- write Doxygen configuration file from template -->
+    <echo message="write Doxygen configuration file..."/>
+    <copy file="utils/Doxyfile" 
+          tofile="tmp/Doxyfile">
+      <filterchain>
+        <expandproperties/>
+        <tokenfilter>
+          <replaceregex pattern="\\" replace="/" flags="g"/> 
+        </tokenfilter>
+      </filterchain>
+    </copy>
+    
+    <!-- call Doxygen -->
+    <echo message="writing API documentation..."/>
+    <doxygen doxygenPath="${doxygen.path}" configFilename="${basedir}/tmp/Doxyfile"/>
+    <delete file="tmp/Doxyfile" />
+  	
+  	<!-- make the distribution files -->
+    <mkdir dir="dist"/>
+    <zip destfile="dist/phpcas-${phpcas.version}-${phpcas.release}.zip">
+      <zipfileset dir="tmp" prefix="phpcas-${phpcas.version}-${phpcas.release}"/>
+    </zip>
+    <delete dir="tmp"/>
+  </target>
+  
+  <!-- ========================================================== 
+       Upload the distribution files to sourceforge.net
+  -->  
+  <target name="upload" 
+          depends="dist" 
+          description="Upload the distribution files to sourceforge.net">
+    <!-- Check that all the properties used for archives upload are set -->
+    <fail message="please set ${sourceforge.arch.host} in build.properties" unless="sourceforge.arch.host"/>
+    <fail message="please set ${sourceforge.arch.username} in build.properties" unless="sourceforge.arch.username"/>
+    <fail message="please set ${sourceforge.arch.password} in build.properties" unless="sourceforge.arch.password"/>
+    <fail message="please set ${sourceforge.arch.remotedir} in build.properties" unless="sourceforge.arch.remotedir"/>
+	<!-- upload distribution files -->
+    <ftp server="${sourceforge.arch.host}" userid="${sourceforge.arch.username}" password="${sourceforge.arch.password}"
+         remotedir="${sourceforge.arch.remotedir}" action="put" binary="yes" depends="yes" verbose="yes">
+      <fileset dir="dist" 
+               includes="
+                         phpcas-${phpcas.version}-${phpcas.release}.zip
+                        "/>
+    </ftp>
+  </target>
+
+  <!-- ==========================================================
+       Clean up everything but distribution file
+  -->  
+  <target name="clean" description="Clean up everything but distribution files">
+    <delete dir="tmp"/>
+  </target>
+  
+  <target name="cleanall" description="Clean up everything including distribution files" depends="clean">
+    <delete dir="dist"/>
+  </target>
+  
+</project>
+
