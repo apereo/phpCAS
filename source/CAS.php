@@ -1214,8 +1214,6 @@ class phpCAS
  *
  * The following pages only show the source documentation.
  *
- * For more information on phpCAS, please refer to http://esup-phpcas.sourceforge.net
- *
  */
 
 // ########################################################################
