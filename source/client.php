@@ -1664,7 +1664,7 @@ class CASClient
       // perform the query
       $buf = curl_exec ($ch);
       if ( $buf === FALSE ) {
-	phpCAS::trace('cur_exec() failed');
+	phpCAS::trace('curl_exec() failed');
 	$err_msg = 'CURL error #'.curl_errno($ch).': '.curl_error($ch);
 	// close the CURL session
 	curl_close ($ch);
