@@ -176,7 +176,7 @@ define("PHPCAS_LANG_DEFAULT", PHPCAS_LANG_ENGLISH);
  *
  * @hideinitializer
  */
-$PHPCAS_CLIENT  = null;
+$GLOBALS['PHPCAS_CLIENT']  = null;
 
 /**
  * This global variable is used to store where the initializer is called from 
@@ -184,7 +184,7 @@ $PHPCAS_CLIENT  = null;
  *
  * @hideinitializer
  */
-$PHPCAS_INIT_CALL = array('done' => FALSE,
+$GLOBALS['PHPCAS_INIT_CALL'] = array('done' => FALSE,
 			  'file' => '?',
 			  'line' => -1,
 			  'method' => '?');
@@ -195,7 +195,7 @@ $PHPCAS_INIT_CALL = array('done' => FALSE,
  *
  * @hideinitializer
  */
-$PHPCAS_AUTH_CHECK_CALL = array('done' => FALSE,
+$GLOBALS['PHPCAS_AUTH_CHECK_CALL'] = array('done' => FALSE,
 				'file' => '?',
 				'line' => -1,
 				'method' => '?',
@@ -206,7 +206,7 @@ $PHPCAS_AUTH_CHECK_CALL = array('done' => FALSE,
  *
  * @hideinitializer
  */
-$PHPCAS_DEBUG  = array('filename' => FALSE,
+$GLOBALS['PHPCAS_DEBUG']  = array('filename' => FALSE,
 		       'indent' => 0,
 		       'unique_id' => '');
 

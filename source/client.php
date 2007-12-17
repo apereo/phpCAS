@@ -1865,7 +1865,8 @@ class CASClient
    */
   function getPT()
     {
-      return 'ST'.substr($this->_pt, 2);
+//      return 'ST'.substr($this->_pt, 2);
+      return $this->_pt;
     }
 
   /**
