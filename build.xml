@@ -24,7 +24,7 @@
 
     <!-- copy source files and examples to tmp directory -->
     <copy todir="tmp">
-      <fileset dir="." includes="source/**/*php examples/*.php"/>
+      <fileset dir="." includes="source/**/*php examples/*.php" excludes="source/makepackage.php" />
       <filterchain>
         <expandproperties/>
       </filterchain>
