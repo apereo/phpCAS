@@ -149,6 +149,8 @@ define("PHPCAS_LANG_FRENCH",     'french');
 define("PHPCAS_LANG_GREEK",      'greek');
 define("PHPCAS_LANG_GERMAN",     'german');
 define("PHPCAS_LANG_JAPANESE",   'japanese');
+define("PHPCAS_LANG_SPANISH",    'spanish');
+define("PHPCAS_LANG_CATALAN",    'catalan');
 
 /** @} */
 
