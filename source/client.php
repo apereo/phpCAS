@@ -656,7 +656,9 @@ class CASClient
 			$res = TRUE;
 		} else {
 			// the user is not authenticated, redirect to the CAS server
-			unset($_SESSION['phpCAS']['auth_checked']);
+			if (isset($_SESSION['phpCAS']['auth_checked'])) {
+				unset($_SESSION['phpCAS']['auth_checked']);
+			}
 			$this->redirectToCas(FALSE/* no gateway */);	
 			// never reached
 			$res = FALSE;
@@ -898,9 +900,7 @@ class CASClient
 		// v0.4.14 sebastien.gougeon at univ-rennes1.fr
 		// header('Location: '.$cas_url);
 		if ( $url != "" ) {
-			// Adam Moore v0.6.0
-			//$url = '?service=' . $url;
-			$url = '?destination=' . $url;
+			$url = '?service=' . $url;
 		}
 		header('Location: '.$cas_url . $url);
 		session_unset();
