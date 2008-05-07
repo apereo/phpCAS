@@ -23,9 +23,9 @@ require_once 'PEAR/Frontend.php';
  */
 PEAR::setErrorHandling(PEAR_ERROR_DIE);
 chdir(dirname(__FILE__));
-//$pfm = PEAR_PackageFileManager2::importOptions('package.xml', array(
-$pfm = new PEAR_PackageFileManager2();
-$pfm->setOptions(array(
+$pfm = PEAR_PackageFileManager2::importOptions('package.xml', array(
+//$pfm = new PEAR_PackageFileManager2();
+//$pfm->setOptions(array(
     'packagedirectory'  => dirname(__FILE__),
     'baseinstalldir'    => 'CAS',
     'filelistgenerator' => 'svn',
@@ -55,14 +55,19 @@ Authentication Service.');
 $pfm->setChannel('pear.unl.edu');
 $pfm->setAPIStability('beta');
 $pfm->setReleaseStability('beta');
-$pfm->setAPIVersion('0.6.0RC6');
-$pfm->setReleaseVersion('0.6.0RC6');
+$pfm->setAPIVersion('0.6.0');
+$pfm->setReleaseVersion('0.6.0');
 $pfm->setNotes('
-Port of 0.6.0RC6 with patch for setCacheTimesForAuthRecheck($n)
+Bug Fix:
+* fixed PGT storage path on Windows (Olivier Thebault).
+
+New Features:
+* added methods setCasServerCert() and setCasServerCaCert() to authenticate the CAS server, and method setNoCasServerValidation() to skip the SSL checks (Pascal Aubry, requested by Andrew Petro).
+* Added spanish and catalan translations (Ivan Garcia).
 ');
 
-$pfm->addMaintainer('helper','saltybeagle','Brett Bieber','brett.bieber@gmail.com');
-$pfm->addMaintainer('lead','paubry','Pascal Aubry','pascal.aubry@univ-rennes1.fr');
+//$pfm->addMaintainer('helper','saltybeagle','Brett Bieber','brett.bieber@gmail.com');
+//$pfm->addMaintainer('lead','paubry','Pascal Aubry','pascal.aubry@univ-rennes1.fr');
 $pfm->setLicense('?', '?');
 $pfm->clearDeps();
 $pfm->setPhpDep('5.0.0');

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.7.0RC1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
-    http://pear.php.net/dtd/tasks-1.0.xsd
-    http://pear.php.net/dtd/package-2.0
-    http://pear.php.net/dtd/package-2.0.xsd">
+<package packagerversion="1.7.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0     http://pear.php.net/dtd/tasks-1.0.xsd     http://pear.php.net/dtd/package-2.0     http://pear.php.net/dtd/package-2.0.xsd">
  <name>CAS</name>
  <channel>pear.unl.edu</channel>
  <summary>Central Authentication Service client library in php</summary>
@@ -20,11 +17,11 @@ Authentication Service.</description>
   <email>brett.bieber@gmail.com</email>
   <active>yes</active>
  </helper>
- <date>2007-12-17</date>
- <time>11:37:48</time>
+ <date>2008-05-07</date>
+ <time>09:25:26</time>
  <version>
-  <release>0.6.0RC6</release>
-  <api>0.6.0RC6</api>
+  <release>0.6.0</release>
+  <api>0.6.0</api>
  </version>
  <stability>
   <release>beta</release>
@@ -32,17 +29,25 @@ Authentication Service.</description>
  </stability>
  <license uri="?">?</license>
  <notes>
-Port of 0.6.0RC6 with patch for setCacheTimesForAuthRecheck($n)
+Bug Fix:
+* fixed PGT storage path on Windows (Olivier Thebault).
+
+New Features:
+* added methods setCasServerCert() and setCasServerCaCert() to authenticate the CAS server, and method setNoCasServerValidation() to skip the SSL checks (Pascal Aubry, requested by Andrew Petro).
+* Added spanish and catalan translations (Ivan Garcia).
+* phpCAS is now PAER-installable (Brett Bieber).
  </notes>
  <contents>
   <dir baseinstalldir="CAS" name="/">
    <dir name="languages">
+    <file name="catalan.php" role="php" />
     <file name="english.php" role="php" />
     <file name="french.php" role="php" />
     <file name="german.php" role="php" />
     <file name="greek.php" role="php" />
     <file name="japanese.php" role="php" />
     <file name="languages.php" role="php" />
+    <file name="spanish.php" role="php" />
    </dir> <!-- /languages -->
    <dir name="PGTStorage">
     <file name="pgt-db.php" role="php" />
@@ -94,8 +99,26 @@ Port of 0.6.0RC6 with patch for setCacheTimesForAuthRecheck($n)
    </stability>
    <date>2007-12-17</date>
    <license uri="?">?</license>
+   <notes>Port of 0.6.0RC6 with patch for setCacheTimesForAuthRecheck($n)</notes>
+  </release>
+  <release>
+   <version>
+    <release>0.6.0</release>
+    <api>0.6.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2008-05-07</date>
+   <license uri="?">?</license>
    <notes>
-Port of 0.6.0RC6 with patch for setCacheTimesForAuthRecheck($n)
+Bug Fix:
+* fixed PGT storage path on Windows (Olivier Thebault).
+
+New Features:
+* added methods setCasServerCert() and setCasServerCaCert() to authenticate the CAS server, and method setNoCasServerValidation() to skip the SSL checks (Pascal Aubry, requested by Andrew Petro).
+* Added spanish and catalan translations (Ivan Garcia).
    </notes>
   </release>
  </changelog>
