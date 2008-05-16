@@ -1,5 +1,6 @@
 <project name="phpcas-devel" default="dist" basedir=".">
 
+  <property file="version.properties"/>
   <property file="build.properties"/>
 
   <taskdef name="doxygen" 
@@ -89,7 +90,7 @@
   		destfile="dist/phpcas-docs-${phpcas.version}-${phpcas.release}.tar.gz" 
   		includes="phpcas-docs-${phpcas.version}/**/*"
   	/>
-  	<!--delete dir="tmp" /-->
+  	<delete dir="tmp" />
   </target>
   
   <!-- ========================================================== 
