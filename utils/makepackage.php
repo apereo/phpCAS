@@ -26,11 +26,11 @@ chdir(dirname(__FILE__));
 //$pfm = PEAR_PackageFileManager2::importOptions('package.xml', array(
 $pfm = new PEAR_PackageFileManager2();
 $pfm->setOptions(array(
-    'packagedirectory'  => 'c:/devel/phpcas-devel/tmp/cas-${phpcas.version}/',
-    'outputdirectory'  => 'c:/devel/phpcas-devel/tmp',
+//    'packagedirectory'  => 'c:/devel/phpcas-devel/tmp/cas-${phpcas.version}/',
+//    'outputdirectory'  => 'c:/devel/phpcas-devel/tmp',
 //    'outputdirectory'  => 'c:\\devel\\phpcas-devel\\tmp',
-//    'packagedirectory'  => '${basedir}/tmp/cas-${phpcas.version}',
-//    'outputdirectory'  => '${basedir}/tmp',
+    'packagedirectory'  => '${basedir}/tmp/cas-${phpcas.version}',
+    'outputdirectory'  => '${basedir}/tmp',
     'baseinstalldir'    => 'CAS',
     'filelistgenerator' => 'file',
     'simpleoutput' => true,
@@ -45,8 +45,8 @@ Authentication Service.');
 $pfm->setChannel('pear.unl.edu');
 $pfm->setAPIStability('beta');
 $pfm->setReleaseStability('beta');
-$pfm->setAPIVersion('${phpcas.version}');
-$pfm->setReleaseVersion('${phpcas.version}');
+$pfm->setAPIVersion('${phpcas.version}${phpcas.release}');
+$pfm->setReleaseVersion('${phpcas.version}${phpcas.release}');
 $pfm->setNotes('
 see http://www.ja-sig.org/wiki/display/CASC/phpCAS+ChangeLog
 ');
