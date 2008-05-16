@@ -15,43 +15,52 @@
        Create ready-to-distribute archives
   -->  
   <target name="dist" description="Create ready-to-export archives">
-    <mkdir dir="tmp"/>
-
-    <!-- copy text files to tmp directory -->
-    <copy todir="tmp">
-      <fileset dir="." includes="README COPYRIGHT"/>
-    </copy>
-
-    <!-- copy source files and examples to tmp directory -->
-    <copy todir="tmp">
-      <fileset dir="." includes="source/**/*php examples/*.php" excludes="source/makepackage.php" />
+    <mkdir dir="dist"/>
+  	<delete dir="tmp" />
+  	<mkdir dir="tmp/cas-${phpcas.version}"/>
+  	<echo message="${basedir}/tmp/cas-${phpcas.version}"/>
+    <!-- copy source files to tmp directory -->
+    <copy todir="tmp/cas-${phpcas.version}">
+      <fileset dir="source" includes="**/*.php" />
       <filterchain>
         <expandproperties/>
       </filterchain>
     </copy>
-
+    <!-- write makepackage.php file from template -->
+    <echo message="write makepackage.php file..."/>
+    <copy file="utils/makepackage.php" 
+          tofile="tmp/makepackage.php">
+      <filterchain>
+        <expandproperties/>
+      </filterchain>
+    </copy>
+    <!-- generate package.xml -->
+    <echo message="checking for php..."/>
+    <fail message="please set ${php.path} in build.properties" unless="php.path"/>
+    <available file="${php.path}" type="file" property="php.present"/>
+    <fail message="php program not found (${php.path})" unless="php.present"/>
+    <echo message="building the PEAR package..."/>
+  	<exec dir="${basedir}" executable="${php.path}" >
+  	  <arg line="-f tmp/makepackage.php"/>
+  	</exec>
+  
+  	<mkdir dir="tmp/phpcas-docs-${phpcas.version}"/>
     <!-- copy docs files to tmp directory -->
-    <copy todir="tmp">
-      <fileset dir="." includes="docs/*" excludes="docs/*.pdf docs/Templates docs/Templates/**/*"/>
+    <copy todir="tmp/phpcas-docs-${phpcas.version}">
+      <fileset dir="docs" excludes="images/*" />
       <filterchain>
         <expandproperties/>
-        <tokenfilter>
-          <replaceregex pattern="&lt;!--.*--&gt;" replace="&lt;!-- --&gt;" flags="g"/> 
-        </tokenfilter>
       </filterchain>
     </copy>
-
   	<!-- copy images to tmp directory -->
-    <copy todir="tmp">
-      <fileset dir="." includes="docs/**/*"  excludes="docs/* docs/Templates docs/Templates/**/*"/>
+    <copy todir="tmp/phpcas-docs-${phpcas.version}">
+      <fileset dir="docs" includes="images/*" />
     </copy>
-
     <!-- check for the doxygen program, and fail is not found -->
     <echo message="checking for doxygen..."/>
     <fail message="please set ${doxygen.path} in build.properties" unless="doxygen.path"/>
     <available file="${doxygen.path}" type="file" property="doxygen.present"/>
     <fail message="doxygen program not found (${doxygen.path})" unless="doxygen.present"/>
-
     <!-- write Doxygen configuration file from template -->
     <echo message="write Doxygen configuration file..."/>
     <copy file="utils/Doxyfile" 
@@ -63,18 +72,24 @@
         </tokenfilter>
       </filterchain>
     </copy>
-    
     <!-- call Doxygen -->
     <echo message="writing API documentation..."/>
     <doxygen doxygenPath="${doxygen.path}" configFilename="${basedir}/tmp/Doxyfile"/>
-    <delete file="tmp/Doxyfile" />
   	
-  	<!-- make the distribution files -->
-    <mkdir dir="dist"/>
-    <zip destfile="dist/phpcas-${phpcas.version}-${phpcas.release}.zip">
-      <zipfileset dir="tmp" prefix="phpcas-${phpcas.version}-${phpcas.release}"/>
-    </zip>
-    <delete dir="tmp"/>
+  	<!-- build the distribution files -->
+  	<tar 
+  		basedir="tmp" 
+  		compression="gzip" 
+  		destfile="dist/phpcas-${phpcas.version}-${phpcas.release}.tar.gz" 
+  		includes="cas-${phpcas.version}/**/* package.xml"
+  	/>
+  	<tar 
+  		basedir="tmp" 
+  		compression="gzip" 
+  		destfile="dist/phpcas-docs-${phpcas.version}-${phpcas.release}.tar.gz" 
+  		includes="phpcas-docs-${phpcas.version}/**/*"
+  	/>
+  	<!--delete dir="tmp" /-->
   </target>
   
   <!-- ========================================================== 

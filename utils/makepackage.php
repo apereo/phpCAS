@@ -23,26 +23,16 @@ require_once 'PEAR/Frontend.php';
  */
 PEAR::setErrorHandling(PEAR_ERROR_DIE);
 chdir(dirname(__FILE__));
-$pfm = PEAR_PackageFileManager2::importOptions('package.xml', array(
-//$pfm = new PEAR_PackageFileManager2();
-//$pfm->setOptions(array(
-    'packagedirectory'  => dirname(__FILE__),
+//$pfm = PEAR_PackageFileManager2::importOptions('package.xml', array(
+$pfm = new PEAR_PackageFileManager2();
+$pfm->setOptions(array(
+    'packagedirectory'  => 'c:/devel/phpcas-devel/tmp/cas-${phpcas.version}/',
+    'outputdirectory'  => 'c:/devel/phpcas-devel/tmp',
+//    'outputdirectory'  => 'c:\\devel\\phpcas-devel\\tmp',
+//    'packagedirectory'  => '${basedir}/tmp/cas-${phpcas.version}',
+//    'outputdirectory'  => '${basedir}/tmp',
     'baseinstalldir'    => 'CAS',
-    'filelistgenerator' => 'svn',
-    'ignore' => array(  'package.xml',
-                        '.project',
-                        '*.tgz',
-                        'makepackage.php',
-                        '*CVS/*',
-                        '*.sh',
-                        '*.svg',
-                        '.cache',
-                        'dataobject.ini',
-                        'DBDataObjects',
-                        'insert_sample_data.php',
-                        'install.sh',
-                        '*tests*',
-                        '*scripts*'),
+    'filelistgenerator' => 'file',
     'simpleoutput' => true,
     'roles'=>array('php'=>'php'),
     'exceptions'=>array()
@@ -55,20 +45,14 @@ Authentication Service.');
 $pfm->setChannel('pear.unl.edu');
 $pfm->setAPIStability('beta');
 $pfm->setReleaseStability('beta');
-$pfm->setAPIVersion('0.6.0');
-$pfm->setReleaseVersion('0.6.0');
+$pfm->setAPIVersion('${phpcas.version}');
+$pfm->setReleaseVersion('${phpcas.version}');
 $pfm->setNotes('
-Bug Fix:
-* fixed PGT storage path on Windows (Olivier Thebault).
-
-New Features:
-* added methods setCasServerCert() and setCasServerCaCert() to authenticate the CAS server, and method setNoCasServerValidation() to skip the SSL checks (Pascal Aubry, requested by Andrew Petro).
-* Added spanish and catalan translations (Ivan Garcia).
+see http://www.ja-sig.org/wiki/display/CASC/phpCAS+ChangeLog
 ');
-
-//$pfm->addMaintainer('helper','saltybeagle','Brett Bieber','brett.bieber@gmail.com');
-//$pfm->addMaintainer('lead','paubry','Pascal Aubry','pascal.aubry@univ-rennes1.fr');
-$pfm->setLicense('?', '?');
+$pfm->addMaintainer('helper','saltybeagle','Brett Bieber','brett.bieber@gmail.com');
+$pfm->addMaintainer('lead','paubry','Pascal Aubry','pascal.aubry@univ-rennes1.fr');
+$pfm->setLicense('New BSD License', 'http://www.ja-sig.org/wiki/display/CASC/phpCAS');
 $pfm->clearDeps();
 $pfm->setPhpDep('5.0.0');
 $pfm->setPearinstallerDep('1.4.3');
@@ -81,8 +65,8 @@ $pfm->addExtensionDep('required', 'zlib');
 $pfm->addPackageDepWithChannel('required', 'DB', 'pear.php.net', '1.4.0');
 
 $pfm->generateContents();
-if (isset($_SERVER['argv']) && $_SERVER['argv'][1] == 'make') {
+//if (isset($_SERVER['argv']) && $_SERVER['argv'][1] == 'make') {
     $pfm->writePackageFile();
-} else {
-    $pfm->debugPackageFile();
-}
+//} else {
+//    $pfm->debugPackageFile();
+//}
