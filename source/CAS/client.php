@@ -1668,6 +1668,9 @@ class CASClient
 		// initialize the CURL session
 		$ch = curl_init($url);
 		
+		// load the user's extra curl options
+		curl_setopt_array($ch, $this->_curl_options);
+
 		if ($this->_cas_server_cert == '' && $this->_cas_server_ca_cert == '' && !$this->_no_cas_server_validation) {
 			phpCAS::error('one of the methods phpCAS::setCasServerCert(), phpCAS::setCasServerCACert() or phpCAS::setNoCasServerValidation() must be called.');
 		}
@@ -1684,8 +1687,9 @@ class CASClient
 		
 		// return the CURL output into a variable
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		// include the HTTP header with the body
-		curl_setopt($ch, CURLOPT_HEADER, 1);
+		// get the HTTP header with a callback
+		$this->_curl_headers = array(); // empty the headers array
+		curl_setopt($ch, CURLOPT_HEADERFUNCTION, array($this, '_curl_read_headers'));
 		// add cookies headers
 		if ( is_array($cookies) ) {
 			curl_setopt($ch,CURLOPT_COOKIE,implode(';',$cookies));
@@ -1702,37 +1706,33 @@ class CASClient
 			// close the CURL session
 			curl_close ($ch);
 			
-			// find the end of the headers
-			// note: strpos($str,"\n\r\n\r") does not work (?)
-			$pos = FALSE;
-			for ($i=0; $i<strlen($buf); $i++) {
-				if ( $buf[$i] == chr(13) ) 
-					if ( $buf[$i+1] == chr(10) ) 
-						if ( $buf[$i+2] == chr(13) ) 
-							if ( $buf[$i+3] == chr(10) ) {
-								// header found
-								$pos = $i;
-								break;
-							}
-			}
-			
-			if ( $pos === FALSE ) {
-				// end of header not found
-				$err_msg = 'no header found';
-				phpCAS::trace($err_msg);
-				$res = FALSE;
-			} else { 
-				// extract headers into an array
-				$headers = preg_split ("/[\n\r]+/",substr($buf,0,$pos));	  
-				// extract body into a string
-				$body = substr($buf,$pos+4);
-			}
+			$headers = $this->_curl_headers;
+			$body = $buf;
 		}
 		
 		phpCAS::traceEnd($res);
 		return $res;
-		}
+	}
 	
+	/**
+	 * This method is the callback used by readURL method to request HTTP headers.
+	 */
+	var $_curl_headers = array();
+	function _curl_read_headers($ch, $header)
+	{
+		$this->_curl_headers[] = $header;
+		return strlen($header);
+	}
+
+	/**
+	 * This method is used to set additional user curl options.
+	 */
+	var $_curl_options = array();
+	function setExtraCurlOption($key, $value)
+	{
+		$this->_curl_options[$key] = $value;
+	}
+ 
 	/**
 	 * This method is used to access an HTTP[S] service.
 	 * 

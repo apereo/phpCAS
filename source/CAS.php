@@ -1221,6 +1221,23 @@ class phpCAS
 	
 	/** @} */
 	
+  /**
+   * Change CURL options.
+   * CURL is used to connect through HTTPS to CAS server
+   * @param $key the option key
+   * @param $value the value to set
+   */
+   function setExtraCurlOption($key, $value)
+		{
+		  global $PHPCAS_CLIENT;
+		  phpCAS::traceBegin();
+		  if ( !is_object($PHPCAS_CLIENT) ) {
+		  	phpCAS::error('this method should only be called after '.__CLASS__.'::client() or'.__CLASS__.'::proxy()');
+		  }  
+		  $PHPCAS_CLIENT->setExtraCurlOption($key, $value);
+		  phpCAS::traceEnd();
+		}
+
 }
 
 // ########################################################################
