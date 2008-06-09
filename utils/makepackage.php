@@ -42,7 +42,7 @@ $pfm->setPackageType('php'); // this is a PEAR-style php script package
 $pfm->setSummary('Central Authentication Service client library in php');
 $pfm->setDescription('This package is a PEAR installable library for using a Central
 Authentication Service.');
-$pfm->setChannel('pear.unl.edu');
+$pfm->setChannel('__uri');
 $pfm->setAPIStability('beta');
 $pfm->setReleaseStability('beta');
 $pfm->setAPIVersion('${phpcas.version}');
