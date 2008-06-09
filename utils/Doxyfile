@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 PROJECT_NAME           = phpCAS
 PROJECT_NUMBER         = "version ${phpcas.version}"
-OUTPUT_DIRECTORY       = ${basedir}/tmp/phpcas-docs-${phpcas.version}
+OUTPUT_DIRECTORY       = ${basedir}/tmp/cas-${phpcas.version}/docs
 OUTPUT_LANGUAGE        = English
 USE_WINDOWS_ENCODING   = YES
 BRIEF_MEMBER_DESC      = YES
@@ -70,7 +70,7 @@ RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
-EXAMPLE_PATH           = ${basedir}/tmp/phpcas-docs-${phpcas.version}/examples
+EXAMPLE_PATH           = ${basedir}/tmp/cas-${phpcas.version}/docs/examples
 EXAMPLE_PATTERNS       = 
 EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             = 

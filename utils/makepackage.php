@@ -45,8 +45,8 @@ Authentication Service.');
 $pfm->setChannel('pear.unl.edu');
 $pfm->setAPIStability('beta');
 $pfm->setReleaseStability('beta');
-$pfm->setAPIVersion('${phpcas.version}${phpcas.release}');
-$pfm->setReleaseVersion('${phpcas.version}${phpcas.release}');
+$pfm->setAPIVersion('${phpcas.version}');
+$pfm->setReleaseVersion('${phpcas.version}');
 $pfm->setNotes('
 see http://www.ja-sig.org/wiki/display/CASC/phpCAS+ChangeLog
 ');

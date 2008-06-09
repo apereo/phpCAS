@@ -1,4 +1,4 @@
-<project name="phpcas-devel" default="dist" basedir=".">
+<project name="phpcas-devel" default="pear" basedir=".">
 
   <property file="version.properties"/>
   <property file="build.properties"/>
@@ -13,13 +13,12 @@
   </tstamp>
 
   <!-- ==========================================================
-       Create ready-to-distribute archives
+       Create pear installable package
   -->  
-  <target name="dist" description="Create ready-to-export archives">
+  <target name="pear" description="Create pear installable package">
     <mkdir dir="dist"/>
-  	<delete dir="tmp" />
-  	<mkdir dir="tmp/cas-${phpcas.version}"/>
-  	<echo message="${basedir}/tmp/cas-${phpcas.version}"/>
+    <delete dir="tmp" />
+    <mkdir dir="tmp/cas-${phpcas.version}"/>
     <!-- copy source files to tmp directory -->
     <copy todir="tmp/cas-${phpcas.version}">
       <fileset dir="source" includes="**/*.php" />
@@ -27,17 +26,16 @@
         <expandproperties/>
       </filterchain>
     </copy>
-  
-  	<mkdir dir="tmp/phpcas-docs-${phpcas.version}"/>
+  	<mkdir dir="tmp/cas-${phpcas.version}/docs"/>
     <!-- copy docs files to tmp directory -->
-    <copy todir="tmp/phpcas-docs-${phpcas.version}">
+    <copy todir="tmp/cas-${phpcas.version}/docs">
       <fileset dir="docs" excludes="images/*" />
       <filterchain>
         <expandproperties/>
       </filterchain>
     </copy>
   	<!-- copy images to tmp directory -->
-    <copy todir="tmp/phpcas-docs-${phpcas.version}">
+    <copy todir="tmp/cas-${phpcas.version}/docs">
       <fileset dir="docs" includes="images/*" />
     </copy>
     <!-- check for the doxygen program, and fail is not found -->
@@ -59,38 +57,6 @@
     <!-- call Doxygen -->
     <echo message="writing API documentation..."/>
     <doxygen doxygenPath="${doxygen.path}" configFilename="${basedir}/tmp/Doxyfile"/>
-  	
-  	<!-- build the distribution files -->
-  	<tar 
-  		basedir="tmp" 
-  		compression="gzip" 
-  		destfile="dist/phpcas-${phpcas.version}-${phpcas.release}.tar.gz" 
-  		includes="cas-${phpcas.version}/**/* package.xml"
-  	/>
-  	<tar 
-  		basedir="tmp" 
-  		compression="gzip" 
-  		destfile="dist/phpcas-docs-${phpcas.version}-${phpcas.release}.tar.gz" 
-  		includes="phpcas-docs-${phpcas.version}/**/*"
-  	/>
-  	<delete dir="tmp" />
-  </target>
-  
-  <!-- ==========================================================
-       Create pear installable package
-  -->  
-  <target name="pear" description="Create pear installable package">
-    <mkdir dir="dist"/>
-    <delete dir="tmp" />
-    <mkdir dir="tmp/cas-${phpcas.version}"/>
-    <echo message="${basedir}/tmp/cas-${phpcas.version}"/>
-    <!-- copy source files to tmp directory -->
-    <copy todir="tmp/cas-${phpcas.version}">
-      <fileset dir="source" includes="**/*.php" />
-      <filterchain>
-        <expandproperties/>
-      </filterchain>
-    </copy>
     <!-- write makepackage.php file from template -->
     <echo message="write makepackage.php file..."/>
     <copy file="utils/makepackage.php" 
@@ -119,8 +85,8 @@
           <arg line="package package.xml"/>
     </exec>
     
-    <copy file="tmp/cas-${phpcas.version}/CAS-${phpcas.version}${phpcas.release}.tgz" 
-          tofile="dist/CAS-${phpcas.version}${phpcas.release}.tgz">
+    <copy file="tmp/cas-${phpcas.version}/CAS-${phpcas.version}.tgz" 
+          tofile="dist/CAS-${phpcas.version}.tgz">
     </copy>
 
     <delete dir="tmp" />
@@ -130,7 +96,7 @@
        Upload the distribution files to sourceforge.net
   -->  
   <target name="upload" 
-          depends="dist" 
+          depends="pear" 
           description="Upload the distribution files to sourceforge.net">
     <!-- Check that all the properties used for archives upload are set -->
     <fail message="please set ${sourceforge.arch.host} in build.properties" unless="sourceforge.arch.host"/>
@@ -142,7 +108,7 @@
          remotedir="${sourceforge.arch.remotedir}" action="put" binary="yes" depends="yes" verbose="yes">
       <fileset dir="dist" 
                includes="
-                         phpcas-${phpcas.version}-${phpcas.release}.zip
+                         phpcas-${phpcas.version}.zip
                         "/>
     </ftp>
   </target>
