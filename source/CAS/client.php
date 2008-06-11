@@ -1668,8 +1668,14 @@ class CASClient
 		// initialize the CURL session
 		$ch = curl_init($url);
 		
-		// load the user's extra curl options
-		curl_setopt_array($ch, $this->_curl_options);
+		if (version_compare(PHP_VERSION,'5','>=')) {
+			//only avaible in php5
+			curl_setopt_array($ch, $this->_curl_options);
+		} else {
+			foreach ($this->_curl_options as $key => $value) {
+				curl_setopt($ch, $key, $value);
+			}
+		}
 
 		if ($this->_cas_server_cert == '' && $this->_cas_server_ca_cert == '' && !$this->_no_cas_server_validation) {
 			phpCAS::error('one of the methods phpCAS::setCasServerCert(), phpCAS::setCasServerCACert() or phpCAS::setNoCasServerValidation() must be called.');
