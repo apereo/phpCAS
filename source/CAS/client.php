@@ -441,7 +441,20 @@ class CASClient
 		{
 		return $this->_server['logout_url'] = $url;
 		}
-	
+
+	/**
+	 * An array to store extra curl options.
+	 */	
+	var $_curl_options = array();
+
+	/**
+	 * This method is used to set additional user curl options.
+	 */
+	function setExtraCurlOption($key, $value)
+	{
+		$this->_curl_options[$key] = $value;
+	}
+ 
 	/**
 	 * This method checks to see if the request is secured via HTTPS
 	 * @return true if https, false otherwise
@@ -483,6 +496,11 @@ class CASClient
 					   $start_session = true) {
 		
 		phpCAS::traceBegin();
+		
+		if (!isLogoutRequest() && !empty($_GET['ticket'])) {
+			$session_id = preg_replace('|-|','',$_GET['ticket']);
+			session_id($session_id);
+		}
 		
 		//activate session mechanism if desired
 		if ($start_session) {
@@ -911,6 +929,43 @@ class CASClient
 		phpCAS::traceExit();
 		exit();
 		}
+	
+	/**
+	 * @return true if the current request is a logout request.
+	 * @public
+	 */
+	function isLogoutRequest() {
+	}
+	
+	/**
+	 * This method handles logout requests.
+	 * @public
+	 */
+	function handleLogoutRequests() {
+		phpCAS::traceBegin();
+		if (empty($_POST['logoutRequest'])) {
+			phpCAS::log("Not a logout request");
+		} else {
+			phpCAS::log("Logout requested");
+			phpCAS::log("SAML REQUEST: ".$_POST['logoutRequest']);
+			// Extract the ticket from the SAML Request
+			preg_match("|<samlp:SessionIndex>(.*)</samlp:SessionIndex>|", $_POST['logoutRequest'], $tick, PREG_OFFSET_CAPTURE, 3);
+			$receve = preg_replace('|<samlp:SessionIndex>|','',$tick[0][0]);
+			$ticket2logout = preg_replace('|</samlp:SessionIndex>|','',$receve);
+			phpCAS::log("Ticket to logout: ".$ticket2logout);
+			$session_id = preg_replace('|-|','',$ticket2logout);
+			phpCAS::log("Session id: ".$session_id);
+			// Overwrite session
+			$_COOKIE[session_name()]=$session_id;
+			session_start();	
+			session_unset();
+		    session_destroy();
+		    printf("disconnected!");
+			phpCAS::traceExit();
+			exit();
+		}
+		phpCAS::traceEnd();
+	}
 	
 	/** @} */
 	
@@ -1730,15 +1785,6 @@ class CASClient
 		return strlen($header);
 	}
 
-	/**
-	 * This method is used to set additional user curl options.
-	 */
-	var $_curl_options = array();
-	function setExtraCurlOption($key, $value)
-	{
-		$this->_curl_options[$key] = $value;
-	}
- 
 	/**
 	 * This method is used to access an HTTP[S] service.
 	 * 
