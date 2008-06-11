@@ -966,7 +966,8 @@ class CASClient
 			if (!$allowed_clients) {
 				$allowed_clients = array( $this->getServerHostname() ); 
 			}
-			$client = $_SERVER['REMOTE_HOST'];
+			$client_ip = $_SERVER['REMOTE_ADDR'];
+			$client = gethostbyaddr($client_ip);
 			phpCAS::log("Client: ".$client);
 			$allowed = false;
 			foreach ($allowed_clients as $allowed_client) {
