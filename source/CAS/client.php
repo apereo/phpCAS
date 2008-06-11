@@ -968,19 +968,22 @@ class CASClient
 			}
 			$client = $_SERVER['REMOTE_HOST'];
 			phpCAS::log("Client: ".$client);
+			$allowed = false;
 			foreach ($allowed_clients as $allowed_client) {
 				if ($client == $allowed_client) {
 					phpCAS::log("Allowed client '".$allowed_client."' matches, logout request is allowed");
+					$allowed = true;
 					break;
 				} else {
 					phpCAS::log("Allowed client '".$allowed_client."' does not match");
 				}
+			}
+			if (!$allowed) {
 				phpCAS::error("Unauthorized logout request from client '".$client."'");
 			    printf("Unauthorized!");
 				phpCAS::traceExit();
 				exit();
 			}
-			phpCAS::log("Logout request is authorized");
 		} else {
 			phpCAS::log("No access control set");
 		}
