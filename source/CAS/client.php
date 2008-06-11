@@ -497,7 +497,7 @@ class CASClient
 		
 		phpCAS::traceBegin();
 		
-		if (!isLogoutRequest() && !empty($_GET['ticket'])) {
+		if (!$this->isLogoutRequest() && !empty($_GET['ticket'])) {
 			$session_id = preg_replace('|-|','',$_GET['ticket']);
 			session_id($session_id);
 		}
@@ -935,6 +935,7 @@ class CASClient
 	 * @public
 	 */
 	function isLogoutRequest() {
+		return !empty($_POST['logoutRequest']);
 	}
 	
 	/**
@@ -943,7 +944,7 @@ class CASClient
 	 */
 	function handleLogoutRequests() {
 		phpCAS::traceBegin();
-		if (empty($_POST['logoutRequest'])) {
+		if (!$this->isLogoutRequest()) {
 			phpCAS::log("Not a logout request");
 		} else {
 			phpCAS::log("Logout requested");
