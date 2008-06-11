@@ -503,7 +503,7 @@ class CASClient
 		}
 		
 		//activate session mechanism if desired
-		if ($start_session) {
+		if (!$this->isLogoutRequest() && $start_session) {
 			session_start();
 		}
 		
@@ -932,40 +932,73 @@ class CASClient
 	
 	/**
 	 * @return true if the current request is a logout request.
-	 * @public
+	 * @private
 	 */
 	function isLogoutRequest() {
 		return !empty($_POST['logoutRequest']);
 	}
 	
 	/**
+	 * @return true if a logout request is allowed.
+	 * @private
+	 */
+	function isLogoutRequestAllowed() {
+	}
+	
+	/**
 	 * This method handles logout requests.
+	 * @param $check_client true to check the client bofore handling the request, 
+	 * false not to perform any access control. True by default.
+	 * @param $allowed_clients an array of host names allowed to send logout requests. 
+	 * By default, only the CAs server (declared in the constructor) will be allowed.
 	 * @public
 	 */
-	function handleLogoutRequests() {
+	function handleLogoutRequests($check_client=true, $allowed_clients=false) {
 		phpCAS::traceBegin();
 		if (!$this->isLogoutRequest()) {
 			phpCAS::log("Not a logout request");
-		} else {
-			phpCAS::log("Logout requested");
-			phpCAS::log("SAML REQUEST: ".$_POST['logoutRequest']);
-			// Extract the ticket from the SAML Request
-			preg_match("|<samlp:SessionIndex>(.*)</samlp:SessionIndex>|", $_POST['logoutRequest'], $tick, PREG_OFFSET_CAPTURE, 3);
-			$receve = preg_replace('|<samlp:SessionIndex>|','',$tick[0][0]);
-			$ticket2logout = preg_replace('|</samlp:SessionIndex>|','',$receve);
-			phpCAS::log("Ticket to logout: ".$ticket2logout);
-			$session_id = preg_replace('|-|','',$ticket2logout);
-			phpCAS::log("Session id: ".$session_id);
-			// Overwrite session
-			$_COOKIE[session_name()]=$session_id;
-			session_start();	
-			session_unset();
-		    session_destroy();
-		    printf("disconnected!");
-			phpCAS::traceExit();
-			exit();
+			phpCAS::traceEnd();
+			return;
 		}
-		phpCAS::traceEnd();
+		phpCAS::log("Logout requested");
+		phpCAS::log("SAML REQUEST: ".$_POST['logoutRequest']);
+		if ($check_client) {
+			if (!$allowed_clients) {
+				$allowed_clients = array( $this->getServerHostname() ); 
+			}
+			$client = $_SERVER['REMOTE_HOST'];
+			phpCAS::log("Client: ".$client);
+			foreach ($allowed_clients as $allowed_client) {
+				if ($client == $allowed_client) {
+					phpCAS::log("Allowed client '".$allowed_client."' matches, logout request is allowed");
+					break;
+				} else {
+					phpCAS::log("Allowed client '".$allowed_client."' does not match");
+				}
+				phpCAS::error("Unauthorized logout request from client '".$client."'");
+			    printf("Unauthorized!");
+				phpCAS::traceExit();
+				exit();
+			}
+			phpCAS::log("Logout request is authorized");
+		} else {
+			phpCAS::log("No access control set");
+		}
+		// Extract the ticket from the SAML Request
+		preg_match("|<samlp:SessionIndex>(.*)</samlp:SessionIndex>|", $_POST['logoutRequest'], $tick, PREG_OFFSET_CAPTURE, 3);
+		$receve = preg_replace('|<samlp:SessionIndex>|','',$tick[0][0]);
+		$ticket2logout = preg_replace('|</samlp:SessionIndex>|','',$receve);
+		phpCAS::log("Ticket to logout: ".$ticket2logout);
+		$session_id = preg_replace('|-|','',$ticket2logout);
+		phpCAS::log("Session id: ".$session_id);
+		// Overwrite session
+		$_COOKIE[session_name()]=$session_id;
+		session_start();	
+		session_unset();
+	    session_destroy();
+	    printf("Disconnected!");
+		phpCAS::traceExit();
+		exit();
 	}
 	
 	/** @} */
