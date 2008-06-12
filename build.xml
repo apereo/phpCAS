@@ -1,7 +1,9 @@
-<project name="phpcas-devel" default="pear" basedir=".">
+<project name="phpcas-devel" default="dist" basedir=".">
 
   <property file="version.properties"/>
   <property file="build.properties"/>
+  <property name="upload.host" value="jasigch.princeton.edu" />
+  <property name="upload.remotedir" value="/jasig/htdocs/www/downloads/cas-clients/php" />
 
   <taskdef name="doxygen" 
            classname="org.doxygen.tools.DoxygenTask"
@@ -15,7 +17,7 @@
   <!-- ==========================================================
        Create pear installable package
   -->  
-  <target name="pear" description="Create pear installable package">
+  <target name="dist" description="Create pear installable and docs packages">
     <mkdir dir="dist"/>
     <delete dir="tmp" />
     <mkdir dir="tmp/cas-${phpcas.version}"/>
@@ -88,30 +90,61 @@
     <copy file="tmp/cas-${phpcas.version}/CAS-${phpcas.version}.tgz" 
           tofile="dist/CAS-${phpcas.version}.tgz">
     </copy>
+  	
+  	<tar 
+  		destfile="dist/docs-${phpcas.version}.tgz"
+  		compression="gzip" 
+  		basedir="tmp/cas-${phpcas.version}"
+  		includes="docs/**/*" />
 
-    <delete dir="tmp" />
+    <!--delete dir="tmp" /-->
   </target>
 
-  <!-- ========================================================== 
-       Upload the distribution files to sourceforge.net
-  -->  
-  <target name="upload" 
-          depends="pear" 
-          description="Upload the distribution files to sourceforge.net">
-    <!-- Check that all the properties used for archives upload are set -->
-    <fail message="please set ${sourceforge.arch.host} in build.properties" unless="sourceforge.arch.host"/>
-    <fail message="please set ${sourceforge.arch.username} in build.properties" unless="sourceforge.arch.username"/>
-    <fail message="please set ${sourceforge.arch.password} in build.properties" unless="sourceforge.arch.password"/>
-    <fail message="please set ${sourceforge.arch.remotedir} in build.properties" unless="sourceforge.arch.remotedir"/>
-	<!-- upload distribution files -->
-    <ftp server="${sourceforge.arch.host}" userid="${sourceforge.arch.username}" password="${sourceforge.arch.password}"
-         remotedir="${sourceforge.arch.remotedir}" action="put" binary="yes" depends="yes" verbose="yes">
-      <fileset dir="dist" 
-               includes="
-                         phpcas-${phpcas.version}.zip
-                        "/>
-    </ftp>
-  </target>
+	  <!-- ========================================================== 
+	       Upload the distribution files to the download area
+	  -->  
+	  <target name="upload" 
+	          description="Upload the distribution files to sourceforge.net">
+	    <!-- Check that all the properties used for archives upload are set -->
+	    <fail message="please set ${upload.username} in build.properties" unless="upload.username"/>
+	    <fail message="please set ${upload.password} in build.properties" unless="upload.password"/>
+	  	<sshexec 
+	  		host="${upload.host}" 
+	  		username="${upload.username}" 
+	  		command="mkdir -p ${upload.remotedir}/${phpcas.version}" 
+	  		password="${upload.password}"
+	  		trust="true" />
+	  	<scp 
+	  		trust="true"
+	  		localFile="${basedir}/dist/CAS-${phpcas.version}.tgz" 
+	  		remoteTodir="${upload.username}:${upload.password}@${upload.host}:${upload.remotedir}/${phpcas.version}" />
+	  	<scp 
+	  		trust="true"
+	  		localFile="${basedir}/dist/docs-${phpcas.version}.tgz" 
+	  		remoteTodir="${upload.username}:${upload.password}@${upload.host}:${upload.remotedir}/${phpcas.version}" />
+	  	<sshexec 
+	  		host="${upload.host}" 
+	  		username="${upload.username}" 
+	  		command="cd ${upload.remotedir}/${phpcas.version} ; tar zxf docs-${phpcas.version}.tgz ; rm docs-${phpcas.version}.tgz" 
+	  		password="${upload.password}"
+	  		trust="true" />
+	  </target>
+
+	  <!-- ========================================================== 
+	       Make a 'stable' symlink to the current version 
+	  -->  
+	  <target name="makeStableSymlink" 
+	          description="Make a 'stable' symlink to the current version">
+	    <!-- Check that all the properties used for archives upload are set -->
+	    <fail message="please set ${upload.username} in build.properties" unless="upload.username"/>
+	    <fail message="please set ${upload.password} in build.properties" unless="upload.password"/>
+	  	<sshexec 
+	  		host="${upload.host}" 
+	  		username="${upload.username}" 
+	  		command="cd ${upload.remotedir} ; rm -f stable ; ln -s stable ${phpcas.version}" 
+	  		password="${upload.password}"
+	  		trust="true" />
+	  </target>
 
   <!-- ==========================================================
        Clean up everything but distribution file
