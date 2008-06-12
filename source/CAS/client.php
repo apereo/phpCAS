@@ -498,8 +498,17 @@ class CASClient
 		phpCAS::traceBegin();
 		
 		if (!$this->isLogoutRequest() && !empty($_GET['ticket'])) {
+            // copy old session vars and destroy the current session
+            session_start();
+            $old_session = $_SESSION;
+            session_destroy();
+            // set up a new session, of name based on the ticket
 			$session_id = preg_replace('|-|','',$_GET['ticket']);
+			phpCAS::LOG("Session ID: " . $session_id);
 			session_id($session_id);
+            session_start();
+            // restore old session vars
+            $_SESSION = $old_session;
 		}
 		
 		//activate session mechanism if desired
@@ -990,8 +999,8 @@ class CASClient
 		}
 		// Extract the ticket from the SAML Request
 		preg_match("|<samlp:SessionIndex>(.*)</samlp:SessionIndex>|", $_POST['logoutRequest'], $tick, PREG_OFFSET_CAPTURE, 3);
-		$receve = preg_replace('|<samlp:SessionIndex>|','',$tick[0][0]);
-		$ticket2logout = preg_replace('|</samlp:SessionIndex>|','',$receve);
+		$wrappedSamlSessionIndex = preg_replace('|<samlp:SessionIndex>|','',$tick[0][0]);
+		$ticket2logout = preg_replace('|</samlp:SessionIndex>|','',$wrappedSamlSessionIndex);
 		phpCAS::log("Ticket to logout: ".$ticket2logout);
 		$session_id = preg_replace('|-|','',$ticket2logout);
 		phpCAS::log("Session id: ".$session_id);

@@ -1008,18 +1008,18 @@ class phpCAS
 		return $PHPCAS_CLIENT->getUser();
 		}
 	
-	/**
-	 * Handle logout requests.
-	 */
-	function handleLogoutRequests()
-		{
-			global $PHPCAS_CLIENT;
-			if ( !is_object($PHPCAS_CLIENT) ) {
-				phpCAS::error('this method should not be called before '.__CLASS__.'::client() or '.__CLASS__.'::proxy()');
-			}
-			return($PHPCAS_CLIENT->handleLogoutRequests());
-		}
-	
+    /**
+     * Handle logout requests.
+     */
+    function handleLogoutRequests($check_client=true, $allowed_clients=false)
+        {
+            global $PHPCAS_CLIENT;
+            if ( !is_object($PHPCAS_CLIENT) ) {
+                phpCAS::error('this method should not be called before '.__CLASS__.'::client() or '.__CLASS__.'::proxy()');
+            }
+            return($PHPCAS_CLIENT->handleLogoutRequests($check_client, $allowed_clients));
+        }
+   
 	/**
 	 * This method returns the URL to be used to login.
 	 * or phpCAS::isAuthenticated().
