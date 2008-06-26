@@ -927,7 +927,8 @@ class CASClient
 		// v0.4.14 sebastien.gougeon at univ-rennes1.fr
 		// header('Location: '.$cas_url);
 		if ( $url != "" ) {
-			$url = '?service=' . $url;
+			// Adam Moore 1.0.0RC2
+			$url = '?service=' . $url . '&destination=' . $url . '&service=' . $url;
 		}
 		header('Location: '.$cas_url . $url);
 		session_unset();
