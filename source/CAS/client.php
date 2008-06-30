@@ -928,7 +928,7 @@ class CASClient
 		// header('Location: '.$cas_url);
 		if ( $url != "" ) {
 			// Adam Moore 1.0.0RC2
-			$url = '?service=' . $url . '&destination=' . $url . '&service=' . $url;
+			$url = '?service=' . $url . '&url=' . $url;
 		}
 		header('Location: '.$cas_url . $url);
 		session_unset();
