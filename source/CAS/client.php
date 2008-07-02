@@ -915,22 +915,47 @@ class CASClient
 		exit();
 	}
 
+//	/**
+//	 * This method is used to logout from CAS.
+//	 * @param $url a URL that will be transmitted to the CAS server (to come back to when logged out)
+//	 * @public
+//	 */
+//	function logout($url = "") {
+//		phpCAS::traceBegin();
+//		$cas_url = $this->getServerLogoutURL();
+//		// v0.4.14 sebastien.gougeon at univ-rennes1.fr
+//		// header('Location: '.$cas_url);
+//		if ( $url != "" ) {
+//			// Adam Moore 1.0.0RC2
+//			$url = '?service=' . $url . '&url=' . $url;
+//		}
+//		header('Location: '.$cas_url . $url);
+//		session_unset();
+//		session_destroy();
+//		$this->printHTMLHeader($this->getString(CAS_STR_LOGOUT));
+//		printf('<p>'.$this->getString(CAS_STR_SHOULD_HAVE_BEEN_REDIRECTED).'</p>',$cas_url);
+//		$this->printHTMLFooter();
+//		phpCAS::traceExit();
+//		exit();
+//	}
+	
 	/**
 	 * This method is used to logout from CAS.
-	 * @param $url a URL that will be transmitted to the CAS server (to come back to when logged out)
+	 * @params $params an array that contains the optional url and service parameters that will be passed to the CAS server
 	 * @public
 	 */
-	function logout($url = "")
-		{
+	function logout($params) {
 		phpCAS::traceBegin();
 		$cas_url = $this->getServerLogoutURL();
-		// v0.4.14 sebastien.gougeon at univ-rennes1.fr
-		// header('Location: '.$cas_url);
-		if ( $url != "" ) {
-			// Adam Moore 1.0.0RC2
-			$url = '?service=' . $url . '&url=' . $url;
+		$paramSeparator = '?';
+		if (isset($params['url'])) {
+			$cas_url = $cas_url . $paramSeparator . "url=" . urlencode($params['url']); 
+			$paramSeparator = '&';
 		}
-		header('Location: '.$cas_url . $url);
+		if (isset($params['service'])) {
+			$cas_url = $cas_url . $paramSeparator . "service=" . urlencode($params['service']); 
+		}
+		header('Location: '.$cas_url);
 		session_unset();
 		session_destroy();
 		$this->printHTMLHeader($this->getString(CAS_STR_LOGOUT));
@@ -938,7 +963,7 @@ class CASClient
 		$this->printHTMLFooter();
 		phpCAS::traceExit();
 		exit();
-		}
+	}
 	
 	/**
 	 * @return true if the current request is a logout request.
@@ -1005,13 +1030,8 @@ class CASClient
 		phpCAS::log("Ticket to logout: ".$ticket2logout);
 		$session_id = preg_replace('|-|','',$ticket2logout);
 		phpCAS::log("Session id: ".$session_id);
-		
-		// fix New session ID
-		session_id($session_id);
-		$_COOKIE[session_name()]=$session_id;
-		$_GET[session_name()]=$session_id;
-		
 		// Overwrite session
+		$_COOKIE[session_name()]=$session_id;
 		session_start();	
 		session_unset();
 	    session_destroy();

@@ -1093,21 +1093,93 @@ class phpCAS
 		}
 	
 	/**
-	 * This method is used to logout from CAS. Halts by redirecting to the CAS server.
-	 * @param $url a URL that will be transmitted to the CAS server (to come back to when logged out)
+	 * This method is used to logout from CAS.
+	 * @params $params an array that contains the optional url and service parameters that will be passed to the CAS server
+	 * @public
 	 */
-	function logout($url = "")
-		{
+	function logout($params = "") {
 		global $PHPCAS_CLIENT;
-		
+		phpCAS::traceBegin();
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS::error('this method should only be called after '.__CLASS__.'::client() or'.__CLASS__.'::proxy()');
+		}
+		$parsedParams = array();
+		if ($params != "") {
+			if (is_string($params)) {
+				phpCAS::error('method `phpCAS::logout($url)\' is now deprecated, use `phpCAS::logoutWithService($service)\' instead');
+			}
+			if (!is_array($params)) {
+				phpCAS::error('type mismatched for parameter $params (should be `array\')');
+			}
+			foreach ($params as $key => $value) {
+				if ($key != "service" && $key != "url") {
+					phpCAS::error('only `url\' and `service\' parameters are allowed for method `phpCAS::logout($params)\'');
+				}
+				$parsedParams[$key] = $value;
+			}
+		}
+		$PHPCAS_CLIENT->logout($parsedParams);
+		// never reached
+		phpCAS::traceEnd();
+	}
+	
+	/**
+	 * This method is used to logout from CAS. Halts by redirecting to the CAS server.
+	 * @param $service a URL that will be transmitted to the CAS server
+	 */
+	function logoutWithRedirectService($service) {
+		global $PHPCAS_CLIENT;
 		phpCAS::traceBegin();
 		if ( !is_object($PHPCAS_CLIENT) ) {
 			phpCAS::error('this method should only be called after '.__CLASS__.'::client() or'.__CLASS__.'::proxy()');
 		}
-		$PHPCAS_CLIENT->logout($url);
+		if (!is_string($service)) {
+			phpCAS::error('type mismatched for parameter $service (should be `string\')');
+		}
+		$PHPCAS_CLIENT->logout(array("service" => $service));
 		// never reached
 		phpCAS::traceEnd();
+	}
+	
+	/**
+	 * This method is used to logout from CAS. Halts by redirecting to the CAS server.
+	 * @param $url a URL that will be transmitted to the CAS server
+	 */
+	function logoutWithUrl($url) {
+		global $PHPCAS_CLIENT;
+		phpCAS::traceBegin();
+		if ( !is_object($PHPCAS_CLIENT) ) {
+			phpCAS::error('this method should only be called after '.__CLASS__.'::client() or'.__CLASS__.'::proxy()');
 		}
+		if (!is_string($url)) {
+			phpCAS::error('type mismatched for parameter $url (should be `string\')');
+		}
+		$PHPCAS_CLIENT->logout(array("url" => $url));
+		// never reached
+		phpCAS::traceEnd();
+	}
+	
+	/**
+	 * This method is used to logout from CAS. Halts by redirecting to the CAS server.
+	 * @param $service a URL that will be transmitted to the CAS server
+	 * @param $url a URL that will be transmitted to the CAS server
+	 */
+	function logoutWithRedirectServiceAndUrl($service, $url) {
+		global $PHPCAS_CLIENT;
+		phpCAS::traceBegin();
+		if ( !is_object($PHPCAS_CLIENT) ) {
+			phpCAS::error('this method should only be called after '.__CLASS__.'::client() or'.__CLASS__.'::proxy()');
+		}
+		if (!is_string($service)) {
+			phpCAS::error('type mismatched for parameter $service (should be `string\')');
+		}
+		if (!is_string($url)) {
+			phpCAS::error('type mismatched for parameter $url (should be `string\')');
+		}
+		$PHPCAS_CLIENT->logout(array("service" => $service, "url" => $url));
+		// never reached
+		phpCAS::traceEnd();
+	}
 	
 	/**
 	 * Set the fixed URL that will be used by the CAS server to transmit the PGT.
