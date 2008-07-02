@@ -1030,8 +1030,13 @@ class CASClient
 		phpCAS::log("Ticket to logout: ".$ticket2logout);
 		$session_id = preg_replace('|-|','',$ticket2logout);
 		phpCAS::log("Session id: ".$session_id);
-		// Overwrite session
+
+		// fix New session ID
+		session_id($session_id);
 		$_COOKIE[session_name()]=$session_id;
+		$_GET[session_name()]=$session_id;
+		
+		// Overwrite session
 		session_start();	
 		session_unset();
 	    session_destroy();
