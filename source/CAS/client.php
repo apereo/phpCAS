@@ -499,14 +499,18 @@ class CASClient
 		
 		if (!$this->isLogoutRequest() && !empty($_GET['ticket'])) {
             // copy old session vars and destroy the current session
-            session_start();
+            if (!isset($_SESSION)) {
+            	session_start();
+            }
             $old_session = $_SESSION;
             session_destroy();
             // set up a new session, of name based on the ticket
 			$session_id = preg_replace('|-|','',$_GET['ticket']);
 			phpCAS::LOG("Session ID: " . $session_id);
 			session_id($session_id);
-            session_start();
+            if (!isset($_SESSION)) {
+            	session_start();
+            }
             // restore old session vars
             $_SESSION = $old_session;
 		}
