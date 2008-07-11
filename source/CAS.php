@@ -166,6 +166,20 @@ define("PHPCAS_LANG_DEFAULT", PHPCAS_LANG_ENGLISH);
 
 /** @} */
 // ------------------------------------------------------------------------
+//  DEBUG
+// ------------------------------------------------------------------------
+ /**
+  * @addtogroup publicDebug
+  * @{
+  */
+
+/**
+ * The default directory for the debug file under Unix.
+ */
+define('DEFAULT_DEBUG_DIR','/tmp/');
+
+/** @} */
+// ------------------------------------------------------------------------
 //  MISC
 // ------------------------------------------------------------------------
  /**
@@ -386,7 +400,7 @@ class phpCAS
 					$debugDir = '';
 				}
 			} else {
-				$debugDir = '/tmp/';
+				$debugDir = DEFAULT_DEBUG_DIR;
 			}
 			$filename = $debugDir . 'phpCAS.log';
 		}
