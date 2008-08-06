@@ -43,8 +43,8 @@ $pfm->setSummary('Central Authentication Service client library in php');
 $pfm->setDescription('This package is a PEAR installable library for using a Central
 Authentication Service.');
 $pfm->setChannel('__uri');
-$pfm->setAPIStability('beta');
-$pfm->setReleaseStability('beta');
+$pfm->setAPIStability('stable');
+$pfm->setReleaseStability('stable');
 $pfm->setAPIVersion('${phpcas.version}');
 $pfm->setReleaseVersion('${phpcas.version}');
 $pfm->setNotes('
