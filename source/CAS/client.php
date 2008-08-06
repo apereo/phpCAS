@@ -1805,7 +1805,7 @@ class CASClient
 		// initialize the CURL session
 		$ch = curl_init($url);
 		
-		if (version_compare(PHP_VERSION,'5','>=')) {
+		if (version_compare(PHP_VERSION,'5.1.3','>=')) {
 			//only avaible in php5
 			curl_setopt_array($ch, $this->_curl_options);
 		} else {
