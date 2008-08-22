@@ -1120,7 +1120,7 @@ class phpCAS
 		$parsedParams = array();
 		if ($params != "") {
 			if (is_string($params)) {
-				phpCAS::error('method `phpCAS::logout($url)\' is now deprecated, use `phpCAS::logoutWithService($service)\' instead');
+				phpCAS::error('method `phpCAS::logout($url)\' is now deprecated, use `phpCAS::logoutWithUrl($url)\' instead');
 			}
 			if (!is_array($params)) {
 				phpCAS::error('type mismatched for parameter $params (should be `array\')');
