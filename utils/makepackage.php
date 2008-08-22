@@ -31,7 +31,7 @@ $pfm->setOptions(array(
 //    'outputdirectory'  => 'c:\\devel\\phpcas-devel\\tmp',
     'packagedirectory'  => '${basedir}/tmp/cas-${phpcas.version}',
     'outputdirectory'  => '${basedir}/tmp',
-    'baseinstalldir'    => 'CAS',
+    'baseinstalldir'    => '/',
     'filelistgenerator' => 'file',
     'simpleoutput' => true,
     'roles'=>array('php'=>'php'),
