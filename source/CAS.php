@@ -35,7 +35,7 @@ if (version_compare(PHP_VERSION,'5','>=')) {
 /**
  * phpCAS version. accessible for the user by phpCAS::getVersion().
  */
-define('PHPCAS_VERSION','${phpcas.version}-${phpcas.release}');
+define('PHPCAS_VERSION','${phpcas.version}');
 
 // ------------------------------------------------------------------------
 //  CAS VERSIONS
