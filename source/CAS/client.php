@@ -2117,7 +2117,7 @@ function getElement5(&$dom_element, &$object_element) {
        foreach($dom_element->childNodes as $dom_child) {
          if ($dom_child->nodeType == XML_ELEMENT_NODE) {
            $child_object = array();
-           $this->getElement5($dom_child, &$child_object);
+           $this->getElement5($dom_child, $child_object);
            array_push($object_element['children'], $child_object);
          }
        }
@@ -2143,7 +2143,7 @@ function getElement5(&$dom_element, &$object_element) {
      if ( $nodeList->item($i)->nodeType == XML_ELEMENT_NODE) {
        $child_object2 = array();
        
-       $this->processChild(&$child_object2, &$nodeList->item($i)->nodeName, &$nodeList->item($i)->firstChild->nodeValue, & $nodeList->item($i)->attributes, & $nodeList->item($i)->childNodes);
+       $this->processChild($child_object2, $nodeList->item($i)->nodeName, $nodeList->item($i)->firstChild->nodeValue, $nodeList->item($i)->attributes, $nodeList->item($i)->childNodes);
        
        array_push($child_object['children'], $child_object2);
      }			 
@@ -2179,7 +2179,7 @@ function getElement5_compatibility(&$dom_element, &$object_element) {
         if ( $nodeList->item($i)->nodeType == XML_ELEMENT_NODE) {
           $child_object = array();
 	  
-	  $this->processChild(&$child_object, &$nodeList->item($i)->nodeName, &$nodeList->item($i)->firstChild->nodeValue, & $nodeList->item($i)->attributes, & $nodeList->item($i)->childNodes);
+	  $this->processChild($child_object, $nodeList->item($i)->nodeName, $nodeList->item($i)->firstChild->nodeValue, $nodeList->item($i)->attributes, $nodeList->item($i)->childNodes);
 	  
 	  array_push($object_element['children'], $child_object);
 	}
@@ -2213,12 +2213,12 @@ function getElement5_compatibility(&$dom_element, &$object_element) {
 	 // dom functions if we used getElement5 as such.
 	 if(ini_get('zend.ze1_compatibility_mode')) {
 
-	   $this->getElement5_compatibility(&$tree_response,&$response_array);
+	   $this->getElement5_compatibility($tree_response, $response_array);
 
 	 } else {
 
 	   // do the conversion to an array
-	   $this->getElement5(&$tree_response,&$response_array);
+	   $this->getElement5($tree_response, $response_array);
 
 	 }
        }
@@ -2233,7 +2233,7 @@ function getElement5_compatibility(&$dom_element, &$object_element) {
        // if document parsed allright
        if ( ($tree_response = $dom->document_element())) {
 	 // convert it to an array structure
-	 $this->getElement4($tree_response,&$response_array);
+	 $this->getElement4($tree_response, $response_array);
        }
      }
    }
@@ -2268,7 +2268,7 @@ function getElement5_compatibility(&$dom_element, &$object_element) {
 				TRUE/*$no_response*/);
 		}
 
-		$response_array=$this->convertXmlResponseToArray(&$text_response);
+		$response_array=$this->convertXmlResponseToArray($text_response);
 		print_r($response_array);
 		
 		$unknown_problem = 0;
