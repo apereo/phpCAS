@@ -497,7 +497,7 @@ class CASClient
 		
 		phpCAS::traceBegin();
 		
-		if (!$this->isLogoutRequest() && !empty($_GET['ticket'])) {
+		if (!$this->isLogoutRequest() && !empty($_GET['ticket']) && $start_session) {
             // copy old session vars and destroy the current session
             if (!isset($_SESSION)) {
             	session_start();
