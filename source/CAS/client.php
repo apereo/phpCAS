@@ -505,7 +505,7 @@ class CASClient
             $old_session = $_SESSION;
             session_destroy();
             // set up a new session, of name based on the ticket
-			$session_id = preg_replace('|-|','',$_GET['ticket']);
+			$session_id = preg_replace('/[^\w]/','',$_GET['ticket']);
 			phpCAS::LOG("Session ID: " . $session_id);
 			session_id($session_id);
             if (!isset($_SESSION)) {
@@ -1034,7 +1034,7 @@ class CASClient
 		$wrappedSamlSessionIndex = preg_replace('|<samlp:SessionIndex>|','',$tick[0][0]);
 		$ticket2logout = preg_replace('|</samlp:SessionIndex>|','',$wrappedSamlSessionIndex);
 		phpCAS::log("Ticket to logout: ".$ticket2logout);
-		$session_id = preg_replace('|-|','',$ticket2logout);
+		$session_id = preg_replace('/[^\w]/','',$ticket2logout);
 		phpCAS::log("Session id: ".$session_id);
 
 		// fix New session ID
