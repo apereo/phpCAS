@@ -513,6 +513,8 @@ class CASClient
             }
             // restore old session vars
             $_SESSION = $old_session;
+            // Redirect to location without ticket.
+            header('Location: '.$this->getURL());
 		}
 		
 		//activate session mechanism if desired
