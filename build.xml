@@ -2,8 +2,8 @@
 
   <property file="version.properties"/>
   <property file="build.properties"/>
-  <property name="upload.host" value="jasigch.princeton.edu" />
-  <property name="upload.remotedir" value="/jasig/htdocs/www/downloads/cas-clients/php" />
+  <property name="upload.host" value="jasig.princeton.edu" />
+  <property name="upload.remotedir" value="/jasig/htdocs/www.ja-sig.org/downloads/cas-clients/php" />
 
   <taskdef name="doxygen" 
            classname="org.doxygen.tools.DoxygenTask"
