@@ -34,3 +34,27 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+In addition, phpCAS ships with an integrated copy of domxml-php4-php5.php 
+(for compatibility with PHP5), written by Alexandre Alapetite, 
+http://alexandre.alapetite.net/cv/.
+
+domxml-php4-php5.php is distributed under the following licensing terms 
+(http://alexandre.alapetite.net/divers/apropos/#by-sa) :
+
+Copyright 2004, Licence: Creative Commons "Attribution-ShareAlike 2.0 France" 
+BY-SA (FR), http://creativecommons.org/licenses/by-sa/2.0/fr/:
+
+    * Attribution. You must give the original author credit
+    * Share Alike. If you alter, transform, or build upon this work, you may 
+      distribute the resulting work only under a license identical to this one
+    * The French law is authoritative
+    * Any of these conditions can be waived if you get permission from Alexandre 
+      Alapetite
+    * Please send to Alexandre Alapetite the modifications you make, in order to 
+      improve this file for the benefit of everybody
+
+If you want to distribute this code, please do it as a link to: 
+http://alexandre.alapetite.net/doc-alex/domxml-php4-php5/
