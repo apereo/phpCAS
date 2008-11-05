@@ -2060,182 +2060,6 @@ class CASClient
 	 */  
 
 
-	   // Processes an element and converts it to an array
-	   // utility function for convertXmlResponseToArray
-	   // Courtesy http://eusebius.developpez.com/php5dom/
-	
-	   // php4 variant (was not tested directly with PHP4 but only with domxml-php4-to-php5.php)
-
-function getElement4($dom_element, &$object_element) {
-
-    $object_element['name'] = 'cas:'.$dom_element->node_name();
-	
-    $object_element['textValue'] = trim($dom_element->first_child()->node_value());
-	
-    if ($dom_element->has_attributes()) {
-      $object_element['attributes'] = array();
-        foreach($dom_element->attributes() as $attName=>$dom_attribute) {
-          $object_element['attributes'][$attName] = $dom_attribute->value;
-        }
-    }
-	
-    if (sizeof($dom_element->child_nodes()) > 1) {
-      $object_element['children'] = array();
-      foreach($dom_element->child_nodes() as $dom_child) {
-        if ($dom_child->node_type() == XML_ELEMENT_NODE) {
-          $child_object = array();
-          $this->getElement4($dom_child, $child_object);
-          array_push($object_element['children'], $child_object);
-        }
-      }
-    }
-}
-
-// php5 variant (without zend.ze1_compatibility_mode)
-// the function can safely recurse
-function getElement5(&$dom_element, &$object_element) {
-
-    $object_element['name'] = $dom_element->nodeName;
-	
-    $object_element['textValue'] = trim($dom_element->firstChild->nodeValue);
-	
-    if ($dom_element->hasAttributes()) {
-      $object_element['attributes'] = array();
-        foreach($dom_element->attributes as $attName=>$dom_attribute) {
-          $object_element['attributes'][$attName] = $dom_attribute->value;
-        }
-    }
-	
-    if ($dom_element->childNodes->length > 1) {
-      $object_element['children'] = array();
-
-       foreach($dom_element->childNodes as $dom_child) {
-         if ($dom_child->nodeType == XML_ELEMENT_NODE) {
-           $child_object = array();
-           $this->getElement5($dom_child, &$child_object);
-           array_push($object_element['children'], $child_object);
-         }
-       }
-    }
-}
-
-// recursive utility function for getElement5_compatibility
- function processChild(&$child_object, &$name, &$textValue, &$attributes, &$nodeList)
- {
-   $child_object['name'] =  &$name;
-   $child_object['textValue'] =  &$textValue;
-   
-   $child_object['attributes'] = array();
-   if ($attributes) {
-     for ($j = 0; $j < $attributes->length; ++$j) {
-       $attName = $attributes->item($j)->nodeName;
-       $child_object['attributes'][$attName] = $attributes->item($j)->nodeValue;
-     }		
-   }
-   
-   $child_object['children'] = array();
-   for ($i = 0; $i < $nodeList->length; ++$i) {
-     if ( $nodeList->item($i)->nodeType == XML_ELEMENT_NODE) {
-       $child_object2 = array();
-       
-       $this->processChild(&$child_object2, &$nodeList->item($i)->nodeName, &$nodeList->item($i)->firstChild->nodeValue, & $nodeList->item($i)->attributes, & $nodeList->item($i)->childNodes);
-       
-       array_push($child_object['children'], $child_object2);
-     }			 
-   }
- }
-
-// php5 variant (with zend.ze1_compatibility_mode : cannot recurse directly like in getElement5)
-// so uses processChild
-function getElement5_compatibility(&$dom_element, &$object_element) {
-
-    $object_element['name'] = $dom_element->nodeName;
-	
-    $object_element['textValue'] = trim($dom_element->firstChild->nodeValue);
-	
-    if ($dom_element->hasAttributes()) {
-      $object_element['attributes'] = array();
-        foreach($dom_element->attributes as $attName=>$dom_attribute) {
-          $object_element['attributes'][$attName] = $dom_attribute->value;
-        }
-    }
-	
-
-    // here foreach($dom_element->childNodes as $dom_child) would fail
-    // (with zend.ze1_compatibility_mode), so we can't recurse
-    // directly as in getElement5()
-
-    if ($dom_element->childNodes->length > 1) {
-      $object_element['children'] = array();
-
-      $nodeList = &$dom_element->childNodes;
-
-      for ($i = 0; $i < $nodeList->length; ++$i) {
-        if ( $nodeList->item($i)->nodeType == XML_ELEMENT_NODE) {
-          $child_object = array();
-	  
-	  $this->processChild(&$child_object, &$nodeList->item($i)->nodeName, &$nodeList->item($i)->firstChild->nodeValue, & $nodeList->item($i)->attributes, & $nodeList->item($i)->childNodes);
-	  
-	  array_push($object_element['children'], $child_object);
-	}
-      }
-    }
-}        
-
-// Converts the XML messages sent back by CAS server (CAS V2) to an array, so that it can be easily tested in algorithms).
-// abstracts the differences in DOM parsing between PHP 4 and PHP 5
- function convertXmlResponseToArray(&$text_response)
- {
-   phpCAS::traceBegin();
-   
-   $response_array= array();
-   
-   if (version_compare(PHP_VERSION,'5','>=')) {	
-
-     // if in PHP5
-
-     // read the response of the CAS server into a DOM object
-     #		   $dom = new DOMDocument();
-     $dom = &new DOMDocument();
-     if ( $dom->loadXML($text_response)) {
-
-       // if the message was parsed
-       # if ( !($tree_response = $dom->documentElement)) {
-       if ($tree_response = & $dom->documentElement) {
-
-	 // differentiate between when zend.ze1_compatibility_mode is
-	 // on or off, as some errors would be displayed in PHP 5.2 on
-	 // dom functions if we used getElement5 as such.
-	 if(ini_get('zend.ze1_compatibility_mode')) {
-
-	   $this->getElement5_compatibility(&$tree_response,&$response_array);
-
-	 } else {
-
-	   // do the conversion to an array
-	   $this->getElement5(&$tree_response,&$response_array);
-
-	 }
-       }
-     }		      
-   }
-   else {
-     // we're in PHP4
-
-     // parse the XML response with DOM
-     if ($dom = &domxml_open_mem($text_response)) {
-
-       // if document parsed allright
-       if ( ($tree_response = $dom->document_element())) {
-	 // convert it to an array structure
-	 $this->getElement4($tree_response,&$response_array);
-       }
-     }
-   }
-   phpCAS::traceEnd(TRUE);
-   return $response_array;
- }
-		
 	/**
 	 * This method is used to validate a PT; halt on failure
 	 * 
@@ -2456,6 +2280,227 @@ function getElement5_compatibility(&$dom_element, &$object_element) {
 		exit();
 		}
 	
+	// ########################################################################
+	//  DOM processing
+	// ########################################################################
+		
+	/**
+	 * Processes an element and converts it to an array
+	 *  
+	 * @param $dom_element
+	 * @param $object_element
+	 * @return unknown_type
+	 * 
+	 * Utility function for convertXmlResponseToArray().
+	 * Courtesy http://eusebius.developpez.com/php5dom/.
+	 * php4 variant (was not tested directly with PHP4 but only with domxml-php4-to-php5.php).
+	 */
+		function getElement4($dom_element, &$object_element) {
+
+			$object_element['name'] = 'cas:'.$dom_element->node_name();
+
+			$object_element['textValue'] = trim($dom_element->first_child()->node_value());
+
+			if ($dom_element->has_attributes()) {
+				$object_element['attributes'] = array();
+				foreach($dom_element->attributes() as $attName=>$dom_attribute) {
+					$object_element['attributes'][$attName] = $dom_attribute->value;
+				}
+			}
+
+			if (sizeof($dom_element->child_nodes()) > 1) {
+				$object_element['children'] = array();
+				foreach($dom_element->child_nodes() as $dom_child) {
+					if ($dom_child->node_type() == XML_ELEMENT_NODE) {
+						$child_object = array();
+						$this->getElement4($dom_child, $child_object);
+						array_push($object_element['children'], $child_object);
+					}
+				}
+			}
+		}
+
+		//
+		/**
+		* Processes an element and converts it to an array
+		* 
+		* @param $dom_element
+		* @param $object_element
+		* @return unknown_type
+		* 
+		* Utility function for convertXmlResponseToArray().
+		* Courtesy http://eusebius.developpez.com/php5dom/.
+		* php5 variant (without zend.ze1_compatibility_mode).
+		* This function can safely recurse
+		*/
+		function getElement5(&$dom_element, &$object_element) {
+
+			$object_element['name'] = $dom_element->nodeName;
+
+			$object_element['textValue'] = trim($dom_element->firstChild->nodeValue);
+
+			if ($dom_element->hasAttributes()) {
+				$object_element['attributes'] = array();
+				foreach($dom_element->attributes as $attName=>$dom_attribute) {
+					$object_element['attributes'][$attName] = $dom_attribute->value;
+				}
+			}
+
+			if ($dom_element->childNodes->length > 1) {
+				$object_element['children'] = array();
+
+				foreach($dom_element->childNodes as $dom_child) {
+					if ($dom_child->nodeType == XML_ELEMENT_NODE) {
+						$child_object = array();
+						$this->getElement5($dom_child, &$child_object);
+						array_push($object_element['children'], $child_object);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Recursive utility function for getElement5_compatibility()
+		 * 
+		 * @param $child_object
+		 * @param $name
+		 * @param $textValue
+		 * @param $attributes
+		 * @param $nodeList
+		 * @return unknown_type
+		 */
+		function processChild(&$child_object, &$name, &$textValue, &$attributes, &$nodeList)
+		{
+			$child_object['name'] =  &$name;
+			$child_object['textValue'] =  &$textValue;
+			 
+			$child_object['attributes'] = array();
+			if ($attributes) {
+				for ($j = 0; $j < $attributes->length; ++$j) {
+					$attName = $attributes->item($j)->nodeName;
+					$child_object['attributes'][$attName] = $attributes->item($j)->nodeValue;
+				}
+			}
+			 
+			$child_object['children'] = array();
+			for ($i = 0; $i < $nodeList->length; ++$i) {
+				if ( $nodeList->item($i)->nodeType == XML_ELEMENT_NODE) {
+					$child_object2 = array();
+					 
+					$this->processChild(&$child_object2, &$nodeList->item($i)->nodeName, &$nodeList->item($i)->firstChild->nodeValue, & $nodeList->item($i)->attributes, & $nodeList->item($i)->childNodes);
+					 
+					array_push($child_object['children'], $child_object2);
+				}
+			}
+		}
+
+		/**
+		 * Processes an element and converts it to an array
+		 * 
+		 * @param $dom_element
+		 * @param $object_element
+		 * @return unknown_type
+		 * 
+		 * Utility function for convertXmlResponseToArray()
+		 * Courtesy http://eusebius.developpez.com/php5dom/
+		 * php5 variant (with zend.ze1_compatibility_mode : cannot recurse directly like in getElement5()
+		 * so uses processChild()).
+		 */
+		function getElement5_compatibility(&$dom_element, &$object_element) {
+
+			$object_element['name'] = $dom_element->nodeName;
+
+			$object_element['textValue'] = trim($dom_element->firstChild->nodeValue);
+
+			if ($dom_element->hasAttributes()) {
+				$object_element['attributes'] = array();
+				foreach($dom_element->attributes as $attName=>$dom_attribute) {
+					$object_element['attributes'][$attName] = $dom_attribute->value;
+				}
+			}
+
+
+			// here foreach($dom_element->childNodes as $dom_child) would fail
+			// (with zend.ze1_compatibility_mode), so we can't recurse
+			// directly as in getElement5()
+
+			if ($dom_element->childNodes->length > 1) {
+				$object_element['children'] = array();
+
+				$nodeList = &$dom_element->childNodes;
+
+				for ($i = 0; $i < $nodeList->length; ++$i) {
+					if ( $nodeList->item($i)->nodeType == XML_ELEMENT_NODE) {
+						$child_object = array();
+						 
+						$this->processChild(&$child_object, &$nodeList->item($i)->nodeName, &$nodeList->item($i)->firstChild->nodeValue, & $nodeList->item($i)->attributes, & $nodeList->item($i)->childNodes);
+						 
+						array_push($object_element['children'], $child_object);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Converts the XML messages sent back by CAS server (CAS V2) to an array, so that it can be easily tested in algorithms).
+		 * 
+		 * @param $text_response
+		 * @return unknown_type
+
+		 * Abstracts the differences in DOM parsing between PHP 4 and PHP 5
+		 */
+		function convertXmlResponseToArray(&$text_response)
+		{
+			phpCAS::traceBegin();
+			 
+			$response_array= array();
+			 
+			if (version_compare(PHP_VERSION,'5','>=')) {
+
+				// if in PHP5
+
+				// read the response of the CAS server into a DOM object
+				#		   $dom = new DOMDocument();
+				$dom = &new DOMDocument();
+				if ( $dom->loadXML($text_response)) {
+
+					// if the message was parsed
+					# if ( !($tree_response = $dom->documentElement)) {
+					if ($tree_response = & $dom->documentElement) {
+
+						// differentiate between when zend.ze1_compatibility_mode is
+						// on or off, as some errors would be displayed in PHP 5.2 on
+						// dom functions if we used getElement5 as such.
+						if(ini_get('zend.ze1_compatibility_mode')) {
+
+							$this->getElement5_compatibility(&$tree_response,&$response_array);
+
+						} else {
+
+							// do the conversion to an array
+							$this->getElement5(&$tree_response,&$response_array);
+
+						}
+					}
+				}
+			}
+			else {
+				// we're in PHP4
+
+				// parse the XML response with DOM
+				if ($dom = &domxml_open_mem($text_response)) {
+
+					// if document parsed allright
+					if ( ($tree_response = $dom->document_element())) {
+						// convert it to an array structure
+						$this->getElement4($tree_response,&$response_array);
+					}
+				}
+			}
+			phpCAS::traceEnd(TRUE);
+			return $response_array;
+		}
+		
 	/** @} */
 }
 
