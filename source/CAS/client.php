@@ -497,6 +497,11 @@ class CASClient
 		
 		phpCAS::traceBegin();
 		
+		// the redirect header() call and DOM parsing code from domxml-php4-php5.php won't work in PHP4 compatibility mode
+		if (version_compare(PHP_VERSION,'5','>=') && ini_get('zend.ze1_compatibility_mode')) {
+			phpCAS::error('phpCAS cannot support zend.ze1_compatibility_mode. Sorry.');
+		}
+
 		if (!$this->isLogoutRequest() && !empty($_GET['ticket']) && $start_session) {
             // copy old session vars and destroy the current session
             if (!isset($_SESSION)) {
