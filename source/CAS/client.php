@@ -1220,7 +1220,7 @@ class CASClient
 			case CAS_VERSION_2_0:
 				
 				// parse the XML serviceResponse message
-				$this->validateServiceResponseCAS2(&$text_response, 'ST', &$tree_response);
+				$this->validateAuthenticationSuccess(&$text_response, 'ST', &$tree_response);
 				
 				break;
 		}
@@ -1667,44 +1667,32 @@ class CASClient
 			return FALSE;
 		}
 		
+		
+		// read the response of the CAS server into a DOM object
+		$response_array = array();
+		$this->convertXmlResponseToArray(&$cas_response, &$response_array);
+
 		$bad_response = FALSE;
-		
-		if ( !$bad_response ) {
-			// read the response of the CAS server into a DOM object
-			if ( !($dom = @domxml_open_mem($cas_response))) {
-				phpCAS::trace('domxml_open_mem() failed');
-				// read failed
-				$bad_response = TRUE;
-			} 
-		}
-		
-		if ( !$bad_response ) {
-			// read the root node of the XML tree
-			if ( !($root = $dom->document_element()) ) {
-				phpCAS::trace('document_element() failed');
-				// read failed
-				$bad_response = TRUE;
-			} 
-		}
+			
 		
 		if ( !$bad_response ) {
 			// insure that tag name is 'serviceResponse'
-			if ( $root->node_name() != 'serviceResponse' ) {
-				phpCAS::trace('node_name() failed');
-				// bad root node
+			if ( $response_array['name'] != 'cas:serviceResponse') 
+			{
+				phpCAS::trace('bad XML root node (should be `cas:serviceResponse\' instead of `'.$response_array['name'].'\'');
 				$bad_response = TRUE;
 			} 
 		}
 		
 		if ( !$bad_response ) {
 			// look for a proxySuccess tag
-			if ( sizeof($arr = $root->get_elements_by_tagname("proxySuccess")) != 0) {
+			if ( $response_array['children'][0]['name'] == 'cas:proxySuccess') {
 				// authentication succeded, look for a proxyTicket tag
-				if ( sizeof($arr = $root->get_elements_by_tagname("proxyTicket")) != 0) {
+				if ( $response_array['children'][0]['children'][0]['name'] == 'cas:proxyTicket') {
 					$err_code = PHPCAS_SERVICE_OK;
 					$err_msg = '';
-					phpCAS::trace('original PT: '.trim($arr[0]->get_content()));
-					$pt = trim($arr[0]->get_content());
+					phpCAS::trace('original PT: '.trim($response_array['children'][0]['children'][0]['textValue']));
+					$pt = trim($response_array['children'][0]['children'][0]['textValue']);
 					phpCAS::traceEnd($pt);
 					return $pt;
 				} else {
@@ -1712,13 +1700,13 @@ class CASClient
 				}
 			} 
 			// look for a proxyFailure tag
-			else if ( sizeof($arr = $root->get_elements_by_tagname("proxyFailure")) != 0) {
+			else if ( $response_array['children'][0]['name'] == 'cas:proxyFailure') {
 				// authentication failed, extract the error
 				$err_code = PHPCAS_SERVICE_PT_FAILURE;
 				$err_msg = 'PT retrieving failed (code=`'
-					.$arr[0]->get_attribute('code')
+					.$response_array['children'][0]['attributes']['code']
 					.'\', message=`'
-					.trim($arr[0]->get_content())
+					.trim($response_array['children'][0]['children'][0]['textValue'])
 					.'\')';
 				phpCAS::traceEnd(FALSE);
 				return FALSE;
@@ -2027,7 +2015,7 @@ class CASClient
 		 * 
 		 * Utility function both for validateST() and validatePT()
 		 */
-		function validateServiceResponseCAS2(&$text_response, $ticket_type, &$response_array)
+		function validateAuthenticationSuccess(&$text_response, $ticket_type, &$response_array)
 		{
 			phpCAS::traceBegin();
 
@@ -2035,8 +2023,7 @@ class CASClient
 			// and even PHP5 with zend.ze1_compatibility_mode on
 			// so we don't use DOM classes instances but instead arrays representing the content
 
-			$response_array=$this->convertXmlResponseToArray(&$text_response, &$response_array);
-			print_r($response_array);
+			$this->convertXmlResponseToArray(&$text_response, &$response_array);
 
 			$problem_found = 0;
 
@@ -2129,7 +2116,7 @@ class CASClient
 				TRUE/*$no_response*/);
 		}
 		
-		$this->validateServiceResponseCAS2(&$text_response, 'PT', &$tree_response);
+		$this->validateAuthenticationSuccess(&$text_response, 'PT', &$tree_response);
 		
 		// at this step, PT has been validated and $this->_user has been set,
 		
@@ -2288,7 +2275,7 @@ class CASClient
 	/**
 	 * Processes an element and converts it to an array
 	 *  
-	 * @param php4DOMNode $dom_element dom tree (from domxml-php4-to-php5)
+	 * @param php4DOMNode $dom_element dom tree
 	 * @param array $object_element return value
 	 * 
 	 * Recursive utility function for convertXmlResponseToArray().
@@ -2507,7 +2494,7 @@ class CASClient
 			}
 			else {
 				// we're in PHP4
-				// parse the XML response with DOM (from domxml-php4-to-php5)
+				// parse the XML response with php4 DOM lib
 				if ($dom = &domxml_open_mem($text_response)) {
 
 					// if document parsed allright
