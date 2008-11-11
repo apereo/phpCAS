@@ -1170,13 +1170,13 @@ class CASClient
 	 * 
 	 * @param $validate_url the URL of the request to the CAS server.
 	 * @param $text_response the response of the CAS server, as is (XML text).
-	 * @param $tree_response the response of the CAS server, as a DOM XML tree.
+	 * @param $tree_response the response of the CAS server, as a DOM-like XML tree (if CAS 2).
 	 *
 	 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
 	 *
 	 * @private
 	 */
-	function validateST($validate_url,&$text_response,&$tree_response)
+	function validateST($validate_url, &$text_response, &$tree_response)
 		{
 		phpCAS::traceBegin();
 		// build the URL to validate the ticket
@@ -1218,65 +1218,10 @@ class CASClient
 				$this->setUser(trim($arr[1]));
 				break;
 			case CAS_VERSION_2_0:
-				// read the response of the CAS server into a DOM object
-				if ( !($dom = domxml_open_mem($text_response))) {
-					phpCAS::trace('domxml_open_mem() failed');
-					$this->authError('ST not validated',
-						$validate_url,
-						FALSE/*$no_response*/,
-						TRUE/*$bad_response*/,
-						$text_response);
-				}
-				// read the root node of the XML tree
-				if ( !($tree_response = $dom->document_element()) ) {
-					phpCAS::trace('document_element() failed');
-					$this->authError('ST not validated',
-						$validate_url,
-						FALSE/*$no_response*/,
-						TRUE/*$bad_response*/,
-						$text_response);
-				}
-				// insure that tag name is 'serviceResponse'
-				if ( $tree_response->node_name() != 'serviceResponse' ) {
-					phpCAS::trace('bad XML root node (should be `serviceResponse\' instead of `'.$tree_response->node_name().'\'');
-					$this->authError('ST not validated',
-						$validate_url,
-						FALSE/*$no_response*/,
-						TRUE/*$bad_response*/,
-						$text_response);
-				}
-				if ( sizeof($success_elements = $tree_response->get_elements_by_tagname("authenticationSuccess")) != 0) {
-					// authentication succeded, extract the user name
-					if ( sizeof($user_elements = $success_elements[0]->get_elements_by_tagname("user")) == 0) {
-						phpCAS::trace('<authenticationSuccess> found, but no <user>');
-						$this->authError('ST not validated',
-							$validate_url,
-							FALSE/*$no_response*/,
-							TRUE/*$bad_response*/,
-							$text_response);
-					}
-					$user = trim($user_elements[0]->get_content());
-					phpCAS::trace('user = `'.$user);
-					$this->setUser($user);
-					
-				} else if ( sizeof($failure_elements = $tree_response->get_elements_by_tagname("authenticationFailure")) != 0) {
-					phpCAS::trace('<authenticationFailure> found');
-					// authentication failed, extract the error code and message
-					$this->authError('ST not validated',
-						$validate_url,
-						FALSE/*$no_response*/,
-						FALSE/*$bad_response*/,
-						$text_response,
-						$failure_elements[0]->get_attribute('code')/*$err_code*/,
-						trim($failure_elements[0]->get_content())/*$err_msg*/);
-				} else {
-					phpCAS::trace('neither <authenticationSuccess> nor <authenticationFailure> found');
-					$this->authError('ST not validated',
-						$validate_url,
-						FALSE/*$no_response*/,
-						TRUE/*$bad_response*/,
-						$text_response);
-				}
+				
+				// parse the XML serviceResponse message
+				$this->validateServiceResponseCAS2(&$text_response, 'ST', &$tree_response);
+				
 				break;
 		}
 		
@@ -1322,6 +1267,7 @@ class CASClient
 		}
 	
 	/** @} */
+
 	// ########################################################################
 	//  PGT
 	// ########################################################################
@@ -1331,7 +1277,7 @@ class CASClient
 	 */  
 	
 	/**
-	 * the Proxy Grnting Ticket given by the CAS server (empty otherwise). 
+	 * the Proxy Granting Ticket given by the CAS server (empty otherwise). 
 	 * Written by CASClient::setPGT(), read by CASClient::getPGT() and CASClient::hasPGT().
 	 *
 	 * @hideinitializer
@@ -1400,7 +1346,7 @@ class CASClient
 		}
 	
 	/**
-	 * This method returns TRUE when the CAs client is running i callback mode, 
+	 * This method returns TRUE when the CAs client is running in callback mode, 
 	 * FALSE otherwise.
 	 *
 	 * @return A boolean.
@@ -1634,17 +1580,30 @@ class CASClient
 	 * @param $validate_url the URL of the request to the CAS server.
 	 * @param $text_response the response of the CAS server, as is (XML text); result
 	 * of CASClient::validateST() or CASClient::validatePT().
-	 * @param $tree_response the response of the CAS server, as a DOM XML tree; result
-	 * of CASClient::validateST() or CASClient::validatePT().
+	 * @param $response_array the response of the CAS server, as an array tree; result
+	 * of CASClient::validateST() or CASClient::validatePT() (see convertXmlResponseToArray() 
+	 * for the format of the tree).
 	 *
 	 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
 	 *
 	 * @private
 	 */
-	function validatePGT(&$validate_url,$text_response,$tree_response)
+	function validatePGT(&$validate_url, $text_response, $response_array)
 		{
 		phpCAS::traceBegin();
-		if ( sizeof($arr = $tree_response->get_elements_by_tagname("proxyGrantingTicket")) == 0) {
+		
+		$found_pgt = 0;
+		
+		foreach ($response_array['children'][0]['children'] as $child) {
+			if ($child['name'] == 'cas:proxyGrantingTicket') {
+				$found_pgt = 1;
+				 
+				// PGT Iou transmitted, extract it
+				$pgt_iou = trim($child['textValue']);
+			}
+		}
+		
+		if ( ! $found_pgt) {
 			phpCAS::trace('<proxyGrantingTicket> not found');
 			// authentication succeded, but no PGT Iou was transmitted
 			$this->authError('Ticket validated but no PGT Iou transmitted',
@@ -1653,8 +1612,6 @@ class CASClient
 				FALSE/*$bad_response*/,
 				$text_response);
 		} else {
-			// PGT Iou transmitted, extract it
-			$pgt_iou = trim($arr[0]->get_content());
 			$pgt = $this->loadPGT($pgt_iou);
 			if ( $pgt == FALSE ) {
 				phpCAS::trace('could not load PGT');
@@ -1666,6 +1623,8 @@ class CASClient
 			}
 			$this->setPGT($pgt);
 		}
+		
+		
 		phpCAS::traceEnd(TRUE);
 		return TRUE;
 		}
@@ -2059,15 +2018,99 @@ class CASClient
 	 * @{
 	 */  
 
+		/**
+		 * validate an XML fragment for a serviceResponse (from a CAS 2 server)
+		 * 
+		 * @param $text_response XML fragment
+		 * @param $ticket_type either 'ST' or 'PT'
+		 * @param $response_array array to be filled with the parsed DOM-like tree
+		 * 
+		 * Utility function both for validateST() and validatePT()
+		 */
+		function validateServiceResponseCAS2(&$text_response, $ticket_type, &$response_array)
+		{
+			phpCAS::traceBegin();
 
+			// DOM parsing is problematic when we want to preserve PHP4 and PHP5 compatibility,
+			// and even PHP5 with zend.ze1_compatibility_mode on
+			// so we don't use DOM classes instances but instead arrays representing the content
+
+			$response_array=$this->convertXmlResponseToArray(&$text_response, &$response_array);
+			print_r($response_array);
+
+			$problem_found = 0;
+
+			// insure that tag name is 'serviceResponse'
+			if ( $response_array['name'] != 'cas:serviceResponse') 
+			{
+				phpCAS::trace('bad XML root node (should be `cas:serviceResponse\' instead of `'.$response_array['name'].'\'');
+				$problem_found = 1;
+			}
+
+			if ( (!$problem_found) &&  ($response_array['children'][0]['name'] == 'cas:authenticationSuccess') )
+			{
+				if ($response_array['children'][0]['children'][0]['name'] != 'cas:user' )
+				{
+					 phpCAS::trace('<authenticationSuccess> found, but no <user>');
+					 $problem_found = 1;
+				}
+			}
+			else
+			{
+				$problem_found = 1;
+			}
+
+			// if the response was as expected
+			if ( !$problem_found )
+			{
+				// there should be only two cases : authenticationSuccess or authenticationFailure
+				if ($response_array['children'][0]['name'] == 'cas:authenticationSuccess') 
+				{
+					// the user was authenticated succesfully, we've got a logname
+					$user = trim($response_array['children'][0]['children'][0]['textValue']);
+					phpCAS::trace('user = `'.$user);
+					$this->setUser($user);
+				} 
+				elseif ( $response_array['children'][0]['name'] == 'cas:authenticationFailure') 
+				{
+					phpCAS::trace('<authenticationFailure> found');
+					// authentication failed, extract the error code and message
+					$this->authError($ticket_type.' not validated',
+					$validate_url,
+					FALSE/*$no_response*/,
+					FALSE/*$bad_response*/,
+					$text_response,
+					$response_array['children'][0]['attributes']['code']/*$err_code*/,
+					trim($response_array['children'][0]['textValue'])/*$err_msg*/);
+				} else {
+					phpCAS::trace('neither <authenticationSuccess> nor <authenticationFailure> found');
+					$problem_found = 1;
+				}
+			}
+
+			// a problem occurred
+			if ($problem_found) 
+			{
+				$this->authError($ticket_type.' not validated',
+				    $validate_url,
+				    FALSE/*$no_response*/,
+				    TRUE/*$bad_response*/,
+				    $text_response);
+			}
+
+			phpCAS::traceEnd(TRUE);
+		}
 	/**
 	 * This method is used to validate a PT; halt on failure
-	 * 
+	 *
+	 * @param $validate_url proxyValidate URL
+	 * @param $text_response XML text retrieved from the validate URL
+	 * @param $tree_response array to be filled with the parsed DOM-like tree for the serviceResponse
 	 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
 	 *
 	 * @private
 	 */
-	function validatePT(&$validate_url,&$text_response,&$tree_response)
+	function validatePT(&$validate_url, &$text_response, &$tree_response)
 		{
 		phpCAS::traceBegin();
 		// build the URL to validate the ticket
@@ -2085,51 +2128,9 @@ class CASClient
 				$validate_url,
 				TRUE/*$no_response*/);
 		}
-
-		$response_array=$this->convertXmlResponseToArray(&$text_response);
-		print_r($response_array);
 		
-		$unknown_problem = 0;
-
-		// insure that tag name is 'serviceResponse'
-		if ( $response_array['name'] != 'cas:serviceResponse') {
-		  $unknown_problem = 1;
-		}
-
-		if ( (!$unknown_problem) &&  ($response_array['children'][0]['name'] == 'cas:authenticationSuccess') &&
-		     ($response_array['children'][0]['children'][0]['name'] != 'cas:user' )) {
-		  $unknown_problem = 1;
-		}
-
-		if ( !$unknown_problem )
-		  {
-		    // there should be only two cases : authenticationSuccess or authenticationFailure
-		    if ($response_array['children'][0]['name'] == 'cas:authenticationSuccess') {
-
-			$this->setUser($response_array['children'][0]['children'][0]['textValue']);
-			
-		    } elseif ( $response_array['children'][0]['name'] == 'cas:authenticationFailure') {
-		      // authentication succeded, extract the error code and message
-		      $this->authError('PT not validated',
-				       $validate_url,
-				       FALSE/*$no_response*/,
-				       FALSE/*$bad_response*/,
-				       $text_response,
-				       $response_array['children'][0]['attributes']['code']/*$err_code*/,
-				       $response_array['children'][0]['textValue']/*$err_msg*/);
-		    } else {
-		      $unknown_problem = 1;
-		    }
-		  }
-
-		if ($unknown_problem) {
-		  $this->authError('PT not validated',
-				   $validate_url,	
-				   FALSE/*$no_response*/,
-				   TRUE/*$bad_response*/,
-				   $text_response);
-		}	       
-
+		$this->validateServiceResponseCAS2(&$text_response, 'PT', &$tree_response);
+		
 		// at this step, PT has been validated and $this->_user has been set,
 		
 		phpCAS::traceEnd(TRUE);
@@ -2287,16 +2288,17 @@ class CASClient
 	/**
 	 * Processes an element and converts it to an array
 	 *  
-	 * @param $dom_element
-	 * @param $object_element
-	 * @return unknown_type
+	 * @param php4DOMNode $dom_element dom tree (from domxml-php4-to-php5)
+	 * @param array $object_element return value
 	 * 
-	 * Utility function for convertXmlResponseToArray().
+	 * Recursive utility function for convertXmlResponseToArray().
 	 * Courtesy http://eusebius.developpez.com/php5dom/.
 	 * php4 variant (was not tested directly with PHP4 but only with domxml-php4-to-php5.php).
 	 */
-		function getElement4($dom_element, &$object_element) {
+		function php4DOMNodeToArray($dom_element, &$object_element) {
 
+			phpCAS::traceBegin();
+			
 			$object_element['name'] = 'cas:'.$dom_element->node_name();
 
 			$object_element['textValue'] = trim($dom_element->first_child()->node_value());
@@ -2313,28 +2315,32 @@ class CASClient
 				foreach($dom_element->child_nodes() as $dom_child) {
 					if ($dom_child->node_type() == XML_ELEMENT_NODE) {
 						$child_object = array();
-						$this->getElement4($dom_child, $child_object);
+						$this->php4DOMNodeToArray($dom_child, $child_object);
 						array_push($object_element['children'], $child_object);
 					}
 				}
 			}
+			
+			phpCAS::traceEnd(TRUE);
 		}
 
 		//
 		/**
 		* Processes an element and converts it to an array
-		* 
+		*
 		* @param $dom_element
 		* @param $object_element
 		* @return unknown_type
-		* 
+		*
 		* Utility function for convertXmlResponseToArray().
 		* Courtesy http://eusebius.developpez.com/php5dom/.
 		* php5 variant (without zend.ze1_compatibility_mode).
 		* This function can safely recurse
 		*/
-		function getElement5(&$dom_element, &$object_element) {
+		function DOMNodeToArray(&$dom_element, &$object_element) {
 
+			phpCAS::traceBegin();
+			
 			$object_element['name'] = $dom_element->nodeName;
 
 			$object_element['textValue'] = trim($dom_element->firstChild->nodeValue);
@@ -2352,28 +2358,34 @@ class CASClient
 				foreach($dom_element->childNodes as $dom_child) {
 					if ($dom_child->nodeType == XML_ELEMENT_NODE) {
 						$child_object = array();
-						$this->getElement5($dom_child, &$child_object);
+						$this->DOMNodeToArray($dom_child, &$child_object);
 						array_push($object_element['children'], $child_object);
 					}
 				}
 			}
+			
+			phpCAS::traceEnd(TRUE);
 		}
 
 		/**
-		 * Recursive utility function for getElement5_compatibility()
+		 * Recursive utility function for DOMNodeToArray_PHP4_compatibility()
+		 *
+		 * @param array $child_object return value
+		 * @param $name node name
+		 * @param $textValue node value
+		 * @param $attributes node attributes
+		 * @param $nodeList node children
 		 * 
-		 * @param $child_object
-		 * @param $name
-		 * @param $textValue
-		 * @param $attributes
-		 * @param $nodeList
-		 * @return unknown_type
+		 * Will apply to the DOM node contents passed as args instead of directly to the DOM node, to avoid recursion problems
 		 */
-		function processChild(&$child_object, &$name, &$textValue, &$attributes, &$nodeList)
+		function DOMNodeContentsToArray(&$child_object, &$name, &$textValue, &$attributes, &$nodeList)
 		{
+			// phpCAS::traceBegin();
+			phpCAS::log('-> DOMNodeContentsToArray()');
+
 			$child_object['name'] =  &$name;
 			$child_object['textValue'] =  &$textValue;
-			 
+
 			$child_object['attributes'] = array();
 			if ($attributes) {
 				for ($j = 0; $j < $attributes->length; ++$j) {
@@ -2381,126 +2393,133 @@ class CASClient
 					$child_object['attributes'][$attName] = $attributes->item($j)->nodeValue;
 				}
 			}
-			 
+
 			$child_object['children'] = array();
 			for ($i = 0; $i < $nodeList->length; ++$i) {
 				if ( $nodeList->item($i)->nodeType == XML_ELEMENT_NODE) {
 					$child_object2 = array();
-					 
-					$this->processChild(&$child_object2, &$nodeList->item($i)->nodeName, &$nodeList->item($i)->firstChild->nodeValue, & $nodeList->item($i)->attributes, & $nodeList->item($i)->childNodes);
-					 
+
+					// recurse
+					$this->DOMNodeContentsToArray(&$child_object2, &$nodeList->item($i)->nodeName, &$nodeList->item($i)->firstChild->nodeValue, & $nodeList->item($i)->attributes, & $nodeList->item($i)->childNodes);
+
 					array_push($child_object['children'], $child_object2);
 				}
 			}
+			//phpCAS::traceEnd(TRUE);
+			phpCAS::log('<- DOMNodeContentsToArray()');
 		}
 
 		/**
 		 * Processes an element and converts it to an array
-		 * 
-		 * @param $dom_element
-		 * @param $object_element
+		 *
+		 * @param DOMElement $dom_element
+		 * @param array $object_element return value
 		 * @return unknown_type
-		 * 
+		 *
 		 * Utility function for convertXmlResponseToArray()
 		 * Courtesy http://eusebius.developpez.com/php5dom/
-		 * php5 variant (with zend.ze1_compatibility_mode : cannot recurse directly like in getElement5()
-		 * so uses processChild()).
+		 * php5 variant when zend.ze1_compatibility_mode : cannot recurse directly like in DOMNodeToArray()
+		 * so uses DOMNodeContentsToArray()).
 		 */
-		function getElement5_compatibility(&$dom_element, &$object_element) {
+		function DOMNodeToArray_PHP4_compatibility(&$dom_element, &$object_element) {
 
-			$object_element['name'] = $dom_element->nodeName;
-
-			$object_element['textValue'] = trim($dom_element->firstChild->nodeValue);
-
-			if ($dom_element->hasAttributes()) {
-				$object_element['attributes'] = array();
-				foreach($dom_element->attributes as $attName=>$dom_attribute) {
-					$object_element['attributes'][$attName] = $dom_attribute->value;
-				}
-			}
-
-
-			// here foreach($dom_element->childNodes as $dom_child) would fail
-			// (with zend.ze1_compatibility_mode), so we can't recurse
-			// directly as in getElement5()
-
-			if ($dom_element->childNodes->length > 1) {
-				$object_element['children'] = array();
-
-				$nodeList = &$dom_element->childNodes;
-
-				for ($i = 0; $i < $nodeList->length; ++$i) {
-					if ( $nodeList->item($i)->nodeType == XML_ELEMENT_NODE) {
-						$child_object = array();
-						 
-						$this->processChild(&$child_object, &$nodeList->item($i)->nodeName, &$nodeList->item($i)->firstChild->nodeValue, & $nodeList->item($i)->attributes, & $nodeList->item($i)->childNodes);
-						 
-						array_push($object_element['children'], $child_object);
-					}
-				}
-			}
+			// this won't work with php4 compatibility
+			// phpCAS::traceBegin();
+			phpCAS::log('-> DOMNodeToArray_PHP4_compatibility()');
+			
+			$this->DOMNodeContentsToArray(&$object_element, 
+			                              $dom_element->nodeName, 
+			                              trim($dom_element->firstChild->nodeValue), 
+			                              &$dom_element->attributes, 
+			                              &$dom_element->childNodes);
+			                              
+			// this won't work with php4 compatibility
+			//phpCAS::traceEnd(TRUE);
+			phpCAS::log('<- DOMNodeToArray_PHP4_compatibility()');
 		}
 
 		/**
 		 * Converts the XML messages sent back by CAS server (CAS V2) to an array, so that it can be easily tested in algorithms).
-		 * 
-		 * @param $text_response
-		 * @return unknown_type
-
+		 *
+		 * @param $text_response XML fragment
+		 * @param $response_array array to be filled with the parsed DOM-like tree
+		 *
 		 * Abstracts the differences in DOM parsing between PHP 4 and PHP 5
-		 */
-		function convertXmlResponseToArray(&$text_response)
+		*/
+		// Whenever passed an XML fragment of the form :
+		//  <cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+		//	 <cas:authenticationSuccess>
+		//		<cas:user>a_logname</cas:user>
+		//	 </cas:authenticationSuccess>
+		//  </cas:serviceResponse>
+		// will return an array in the form of :
+		//  Array
+		//  (
+		//    [name] => cas:serviceResponse
+		//    [textValue] =>
+		//    [children] => Array
+		//        (
+		//            [0] => Array
+		//                (
+		//                    [name] => cas:authenticationSuccess
+		//                    [textValue] =>
+		//                    [children] => Array
+		//                        (
+		//                            [0] => Array
+		//                                (
+		//                                    [name] => cas:user
+		//                                    [textValue] => a_logname
+		//                                )
+		//
+		//                        )
+		//
+		//                )
+		//
+		//        )
+		//
+		//   )
+
+		function convertXmlResponseToArray(&$text_response, &$response_array)
 		{
 			phpCAS::traceBegin();
-			 
-			$response_array= array();
-			 
+
 			if (version_compare(PHP_VERSION,'5','>=')) {
-
 				// if in PHP5
-
 				// read the response of the CAS server into a DOM object
-				#		   $dom = new DOMDocument();
 				$dom = &new DOMDocument();
 				if ( $dom->loadXML($text_response)) {
 
 					// if the message was parsed
-					# if ( !($tree_response = $dom->documentElement)) {
 					if ($tree_response = & $dom->documentElement) {
 
+					    // do the conversion to an array
+					
 						// differentiate between when zend.ze1_compatibility_mode is
 						// on or off, as some errors would be displayed in PHP 5.2 on
-						// dom functions if we used getElement5 as such.
+						// dom functions if we used DOMNodeToArray as such.
 						if(ini_get('zend.ze1_compatibility_mode')) {
-
-							$this->getElement5_compatibility(&$tree_response,&$response_array);
-
+							$this->DOMNodeToArray_PHP4_compatibility(&$tree_response,&$response_array);
 						} else {
-
-							// do the conversion to an array
-							$this->getElement5(&$tree_response,&$response_array);
-
+							$this->DOMNodeToArray(&$tree_response,&$response_array);
 						}
 					}
 				}
 			}
 			else {
 				// we're in PHP4
-
-				// parse the XML response with DOM
+				// parse the XML response with DOM (from domxml-php4-to-php5)
 				if ($dom = &domxml_open_mem($text_response)) {
 
 					// if document parsed allright
 					if ( ($tree_response = $dom->document_element())) {
 						// convert it to an array structure
-						$this->getElement4($tree_response,&$response_array);
+						$this->php4DOMNodeToArray($tree_response,&$response_array);
 					}
 				}
 			}
 			phpCAS::traceEnd(TRUE);
-			return $response_array;
 		}
-		
+
 	/** @} */
 }
 
