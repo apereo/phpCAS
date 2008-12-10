@@ -1956,6 +1956,7 @@ class CASClient
 	 * 
 	 * @param $url a string giving the URL of the service, including the mailing box
 	 * for IMAP URLs, as accepted by imap_open().
+	 * @param $service a string giving for CAS retrieve Proxy ticket
 	 * @param $flags options given to imap_open().
 	 * @param $err_code an error code Possible values are PHPCAS_SERVICE_OK (on
 	 * success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE,
@@ -1969,11 +1970,11 @@ class CASClient
 	 *
 	 * @public
 	 */
-	function serviceMail($url,$flags,&$err_code,&$err_msg,&$pt)
+	function serviceMail($url,$service,$flags,&$err_code,&$err_msg,&$pt)
 		{
 		phpCAS::traceBegin();
 		// at first retrieve a PT
-		$pt = $this->retrievePT($target_service,$err_code,$output);
+		$pt = $this->retrievePT($service,$err_code,$output);
 		
 		$stream = FALSE;
 		
