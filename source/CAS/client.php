@@ -519,7 +519,7 @@ class CASClient
             // restore old session vars
             $_SESSION = $old_session;
             // Redirect to location without ticket.
-            header('Location: '.$this->getURL());
+            //header('Location: '.$this->getURL());
 		}
 		
 		//activate session mechanism if desired
@@ -799,7 +799,8 @@ class CASClient
 			phpCAS::trace('user was already authenticated, no need to look for tickets');
 			$res = TRUE;
 		} 
-		elseif ( $this->hasST() ) {
+		else {
+		  if ( $this->hasST() ) {
 			// if a Service Ticket was given, validate it
 			phpCAS::trace('ST `'.$this->getST().'\' is present');
 			$this->validateST($validate_url,$text_response,$tree_response); // if it fails, it halts
@@ -828,6 +829,13 @@ class CASClient
 		else {
 			// no ticket given, not authenticated
 			phpCAS::trace('no ticket found');
+		}
+		  if ($res) {
+		    // if called with a ticket parameter, we need to redirect to the app without the ticket so that CAS-ification is transparent to the browser (for later POSTS)
+		    // most of the checks and errors should have been made now, so we're safe for redirect without masking error messages.
+		    header('Location: '.$this->getURL());
+		    phpCAS::log( "Prepare redirect to : ".$this->getURL() );
+		  }
 		}
 		
 		phpCAS::traceEnd($res);
