@@ -509,6 +509,7 @@ class CASClient
             }
             $old_session = $_SESSION;
             session_destroy();
+            
             // set up a new session, of name based on the ticket
 			$session_id = preg_replace('/[^\w]/','',$_GET['ticket']);
 			phpCAS::LOG("Session ID: " . $session_id);
@@ -518,15 +519,15 @@ class CASClient
             }
             // restore old session vars
             $_SESSION = $old_session;
-            // Redirect to location without ticket.
-            //header('Location: '.$this->getURL());
+            
 		}
 		
-		//activate session mechanism if desired
+		// activate session mechanism if desired
 		if (!$this->isLogoutRequest() && $start_session) {
 			session_start();
 		}
 		
+		// are we in proxy mode ?
 		$this->_proxy = $proxy;
 		
 		//check version
@@ -546,29 +547,29 @@ class CASClient
 		}
 		$this->_server['version'] = $server_version;
 		
-		//check hostname
+		// check hostname
 		if ( empty($server_hostname) 
 				|| !preg_match('/[\.\d\-abcdefghijklmnopqrstuvwxyz]*/',$server_hostname) ) {
 			phpCAS::error('bad CAS server hostname (`'.$server_hostname.'\')');
 		}
 		$this->_server['hostname'] = $server_hostname;
 		
-		//check port
+		// check port
 		if ( $server_port == 0 
 			|| !is_int($server_port) ) {
 			phpCAS::error('bad CAS server port (`'.$server_hostname.'\')');
 		}
 		$this->_server['port'] = $server_port;
 		
-		//check URI
+		// check URI
 		if ( !preg_match('/[\.\d\-_abcdefghijklmnopqrstuvwxyz\/]*/',$server_uri) ) {
 			phpCAS::error('bad CAS server URI (`'.$server_uri.'\')');
 		}
-		//add leading and trailing `/' and remove doubles      
+		// add leading and trailing `/' and remove doubles      
 		$server_uri = preg_replace('/\/\//','/','/'.$server_uri.'/');
 		$this->_server['uri'] = $server_uri;
 		
-		//set to callback mode if PgtIou and PgtId CGI GET parameters are provided 
+		// set to callback mode if PgtIou and PgtId CGI GET parameters are provided 
 		if ( $this->isProxy() ) {
 			$this->setCallbackMode(!empty($_GET['pgtIou'])&&!empty($_GET['pgtId']));
 		}
@@ -783,63 +784,63 @@ class CASClient
 	 * This method is called to check if the user is authenticated (previously or by
 	 * tickets given in the URL).
 	 *
-	 * @return TRUE when the user is authenticated.
+	 * @return TRUE when the user is authenticated. Also may redirect to the same URL without the ticket.
 	 *
 	 * @public
 	 */
 	function isAuthenticated()
 		{
-		phpCAS::traceBegin();
-		$res = FALSE;
-		$validate_url = '';
-		
-		if ( $this->wasPreviouslyAuthenticated() ) {
-			// the user has already (previously during the session) been 
-			// authenticated, nothing to be done.
-			phpCAS::trace('user was already authenticated, no need to look for tickets');
-			$res = TRUE;
-		} 
-		else {
-		  if ( $this->hasST() ) {
-			// if a Service Ticket was given, validate it
-			phpCAS::trace('ST `'.$this->getST().'\' is present');
-			$this->validateST($validate_url,$text_response,$tree_response); // if it fails, it halts
-			phpCAS::trace('ST `'.$this->getST().'\' was validated');
-			if ( $this->isProxy() ) {
-				$this->validatePGT($validate_url,$text_response,$tree_response); // idem
-				phpCAS::trace('PGT `'.$this->getPGT().'\' was validated');
-				$_SESSION['phpCAS']['pgt'] = $this->getPGT();
+			phpCAS::traceBegin();
+			$res = FALSE;
+			$validate_url = '';
+
+			if ( $this->wasPreviouslyAuthenticated() ) {
+				// the user has already (previously during the session) been
+				// authenticated, nothing to be done.
+				phpCAS::trace('user was already authenticated, no need to look for tickets');
+				$res = TRUE;
 			}
-			$_SESSION['phpCAS']['user'] = $this->getUser();
-			$res = TRUE;
-		}
-		elseif ( $this->hasPT() ) {
-			// if a Proxy Ticket was given, validate it
-			phpCAS::trace('PT `'.$this->getPT().'\' is present');
-			$this->validatePT($validate_url,$text_response,$tree_response); // note: if it fails, it halts
-			phpCAS::trace('PT `'.$this->getPT().'\' was validated');
-			if ( $this->isProxy() ) {
-				$this->validatePGT($validate_url,$text_response,$tree_response); // idem
-				phpCAS::trace('PGT `'.$this->getPGT().'\' was validated');
-				$_SESSION['phpCAS']['pgt'] = $this->getPGT();
+			else {
+				if ( $this->hasST() ) {
+					// if a Service Ticket was given, validate it
+					phpCAS::trace('ST `'.$this->getST().'\' is present');
+					$this->validateST($validate_url,$text_response,$tree_response); // if it fails, it halts
+					phpCAS::trace('ST `'.$this->getST().'\' was validated');
+					if ( $this->isProxy() ) {
+						$this->validatePGT($validate_url,$text_response,$tree_response); // idem
+						phpCAS::trace('PGT `'.$this->getPGT().'\' was validated');
+						$_SESSION['phpCAS']['pgt'] = $this->getPGT();
+					}
+					$_SESSION['phpCAS']['user'] = $this->getUser();
+					$res = TRUE;
+				}
+				elseif ( $this->hasPT() ) {
+					// if a Proxy Ticket was given, validate it
+					phpCAS::trace('PT `'.$this->getPT().'\' is present');
+					$this->validatePT($validate_url,$text_response,$tree_response); // note: if it fails, it halts
+					phpCAS::trace('PT `'.$this->getPT().'\' was validated');
+					if ( $this->isProxy() ) {
+						$this->validatePGT($validate_url,$text_response,$tree_response); // idem
+						phpCAS::trace('PGT `'.$this->getPGT().'\' was validated');
+						$_SESSION['phpCAS']['pgt'] = $this->getPGT();
+					}
+					$_SESSION['phpCAS']['user'] = $this->getUser();
+					$res = TRUE;
+				}
+				else {
+					// no ticket given, not authenticated
+					phpCAS::trace('no ticket found');
+				}
+				if ($res) {
+					// if called with a ticket parameter, we need to redirect to the app without the ticket so that CAS-ification is transparent to the browser (for later POSTS)
+					// most of the checks and errors should have been made now, so we're safe for redirect without masking error messages.
+					header('Location: '.$this->getURL());
+					phpCAS::log( "Prepare redirect to : ".$this->getURL() );
+				}
 			}
-			$_SESSION['phpCAS']['user'] = $this->getUser();
-			$res = TRUE;
-		} 
-		else {
-			// no ticket given, not authenticated
-			phpCAS::trace('no ticket found');
-		}
-		  if ($res) {
-		    // if called with a ticket parameter, we need to redirect to the app without the ticket so that CAS-ification is transparent to the browser (for later POSTS)
-		    // most of the checks and errors should have been made now, so we're safe for redirect without masking error messages.
-		    header('Location: '.$this->getURL());
-		    phpCAS::log( "Prepare redirect to : ".$this->getURL() );
-		  }
-		}
-		
-		phpCAS::traceEnd($res);
-		return $res;
+
+			phpCAS::traceEnd($res);
+			return $res;
 		}
 	
 	/**
@@ -930,6 +931,7 @@ class CASClient
 		
 		printf('<p>'.$this->getString(CAS_STR_SHOULD_HAVE_BEEN_REDIRECTED).'</p>',$cas_url);
 		$this->printHTMLFooter();
+		
 		phpCAS::traceExit();
 		exit();
 	}
@@ -975,11 +977,15 @@ class CASClient
 			$cas_url = $cas_url . $paramSeparator . "service=" . urlencode($params['service']); 
 		}
 		header('Location: '.$cas_url);
+		phpCAS::log( "Prepare redirect to : ".$cas_url );
+ 
 		session_unset();
 		session_destroy();
+		
 		$this->printHTMLHeader($this->getString(CAS_STR_LOGOUT));
 		printf('<p>'.$this->getString(CAS_STR_SHOULD_HAVE_BEEN_REDIRECTED).'</p>',$cas_url);
 		$this->printHTMLFooter();
+		
 		phpCAS::traceExit();
 		exit();
 	}
