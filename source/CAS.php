@@ -304,7 +304,7 @@ class phpCAS
 			phpCAS::error('type mismatched for parameter $server_uri (should be `string\')');
 		}
 		
-		// store where the initialzer is called from
+		// store where the initializer is called from
 		$dbg = phpCAS::backtrace();
 		$PHPCAS_INIT_CALL = array('done' => TRUE,
 			'file' => $dbg[0]['file'],
