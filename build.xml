@@ -104,7 +104,7 @@
 	       Upload the distribution files to the download area
 	  -->  
 	  <target name="upload" 
-	          description="Upload the distribution files to sourceforge.net">
+	          description="Upload the distribution files to JA-SIG">
 	    <!-- Check that all the properties used for archives upload are set -->
 	    <fail message="please set ${upload.username} in build.properties" unless="upload.username"/>
 	    <fail message="please set ${upload.password} in build.properties" unless="upload.password"/>
