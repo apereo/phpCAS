@@ -1500,6 +1500,7 @@ class CASClient
 		$this->storePGT($pgt,$pgt_iou);
 		$this->printHTMLFooter();
 		phpCAS::traceExit();
+		exit();
 		}
 	
 	/** @} */
