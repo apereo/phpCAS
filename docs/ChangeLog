@@ -3,6 +3,13 @@ This document duplicates reference information found at http://www.ja-sig.org/wi
 for interested parties, in the case the wiki wouldn't be available.
 
 ----
+Changes in version 1.0.2RC1
+Bug fixes
+	* fix redirections masking error messages [PHPCAS-36] (Olivier Berger) 	 
+    * fixed validatePGT() failing on phpCAS::traceBegin() with newer domxml-php4-to-php5.php [PHPCAS-35] (Olivier Berger) 	 
+    * Fixed missing exit() at end of callback() method [PHPCAS-34] (Olivier Berger)
+    * Update included domxml-php4-php5.php to most recent version now under LGPL [PHPCAS-30] (Olivier Berger) 	  
+    * fixed empty $target_service in CASClient:serviceMail [PHPCAS-22] (Julien Marchal).
 
 Changes in version 1.0.1
 Bug fixes
