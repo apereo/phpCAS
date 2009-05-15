@@ -519,7 +519,6 @@ class CASClient
             }
             // restore old session vars
             $_SESSION = $old_session;
-            
 		}
 		
 		// activate session mechanism if desired
@@ -1841,7 +1840,15 @@ class CASClient
 		if ($this->_cas_server_cert == '' && $this->_cas_server_ca_cert == '' && !$this->_no_cas_server_validation) {
 			phpCAS::error('one of the methods phpCAS::setCasServerCert(), phpCAS::setCasServerCACert() or phpCAS::setNoCasServerValidation() must be called.');
 		}
-		if ($this->_cas_server_cert != '' ) {
+		if ($this->_cas_server_cert != '' && $this->_cas_server_ca_cert != '') {
+			// This branch added by IDMS. Seems phpCAS implementor got a bit confused about the curl options CURLOPT_SSLCERT and CURLOPT_CAINFO
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+			curl_setopt($ch, CURLOPT_SSLCERT, $this->_cas_server_cert);
+			curl_setopt($ch, CURLOPT_CAINFO, $this->_cas_server_ca_cert);
+			curl_setopt($ch, CURLOPT_VERBOSE, '1');
+			phpCAS::trace('CURL: Set all required opts for mutual authentication ------');
+		} else if ($this->_cas_server_cert != '' ) {
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
 			curl_setopt($ch, CURLOPT_SSLCERT, $this->_cas_server_cert);
 		} else if ($this->_cas_server_ca_cert != '') {
@@ -1863,9 +1870,11 @@ class CASClient
 		}
 		// perform the query
 		$buf = curl_exec ($ch);
+		phpCAS::trace('CURL: Call completed. Response body is: \''.$buf.'\'');
 		if ( $buf === FALSE ) {
 			phpCAS::trace('curl_exec() failed');
 			$err_msg = 'CURL error #'.curl_errno($ch).': '.curl_error($ch);
+			phpCAS::trace('curl error: '.$err_msg);
 			// close the CURL session
 			curl_close ($ch);
 			$res = FALSE;
