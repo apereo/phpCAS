@@ -54,6 +54,63 @@ define("CAS_VERSION_1_0",'1.0');
  */
 define("CAS_VERSION_2_0",'2.0');
 
+// ------------------------------------------------------------------------
+//  SAML defines
+// ------------------------------------------------------------------------
+
+/**
+ * SAML protocol
+ */
+define("SAML_VERSION_1_1", 'S1');
+
+/**
+ * XML header for SAML POST
+ */
+define("SAML_XML_HEADER", '<?xml version="1.0" encoding="UTF-8"?>');
+
+/**
+ * SOAP envelope for SAML POST
+ */
+define ("SAML_SOAP_ENV", '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/>');
+
+/**
+ * SOAP body for SAML POST
+ */
+define ("SAML_SOAP_BODY", '<SOAP-ENV:Body>');
+
+/**
+ * SAMLP request
+ */
+define ("SAMLP_REQUEST", '<samlp:Request xmlns:samlp="urn:oasis:names:tc:SAML:1.0:protocol"  MajorVersion="1" MinorVersion="1" RequestID="_192.168.16.51.1024506224022" IssueInstant="2002-06-19T17:03:44.022Z">');
+define ("SAMLP_REQUEST_CLOSE", '</samlp:Request>');
+
+/**
+ * SAMLP artifact tag (for the ticket)
+ */
+define ("SAML_ASSERTION_ARTIFACT", '<samlp:AssertionArtifact>');
+
+/**
+ * SAMLP close
+ */
+define ("SAML_ASSERTION_ARTIFACT_CLOSE", '</samlp:AssertionArtifact>');
+
+/**
+ * SOAP body close
+ */
+define ("SAML_SOAP_BODY_CLOSE", '</SOAP-ENV:Body>');
+
+/**
+ * SOAP envelope close
+ */
+define ("SAML_SOAP_ENV_CLOSE", '</SOAP-ENV:Envelope>');
+
+/**
+ * SAML Attributes
+ */
+define("SAML_ATTRIBUTES", 'SAMLATTRIBS');
+
+
+
 /** @} */
  /**
   * @addtogroup publicPGTStorage
@@ -894,7 +951,7 @@ class phpCAS
 		phpCAS::traceEnd($auth);
 		return $auth; 
 		}
-	
+
 	/**
 	 * This method is called to force authentication if the user was not already 
 	 * authenticated. If the user is not authenticated, halt by redirecting to 

@@ -373,7 +373,25 @@ class CASClient
 		//      return $this->_server['service_validate_url'].'?service='.preg_replace('/&/','%26',$this->getURL()); 
 		return $this->_server['service_validate_url'].'?service='.urlencode($this->getURL()); 
 		}
-	
+	/**
+	* This method is used to retrieve the SAML validating URL of the CAS server.
+	* @return a URL.
+	* @private
+	*/
+	function getServerSamlValidateURL()
+	{
+	phpCAS::traceBegin();
+	// the URL is build only when needed
+	if ( empty($this->_server['saml_validate_url']) ) {
+		switch ($this->getServerVersion()) {
+		case SAML_VERSION_1_1:
+			$this->_server['saml_validate_url'] = $this->getServerBaseURL().'samlValidate';
+			break;
+			}
+	}
+	phpCAS::traceEnd($this->_server['saml_validate_url'].'?TARGET='.urlencode($this->getURL()));
+	return $this->_server['saml_validate_url'].'?TARGET='.urlencode($this->getURL());
+	}
 	/**
 	 * This method is used to retrieve the proxy validating URL of the CAS server.
 	 * @return a URL.
@@ -538,6 +556,8 @@ class CASClient
 				break;
 			case CAS_VERSION_2_0:
 				break;
+			case SAML_VERSION_1_1:
+				break;
 			default:
 				phpCAS::error('this version of CAS (`'
 					.$server_version
@@ -603,6 +623,16 @@ class CASClient
 						//ill-formed ticket, halt
 						phpCAS::error('ill-formed ticket found in the URL (ticket=`'.htmlentities($ticket).'\')');
 					} 
+					break;
+				case SAML_VERSION_1_1: // SAML just does Service Tickets
+					if( preg_match('/^[SP]T-/',$ticket) ) {
+					phpCAS::trace('SA \''.$ticket.'\' found');
+					$this->setSA($ticket);
+					unset($_GET['ticket']);
+					} else if ( !empty($ticket) ) {
+						//ill-formed ticket, halt
+						phpCAS::error('ill-formed ticket found in the URL (ticket=`'.htmlentities($ticket).'\')');
+					}
 					break;
 			}
 		}
@@ -826,6 +856,14 @@ class CASClient
 					$_SESSION['phpCAS']['user'] = $this->getUser();
 					$res = TRUE;
 				}
+                                elseif ( $this->hasSA() ) {
+                                       // if we have a SAML ticket, validate it.
+                                       phpCAS::trace('SA `'.$this->getSA().'\' is present');
+                                       $this->validateSA($validate_url,$text_response,$tree_response); // if it fails, it halts
+                                       phpCAS::trace('SA `'.$this->getSA().'\' was validated');
+                                       $_SESSION['phpCAS']['user'] = $this->getUser();
+                                       $res = TRUE;
+                                }
 				else {
 					// no ticket given, not authenticated
 					phpCAS::trace('no ticket found');
@@ -1302,6 +1340,140 @@ class CASClient
 		phpCAS::traceEnd(TRUE);
 		return TRUE;
 		}
+
+ // ########################################################################
+ //  SAML VALIDATION
+ // ########################################################################
+   /**
+    * @addtogroup internalBasic
+    * @{
+    */
+
+   /**
+    * This method is used to validate a SAML TICKET; halt on failure, and sets $validate_url,
+    * $text_reponse and $tree_response on success. These parameters are used later
+    * by CASClient::validatePGT() for CAS proxies.
+    *
+    * @param $validate_url the URL of the request to the CAS server.
+    * @param $text_response the response of the CAS server, as is (XML text).
+    * @param $tree_response the response of the CAS server, as a DOM XML tree.
+    *
+    * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+    *
+    * @private
+    */
+   function validateSA($validate_url,&$text_response,&$tree_response)
+     {
+       phpCAS::traceBegin();
+
+       // build the URL to validate the ticket
+       $validate_url = $this->getServerSamlValidateURL();
+
+       // open and read the URL
+       if ( !$this->readURL($validate_url,''/*cookies*/,$headers,$text_response,$err_msg) ) {
+           phpCAS::trace('could not open URL \''.$validate_url.'\' to validate ('.$err_msg.')');
+           $this->authError('SA not validated', $validate_url, TRUE/*$no_response*/);
+       }
+
+       phpCAS::trace('server version: '.$this->getServerVersion());
+
+       // analyze the result depending on the version
+       switch ($this->getServerVersion()) {
+       case SAML_VERSION_1_1:
+
+     // read the response of the CAS server into a DOM object
+       if ( !($dom = domxml_open_mem($text_response))) {
+         phpCAS::trace('domxml_open_mem() failed');
+         $this->authError('SA not validated',
+                      $validate_url,
+                      FALSE/*$no_response*/,
+                      TRUE/*$bad_response*/,
+                      $text_response);
+       }
+       // read the root node of the XML tree
+       if ( !($tree_response = $dom->document_element()) ) {
+         phpCAS::trace('document_element() failed');
+         $this->authError('SA not validated',
+                      $validate_url,
+                      FALSE/*$no_response*/,
+                      TRUE/*$bad_response*/,
+                      $text_response);
+       }
+       // insure that tag name is 'Envelope'
+       if ( $tree_response->node_name() != 'Envelope' ) {
+         phpCAS::trace('bad XML root node (should be `Envelope\' instead of `'.$tree_response->node_name().'\'');
+         $this->authError('SA not validated',
+                      $validate_url,
+                      FALSE/*$no_response*/,
+                      TRUE/*$bad_response*/,
+                      $text_response);
+       }
+     // check for the NameIdentifier tag in the SAML response
+       if ( sizeof($success_elements = $tree_response->get_elements_by_tagname("NameIdentifier")) != 0) {
+       phpCAS::trace('NameIdentifier found');
+         $user = trim($success_elements[0]->get_content());
+         phpCAS::trace('user = `'.$user.'`');
+         $this->setUser($user);
+       $this->setSessionAttributes($text_response);
+       } else {
+         phpCAS::trace('no <NameIdentifier> tag found in SAML payload');
+         $this->authError('SA not validated',
+                      $validate_url,
+                      FALSE/*$no_response*/,
+                      TRUE/*$bad_response*/,
+                      $text_response);
+       }
+       break;
+       }
+
+       // at this step, ST has been validated and $this->_user has been set,
+       phpCAS::traceEnd(TRUE);
+       return TRUE;
+     }
+
+   /**
+    * This method will parse the DOM and pull out the attributes from the SAML
+    * payload and put them into an array, then put the array into the session.
+    *
+    * @param $text_response the SAML payload.
+    * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+    *
+    * @private
+    */
+ function setSessionAttributes($text_response)
+ {
+           phpCAS::traceBegin();
+
+           $result = FALSE;
+
+           if (isset($_SESSION[SAML_ATTRIBUTES])) {
+             phpCAS::trace("session attrs already set.");  //testbml - do we care?
+           }
+
+           $attr_array = array();
+
+                if (($dom = DOMDocument::loadXML($text_response))) {
+                   $xPath = new DOMXpath($dom);
+                   $xPath->registerNameSpace('samlp', 'urn:oasis:names:tc:SAML:1.0:protocol');
+                   $xPath->registerNameSpace('saml', 'urn:oasis:names:tc:SAML:1.0:assertion');
+                   $attrs = $xPath->query("//saml:Attribute");
+                   foreach($attrs as $attr) {
+                      phpCAS::trace($attr->getAttribute('AttributeName'));
+                      $values = $xPath->query("saml:AttributeValue", $attr);
+                      $value_array = array();
+                      foreach($values as $value) {
+                          $value_array[] = $value->nodeValue;
+                          phpCAS::trace("* " . $value->nodeValue);
+                      }
+                      $attr_array[$attr->getAttribute('AttributeName')] = $value_array;
+                   }
+                   $_SESSION[SAML_ATTRIBUTES] = $attr_array;
+                   $result = TRUE;
+                }
+
+       phpCAS::traceEnd($result);
+       return $result;
+ }
 	
 	/** @} */
 	
@@ -1868,13 +2040,28 @@ class CASClient
 		if ( is_array($cookies) ) {
 			curl_setopt($ch,CURLOPT_COOKIE,implode(';',$cookies));
 		}
+                // add extra stuff if SAML
+                if ($this->hasSA()) {
+                        $more_headers = array ("soapaction: http://www.oasis-open.org/committees/security",
+                                               "cache-control: no-cache",
+                                               "pragma: no-cache",
+                                               "accept: text/xml",
+                                               "connection: keep-alive",
+                                               "content-type: text/xml");
+
+                       curl_setopt($ch, CURLOPT_HTTPHEADER, $more_headers);
+                       curl_setopt($ch, CURLOPT_POST, 1);
+                       $data = $this->buildSAMLPayload();
+                       //phpCAS::trace('SAML Payload: '.print_r($data, TRUE));
+                       curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                }
 		// perform the query
 		$buf = curl_exec ($ch);
-		phpCAS::trace('CURL: Call completed. Response body is: \''.$buf.'\'');
+		//phpCAS::trace('CURL: Call completed. Response body is: \''.$buf.'\'');
 		if ( $buf === FALSE ) {
 			phpCAS::trace('curl_exec() failed');
 			$err_msg = 'CURL error #'.curl_errno($ch).': '.curl_error($ch);
-			phpCAS::trace('curl error: '.$err_msg);
+			//phpCAS::trace('curl error: '.$err_msg);
 			// close the CURL session
 			curl_close ($ch);
 			$res = FALSE;
@@ -1889,7 +2076,28 @@ class CASClient
 		phpCAS::traceEnd($res);
 		return $res;
 	}
-	
+
+        /**
+        * This method is used to build the SAML POST body sent to /samlValidate URL.
+        *
+        * @return the SOAP-encased SAMLP artifact (the ticket).
+        *
+        * @private
+        */
+        function buildSAMLPayload()
+        {
+        phpCAS::traceBegin();
+
+        //get the ticket
+        $sa = $this->getSA();
+        //phpCAS::trace("SA: ".$sa);
+
+        $body=SAML_SOAP_ENV.SAML_SOAP_BODY.SAMLP_REQUEST.SAML_ASSERTION_ARTIFACT.$sa.SAML_ASSERTION_ARTIFACT_CLOSE.SAMLP_REQUEST_CLOSE.SAML_SOAP_BODY_CLOSE.SAML_SOAP_ENV_CLOSE;
+
+        phpCAS::traceEnd($body);
+        return ($body);
+        }
+
 	/**
 	 * This method is the callback used by readURL method to request HTTP headers.
 	 */
@@ -2081,7 +2289,30 @@ class CASClient
 	 */
 	function hasPT()
 		{ return !empty($this->_pt); }
-	
+	/**
+       * This method returns the SAML Ticket provided in the URL of the request.
+       * @return The SAML ticket.
+       * @private
+       */
+       function getSA()
+       { return 'ST'.substr($this->_sa, 2); }
+
+       /**
+       * This method stores the SAML Ticket.
+       * @param $sa The SAML Ticket.
+       * @private
+       */
+       function setSA($sa)
+       { $this->_sa = $sa; }
+
+       /**
+       * This method tells if a SAML Ticket was stored.
+       * @return TRUE if a SAML Ticket has been stored.
+       * @private
+       */
+       function hasSA()
+       { return !empty($this->_sa); }
+
 	/** @} */
 	// ########################################################################
 	//  PT VALIDATION
