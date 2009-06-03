@@ -1080,6 +1080,27 @@ class phpCAS
 		return $PHPCAS_CLIENT->getUser();
 		}
 	
+	/**
+	 * This method returns the CAS user's login name.
+	 * @warning should not be called only after phpCAS::forceAuthentication()
+	 * or phpCAS::checkAuthentication().
+	 *
+	 * @return the login name of the authenticated user
+	 */
+	function getAttributes()
+		{
+		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
+		if ( !is_object($PHPCAS_CLIENT) ) {
+			phpCAS::error('this method should not be called before '.__CLASS__.'::client() or '.__CLASS__.'::proxy()');
+		}
+		if ( !$PHPCAS_AUTH_CHECK_CALL['done'] ) {
+			phpCAS::error('this method should only be called after '.__CLASS__.'::forceAuthentication() or '.__CLASS__.'::isAuthenticated()');
+		}
+		if ( !$PHPCAS_AUTH_CHECK_CALL['result'] ) {
+			phpCAS::error('authentication was checked (by '.$PHPCAS_AUTH_CHECK_CALL['method'].'() at '.$PHPCAS_AUTH_CHECK_CALL['file'].':'.$PHPCAS_AUTH_CHECK_CALL['line'].') but the method returned FALSE');
+		}
+		return $PHPCAS_CLIENT->getAttributes();
+		}
     /**
      * Handle logout requests.
      */

@@ -687,6 +687,45 @@ class CASClient
 		}
 		return $this->_user;
 		}
+
+
+	
+	/***********************************************************************************************************************
+	 * Atrributes section
+	 * 
+	 * @author Matthias Crauwels <matthias.crauwels@ugent.be>, Ghent University, Belgium
+	 * 
+	 ***********************************************************************************************************************/
+	/**
+	 * The Authenticated users attributes. Written by CASClient::setAttributes(), read by CASClient::getAttributes().
+	 * @attention client applications should use phpCAS::getAttributes().
+	 *
+	 * @hideinitializer
+	 * @private
+	 */	
+	var $_attributes = array();
+
+	function setAttributes($attributes)	
+		{ $this->_attributes = $attributes; }
+		
+	function getAttributes() {
+		if ( empty($this->_user) ) { // if no user is set, there shouldn't be any attributes also...
+			phpCAS::error('this method should be used only after '.__CLASS__.'::forceAuthentication() or '.__CLASS__.'::isAuthenticated()');
+		}
+		return $this->_attributes;
+	}
+		
+	function hasAttributes()
+		{ return !empty($this->_attributes); }
+		
+	function hasAttribute($key)
+		{ return (is_array($this->_attributes) && array_key_exists($key, $this->_attributes)); }
+		
+	function getAttribute($key)	{
+		if($this->hasAttribute($key)) {
+			return $this->_attributes[$key];
+		}
+	}
 	
 	/**
 	 * This method is called to renew the authentication of the user
@@ -856,14 +895,15 @@ class CASClient
 					$_SESSION['phpCAS']['user'] = $this->getUser();
 					$res = TRUE;
 				}
-                                elseif ( $this->hasSA() ) {
-                                       // if we have a SAML ticket, validate it.
-                                       phpCAS::trace('SA `'.$this->getSA().'\' is present');
-                                       $this->validateSA($validate_url,$text_response,$tree_response); // if it fails, it halts
-                                       phpCAS::trace('SA `'.$this->getSA().'\' was validated');
-                                       $_SESSION['phpCAS']['user'] = $this->getUser();
-                                       $res = TRUE;
-                                }
+				elseif ( $this->hasSA() ) {
+					// if we have a SAML ticket, validate it.
+					phpCAS::trace('SA `'.$this->getSA().'\' is present');
+					$this->validateSA($validate_url,$text_response,$tree_response); // if it fails, it halts
+					phpCAS::trace('SA `'.$this->getSA().'\' was validated');
+					$_SESSION['phpCAS']['user'] = $this->getUser();
+					$_SESSION['phpCAS']['attributes'] = $this->getAttributes();
+					$res = TRUE;
+				}
 				else {
 					// no ticket given, not authenticated
 					phpCAS::trace('no ticket found');
@@ -940,6 +980,7 @@ class CASClient
 			if ( $this->isSessionAuthenticated() ) {
 				// authentication already done
 				$this->setUser($_SESSION['phpCAS']['user']);
+				$this->setAttributes($_SESSION['phpCAS']['attributes']);
 				phpCAS::trace('user = `'.$_SESSION['phpCAS']['user'].'\''); 
 				$auth = TRUE;
 			} else {
@@ -1468,9 +1509,17 @@ class CASClient
                       $attr_array[$attr->getAttribute('AttributeName')] = $value_array;
                    }
                    $_SESSION[SAML_ATTRIBUTES] = $attr_array;
+		   // UGent addition...
+		   foreach($attr_array as $attr_key => $attr_value) {
+		      if(count($attr_value) > 1) {
+			$this->_attributes[$attr_key] = $attr_value;
+		      }
+		      else {
+			$this->_attributes[$attr_key] = $attr_value[0];
+		      }
+		   }
                    $result = TRUE;
                 }
-
        phpCAS::traceEnd($result);
        return $result;
  }
