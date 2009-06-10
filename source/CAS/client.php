@@ -2526,7 +2526,9 @@ class CASClient
 			}
 			
 			$final_uri .= strtok($_SERVER['REQUEST_URI'],"?");
-			$cgi_params = '?'.strtok("?");
+			// PHPCAS-40 by Alex Danieli: Returned invalid url validation from webserver
+			//$cgi_params = '?'.strtok("?");
+			$cgi_params = '?'.strtok("?&");
 			// remove the ticket if present in the CGI parameters
 			$cgi_params = preg_replace('/&ticket=[^&]*/','',$cgi_params);
 			$cgi_params = preg_replace('/\?ticket=[^&;]*/','?',$cgi_params);
