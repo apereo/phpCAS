@@ -1106,10 +1106,10 @@ class CASClient
 			}
 			$client_ip = $_SERVER['REMOTE_ADDR'];
 			$client = gethostbyaddr($client_ip);
-			phpCAS::log("Client: ".$client);
+			phpCAS::log("Client: ".$client."/".$client_ip); 
 			$allowed = false;
 			foreach ($allowed_clients as $allowed_client) {
-				if ($client == $allowed_client) {
+				if (($client == $allowed_client) or ($client_ip == $allowed_client)) { 
 					phpCAS::log("Allowed client '".$allowed_client."' matches, logout request is allowed");
 					$allowed = true;
 					break;
