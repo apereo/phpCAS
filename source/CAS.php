@@ -796,7 +796,7 @@ class phpCAS
 		if ( gettype($table) != 'string' ) {
 			phpCAS::error('type mismatched for parameter $table (should be `string\')');
 		}
-		$PHPCAS_CLIENT->setPGTStorageDB($this,$user,$password,$hostname,$port,$database,$table);
+		$PHPCAS_CLIENT->setPGTStorageDB($user,$password,$database_type,$hostname,$port,$database,$table);
 		phpCAS::traceEnd();
 		}
 	
