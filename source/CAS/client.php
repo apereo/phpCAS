@@ -652,8 +652,12 @@ class CASClient
 					}
 					break;
 				case CAS_VERSION_2_0: // check for a Service or Proxy Ticket
-					if( preg_match('/^[SP]T-/',$ticket) ) {
-						phpCAS::trace('ST or PT \''.$ticket.'\' found');
+					if (preg_match('/^ST-/', $ticket)) {
+						phpCAS::trace('ST \'' . $ticket . '\' found');
+						$this->setST($ticket);
+						unset ($_GET['ticket']);
+					} else if (preg_match('/^PT-/', $ticket)) {
+						phpCAS::trace('PT \'' . $ticket . '\' found');
 						$this->setPT($ticket);
 						unset($_GET['ticket']);
 					} else if ( !empty($ticket) ) {
