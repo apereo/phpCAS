@@ -351,6 +351,43 @@ class CASClient
 		{
 		return $this->_server['login_url'] = $url;
 		}
+		
+		
+	/**
+	 * This method sets the serviceValidate URL of the CAS server.
+	 * @param $url the serviceValidate URL
+	 * @private
+	 * @since 1.1.0 by Joachim Fritschi
+	 */
+	function setServerServiceValidateURL($url)
+		{
+		return $this->_server['service_validate_url'] = $url;
+		}
+		
+		
+	/**
+	 * This method sets the proxyValidate URL of the CAS server.
+	 * @param $url the proxyValidate URL
+	 * @private
+	 * @since 1.1.0 by Joachim Fritschi
+	 */
+	function setServerProxyValidateURL($url)
+		{
+		return $this->_server['proxy_validate_url'] = $url;
+		}
+		
+		
+	/**
+	 * This method sets the proxyValidate URL of the CAS server.
+	 * @param $url the proxyValidate URL
+	 * @private
+	 * @since 1.1.0 by Joachim Fritschi
+	 */
+	function setServerSamlValidateURL($url)
+		{
+		return $this->_server['saml_validate_url'] = $url;
+		}
+			
 	
 	/**
 	 * This method is used to retrieve the service validating URL of the CAS server.
