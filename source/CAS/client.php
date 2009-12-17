@@ -557,29 +557,31 @@ class CASClient
 			phpCAS::error('phpCAS cannot support zend.ze1_compatibility_mode. Sorry.');
 		}
 
-		if (!$this->isLogoutRequest() && !empty($_GET['ticket']) && $start_session) {
-            // copy old session vars and destroy the current session
-            if (!isset($_SESSION)) {
-            	session_start();
-            }
-            $old_session = $_SESSION;
-            session_destroy();
-            
-            // set up a new session, of name based on the ticket
-			$session_id = preg_replace('/[^\w]/','',$_GET['ticket']);
-			phpCAS::LOG("Session ID: " . $session_id);
-			session_id($session_id);
-            if (!isset($_SESSION)) {
-            	session_start();
-            }
-            // restore old session vars
-            $_SESSION = $old_session;
-		}
-		
-		// activate session mechanism if desired
 		if (!$this->isLogoutRequest() && $start_session) {
-			session_start();
+			// copy old session vars and destroy the current session
+			if (isset($_SESSION)) {
+				phpCAS::trace("Old session found. Saving values and destroying session");
+				$old_session = $_SESSION;
+				session_destroy();
+			}
+			// set up a new session, of name based on the ticket
+			if(!empty($_GET['ticket'])){
+				$session_id = preg_replace('/[^\w]/','',$_GET['ticket']);
+				phpCAS::LOG("Session ID: " . $session_id);
+				session_id($session_id);
+			}
+			// start a new session (should alway be true) 
+			if (!isset($_SESSION)) {
+				session_start();
+				phpCAS::trace("Starting new session");
+			}
+			// restore old session vars
+			if(isset($old_session)){
+				phpCAS::trace("Restoring old sesson vars");
+				$_SESSION = $old_session;
+			}
 		}
+
 		
 		// are we in proxy mode ?
 		$this->_proxy = $proxy;
@@ -1021,7 +1023,9 @@ class CASClient
 			if ( $this->isSessionAuthenticated() ) {
 				// authentication already done
 				$this->setUser($_SESSION['phpCAS']['user']);
-				$this->setAttributes($_SESSION['phpCAS']['attributes']);
+				if(isset($_SESSION['phpCAS']['attributes'])){
+					$this->setAttributes($_SESSION['phpCAS']['attributes']);
+				}
 				phpCAS::trace('user = `'.$_SESSION['phpCAS']['user'].'\''); 
 				$auth = TRUE;
 			} else {
