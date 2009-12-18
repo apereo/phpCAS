@@ -51,6 +51,7 @@ $pfm->setNotes('
 see http://www.ja-sig.org/wiki/display/CASC/phpCAS+ChangeLog
 ');
 $pfm->addMaintainer('helper','saltybeagle','Brett Bieber','brett.bieber@gmail.com');
+$pfm->addMaintainer('helper','fritschi','Joachim Fritschi','fritschi@hrz.tu-darmstadt.de');
 $pfm->addMaintainer('lead','paubry','Pascal Aubry','pascal.aubry@univ-rennes1.fr');
 $pfm->setLicense('New BSD License', 'http://www.ja-sig.org/wiki/display/CASC/phpCAS');
 $pfm->clearDeps();

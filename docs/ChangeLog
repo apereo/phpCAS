@@ -3,9 +3,37 @@ This document duplicates reference information found at http://www.ja-sig.org/wi
 for interested parties, in the case the wiki wouldn't be available.
 
 ----
+Changes in version 1.1.0RC2
+New features
+
+* custom validation Urls [PHPCAS-45] (Joachim Fritschi).
+
+Bug fixes
+
+* fixed PGT DB storage parameter list [PHPCAS-47] (Paul Merchant, Jr.)
+* fix parsing of STs [PHPCAS-44] (Joachim Fritschi)
+* fix session initialisation [PHPCAS-50] (Joachim Fritschi)
+* fix urls with than one query parameter [PHPCAS-42] (Caio Chassot)
+
+Changes in version 1.1.0RC1
+New features
+
+* added SAML support [PHPCAS-40] (Brian Long and Matthias Crauwels).
+
+Bug fixes
+
+* fixed invalid validation URLs [PHPCAS-39] (Alex Danieli).
+* removed old PHP4 references [PHPCAS-41] (Yann Richard).
+* fixed curl options [PHPCAS-38] (Andy Cowling).
+
+Improvement
+
+* accept IP addresses for allowed clients [PHPCAS-37] (Arunas Stockus) 
+
 Changes in version 1.0.2RC1
 Bug fixes
-	* fix redirections masking error messages [PHPCAS-36] (Olivier Berger) 	 
+
+    * fix redirections masking error messages [PHPCAS-36] (Olivier Berger) 	 
     * fixed validatePGT() failing on phpCAS::traceBegin() with newer domxml-php4-to-php5.php [PHPCAS-35] (Olivier Berger) 	 
     * Fixed missing exit() at end of callback() method [PHPCAS-34] (Olivier Berger)
     * Update included domxml-php4-php5.php to most recent version now under LGPL [PHPCAS-30] (Olivier Berger) 	  

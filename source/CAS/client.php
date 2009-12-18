@@ -378,8 +378,8 @@ class CASClient
 		
 		
 	/**
-	 * This method sets the proxyValidate URL of the CAS server.
-	 * @param $url the proxyValidate URL
+	 * This method sets the samlValidate URL of the CAS server.
+	 * @param $url the samlValidate URL
 	 * @private
 	 * @since 1.1.0 by Joachim Fritschi
 	 */
