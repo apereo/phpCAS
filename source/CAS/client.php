@@ -2572,7 +2572,11 @@ class CASClient
 			
 			$php_is_for_sissies = split("\?", $_SERVER['REQUEST_URI'], 2);
 			$final_uri .= $php_is_for_sissies[0];
-			$cgi_params = '?' . $php_is_for_sissies[1];
+			if(sizeof($php_is_for_sissies) > 1){
+				$cgi_params = '?' . $php_is_for_sissies[1];
+			} else {
+				$cgi_params = '?';
+			}
 			// remove the ticket if present in the CGI parameters
 			$cgi_params = preg_replace('/&ticket=[^&]*/','',$cgi_params);
 			$cgi_params = preg_replace('/\?ticket=[^&;]*/','?',$cgi_params);
