@@ -770,6 +770,17 @@ class CASClient
 		}
 	}
 	
+	var $_extra_attributes_cas20 = FALSE;
+	
+	function setExtraAttributesCas20($value){
+		{ $this->_extra_attributes_cas20 = $value; }
+	}
+	
+	function isExtraAttributesCas20(){
+		{ return $this->_extra_attributes_cas20; }
+	}
+	
+	
 	/**
 	 * This method is called to renew the authentication of the user
 	 * If the user is authenticated, renew the connection
@@ -923,6 +934,9 @@ class CASClient
 						$_SESSION['phpCAS']['pgt'] = $this->getPGT();
 					}
 					$_SESSION['phpCAS']['user'] = $this->getUser();
+					if($this->hasAttributes()){
+						$_SESSION['phpCAS']['attributes'] = $this->getAttributes();
+					}
 					$res = TRUE;
 				}
 				elseif ( $this->hasPT() ) {
@@ -936,6 +950,9 @@ class CASClient
 						$_SESSION['phpCAS']['pgt'] = $this->getPGT();
 					}
 					$_SESSION['phpCAS']['user'] = $this->getUser();
+					if($this->hasAttributes()){
+						$_SESSION['phpCAS']['attributes'] = $this->getAttributes();
+					}
 					$res = TRUE;
 				}
 				elseif ( $this->hasSA() ) {
@@ -998,6 +1015,9 @@ class CASClient
 			if ( $this->isSessionAuthenticated() && !empty($_SESSION['phpCAS']['pgt']) ) {
 				// authentication already done
 				$this->setUser($_SESSION['phpCAS']['user']);
+				if(isset($_SESSION['phpCAS']['attributes'])){
+					$this->setAttributes($_SESSION['phpCAS']['attributes']);
+				}
 				$this->setPGT($_SESSION['phpCAS']['pgt']);
 				phpCAS::trace('user = `'.$_SESSION['phpCAS']['user'].'\', PGT = `'.$_SESSION['phpCAS']['pgt'].'\''); 
 				$auth = TRUE;
@@ -1361,7 +1381,7 @@ class CASClient
 				break;
 			case CAS_VERSION_2_0:
 				// read the response of the CAS server into a DOM object
-				if ( !($dom = domxml_open_mem($text_response))) {
+				if ( !($dom = domxml_open_mem($text_response,DOMXML_LOAD_DONT_KEEP_BLANKS))) {
 					phpCAS::trace('domxml_open_mem() failed');
 					$this->authError('ST not validated',
 						$validate_url,
@@ -1400,6 +1420,9 @@ class CASClient
 					$user = trim($user_elements[0]->get_content());
 					phpCAS::trace('user = `'.$user);
 					$this->setUser($user);
+					if($this->isExtraAttributesCas20()){
+						$this->readExtraAttributesCas20($success_elements);
+					}
 					
 				} else if ( sizeof($failure_elements = $tree_response->get_elements_by_tagname("authenticationFailure")) != 0) {
 					phpCAS::trace('<authenticationFailure> found');
@@ -1426,7 +1449,51 @@ class CASClient
 		phpCAS::traceEnd(TRUE);
 		return TRUE;
 		}
-
+		
+		
+	/**
+	* This method will parse the DOM and pull out the attributes from the XML
+	* payload and put them into an array, then put the array into the session.
+	*
+	* @param $text_response the XML payload.
+	* @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+	*
+	* @private
+	*/
+	function readExtraAttributesCas20($success_elements)
+		{
+		# PHPCAS-43 add CAS-2.0 extra attributes
+#		phpCAS::trace('Searching extra attributes in' . Print_r($success_elements));
+		$childnodes = $success_elements[0]->child_nodes();
+		$extra_attributes = array();
+		foreach ($childnodes as $attr_node) {
+			// Skip the normal user attribute
+#			phpCAS::trace('Extra attributes in ' . $attr_node->tagname);
+			if ($attr_node->tagname != 'user'){
+				if($attr_node->has_child_nodes()){
+					// Nested Attributes
+					phpCas :: trace("Found nested Attributes");
+					foreach ($attr_node->child_nodes() as $attr_child){
+						if($attr_node->node_type() == XML_ELEMENT_NODE){
+							phpCas :: trace("Child attribute [".$attr_child->node_name()."] = ".$attr_child->get_content());
+							$extra_attributes[$attr_child->tagname] = trim($attr_child->get_content());
+						}
+					}
+					phpCas :: trace("End nested Attributes");
+				}else{
+					if($attr_node->node_type() == XML_ELEMENT_NODE){
+						phpCas :: trace("Single Attribute [".$attr_node->node_name()."] = ".$attr_node->get_content());
+						$extra_attributes[$attr_node->tagname] = trim($attr_node->get_content());
+					}
+				}
+			}else{
+				phpCas :: trace("Skipping user element");
+				continue;
+			}
+		}
+		$this->setAttributes($extra_attributes);
+		return TRUE;
+	}
  // ########################################################################
  //  SAML VALIDATION
  // ########################################################################
@@ -1999,7 +2066,7 @@ class CASClient
 		
 		if ( !$bad_response ) {
 			// read the response of the CAS server into a DOM object
-			if ( !($dom = @domxml_open_mem($cas_response))) {
+			if ( !($dom = @domxml_open_mem($cas_response,DOMXML_LOAD_DONT_KEEP_BLANKS))) {
 				phpCAS::trace('domxml_open_mem() failed');
 				// read failed
 				$bad_response = TRUE;
@@ -2443,7 +2510,7 @@ class CASClient
 		}
 		
 		// read the response of the CAS server into a DOM object
-		if ( !($dom = domxml_open_mem($text_response))) {
+		if ( !($dom = domxml_open_mem($text_response,DOMXML_LOAD_DONT_KEEP_BLANKS))) {
 			// read failed
 			$this->authError('PT not validated',
 				$validate_url,
@@ -2469,7 +2536,7 @@ class CASClient
 				TRUE/*$bad_response*/,
 				$text_response);
 		}
-		if ( sizeof($arr = $tree_response->get_elements_by_tagname("authenticationSuccess")) != 0) {
+		if ( sizeof($arr = $success_elements = $tree_response->get_elements_by_tagname("authenticationSuccess")) != 0) {
 			// authentication succeded, extract the user name
 			if ( sizeof($arr = $tree_response->get_elements_by_tagname("user")) == 0) {
 				// no user specified => error
@@ -2480,7 +2547,9 @@ class CASClient
 					$text_response);
 			}
 			$this->setUser(trim($arr[0]->get_content()));
-			
+			if($this->isExtraAttributesCas20()){
+				readExtraAttributesCas20($success_response);
+			}
 		} else if ( sizeof($arr = $tree_response->get_elements_by_tagname("authenticationFailure")) != 0) {
 			// authentication succeded, extract the error code and message
 			$this->authError('PT not validated',
