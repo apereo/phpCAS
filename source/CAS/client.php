@@ -1538,20 +1538,23 @@ class CASClient
 
            $attr_array = array();
 
-                if (($dom = DOMDocument::loadXML($text_response))) {
-                   $xPath = new DOMXpath($dom);
-                   $xPath->registerNameSpace('samlp', 'urn:oasis:names:tc:SAML:1.0:protocol');
-                   $xPath->registerNameSpace('saml', 'urn:oasis:names:tc:SAML:1.0:assertion');
-                   $attrs = $xPath->query("//saml:Attribute");
-                   foreach($attrs as $attr) {
-                      phpCAS::trace($attr->getAttribute('AttributeName'));
-                      $values = $xPath->query("saml:AttributeValue", $attr);
+                if (($dom = domxml_open_mem($text_response))) {
+                   $xPath = $dom->xpath_new_context();
+                   $xPath->xpath_register_ns('samlp', 'urn:oasis:names:tc:SAML:1.0:protocol');
+                   $xPath->xpath_register_ns('saml', 'urn:oasis:names:tc:SAML:1.0:assertion');
+                   $nodelist = $xPath->xpath_eval("//saml:Attribute");
+                   $attrs = $nodelist->nodeset;
+                   phpCAS::trace($text_response);
+                  foreach($attrs as $attr){
+                      $xres = $xPath->xpath_eval("saml:AttributeValue", $attr);
+                      $name = $attr->get_attribute("AttributeName");
                       $value_array = array();
-                      foreach($values as $value) {
-                          $value_array[] = $value->nodeValue;
-                          phpCAS::trace("* " . $value->nodeValue);
+                      foreach($xres->nodeset as $node){
+                          $value_array[] = $node->get_content();
+                         
                       }
-                      $attr_array[$attr->getAttribute('AttributeName')] = $value_array;
+                      phpCAS::trace("* " . $name . "=" . $value_array);
+                      $attr_array[$name] = $value_array;
                    }
                    $_SESSION[SAML_ATTRIBUTES] = $attr_array;
 		   // UGent addition...
