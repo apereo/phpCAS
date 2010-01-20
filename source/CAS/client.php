@@ -556,30 +556,39 @@ class CASClient
 		if (version_compare(PHP_VERSION,'5','>=') && ini_get('zend.ze1_compatibility_mode')) {
 			phpCAS::error('phpCAS cannot support zend.ze1_compatibility_mode. Sorry.');
 		}
-
-		if (!$this->isLogoutRequest() && $start_session) {
-			// copy old session vars and destroy the current session
-			if (isset($_SESSION)) {
-				phpCAS::trace("Old session found. Saving values and destroying session");
-				$old_session = $_SESSION;
-				session_destroy();
-			}
-			// set up a new session, of name based on the ticket
-			if(!empty($_GET['ticket'])){
+		// skip Session Handling for logout requests and if don't want it'
+		if ($start_session && !$this->isLogoutRequest()) {
+			phpCAS::trace("Starting session handling");
+			// Check for Tickets from the CAS server
+			if (empty($_GET['ticket'])){
+				phpCAS::trace("No ticket found");
+				// only create a session if necessary
+				if (!isset($_SESSION)) {
+					phpCAS::trace("No session found, creating new session");
+					session_start();
+				}
+			}else{
+				phpCAS::trace("Ticket found");
+				// if there is an old session we change to preserve the data before
+				// creating a new session based on the ticket id
+				if (isset($_SESSION)) {
+					phpCAS::trace("Old session found, saving old data and destroying session");
+					$old_session = $_SESSION;
+					session_destroy();	
+				}
+				// set up a new session, of name based on the ticket
 				$session_id = preg_replace('/[^\w]/','',$_GET['ticket']);
 				phpCAS::LOG("Session ID: " . $session_id);
 				session_id($session_id);
-			}
-			// start a new session (should alway be true) 
-			if (!isset($_SESSION)) {
 				session_start();
-				phpCAS::trace("Starting new session");
+				// restore old session vars
+				if(isset($old_session)){
+					phpCAS::trace("Restoring old sesson vars");
+					$_SESSION = $old_session;
+				}
 			}
-			// restore old session vars
-			if(isset($old_session)){
-				phpCAS::trace("Restoring old sesson vars");
-				$_SESSION = $old_session;
-			}
+		}else{
+			phpCAS::trace("Skipping session creation");
 		}
 
 		
