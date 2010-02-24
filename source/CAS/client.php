@@ -569,10 +569,14 @@ class CASClient
 				}
 			}else{
 				phpCAS::trace("Ticket found");
-				// if there is an old session we change to preserve the data before
-				// creating a new session based on the ticket id
+				// We have to copy any old data before renaming the session
 				if (isset($_SESSION)) {
-					phpCAS::trace("Old session found, saving old data and destroying session");
+					phpCAS::trace("Old active session found, saving old data and destroying session");
+					$old_session = $_SESSION;
+					session_destroy();	
+				}else{
+					session_start();
+					phpCAS::trace("Starting possible old session to copy variables");
 					$old_session = $_SESSION;
 					session_destroy();	
 				}
@@ -583,7 +587,7 @@ class CASClient
 				session_start();
 				// restore old session vars
 				if(isset($old_session)){
-					phpCAS::trace("Restoring old sesson vars");
+					phpCAS::trace("Restoring old session vars");
 					$_SESSION = $old_session;
 				}
 			}
