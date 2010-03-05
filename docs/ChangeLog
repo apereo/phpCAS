@@ -2,6 +2,10 @@ This document duplicates reference information found at http://www.ja-sig.org/wi
 for interested parties, in the case the wiki wouldn't be available.
 
 ----
+Changes in version 1.1.0RC7
+Security fixes
+    * Fix XSS Vulnerability. Sanatize parameters before using the url submitted by a client [PHPCAS-52] (Joachim Fritschi)
+    
 Changes in version 1.1.0RC6
 Bug fixes
     * restore any possible old session before renaming the session [PHPCAS-50] (Joachim Fritschi)
