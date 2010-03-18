@@ -11,9 +11,13 @@ phpCAS::setDebug();
 
 // initialize phpCAS
 phpCAS::client(CAS_VERSION_2_0,'sso.hrz.tu-darmstadt.de',443,'');
-phpCAS::setServerServiceValidateURL('https://sso.hrz.tu-darmstadt.de:1443/serviceValidate');
+// Override the validation url for any (ST and PT) CAS 2.0 validation
+phpCAS::setServerProxyValidateURL('https://sso.hrz.tu-darmstadt.de:1443/proxyValidate');
+// Override the validation url for any CAS 1.0 validation
+//phpCAS::setServerServiceValidateURL('https://sso.hrz.tu-darmstadt.de:1443/serviceValidate');
+//Override the validation url for any SAML11 validation
 //phpCAS::setServerSamlValidateURL('https://sso.hrz.tu-darmstadt.de:1443/samlValidate');
-//phpCAS::setServerProxyValidateURL('https://sso.hrz.tu-darmstadt.de:1443/proxyValidate');
+
 
 // no SSL validation for the CAS server
 phpCAS::setNoCasServerValidation();
