@@ -667,15 +667,11 @@ class CASClient
 					}
 					break;
 				case CAS_VERSION_2_0: // check for a Service or Proxy Ticket
-					if($this->isProxy() && preg_match('/^[SP]T-/', $ticket)){
-						phpCAS::trace('PT \'' . $ticket . '\' found');
+					if( preg_match('/^[SP]T-/',$ticket) ) {
+						phpCAS::trace('ST or PT \''.$ticket.'\' found');
 						$this->setPT($ticket);
 						unset($_GET['ticket']);
-					}else if(!$this->isProxy() && preg_match('/^ST-/', $ticket)){
-						phpCAS::trace('ST \'' . $ticket . '\' found');
-						$this->setST($ticket);
-						unset ($_GET['ticket']);
-					} else if(!empty($ticket)) {
+					} else if ( !empty($ticket) ) {
 						//ill-formed ticket, halt
 						phpCAS::error('ill-formed ticket found in the URL (ticket=`'.htmlentities($ticket).'\')');
 					} 
@@ -930,6 +926,11 @@ class CASClient
 					phpCAS::trace('ST `'.$this->getST().'\' is present');
 					$this->validateST($validate_url,$text_response,$tree_response); // if it fails, it halts
 					phpCAS::trace('ST `'.$this->getST().'\' was validated');
+					if ( $this->isProxy() ) {
+						$this->validatePGT($validate_url,$text_response,$tree_response); // idem
+						phpCAS::trace('PGT `'.$this->getPGT().'\' was validated');
+						$_SESSION['phpCAS']['pgt'] = $this->getPGT();
+					}
 					$_SESSION['phpCAS']['user'] = $this->getUser();
 					$res = TRUE;
 				}
@@ -938,9 +939,11 @@ class CASClient
 					phpCAS::trace('PT `'.$this->getPT().'\' is present');
 					$this->validatePT($validate_url,$text_response,$tree_response); // note: if it fails, it halts
 					phpCAS::trace('PT `'.$this->getPT().'\' was validated');
-					$this->validatePGT($validate_url,$text_response,$tree_response); // idem
-					phpCAS::trace('PGT `'.$this->getPGT().'\' was validated');
-					$_SESSION['phpCAS']['pgt'] = $this->getPGT();
+					if ( $this->isProxy() ) {
+						$this->validatePGT($validate_url,$text_response,$tree_response); // idem
+						phpCAS::trace('PGT `'.$this->getPGT().'\' was validated');
+						$_SESSION['phpCAS']['pgt'] = $this->getPGT();
+					}
 					$_SESSION['phpCAS']['user'] = $this->getUser();
 					$res = TRUE;
 				}
