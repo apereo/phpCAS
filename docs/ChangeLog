@@ -2,6 +2,12 @@ This document duplicates reference information found at http://www.ja-sig.org/wi
 for interested parties, in the case the wiki wouldn't be available.
 
 ----
+Changes in version 1.1.0RC8
+Bug fixes
+    * Add additional comments regarding the use of serviceValidate and proxyValdiate [PHPCAS-44] (Joachim Fritschi)
+    * Revert all changes made to the ticket parsing in r47347 r48210 [PHPCAS-44] (Joachim Fritschi)
+    * Fix warning when destroying uninitialized session [PHPCAS-53] (Yann Richard,Joachim Fritschi)
+
 Changes in version 1.1.0RC7
 Security fixes
     * Fix XSS Vulnerability. Sanatize parameters before using the url submitted by a client [PHPCAS-52] (Joachim Fritschi)
