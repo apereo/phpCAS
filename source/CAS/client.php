@@ -2582,7 +2582,7 @@ class CASClient
 				}
 			}
 			
-			$baseurl = split("\?", $_SERVER['REQUEST_URI'], 2);
+			$baseurl = explode("?", $_SERVER['REQUEST_URI'], 2);
 			$final_uri .= $baseurl[0];
 			$query_string = '';
 			if ($_GET) {
