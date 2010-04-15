@@ -592,14 +592,14 @@ class CASClient
 			if (empty($_GET['ticket'])){
 				phpCAS::trace("No ticket found");
 				// only create a session if necessary
-				if (session_id() !== '') {
+				if (!session_id()) {
 					phpCAS::trace("No session found, creating new session");
 					session_start();
 				}
 			}else{
 				phpCAS::trace("Ticket found");
 				// We have to copy any old data before renaming the session
-				if (session_id() !== '') {
+				if (session_id()) {
 					phpCAS::trace("Old active session found, saving old data and destroying session");
 					$old_session = $_SESSION;
 					session_destroy();	
