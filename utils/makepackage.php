@@ -43,15 +43,15 @@ $pfm->setSummary('Central Authentication Service client library in php');
 $pfm->setDescription('This package is a PEAR installable library for using a Central
 Authentication Service.');
 $pfm->setChannel('__uri');
-$pfm->setAPIStability('stable');
-$pfm->setReleaseStability('stable');
+$pfm->setAPIStability('${phpcas.apiStability}');
+$pfm->setReleaseStability('${phpcas.releaseStability}');
 $pfm->setAPIVersion('${phpcas.version}');
 $pfm->setReleaseVersion('${phpcas.version}');
 $pfm->setNotes('
 see http://www.ja-sig.org/wiki/display/CASC/phpCAS+ChangeLog
 ');
 $pfm->addMaintainer('helper','saltybeagle','Brett Bieber','brett.bieber@gmail.com');
-$pfm->addMaintainer('helper','fritschi','Joachim Fritschi','fritschi@hrz.tu-darmstadt.de');
+$pfm->addMaintainer('lead','fritschi','Joachim Fritschi','fritschi@hrz.tu-darmstadt.de');
 $pfm->addMaintainer('lead','paubry','Pascal Aubry','pascal.aubry@univ-rennes1.fr');
 $pfm->setLicense('New BSD License', 'http://www.ja-sig.org/wiki/display/CASC/phpCAS');
 $pfm->clearDeps();

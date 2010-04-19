@@ -2,6 +2,10 @@ This document duplicates reference information found at http://www.ja-sig.org/wi
 for interested parties, in the case the wiki wouldn't be available.
 
 ----
+Changes in version 1.1.1RC1
+Bug fixes
+    * Fix bug in restoring an existing session [PHPCAS-55] (Joachim Fritschi)
+    
 Changes in version 1.1.0
 Improvement
     * Replace deprecated split() with explode(). [PHPCAS-42] (Joe Lencioni)
