@@ -2588,26 +2588,43 @@ class CASClient
 				}
 			}
 			
-			$baseurl = explode("?", $_SERVER['REQUEST_URI'], 2);
-			$final_uri .= $baseurl[0];
-			$query_string = '';
-			if ($_GET) {
-				$kv = array();
-				foreach ($_GET as $key => $value) {
-					if($key !== "ticket"){
-						$kv[] = urlencode($key). "=" . urlencode($value);
-					}
-				}
-				$query_string = join("&", $kv);
+			$request_uri	= explode('?', $_SERVER['REQUEST_URI'], 2);
+			$final_uri		.= $request_uri[0];
+			
+			if (isset($request_uri[1]) && $request_uri[1])
+			{
+				$query_string	= $this->removeParameterFromQueryString('ticket', $request_uri[1]);
+				
+				// If the query string still has anything left, append it to the final URI
+				if ($query_string !== '')
+					$final_uri	.= "?$query_string";
+				
 			}
-			if($query_string){
-				$final_uri .= "?" . $query_string;
-			}
+			
+			phpCAS::trace("Final URI: $final_uri");
 			$this->setURL($final_uri);
 		}
 		phpCAS::traceEnd($this->_url);
 		return $this->_url;
-		}
+	}
+	
+
+		
+	/**
+	 * Removes a parameter from a query string
+	 * 
+	 * @param string $parameterName 
+	 * @param string $queryString
+	 * @return string
+	 *
+	 * @link http://stackoverflow.com/questions/1842681/regular-expression-to-remove-one-parameter-from-query-string
+	 */
+	function removeParameterFromQueryString($parameterName, $queryString)
+	{
+		$parameterName	= preg_quote($parameterName);
+		return preg_replace("/&$parameterName(=[^&]*)?|^$parameterName(=[^&]*)?&?/", '', $queryString);
+	}
+
 	
 	/**
 	 * This method sets the URL of the current request 
