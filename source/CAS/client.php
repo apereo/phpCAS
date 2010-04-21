@@ -2661,7 +2661,7 @@ class CASClient
 		phpCAS::traceBegin();
 		
 		$this->printHTMLHeader($this->getString(CAS_STR_AUTHENTICATION_FAILED));
-		printf($this->getString(CAS_STR_YOU_WERE_NOT_AUTHENTICATED),$this->getURL(),$_SERVER['SERVER_ADMIN']);
+		printf($this->getString(CAS_STR_YOU_WERE_NOT_AUTHENTICATED),htmlentities($this->getURL()),$_SERVER['SERVER_ADMIN']);
 		phpCAS::trace('CAS URL: '.$cas_url);
 		phpCAS::trace('Authentication failure: '.$failure);
 		if ( $no_response ) {
