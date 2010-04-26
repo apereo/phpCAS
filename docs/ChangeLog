@@ -4,6 +4,11 @@ for interested parties, in the case the wiki wouldn't be available.
 ----
 Changes in version 1.1.1RC1
 Bug fixes
+    * Fix bug in handling urls containing parameters without values [PHPCAS-57] (Joe Lencioni)
+    * New XSS patch for PHPCAS-52 that was undone in r48507 [PHPCAS-57] (Joachim Fritschi)
+
+Changes in version 1.1.1RC1
+Bug fixes
     * Fix bug in restoring an existing session [PHPCAS-55] (Joachim Fritschi)
     
 Changes in version 1.1.0
