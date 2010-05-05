@@ -1194,7 +1194,12 @@ class CASClient
 		$session_id = preg_replace('/[^\w]/','',$ticket2logout);
 		phpCAS::log("Session id: ".$session_id);
 		
-		// fix New session ID
+		// destroy a possible application session created before phpcas
+		if(session_id()){
+			session_unset();
+			session_destroy();
+		}
+		// fix session ID
 		session_id($session_id);
 		$_COOKIE[session_name()]=$session_id;
 		$_GET[session_name()]=$session_id;
