@@ -1500,7 +1500,9 @@ class CASClient
 			phpCas :: trace("Testing for rubycas style attributes");
 			$childnodes = $success_elements[0]->child_nodes();
 			foreach ($childnodes as $attr_node) {
-				if ($attr_node->tagname != 'user'){
+				if ($attr_node->tagname != 'user' 
+				|| $attr_node->tagname != 'proxies' 
+				|| $attr_node->tagname != 'proxyGrantingTicket'){
 					phpCas :: trace("Attribute [".$attr_node->tagname."] = ".$attr_node->get_content());
 					$extra_attributes[$attr_node->tagname] = trim($attr_node->get_content());
 				}
