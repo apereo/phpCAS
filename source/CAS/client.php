@@ -1484,31 +1484,26 @@ class CASClient
 		{
 		# PHPCAS-43 add CAS-2.0 extra attributes
 #		phpCAS::trace('Searching extra attributes in' . Print_r($success_elements));
-		$childnodes = $success_elements[0]->child_nodes();
+		
 		$extra_attributes = array();
-		foreach ($childnodes as $attr_node) {
-			// Skip the normal user attribute
-#			phpCAS::trace('Extra attributes in ' . $attr_node->tagname);
-			if ($attr_node->tagname != 'user'){
-				if($attr_node->has_child_nodes()){
+		
+		if ( sizeof($attr_nodes = $success_elements[0]->get_elements_by_tagname("attributes")) != 0){
+			phpCas :: trace("Found nested jasig style attributes");
+			if($attr_nodes[0]->has_child_nodes()){
 					// Nested Attributes
-					phpCas :: trace("Found nested Attributes");
-					foreach ($attr_node->child_nodes() as $attr_child){
-						if($attr_node->node_type() == XML_ELEMENT_NODE){
-							phpCas :: trace("Child attribute [".$attr_child->node_name()."] = ".$attr_child->get_content());
-							$extra_attributes[$attr_child->tagname] = trim($attr_child->get_content());
-						}
+					foreach ($attr_nodes[0]->child_nodes() as $attr_child){
+						phpCas :: trace("Attribute [".$attr_child->tagname."] = ".$attr_child->get_content());
+						$extra_attributes[$attr_child->tagname] = trim($attr_child->get_content());
 					}
-					phpCas :: trace("End nested Attributes");
-				}else{
-					if($attr_node->node_type() == XML_ELEMENT_NODE){
-						phpCas :: trace("Single Attribute [".$attr_node->node_name()."] = ".$attr_node->get_content());
-						$extra_attributes[$attr_node->tagname] = trim($attr_node->get_content());
-					}
+			}
+		}else{
+			phpCas :: trace("Testing for rubycas style attributes");
+			$childnodes = $success_elements[0]->child_nodes();
+			foreach ($childnodes as $attr_node) {
+				if ($attr_node->tagname != 'user'){
+					phpCas :: trace("Attribute [".$attr_node->tagname."] = ".$attr_node->get_content());
+					$extra_attributes[$attr_node->tagname] = trim($attr_node->get_content());
 				}
-			}else{
-				phpCas :: trace("Skipping user element");
-				continue;
 			}
 		}
 		$this->setAttributes($extra_attributes);
