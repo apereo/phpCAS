@@ -1542,7 +1542,7 @@ class CASClient
 	 * payload and put them into an array, then put the array into the session.
 	 *
 	 * @param $text_response the SAML payload.
-	 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+	 * @return bool TRUE when successfull and FALSE if no attributes a found
 	 *
 	 * @private
 	 */
@@ -1563,30 +1563,34 @@ class CASClient
 			$xPath->xpath_register_ns('samlp', 'urn:oasis:names:tc:SAML:1.0:protocol');
 			$xPath->xpath_register_ns('saml', 'urn:oasis:names:tc:SAML:1.0:assertion');
 			$nodelist = $xPath->xpath_eval("//saml:Attribute");
-			$attrs = $nodelist->nodeset;
-			phpCAS::trace($text_response);
-			foreach($attrs as $attr){
-				$xres = $xPath->xpath_eval("saml:AttributeValue", $attr);
-				$name = $attr->get_attribute("AttributeName");
-				$value_array = array();
-				foreach($xres->nodeset as $node){
-					$value_array[] = $node->get_content();
-					
+			if($nodelist){
+				$attrs = $nodelist->nodeset;
+				phpCAS::trace($text_response);
+				foreach($attrs as $attr){
+					$xres = $xPath->xpath_eval("saml:AttributeValue", $attr);
+					$name = $attr->get_attribute("AttributeName");
+					$value_array = array();
+					foreach($xres->nodeset as $node){
+						$value_array[] = $node->get_content();
+					}
+					phpCAS::trace("* " . $name . "=" . $value_array);
+					$attr_array[$name] = $value_array;
 				}
-				phpCAS::trace("* " . $name . "=" . $value_array);
-				$attr_array[$name] = $value_array;
+				$_SESSION[SAML_ATTRIBUTES] = $attr_array;
+				// UGent addition...
+				foreach($attr_array as $attr_key => $attr_value) {
+					if(count($attr_value) > 1) {
+						$this->_attributes[$attr_key] = $attr_value;
+					}
+					else {
+						$this->_attributes[$attr_key] = $attr_value[0];
+					}
+				}
+				$result = TRUE;
+			}else{
+				phpCAS::trace("SAML Attributes are empty");
+				$result = FALSE;
 			}
-			$_SESSION[SAML_ATTRIBUTES] = $attr_array;
-			// UGent addition...
-			foreach($attr_array as $attr_key => $attr_value) {
-				if(count($attr_value) > 1) {
-					$this->_attributes[$attr_key] = $attr_value;
-				}
-				else {
-					$this->_attributes[$attr_key] = $attr_value[0];
-				}
-			}
-			$result = TRUE;
 		}
 		phpCAS::traceEnd($result);
 		return $result;
