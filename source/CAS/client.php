@@ -1565,7 +1565,6 @@ class CASClient
 			$nodelist = $xPath->xpath_eval("//saml:Attribute");
 			if($nodelist){
 				$attrs = $nodelist->nodeset;
-				phpCAS::trace($text_response);
 				foreach($attrs as $attr){
 					$xres = $xPath->xpath_eval("saml:AttributeValue", $attr);
 					$name = $attr->get_attribute("AttributeName");
@@ -1573,7 +1572,6 @@ class CASClient
 					foreach($xres->nodeset as $node){
 						$value_array[] = $node->get_content();
 					}
-					phpCAS::trace("* " . $name . "=" . $value_array);
 					$attr_array[$name] = $value_array;
 				}
 				$_SESSION[SAML_ATTRIBUTES] = $attr_array;
@@ -1581,9 +1579,11 @@ class CASClient
 				foreach($attr_array as $attr_key => $attr_value) {
 					if(count($attr_value) > 1) {
 						$this->_attributes[$attr_key] = $attr_value;
+						phpCAS::trace("* " . $attr_key . "=" . $attr_value);
 					}
 					else {
 						$this->_attributes[$attr_key] = $attr_value[0];
+						phpCAS::trace("* " . $attr_key . "=" . $attr_value[0]);
 					}
 				}
 				$result = TRUE;
