@@ -1382,7 +1382,7 @@ class CASClient
 		$validate_url = $this->getServerServiceValidateURL().'&ticket='.$this->getST();
 		if ( $this->isProxy() ) {
 			// pass the callback url for CAS proxies
-			$validate_url .= '&pgtUrl='.$this->getCallbackURL();
+			$validate_url .= '&pgtUrl='.urlencode($this->getCallbackURL());
 		}
 		
 		// open and read the URL
@@ -2495,7 +2495,7 @@ class CASClient
 		
 		if ( $this->isProxy() ) {
 			// pass the callback url for CAS proxies
-			$validate_url .= '&pgtUrl='.$this->getCallbackURL();
+			$validate_url .= '&pgtUrl='.urlencode($this->getCallbackURL());
 		}
 		
 		// open and read the URL
