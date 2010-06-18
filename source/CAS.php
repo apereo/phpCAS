@@ -491,7 +491,7 @@ class phpCAS {
 
 		$PHPCAS_DEBUG['filename'] = $filename;
 
-		phpCAS :: trace('START ******************');
+		phpCAS :: trace('START phpCAS-' . PHPCAS_VERSION . ' ******************');
 	}
 
 	/** @} */
