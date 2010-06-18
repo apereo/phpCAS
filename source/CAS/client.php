@@ -2284,6 +2284,7 @@ class CASClient
 	function serviceWeb($url,&$err_code,&$output)
 		{
 		phpCAS::traceBegin();
+		$cookies = array();
 		// at first retrieve a PT
 		$pt = $this->retrievePT($url,$err_code,$output);
 		
@@ -2296,7 +2297,8 @@ class CASClient
 			$res = FALSE;
 		} else {
 			// add cookies if necessary
-			if ( is_array($_SESSION['phpCAS']['services'][$url]['cookies']) ) {
+			if ( isset($_SESSION['phpCAS']['services'][$url]['cookies']) && 
+					is_array($_SESSION['phpCAS']['services'][$url]['cookies']) ) {
 				foreach ( $_SESSION['phpCAS']['services'][$url]['cookies'] as $name => $val ) { 
 					$cookies[] = $name.'='.$val;
 				}
