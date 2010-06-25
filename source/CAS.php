@@ -1475,22 +1475,6 @@ class phpCAS {
 		$PHPCAS_CLIENT->setExtraCurlOption($key, $value);
 		phpCAS :: traceEnd();
 	}
-
-  /**
-   * Enable Cas 2.0 extra attributes
-   * @param $value the option key
-   */
-   function setExtraAttributesCas20($value)
-		{
-		  global $PHPCAS_CLIENT;
-		  phpCAS::traceBegin();
-		  if ( !is_object($PHPCAS_CLIENT) ) {
-		  	phpCAS::error('this method should only be called after '.__CLASS__.'::client() or'.__CLASS__.'::proxy()');
-		  }  
-		  $PHPCAS_CLIENT->setExtraAttributesCas20($value);
-		  phpCAS::traceEnd();
-		}
-
 }
 
 // ########################################################################

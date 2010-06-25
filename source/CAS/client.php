@@ -835,16 +835,6 @@ class CASClient
 		}
 	}
 	
-	var $_extra_attributes_cas20 = FALSE;
-	
-	function setExtraAttributesCas20($value){
-		{ $this->_extra_attributes_cas20 = $value; }
-	}
-	
-	function isExtraAttributesCas20(){
-		{ return $this->_extra_attributes_cas20; }
-	}
-	
 	
 	/**
 	 * This method is called to renew the authentication of the user
@@ -1477,9 +1467,7 @@ class CASClient
 					$user = trim($user_elements[0]->get_content());
 					phpCAS::trace('user = `'.$user);
 					$this->setUser($user);
-					if($this->isExtraAttributesCas20()){
-						$this->readExtraAttributesCas20($success_elements);
-					}
+					$this->readExtraAttributesCas20($success_elements);
 					
 				} else if ( sizeof($failure_elements = $tree_response->get_elements_by_tagname("authenticationFailure")) != 0) {
 					phpCAS::trace('<authenticationFailure> found');
@@ -2610,9 +2598,7 @@ class CASClient
 					$text_response);
 			}
 			$this->setUser(trim($arr[0]->get_content()));
-			if($this->isExtraAttributesCas20()){
-				$this->readExtraAttributesCas20($success_elements);
-			}
+			$this->readExtraAttributesCas20($success_elements);
 		} else if ( sizeof($arr = $tree_response->get_elements_by_tagname("authenticationFailure")) != 0) {
 			// authentication succeded, extract the error code and message
 			$this->authError('PT not validated',
