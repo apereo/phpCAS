@@ -1016,13 +1016,6 @@ class phpCAS {
 	}
 
 	/**
-	 * This method has been left from version 0.4.1 for compatibility reasons.
-	 */
-	public static function authenticate() {
-		phpCAS :: error('this method is deprecated. You should use ' . __CLASS__ . '::forceAuthentication() instead');
-	}
-
-	/**
 	 * This method is called to check if the user is authenticated (previously or by
 	 * tickets given in the URL).
 	 *

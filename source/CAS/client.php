@@ -356,7 +356,6 @@ class CASClient
 			if ( empty($this->_server['login_url']) ) {
 				$this->_server['login_url'] = $this->getServerBaseURL();
 				$this->_server['login_url'] .= 'login?service=';
-				// $this->_server['login_url'] .= preg_replace('/&/','%26',$this->getURL());
 				$this->_server['login_url'] .= urlencode($this->getURL());
 				if($renew) {
 					// It is recommended that when the "renew" parameter is set, its value be "true"
@@ -436,7 +435,6 @@ class CASClient
 						break;
 				}
 			}
-			//      return $this->_server['service_validate_url'].'?service='.preg_replace('/&/','%26',$this->getURL());
 			return $this->_server['service_validate_url'].'?service='.urlencode($this->getURL());
 		}
 		/**
@@ -476,7 +474,6 @@ class CASClient
 						break;
 				}
 			}
-			//      return $this->_server['proxy_validate_url'].'?service='.preg_replace('/&/','%26',$this->getURL());
 			return $this->_server['proxy_validate_url'].'?service='.urlencode($this->getURL());
 		}
 
@@ -545,8 +542,6 @@ class CASClient
 		 * @private
 		 */
 		function isHttps() {
-			//if ( isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) ) {
-			//0.4.24 by Hinnack
 			if ( isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
 				return true;
 			} else {
@@ -919,10 +914,6 @@ class CASClient
 				unset($_SESSION['phpCAS']['auth_checked']);
 				$res = FALSE;
 			} else {
-				//        $_SESSION['phpCAS']['auth_checked'] = true;
-				//	    $this->redirectToCas(TRUE/* gateway */);
-				//	    // never reached
-				//	    $res = FALSE;
 				// avoid a check against CAS on every request
 				if (! isset($_SESSION['phpCAS']['unauth_count']) )
 				$_SESSION['phpCAS']['unauth_count'] = -2; // uninitialized
@@ -1589,10 +1580,6 @@ class CASClient
 
 			$result = FALSE;
 
-			if (isset($_SESSION[SAML_ATTRIBUTES])) {
-				phpCAS::trace("session attrs already set.");  //testbml - do we care?
-			}
-
 			$attr_array = array();
 
 			if (($dom = domxml_open_mem($text_response))) {
@@ -1611,7 +1598,6 @@ class CASClient
 						}
 						$attr_array[$name] = $value_array;
 					}
-					$_SESSION[SAML_ATTRIBUTES] = $attr_array;
 					// UGent addition...
 					foreach($attr_array as $attr_key => $attr_value) {
 						if(count($attr_value) > 1) {
@@ -1786,13 +1772,7 @@ class CASClient
 				$final_uri = '';
 				// remove the ticket if present in the URL
 				$final_uri = 'https://';
-				/* replaced by Julien Marchal - v0.4.6
-				 * $this->uri .= $_SERVER['SERVER_NAME'];
-				 */
 				if(empty($_SERVER['HTTP_X_FORWARDED_SERVER'])){
-					/* replaced by teedog - v0.4.12
-					 * $final_uri .= $_SERVER['SERVER_NAME'];
-					 */
 					if (empty($_SERVER['SERVER_NAME'])) {
 						$final_uri .= $_SERVER['HTTP_HOST'];
 					} else {
@@ -2047,7 +2027,6 @@ class CASClient
 			$err_msg = '';
 
 			// build the URL to retrieve the PT
-			//      $cas_url = $this->getServerProxyURL().'?targetService='.preg_replace('/&/','%26',$target_service).'&pgt='.$this->getPGT();
 			$cas_url = $this->getServerProxyURL().'?targetService='.urlencode($target_service).'&pgt='.$this->getPGT();
 
 			// open and read the URL
@@ -2210,16 +2189,13 @@ class CASClient
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $more_headers);
 				curl_setopt($ch, CURLOPT_POST, 1);
 				$data = $this->buildSAMLPayload();
-				//phpCAS::trace('SAML Payload: '.print_r($data, TRUE));
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 			}
 			// perform the query
 			$buf = curl_exec ($ch);
-			//phpCAS::trace('CURL: Call completed. Response body is: \''.$buf.'\'');
 			if ( $buf === FALSE ) {
 				phpCAS::trace('curl_exec() failed');
 				$err_msg = 'CURL error #'.curl_errno($ch).': '.curl_error($ch);
-				//phpCAS::trace('curl error: '.$err_msg);
 				// close the CURL session
 				curl_close ($ch);
 				$res = FALSE;
@@ -2248,7 +2224,6 @@ class CASClient
 
 			//get the ticket
 			$sa = $this->getSA();
-			//phpCAS::trace("SA: ".$sa);
 
 			$body=SAML_SOAP_ENV.SAML_SOAP_BODY.SAMLP_REQUEST.SAML_ASSERTION_ARTIFACT.$sa.SAML_ASSERTION_ARTIFACT_CLOSE.SAMLP_REQUEST_CLOSE.SAML_SOAP_BODY_CLOSE.SAML_SOAP_ENV_CLOSE;
 
@@ -2613,13 +2588,7 @@ class CASClient
 				// remove the ticket if present in the URL
 				$final_uri = ($this->isHttps()) ? 'https' : 'http';
 				$final_uri .= '://';
-				/* replaced by Julien Marchal - v0.4.6
-				 * $this->_url .= $_SERVER['SERVER_NAME'];
-				 */
 				if(empty($_SERVER['HTTP_X_FORWARDED_SERVER'])){
-					/* replaced by teedog - v0.4.12
-					 * $this->_url .= $_SERVER['SERVER_NAME'];
-					 */
 					if (empty($_SERVER['SERVER_NAME'])) {
 						$server_name = $_SERVER['HTTP_HOST'];
 					} else {
