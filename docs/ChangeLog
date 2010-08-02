@@ -2,10 +2,20 @@ This document duplicates reference information found at http://www.ja-sig.org/wi
 for interested parties, in the case the wiki wouldn't be available.
 
 ----
+Changes in version 1.1.2
+   * None
+   
+Changes in version 1.1.2RC2
+ Bug Fixes
+    * Prevent domxml-php4-to-php5 to be inclueded twice [PHPCAS-48] (Brad Krane)
+
 Changes in version 1.1.2RC1
-Improvement
-    * Debuglog contains phpCAS version information [PHPCAS-62] (Joachim Fritschi)
+Security Issue
+    * Fix a session hijacking hole [PHPCAS-61] (Joachim Fritschi)
     * callbackurl in proxy mode should be urlencoded [PHPCAS-67] (Joachim Fritschi)
+
+ Improvement
+    * Debuglog contains phpCAS version information [PHPCAS-62] (Joachim Fritschi)
     
  Bug Fixes   
     * Fix warnings for SAML responses without attributes [PHPCAS-59] (Joachim Fritschi)
