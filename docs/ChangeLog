@@ -12,10 +12,10 @@ Changes in version 1.1.2RC2
 Changes in version 1.1.2RC1
 Security Issue
     * Fix a session hijacking hole [PHPCAS-61] (Joachim Fritschi)
+    * callbackurl in proxy mode should be urlencoded [PHPCAS-67] (Joachim Fritschi)
 
  Improvement
     * Debuglog contains phpCAS version information [PHPCAS-62] (Joachim Fritschi)
-    * callbackurl in proxy mode should be urlencoded [PHPCAS-67] (Joachim Fritschi)
     
  Bug Fixes   
     * Fix warnings for SAML responses without attributes [PHPCAS-59] (Joachim Fritschi)
