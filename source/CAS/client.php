@@ -986,6 +986,9 @@ class CASClient
 						$_SESSION['phpCAS']['pgt'] = $this->getPGT();
 					}
 					$_SESSION['phpCAS']['user'] = $this->getUser();
+					if($this->hasAttributes()){
+						$_SESSION['phpCAS']['attributes'] = $this->getAttributes();
+					}
 					$res = TRUE;
 				}
 				elseif ( $this->hasPT() ) {
@@ -999,6 +1002,9 @@ class CASClient
 						$_SESSION['phpCAS']['pgt'] = $this->getPGT();
 					}
 					$_SESSION['phpCAS']['user'] = $this->getUser();
+					if($this->hasAttributes()){
+						$_SESSION['phpCAS']['attributes'] = $this->getAttributes();
+					}
 					$res = TRUE;
 				}
 				elseif ( $this->hasSA() ) {
@@ -1061,6 +1067,9 @@ class CASClient
 				if ( $this->isSessionAuthenticated() && !empty($_SESSION['phpCAS']['pgt']) ) {
 					// authentication already done
 					$this->setUser($_SESSION['phpCAS']['user']);
+					if(isset($_SESSION['phpCAS']['attributes'])){
+						$this->setAttributes($_SESSION['phpCAS']['attributes']);
+					}
 					$this->setPGT($_SESSION['phpCAS']['pgt']);
 					phpCAS::trace('user = `'.$_SESSION['phpCAS']['user'].'\', PGT = `'.$_SESSION['phpCAS']['pgt'].'\'');
 					$auth = TRUE;
@@ -1409,7 +1418,7 @@ class CASClient
 					break;
 				case CAS_VERSION_2_0:
 					// read the response of the CAS server into a DOM object
-					if ( !($dom = domxml_open_mem($text_response))) {
+					if ( !($dom = domxml_open_mem($text_response,DOMXML_LOAD_DONT_KEEP_BLANKS))) {
 						phpCAS::trace('domxml_open_mem() failed');
 						$this->authError('ST not validated',
 						$validate_url,
@@ -1448,6 +1457,7 @@ class CASClient
 						$user = trim($user_elements[0]->get_content());
 						phpCAS::trace('user = `'.$user);
 						$this->setUser($user);
+						$this->readExtraAttributesCas20($success_elements);
 							
 					} else if ( sizeof($failure_elements = $tree_response->get_elements_by_tagname("authenticationFailure")) != 0) {
 						phpCAS::trace('<authenticationFailure> found');
@@ -1475,6 +1485,47 @@ class CASClient
 			return TRUE;
 		}
 
+
+		/**
+		 * This method will parse the DOM and pull out the attributes from the XML
+		 * payload and put them into an array, then put the array into the session.
+		 *
+		 * @param $text_response the XML payload.
+		 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+		 *
+		 * @private
+		 */
+		function readExtraAttributesCas20($success_elements)
+		{
+			# PHPCAS-43 add CAS-2.0 extra attributes
+			#		phpCAS::trace('Searching extra attributes in' . Print_r($success_elements));
+
+			$extra_attributes = array();
+
+			if ( sizeof($attr_nodes = $success_elements[0]->get_elements_by_tagname("attributes")) != 0){
+				phpCas :: trace("Found nested jasig style attributes");
+				if($attr_nodes[0]->has_child_nodes()){
+					// Nested Attributes
+					foreach ($attr_nodes[0]->child_nodes() as $attr_child){
+						phpCas :: trace("Attribute [".$attr_child->tagname."] = ".$attr_child->get_content());
+						$extra_attributes[$attr_child->tagname] = trim($attr_child->get_content());
+					}
+				}
+			}else{
+				phpCas :: trace("Testing for rubycas style attributes");
+				$childnodes = $success_elements[0]->child_nodes();
+				foreach ($childnodes as $attr_node) {
+					if ($attr_node->tagname != 'user'
+					|| $attr_node->tagname != 'proxies'
+					|| $attr_node->tagname != 'proxyGrantingTicket'){
+						phpCas :: trace("Attribute [".$attr_node->tagname."] = ".$attr_node->get_content());
+						$extra_attributes[$attr_node->tagname] = trim($attr_node->get_content());
+					}
+				}
+			}
+			$this->setAttributes($extra_attributes);
+			return TRUE;
+		}
 		// ########################################################################
 		//  SAML VALIDATION
 		// ########################################################################
@@ -1516,7 +1567,7 @@ class CASClient
 				case SAML_VERSION_1_1:
 
 					// read the response of the CAS server into a DOM object
-					if ( !($dom = domxml_open_mem($text_response))) {
+					if ( !($dom = domxml_open_mem($text_response,DOMXML_LOAD_DONT_KEEP_BLANKS))) {
 						phpCAS::trace('domxml_open_mem() failed');
 						$this->authError('SA not validated',
 						$validate_url,
@@ -1582,7 +1633,7 @@ class CASClient
 
 			$attr_array = array();
 
-			if (($dom = domxml_open_mem($text_response))) {
+			if (($dom = domxml_open_mem($text_response,DOMXML_LOAD_DONT_KEEP_BLANKS))) {
 				$xPath = $dom->xpath_new_context();
 				$xPath->xpath_register_ns('samlp', 'urn:oasis:names:tc:SAML:1.0:protocol');
 				$xPath->xpath_register_ns('saml', 'urn:oasis:names:tc:SAML:1.0:assertion');
@@ -2042,7 +2093,7 @@ class CASClient
 
 			if ( !$bad_response ) {
 				// read the response of the CAS server into a DOM object
-				if ( !($dom = @domxml_open_mem($cas_response))) {
+				if ( !($dom = @domxml_open_mem($cas_response,DOMXML_LOAD_DONT_KEEP_BLANKS))) {
 					phpCAS::trace('domxml_open_mem() failed');
 					// read failed
 					$bad_response = TRUE;
@@ -2484,7 +2535,7 @@ class CASClient
 			}
 
 			// read the response of the CAS server into a DOM object
-			if ( !($dom = domxml_open_mem($text_response))) {
+			if ( !($dom = domxml_open_mem($text_response,DOMXML_LOAD_DONT_KEEP_BLANKS))) {
 				// read failed
 				$this->authError('PT not validated',
 				$validate_url,
@@ -2510,7 +2561,7 @@ class CASClient
 				TRUE/*$bad_response*/,
 				$text_response);
 			}
-			if ( sizeof($arr = $tree_response->get_elements_by_tagname("authenticationSuccess")) != 0) {
+			if ( sizeof($success_elements = $tree_response->get_elements_by_tagname("authenticationSuccess")) != 0) {
 				// authentication succeded, extract the user name
 				if ( sizeof($arr = $tree_response->get_elements_by_tagname("user")) == 0) {
 					// no user specified => error
@@ -2521,7 +2572,7 @@ class CASClient
 					$text_response);
 				}
 				$this->setUser(trim($arr[0]->get_content()));
-					
+				$this->readExtraAttributesCas20($success_elements);
 			} else if ( sizeof($arr = $tree_response->get_elements_by_tagname("authenticationFailure")) != 0) {
 				// authentication succeded, extract the error code and message
 				$this->authError('PT not validated',
