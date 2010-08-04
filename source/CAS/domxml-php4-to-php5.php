@@ -263,7 +263,7 @@ class php4DOMNode
 				return false;
 		}
 	}
-	function add_child($newnode) {return append_child($newnode);}
+	function add_child($newnode) {return $this->append_child($newnode);}
 	function add_namespace($uri,$prefix) {return false;}
 	function append_child($newnode) {return self::_newDOMElement($this->myDOMNode->appendChild($this->_importNode($newnode)),$this->myOwnerDocument);}
 	function append_sibling($newnode) {return self::_newDOMElement($this->myDOMNode->parentNode->appendChild($this->_importNode($newnode)),$this->myOwnerDocument);}
