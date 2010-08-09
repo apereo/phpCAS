@@ -209,7 +209,7 @@ class PGTStorageDB extends PGTStorage
 			phpCAS::error('could not connect to database ('.DB::errorMessage($this->_link).')');
 		}
 		var_dump($this->_link);
-		phpCAS::traceBEnd();
+		phpCAS::traceEnd();
 	}
 
 	/** @} */
