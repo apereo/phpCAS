@@ -2323,11 +2323,9 @@ class CASClient
 				$res = FALSE;
 			} else {
 				// add cookies if necessary
-				if ( isset($_SESSION['phpCAS']['services'][$url]['cookies']) &&
-				is_array($_SESSION['phpCAS']['services'][$url]['cookies']) ) {
-					foreach ( $_SESSION['phpCAS']['services'][$url]['cookies'] as $name => $val ) {
-						$cookies[] = $name.'='.$val;
-					}
+				$cookies = array();
+				foreach ( $this->getServiceCookies($url) as $name => $val ) {
+					$cookies[] = $name.'='.$val;
 				}
 					
 				// build the URL including the PT
@@ -2349,26 +2347,245 @@ class CASClient
 				} else {
 					// URL has been fetched, extract the cookies
 					phpCAS::trace('URL`'.$service_url.'\' has been read, storing cookies:');
-					foreach ( $headers as $header ) {
-						// test if the header is a cookie
-						if ( preg_match('/^Set-Cookie:/',$header) ) {
-							// the header is a cookie, remove the beginning
-							$header_val = preg_replace('/^Set-Cookie: */','',$header);
-							// extract interesting information
-							$name_val = strtok($header_val,'; ');
-							// extract the name and the value of the cookie
-							$cookie_name = strtok($name_val,'=');
-							$cookie_val = strtok('=');
-							// store the cookie
-							$_SESSION['phpCAS']['services'][$url]['cookies'][$cookie_name] = $cookie_val;
-							phpCAS::trace($cookie_name.' -> '.$cookie_val);
-						}
-					}
+					$this->setServiceCookies($service_url, $headers);
 				}
 			}
 
 			phpCAS::traceEnd($res);
 			return $res;
+		}
+
+
+		/**
+		 * Store cookies for a web service request.
+		 * Cookie storage is based on RFC 2965: http://www.ietf.org/rfc/rfc2965.txt
+		 *
+		 * @param string $service_url The service that generated the response.
+		 * @param array $response_headers An array of the HTTP response header strings.
+		 *
+		 * @return void
+		 *
+		 * @access private
+		 */
+		function setServiceCookies ($service_url, $response_headers) {
+			if (!isset($_SESSION['phpCAS']['service_cookies'])) {
+				$_SESSION['phpCAS']['service_cookies'] = array();
+			}
+
+			foreach ( $response_headers as $header ) {
+				// test if the header is a cookie
+				if ( preg_match('/^Set-Cookie2?:/',$header) ) {
+					// the header is a cookie, remove the beginning
+					$header_val = preg_replace('/^Set-Cookie2?: */','',$header);
+
+					// Parse the cookie string into an array of cookies
+					$cookies = $this->parseCookieHeader($service_url, $header_val);
+					var_dump($cookies);
+					foreach ($cookies as $cookie) {
+						// Enforce the same-origin policy by verifying that the cookie
+						// would match the service that is setting it
+						if (!$this->cookieMatchesTarget($cookie, parse_url($service_url)))
+						continue;
+
+						// store the cookie
+						$this->setServiceCookie($cookie);
+
+						phpCAS::trace($cookie['name'].' -> '.$cookie['value']);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Retrieve cookies applicable for a web service request.
+		 * Cookie applicability is based on RFC 2965: http://www.ietf.org/rfc/rfc2965.txt
+		 *
+		 * @param string $service_url The service that generated the response.
+		 *
+		 * @return array An array containing cookies. E.g. array('name' => 'val');
+		 *
+		 * @access private
+		 */
+		function getServiceCookies ($service_url) {
+			// If no cookies have been set:
+			if (!isset($_SESSION['phpCAS']['service_cookies']))
+			return array();
+
+			// If our service URL can't be parsed, no cookies apply.
+			$target = parse_url($service_url);
+			if ($target === FALSE)
+			return array();
+
+			$this->expireServiceCookies();
+
+			$matching_cookies = array();
+			foreach ($_SESSION['phpCAS']['service_cookies'] as $key => $cookie) {
+				if ($this->cookieMatchesTarget($cookie, $target)) {
+					$matching_cookies[$cookie['name']] = $cookie['value'];
+
+					// Expire single-use cookies
+					if ($cookie['expires'] === 0)
+					unset($_SESSION['phpCAS']['service_cookies'][$key]);
+				}
+			}
+			return $matching_cookies;
+		}
+
+		/**
+		 * Parse a Set-Cookie header line into an array of cookie objects.
+		 *
+		 * @param string $service_url
+		 * @param string $header_val
+		 *
+		 * @return array An array of stdClass objects.
+		 *
+		 * @access private
+		 */
+		function parseCookieHeader ($service_url, $header_val) {
+			// Here is our dependency on the PECL HTTP extension.
+			$cookie_data = http_parse_cookie($header_val);
+
+			if ($cookie_data === FALSE)
+			return array();
+
+			// Initialize any values
+			if (strlen($cookie_data->domain))
+			$meta['domain'] = $cookie_data->domain;
+			else {
+				$url_parts = parse_url($service_url);
+				// If our service URL can't be parsed, we can't save the cookies.
+				if ($url_parts === FALSE)
+				return array();
+				$meta['domain'] = $url_parts['host'];
+			}
+
+			$meta['path'] = trim($cookie_data->path);
+
+			if (isset($cookie_data->portlist))
+			$meta['ports'] = explode(',', $cookie_data->port);
+			else
+			$meta['ports'] = null;
+
+			if (isset($cookie_data->expires))
+			$meta['expires'] = $cookie_data->expires;
+			else
+			$meta['expires'] = null;
+
+			if ($cookie_data->flags & HTTP_COOKIE_SECURE)
+			$meta['secure_only'] = true;
+			else
+			$meta['secure_only'] = false;
+
+			if (isset($cookie_data->discard))
+			$meta['discard'] = true;
+			else
+			$meta['discard'] = false;
+
+
+			// Break up the cookie into individual name/value pairs.
+			$cookieArray = array();
+			foreach ($cookie_data->cookies as $name => $value) {
+				$cookieArray[] = array_merge($meta, array('name' => $name, 'value' => $value));
+			}
+			return $cookieArray;
+		}
+
+		/**
+		 * Add, update, or remove a cookie.
+		 *
+		 * @param stdClass $cookie A cookie object as created by http_parse_cookie()
+		 *
+		 * @return void
+		 *
+		 * @access private
+		 */
+		function setServiceCookie ($cookie) {
+			// Discard any old versions of this cookie.
+			$this->discardServiceCookie($cookie);
+
+			// Store the cookie
+			if (!$cookie['discard']) {
+				$_SESSION['phpCAS']['service_cookies'][] = $cookie;
+			}
+		}
+
+		/**
+		 * Discard an existing cookie
+		 *
+		 * @param stdClass $cookie
+		 *
+		 * @return void
+		 *
+		 * @access private
+		 */
+		function discardServiceCookie ($cookie) {
+			foreach ($_SESSION['phpCAS']['service_cookies'] as $key => $old_cookie) {
+				if ($cookie['domain'] == $old_cookie['domain']
+				&& $cookie['path'] == $old_cookie['path']
+				&& $cookie['name'] == $old_cookie['name'])
+				{
+					unset($_SESSION['phpCAS']['service_cookies'][$key]);
+				}
+			}
+		}
+
+		/**
+		 * Go through our stored cookies and remove any that are expired.
+		 *
+		 * @return void
+		 *
+		 * @access private
+		 */
+		function expireServiceCookies () {
+			foreach ($_SESSION['phpCAS']['service_cookies'] as $key => $cookie) {
+				if ($cookie['expires'] && $cookie['expires'] < time()) {
+					unset($_SESSION['phpCAS']['service_cookies'][$key]);
+				}
+			}
+		}
+
+		/**
+		 * Answer true if cookie is applicable to a target.
+		 *
+		 * @param array $cookie An array of cookie attributes.
+		 * @param array $target An array of URL attributes as generated by parse_url().
+		 *
+		 * @return boolean
+		 *
+		 * @access private
+		 */
+		function cookieMatchesTarget ($cookie, $target) {
+			// Verify that the scheme matches
+			if ($cookie['secure_only'] && $target['scheme'] != 'http')
+			return false;
+
+			// Verify that the host matches
+			// Match domain and mulit-host cookies
+			if (strpos($cookie['domain'], '.') === 0) {
+				// check that the target host a.b.c.edu is within .b.c.edu
+				$pos = strripos($target['host'], $cookie['domain']);
+				if (!$pos)
+				return false;
+				// verify that the cookie domain is the last part of the host.
+				if ($pos + strlen($cookie['domain']) != strlen($target['host']))
+				return false;
+			}
+			// If the cookie host doesn't begin with '.', the host must case-insensitive
+			// match exactly
+			else {
+				if (strcasecmp($target['host'], $cookie['domain']) !== 0)
+				return false;
+			}
+
+			// Verify that the port matches
+			if ($cookie['ports'] && !in_array($target['port'], $cookie['ports']))
+			return false;
+
+			// Verify that the path matches
+			if (strpos($target['path'], $cookie['path']) !== 0)
+			return false;
+
+			return true;
 		}
 
 		/**
