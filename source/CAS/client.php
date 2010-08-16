@@ -976,12 +976,14 @@ class CASClient
 				phpCAS::trace('ticket was present and will be discarded, use renewAuthenticate()');
 				header('Location: '.$this->getURL());
 				phpCAS::log( "Prepare redirect to remove ticket: ".$this->getURL() );
+				phpCAS::traceExit();
+				exit();
 			}else{
 				// the user has already (previously during the session) been
 				// authenticated, nothing to be done.
 				phpCAS::trace('user was already authenticated, no need to look for tickets');
+				$res = TRUE;
 			}
-			$res = TRUE;
 		}
 		else {
 			if ( $this->hasST() ) {
@@ -1026,8 +1028,11 @@ class CASClient
 			if ($res) {
 				// if called with a ticket parameter, we need to redirect to the app without the ticket so that CAS-ification is transparent to the browser (for later POSTS)
 				// most of the checks and errors should have been made now, so we're safe for redirect without masking error messages.
+				// remove the ticket as a security precaution to prevent a ticket in the HTTP_REFERRER
 				header('Location: '.$this->getURL());
 				phpCAS::log( "Prepare redirect to : ".$this->getURL() );
+				phpCAS::traceExit();
+				exit();
 			}
 		}
 		
