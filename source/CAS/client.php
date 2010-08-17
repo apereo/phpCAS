@@ -2372,28 +2372,20 @@ class CASClient
 				$_SESSION['phpCAS']['service_cookies'] = array();
 			}
 
-			foreach ( $response_headers as $header ) {
-				// test if the header is a cookie
-				if ( preg_match('/^Set-Cookie2?:/',$header) ) {
-					// the header is a cookie, remove the beginning
-					$header_val = preg_replace('/^Set-Cookie2?: */','',$header);
+			$cookies = $this->parseCookieHeaders($response_headers);
+			var_dump($cookies);
+			foreach ($cookies as $cookie) {
+				// Enforce the same-origin policy by verifying that the cookie
+				// would match the service that is setting it
+				if (!$this->cookieMatchesTarget($cookie, parse_url($service_url)))
+				continue;
 
-					// Parse the cookie string into an array of cookies
-					$cookies = $this->parseCookieHeader($service_url, $header_val);
-					var_dump($cookies);
-					foreach ($cookies as $cookie) {
-						// Enforce the same-origin policy by verifying that the cookie
-						// would match the service that is setting it
-						if (!$this->cookieMatchesTarget($cookie, parse_url($service_url)))
-						continue;
+				// store the cookie
+				$this->setServiceCookie($cookie);
 
-						// store the cookie
-						$this->setServiceCookie($cookie);
-
-						phpCAS::trace($cookie['name'].' -> '.$cookie['value']);
-					}
-				}
+				phpCAS::trace($cookie['name'].' -> '.$cookie['value']);
 			}
+
 		}
 
 		/**
@@ -2431,64 +2423,40 @@ class CASClient
 			return $matching_cookies;
 		}
 
+
 		/**
-		 * Parse a Set-Cookie header line into an array of cookie objects.
-		 *
-		 * @param string $service_url
-		 * @param string $header_val
-		 *
-		 * @return array An array of stdClass objects.
-		 *
-		 * @access private
+		 * Parse Cookies without PECL
+		 * From the comments in http://php.net/manual/en/function.http-parse-cookie.php
+		 * @param $header
+		 * @return array of cookies
 		 */
-		function parseCookieHeader ($service_url, $header_val) {
-			// Here is our dependency on the PECL HTTP extension.
-			$cookie_data = http_parse_cookie($header_val);
-
-			if ($cookie_data === FALSE)
-			return array();
-
-			// Initialize any values
-			if (strlen($cookie_data->domain))
-			$meta['domain'] = $cookie_data->domain;
-			else {
-				$url_parts = parse_url($service_url);
-				// If our service URL can't be parsed, we can't save the cookies.
-				if ($url_parts === FALSE)
-				return array();
-				$meta['domain'] = $url_parts['host'];
+		function parseCookieHeaders( $header ) {
+			$cookies = array();
+			foreach( $header as $line ) {
+				if( preg_match( '/^Set-Cookie2?: /i', $line ) ) {
+					$line = preg_replace( '/^Set-Cookie2?: /i', '', trim( $line ) );
+					$csplit = explode( ';', $line );
+					$cdata = array();
+					foreach( $csplit as $data ) {
+						$cinfo = explode( '=', $data );
+						$cinfo[0] = trim( $cinfo[0] );
+						if( $cinfo[0] == 'expires' ) $cinfo[1] = strtotime( $cinfo[1] );
+						if( $cinfo[0] == 'secure' ) $cinfo[1] = "true";
+						if( in_array( $cinfo[0], array( 'domain', 'expires', 'path', 'secure', 'comment' ) ) ) {
+							$cdata[trim( $cinfo[0] )] = $cinfo[1];
+						}
+						else {
+							$cdata['value']['key'] = $cinfo[0];
+							$cdata['value']['value'] = $cinfo[1];
+						}
+					}
+					$cookies[] = $cdata;
+				}
 			}
-
-			$meta['path'] = trim($cookie_data->path);
-
-			if (isset($cookie_data->portlist))
-			$meta['ports'] = explode(',', $cookie_data->port);
-			else
-			$meta['ports'] = null;
-
-			if (isset($cookie_data->expires))
-			$meta['expires'] = $cookie_data->expires;
-			else
-			$meta['expires'] = null;
-
-			if ($cookie_data->flags & HTTP_COOKIE_SECURE)
-			$meta['secure_only'] = true;
-			else
-			$meta['secure_only'] = false;
-
-			if (isset($cookie_data->discard))
-			$meta['discard'] = true;
-			else
-			$meta['discard'] = false;
-
-
-			// Break up the cookie into individual name/value pairs.
-			$cookieArray = array();
-			foreach ($cookie_data->cookies as $name => $value) {
-				$cookieArray[] = array_merge($meta, array('name' => $name, 'value' => $value));
-			}
-			return $cookieArray;
+			return $cookies;
 		}
+
+
 
 		/**
 		 * Add, update, or remove a cookie.
@@ -2556,7 +2524,7 @@ class CASClient
 		 */
 		function cookieMatchesTarget ($cookie, $target) {
 			// Verify that the scheme matches
-			if ($cookie['secure_only'] && $target['scheme'] != 'http')
+			if ($cookie['secure'] && $target['scheme'] != 'http')
 			return false;
 
 			// Verify that the host matches
@@ -2735,6 +2703,7 @@ class CASClient
 	 function validatePT(&$validate_url,&$text_response,&$tree_response)
 		{
 			phpCAS::traceBegin();
+			phpCAS::trace($text_response);
 			// build the URL to validate the ticket
 			$validate_url = $this->getServerProxyValidateURL().'&ticket='.$this->getPT();
 
