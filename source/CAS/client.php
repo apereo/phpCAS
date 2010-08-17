@@ -1506,7 +1506,7 @@ class CASClient
 			if ( $success_elements->item(0)->getElementsByTagName("attributes")->length != 0) {
 				$attr_nodes = $success_elements->item(0)->getElementsByTagName("attributes");
 				phpCas :: trace("Found nested jasig style attributes");
-				if($attr_nodes->item(0)->hasChildNodes){
+				if($attr_nodes->item(0)->hasChildNodes()){
 					// Nested Attributes
 					foreach ($attr_nodes->item(0)->childNodes as $attr_child) {
 						phpCas :: trace("Attribute [".$attr_child->localName."] = ".$attr_child->nodeValue);
