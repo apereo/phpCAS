@@ -576,11 +576,6 @@ class CASClient
 
 			phpCAS::traceBegin();
 
-      // XXX TODO: Will this be needed anymore?? XXX
-			// the redirect header() call and DOM parsing code from domxml-php4-php5.php won't work in PHP4 compatibility mode
-			if (version_compare(PHP_VERSION,'5','>=') && ini_get('zend.ze1_compatibility_mode')) {
-				phpCAS::error('phpCAS cannot support zend.ze1_compatibility_mode. Sorry.');
-			}
 			$this->_start_session = $start_session;
 
 			if ($this->_start_session && session_id())
@@ -1418,10 +1413,10 @@ class CASClient
 					$this->setUser(trim($arr[1]));
 					break;
 				case CAS_VERSION_2_0:
-					
+						
 					// create new DOMDocument object
 					$dom = new DOMDocument();
-					
+						
 					// read the response of the CAS server into a DOM object
 					if ( !($dom->loadXML($text_response))) {
 						phpCAS::trace('dom->loadXML() failed');
@@ -1451,7 +1446,7 @@ class CASClient
 					}
 					if ( $tree_response->getElementsByTagName("authenticationSuccess")->length != 0 ) {
 						// authentication succeded, extract the user name
-                        $auth_success_list = $tree_response->getElementsByTagName("authenticationSuccess");
+						$auth_success_list = $tree_response->getElementsByTagName("authenticationSuccess");
 						if ( $auth_success_list->item(0)->getElementsByTagName("user")->length == 0) {
 							phpCAS::trace('<authenticationSuccess> found, but no <user>');
 							$this->authError('ST not validated',
@@ -1573,9 +1568,9 @@ class CASClient
 			switch ($this->getServerVersion()) {
 				case SAML_VERSION_1_1:
 
-	                // create new DOMDocument Object
-	                $dom = new DOMDocument();
-		
+					// create new DOMDocument Object
+					$dom = new DOMDocument();
+
 					// read the response of the CAS server into a DOM object
 					if ( !($dom->loadXML($text_response))) {
 						phpCAS::trace('dom->loadXML() failed');
@@ -1643,9 +1638,9 @@ class CASClient
 			$result = FALSE;
 
 			$attr_array = array();
-			
+				
 			// create new DOMDocument Object
-            $dom = new DOMDocument();
+			$dom = new DOMDocument();
 
 			if (($dom->loadXML($text_response))) {
 				$xPath = new DOMXpath($dom);
@@ -2108,7 +2103,7 @@ class CASClient
 
 			if ( !$bad_response ) {
 				// create new DOMDocument object
-                $dom = new DOMDocument();
+				$dom = new DOMDocument();
 
 				// read the response of the CAS server into a DOM object
 				if ( !($dom->loadXML($cas_response))) {
@@ -2140,13 +2135,13 @@ class CASClient
 				// look for a proxySuccess tag
 				if ( $root->getElementsByTagName("proxySuccess")->length != 0) {
 					$proxy_success_list = $root->getElementsByTagName("proxySuccess");
-					
+						
 					// authentication succeded, look for a proxyTicket tag
 					if ( $proxy_success_list->getElementsByTagName("proxyTicket")->length != 0) {
 						$err_code = PHPCAS_SERVICE_OK;
 						$err_msg = '';
 						$pt = trim($proxy_success_list->getElementsByTagName("proxyTicket")->item(0)->nodeValue);
-            phpCAS::trace('original PT: '.trim($pt));
+						phpCAS::trace('original PT: '.trim($pt));
 						phpCAS::traceEnd($pt);
 						return $pt;
 					} else {
@@ -2156,7 +2151,7 @@ class CASClient
 				// look for a proxyFailure tag
 				else if ( $root->getElementsByTagName("proxyFailure")->length != 0) {
 					$proxy_failure_list = $root->getElementsByTagName("proxyFailure");
-					
+						
 					// authentication failed, extract the error
 					$err_code = PHPCAS_SERVICE_PT_FAILURE;
 					$err_msg = 'PT retrieving failed (code=`'
@@ -2557,18 +2552,18 @@ class CASClient
 				TRUE/*$no_response*/);
 			}
 
-            // create new DOMDocument object
-            $dom = new DOMDocument();
+			// create new DOMDocument object
+			$dom = new DOMDocument();
 
 			// read the response of the CAS server into a DOMDocument object
 			if ( !($dom->loadXML($text_response))) {
-			    // read failed
+				// read failed
 				$this->authError('PT not validated',
 				$validate_url,
 				FALSE/*$no_response*/,
 				TRUE/*$bad_response*/,
 				$text_response);
-			}			
+			}
 
 			// read the root node of the XML tree
 			if ( !($tree_response = $dom->documentElement) ) {
@@ -2578,7 +2573,7 @@ class CASClient
 				FALSE/*$no_response*/,
 				TRUE/*$bad_response*/,
 				$text_response);
-			}			
+			}
 			// insure that tag name is 'serviceResponse'
 			if ( $tree_response->localName != 'serviceResponse' ) {
 				// bad root node
@@ -2601,10 +2596,10 @@ class CASClient
 				}
 
 				$this->setUser(trim($success_elements->item(0)->getElementsByTagName("user")->item(0)->nodeValue));
-                $this->readExtraAttributesCas20($success_elements);
+				$this->readExtraAttributesCas20($success_elements);
 			} else if ( $tree_response->getElementsByTagName("authenticationFailure")->length != 0) {
-                // authentication succeded, extract the error code and message
-                $auth_fail_list = $tree_response->getElementsByTagName("authenticationFailure");
+				// authentication succeded, extract the error code and message
+				$auth_fail_list = $tree_response->getElementsByTagName("authenticationFailure");
 				$this->authError('PT not validated',
 				$validate_url,
 				FALSE/*$no_response*/,
