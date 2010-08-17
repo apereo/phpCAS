@@ -576,6 +576,7 @@ class CASClient
 
 			phpCAS::traceBegin();
 
+      // XXX TODO: Will this be needed anymore?? XXX
 			// the redirect header() call and DOM parsing code from domxml-php4-php5.php won't work in PHP4 compatibility mode
 			if (version_compare(PHP_VERSION,'5','>=') && ini_get('zend.ze1_compatibility_mode')) {
 				phpCAS::error('phpCAS cannot support zend.ze1_compatibility_mode. Sorry.');
@@ -1432,7 +1433,7 @@ class CASClient
 					}
 					// read the root node of the XML tree
 					if ( !($tree_response = $dom->documentElement) ) {
-						phpCAS::trace('document_element() failed');
+						phpCAS::trace('documentElement() failed');
 						$this->authError('ST not validated',
 						$validate_url,
 						FALSE/*$no_response*/,
@@ -1586,7 +1587,7 @@ class CASClient
 					}
 					// read the root node of the XML tree
 					if ( !($tree_response = $dom->documentElement) ) {
-						phpCAS::trace('document_element() failed');
+						phpCAS::trace('documentElement() failed');
 						$this->authError('SA not validated',
 						$validate_url,
 						FALSE/*$no_response*/,
@@ -2120,7 +2121,7 @@ class CASClient
 			if ( !$bad_response ) {
 				// read the root node of the XML tree
 				if ( !($root = $dom->documentElement) ) {
-					phpCAS::trace('document_element() failed');
+					phpCAS::trace('documentElement() failed');
 					// read failed
 					$bad_response = TRUE;
 				}
@@ -2145,7 +2146,7 @@ class CASClient
 						$err_code = PHPCAS_SERVICE_OK;
 						$err_msg = '';
 						$pt = trim($proxy_success_list->getElementsByTagName("proxyTicket")->item(0)->nodeValue);
-                        phpCAS::trace('original PT: '.trim($pt));
+            phpCAS::trace('original PT: '.trim($pt));
 						phpCAS::traceEnd($pt);
 						return $pt;
 					} else {
