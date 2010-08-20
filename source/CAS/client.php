@@ -332,11 +332,12 @@ class CASClient
 		{
 			// the URL is build only when needed
 			if ( empty($this->_server['base_url']) ) {
-				$this->_server['base_url'] = 'https://'
-				.$this->getServerHostname()
-				.':'
-				.$this->getServerPort()
-				.$this->getServerURI();
+				$this->_server['base_url'] = 'https://' . $this->getServerHostname();
+				if ($this->getServerPort()!=443) {
+					$this->_server['base_url'] .= ':'
+					.$this->getServerPort();
+				}
+				$this->_server['base_url'] .= $this->getServerURI();
 			}
 			return $this->_server['base_url'];
 		}
