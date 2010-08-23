@@ -34,12 +34,3 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-
-In addition, phpCAS ships (for compatibility with PHP5) with an integrated copy 
-of domxml-php4-to-php5.php (http://alexandre.alapetite.net/doc-alex/domxml-php4-php5/),
-written by Alexandre Alapetite (http://alexandre.alapetite.net/cv/).
-
-domxml-php4-to-php5.php is distributed under the GNU Lesser General Public License,
-http://www.gnu.org/licenses/lgpl.html
