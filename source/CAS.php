@@ -40,9 +40,9 @@ if (!$_SERVER['REQUEST_URI']) {
 //
 // another one by Vangelis Haniotakis also to make phpCAS work with PHP5
 //
-if (version_compare(PHP_VERSION, '5', '>=') && !(function_exists('domxml_new_doc'))) {
-	require_once (dirname(__FILE__) . '/CAS/domxml-php4-to-php5.php');
-}
+//if (version_compare(PHP_VERSION, '5', '>=') && !(function_exists('domxml_new_doc'))) {
+//	require_once (dirname(__FILE__) . '/CAS/domxml-php4-to-php5.php');
+//}
 
 /**
  * @file CAS/CAS.php
