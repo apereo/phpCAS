@@ -2040,8 +2040,7 @@ class CASClient
 		{
 			// here cannot use phpCAS::traceBegin(); alongside domxml-php4-to-php5.php
 			phpCAS::log('start validatePGT()');
-			if ( $tree_response->getElementsByTagName("proxyGrantingTicket")->length == 0) {
-				$arr = $tree_response->getElementsByTagName("proxyGrantingTicket");
+			if ( sizeof($arr = $tree_response->getElementsByTagName("proxyGrantingTicket")) == 0) {
 				phpCAS::trace('<proxyGrantingTicket> not found');
 				// authentication succeded, but no PGT Iou was transmitted
 				$this->authError('Ticket validated but no PGT Iou transmitted',
@@ -2122,7 +2121,7 @@ class CASClient
 			if ( !$bad_response ) {
 				// read the root node of the XML tree
 				if ( !($root = $dom->documentElement) ) {
-					phpCAS::trace('documentElement() failed');
+					phpCAS::trace('documentElement failed');
 					// read failed
 					$bad_response = TRUE;
 				}
@@ -2130,8 +2129,8 @@ class CASClient
 
 			if ( !$bad_response ) {
 				// insure that tag name is 'serviceResponse'
-				if ( $root->localName() != 'serviceResponse' ) {
-					phpCAS::trace('localName() failed');
+				if ( $root->localName != 'serviceResponse' ) {
+					phpCAS::trace('localName failed');
 					// bad root node
 					$bad_response = TRUE;
 				}
@@ -2143,10 +2142,10 @@ class CASClient
 					$proxy_success_list = $root->getElementsByTagName("proxySuccess");
 						
 					// authentication succeded, look for a proxyTicket tag
-					if ( $proxy_success_list->getElementsByTagName("proxyTicket")->length != 0) {
+					if ( $proxy_success_list->item(0)->getElementsByTagName("proxyTicket")->length != 0) {
 						$err_code = PHPCAS_SERVICE_OK;
 						$err_msg = '';
-						$pt = trim($proxy_success_list->getElementsByTagName("proxyTicket")->item(0)->nodeValue);
+						$pt = trim($proxy_success_list->item(0)->getElementsByTagName("proxyTicket")->item(0)->nodeValue);
 						phpCAS::trace('original PT: '.trim($pt));
 						phpCAS::traceEnd($pt);
 						return $pt;
@@ -2281,7 +2280,7 @@ class CASClient
 				$headers = $this->_curl_headers;
 				$body = $buf;
 			}
-
+			
 			phpCAS::traceEnd($res);
 			return $res;
 		}
