@@ -1422,7 +1422,8 @@ class CASClient
 						
 					// create new DOMDocument object
 					$dom = new DOMDocument();
-						
+					// Fix possible whitspace problems
+					$dom->preserveWhiteSpace = false;
 					// read the response of the CAS server into a DOM object
 					if ( !($dom->loadXML($text_response))) {
 						phpCAS::trace('dom->loadXML() failed');
@@ -1574,7 +1575,8 @@ class CASClient
 
 					// create new DOMDocument Object
 					$dom = new DOMDocument();
-
+					// Fix possible whitspace problems
+					$dom->preserveWhiteSpace = false;
 					// read the response of the CAS server into a DOM object
 					if ( !($dom->loadXML($text_response))) {
 						phpCAS::trace('dom->loadXML() failed');
@@ -1645,7 +1647,8 @@ class CASClient
 				
 			// create new DOMDocument Object
 			$dom = new DOMDocument();
-
+			// Fix possible whitspace problems
+			$dom->preserveWhiteSpace = false;
 			if (($dom->loadXML($text_response))) {
 				$xPath = new DOMXpath($dom);
 				$xPath->registerNamespace('samlp', 'urn:oasis:names:tc:SAML:1.0:protocol');
@@ -2107,7 +2110,8 @@ class CASClient
 			if ( !$bad_response ) {
 				// create new DOMDocument object
 				$dom = new DOMDocument();
-
+				// Fix possible whitspace problems
+				$dom->preserveWhiteSpace = false;
 				// read the response of the CAS server into a DOM object
 				if ( !($dom->loadXML($cas_response))) {
 					phpCAS::trace('dom->loadXML() failed');
@@ -2557,7 +2561,8 @@ class CASClient
 
 			// create new DOMDocument object
 			$dom = new DOMDocument();
-
+			// Fix possible whitspace problems
+			$dom->preserveWhiteSpace = false;
 			// read the response of the CAS server into a DOMDocument object
 			if ( !($dom->loadXML($text_response))) {
 				// read failed
