@@ -2337,7 +2337,7 @@ class CASClient
 			phpCAS::traceBegin();
 			$cookies = array();
 			// at first retrieve a PT
-			$pt = $this->retrievePT($url,$err_code,$output);
+			$pt = $this->retrievePT($url,$err_code,$ptoutput);
 
 			$res = TRUE;
 
@@ -2419,7 +2419,7 @@ class CASClient
 		{
 			phpCAS::traceBegin();
 			// at first retrieve a PT
-			$pt = $this->retrievePT($service,$err_code,$output);
+			$pt = $this->retrievePT($service,$err_code,$ptoutput);
 
 			$stream = FALSE;
 
@@ -2435,7 +2435,7 @@ class CASClient
 					$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
 					// give an error message
 					$err_msg = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
-					$service_url,
+					$url,
 					var_export(imap_errors(),TRUE));
 					$pt = FALSE;
 					$stream = FALSE;
