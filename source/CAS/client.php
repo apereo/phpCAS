@@ -1450,22 +1450,20 @@ class CASClient
 						TRUE/*$bad_response*/,
 						$text_response);
 					}
-					if ( $tree_response->getElementsByTagName("authenticationSuccess")->length != 0 ) {
+					
+					if ( $tree_response->getElementsByTagName("authenticationSuccess")->length != 0) {
 						// authentication succeded, extract the user name
-						$auth_success_list = $tree_response->getElementsByTagName("authenticationSuccess");
-						if ( $auth_success_list->item(0)->getElementsByTagName("user")->length == 0) {
-							phpCAS::trace('<authenticationSuccess> found, but no <user>');
+						$success_elements = $tree_response->getElementsByTagName("authenticationSuccess");
+						if ( $success_elements->item(0)->getElementsByTagName("user")->length == 0) {
+							// no user specified => error
 							$this->authError('ST not validated',
-							$validate_url,
-							FALSE/*$no_response*/,
-							TRUE/*$bad_response*/,
-							$text_response);
+								$validate_url,
+								FALSE/*$no_response*/,
+								TRUE/*$bad_response*/,
+								$text_response);
 						}
-						$user = trim($auth_success_list->item(0)->getElementsByTagName("user")->item(0)->nodeValue);
-						phpCAS::trace('user = `'.$user);
-						$this->setUser($user);
+						$this->setUser(trim($success_elements->item(0)->getElementsByTagName("user")->item(0)->nodeValue));
 						$this->readExtraAttributesCas20($success_elements);
-							
 					} else if ( $tree_response->getElementsByTagName("authenticationFailure")->length != 0) {
 						phpCAS::trace('<authenticationFailure> found');
 						// authentication failed, extract the error code and message
