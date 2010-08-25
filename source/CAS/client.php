@@ -2034,8 +2034,7 @@ class CASClient
 		 */
 		function validatePGT(&$validate_url,$text_response,$tree_response)
 			{
-			// here cannot use phpCAS::traceBegin(); alongside domxml-php4-to-php5.php
-			phpCAS::log('start validatePGT()');
+			phpCAS::traceBegin();
 			if ( sizeof($arr = $tree_response->getElementsByTagName("proxyGrantingTicket")) == 0) {
 				phpCAS::trace('<proxyGrantingTicket> not found');
 				// authentication succeded, but no PGT Iou was transmitted
@@ -2067,7 +2066,6 @@ class CASClient
 						$text_response);
 				}
 			}
-			phpCAS::log('end validatePGT()');
 			phpCAS::traceEnd(TRUE);
 			return TRUE;
 			}
