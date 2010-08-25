@@ -2290,7 +2290,6 @@ class CASClient
 	function serviceWeb($url,&$err_code,&$output)
 		{
 		phpCAS::traceBegin();
-		$cookies = array();
 		// at first retrieve a PT
 		$pt = $this->retrievePT($url,$err_code,$output);
 		
@@ -2303,12 +2302,7 @@ class CASClient
 			$res = FALSE;
 		} else {
 			// add cookies if necessary
-			if ( isset($_SESSION['phpCAS']['services'][$url]['cookies']) && 
-					is_array($_SESSION['phpCAS']['services'][$url]['cookies']) ) {
-				foreach ( $_SESSION['phpCAS']['services'][$url]['cookies'] as $name => $val ) { 
-					$cookies[] = $name.'='.$val;
-				}
-			}
+			$cookies = $this->getCookies($url);
 			
 			// build the URL including the PT
 			if ( strstr($url,'?') === FALSE ) {
@@ -2329,19 +2323,29 @@ class CASClient
 			} else {
 				// URL has been fetched, extract the cookies
 				phpCAS::trace('URL`'.$service_url.'\' has been read, storing cookies:');
-				foreach ( $headers as $header ) {
-					// test if the header is a cookie
-					if ( preg_match('/^Set-Cookie:/',$header) ) {
-						// the header is a cookie, remove the beginning
-						$header_val = preg_replace('/^Set-Cookie: */','',$header);
-						// extract interesting information
-						$name_val = strtok($header_val,'; ');
-						// extract the name and the value of the cookie
-						$cookie_name = strtok($name_val,'=');
-						$cookie_val = strtok('=');
-						// store the cookie 
-						$_SESSION['phpCAS']['services'][$url]['cookies'][$cookie_name] = $cookie_val;
-						phpCAS::trace($cookie_name.' -> '.$cookie_val);
+				$this->setCookies($headers,$url);
+				// Check for a possible redirect (phpCAS authenticiation redirect after ticket removal)
+				foreach($headers as $header){
+					if (preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches))
+					{
+						$redirect_url = trim(array_pop($matches));
+						phpCAS :: trace('Found redirect:'.$redirect_url);
+						$cookies = $this->getCookies($redirect_url);
+						phpCAS::trace('reading URL`'.$redirect_url.'\'');
+						if ( !$this->readURL($redirect_url,$cookies,$headers,$output,$err_msg) ) {
+							phpCAS::trace('could not read URL`'.$redirect_url.'\'');
+							$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
+							// give an error message
+							$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
+								$service_url,
+								$err_msg);
+							$res = FALSE;
+						} else {
+							// URL has been fetched, extract the cookies
+							phpCAS::trace('URL`'.$redirect_url.'\' has been read, storing cookies:');
+							$this->setCookies($headers,$redirect_url);
+						}
+						break;
 					}
 				}
 			}
@@ -2350,6 +2354,47 @@ class CASClient
 		phpCAS::traceEnd($res);
 		return $res;
 		}
+	
+	/**
+	 * This method stores cookies from a HTTP Header in the session
+	 * @param $header HTTP Header
+	 * @param $url the url the Header is from
+	 */
+	
+	function setCookies($headers,$url){
+		phpCAS::traceBegin();
+		foreach ( $headers as $header ) {
+			// test if the header is a cookie
+			if ( preg_match('/^Set-Cookie:/',$header) ) {
+				// the header is a cookie, remove the beginning
+				$header_val = preg_replace('/^Set-Cookie: */','',$header);
+				// extract interesting information
+				$name_val = strtok($header_val,'; ');
+				// extract the name and the value of the cookie
+				$cookie_name = strtok($name_val,'=');
+				$cookie_val = strtok('=');
+				// store the cookie 
+				$_SESSION['phpCAS']['services'][$url]['cookies'][$cookie_name] = $cookie_val;
+				phpCAS::trace($cookie_name.' -> '.$cookie_val);
+			}
+		}
+		phpCAS::traceEnd();
+	}
+	
+	/**
+	 * This method get the cookies from the session
+	 */
+	 
+	function getCookies($url){
+		$cookies = array();
+		if ( isset($_SESSION['phpCAS']['services'][$url]['cookies']) && 
+				is_array($_SESSION['phpCAS']['services'][$url]['cookies']) ) {
+			foreach ( $_SESSION['phpCAS']['services'][$url]['cookies'] as $name => $val ) { 
+				$cookies[] = $name.'='.$val;
+			}
+		}
+		return $cookies;
+	}
 	
 	/**
 	 * This method is used to access an IMAP/POP3/NNTP service.
