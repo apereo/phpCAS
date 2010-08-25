@@ -1839,20 +1839,7 @@ class CASClient
 				$final_uri = '';
 				// remove the ticket if present in the URL
 				$final_uri = 'https://';
-				if(empty($_SERVER['HTTP_X_FORWARDED_SERVER'])){
-					if (empty($_SERVER['SERVER_NAME'])) {
-						$final_uri .= $_SERVER['HTTP_HOST'];
-					} else {
-						$final_uri .= $_SERVER['SERVER_NAME'];
-					}
-				} else {
-					$final_uri .= $_SERVER['HTTP_X_FORWARDED_SERVER'];
-				}
-				if ( ($this->isHttps() && $_SERVER['SERVER_PORT']!=443)
-				|| (!$this->isHttps() && $_SERVER['SERVER_PORT']!=80) ) {
-					$final_uri .= ':';
-					$final_uri .= $_SERVER['SERVER_PORT'];
-				}
+				$final_uri .= $this->getServerUrl();
 				$request_uri = $_SERVER['REQUEST_URI'];
 				$request_uri = preg_replace('/\?.*$/','',$request_uri);
 				$final_uri .= $request_uri;
@@ -2672,24 +2659,8 @@ class CASClient
 				// remove the ticket if present in the URL
 				$final_uri = ($this->isHttps()) ? 'https' : 'http';
 				$final_uri .= '://';
-				if(empty($_SERVER['HTTP_X_FORWARDED_SERVER'])){
-					if (empty($_SERVER['SERVER_NAME'])) {
-						$server_name = $_SERVER['HTTP_HOST'];
-					} else {
-						$server_name = $_SERVER['SERVER_NAME'];
-					}
-				} else {
-					$server_name = $_SERVER['HTTP_X_FORWARDED_SERVER'];
-				}
-				$final_uri .= $server_name;
-				if (!strpos($server_name, ':')) {
-					if ( ($this->isHttps() && $_SERVER['SERVER_PORT']!=443)
-					|| (!$this->isHttps() && $_SERVER['SERVER_PORT']!=80) ) {
-						$final_uri .= ':';
-						$final_uri .= $_SERVER['SERVER_PORT'];
-					}
-				}
-					
+
+				$final_uri .= $this->getServerUrl();	
 				$request_uri	= explode('?', $_SERVER['REQUEST_URI'], 2);
 				$final_uri		.= $request_uri[0];
 					
@@ -2708,6 +2679,33 @@ class CASClient
 			}
 			phpCAS::traceEnd($this->_url);
 			return $this->_url;
+		}
+
+		/**
+		 * Try to figure out the server URL with possible Proxys / Ports etc.
+		 * @return Server URL with domain:port
+		 */
+		function getServerUrl(){
+			$server_url = '';
+			if(!empty($_SERVER['HTTP_X_FORWARDED_HOST'])){
+				$server_url = $_SERVER['HTTP_X_FORWARDED_HOST'];
+			}else if(!empty($_SERVER['HTTP_X_FORWARDED_SERVER'])){
+				$server_url = $_SERVER['HTTP_X_FORWARDED_SERVER'];
+			}else{
+				if (empty($_SERVER['SERVER_NAME'])) {
+					$server_url = $_SERVER['HTTP_HOST'];
+				} else {
+					$server_url = $_SERVER['SERVER_NAME'];
+				}
+			}
+			if (!strpos($server_url, ':')) {
+				if ( ($this->isHttps() && $_SERVER['SERVER_PORT']!=443)
+				|| (!$this->isHttps() && $_SERVER['SERVER_PORT']!=80) ) {
+					$server_url .= ':';
+					$server_url .= $_SERVER['SERVER_PORT'];
+				}
+			}
+			return $server_url;
 		}
 
 
