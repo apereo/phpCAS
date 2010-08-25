@@ -1869,13 +1869,21 @@ class CASClient
 		function callback()
 		{
 			phpCAS::traceBegin();
-			$this->printHTMLHeader('phpCAS callback');
-			$pgt_iou = $_GET['pgtIou'];
-			$pgt = $_GET['pgtId'];
-			phpCAS::trace('Storing PGT `'.$pgt.'\' (id=`'.$pgt_iou.'\')');
-			echo '<p>Storing PGT `'.$pgt.'\' (id=`'.$pgt_iou.'\').</p>';
-			$this->storePGT($pgt,$pgt_iou);
-			$this->printHTMLFooter();
+			if (preg_match('/PGTIOU-[\.\-\w]/', $_GET['pgtIou'])){
+				if(preg_match('/[PT]GT-[\.\-\w]/', $_GET['pgtId'])){
+				$this->printHTMLHeader('phpCAS callback');
+				$pgt_iou = $_GET['pgtIou'];
+				$pgt = $_GET['pgtId'];
+				phpCAS::trace('Storing PGT `'.$pgt.'\' (id=`'.$pgt_iou.'\')');
+				echo '<p>Storing PGT `'.$pgt.'\' (id=`'.$pgt_iou.'\').</p>';
+				$this->storePGT($pgt,$pgt_iou);
+				$this->printHTMLFooter();
+				}else{
+					phpCAS::error('PGT format invalid' . $_GET['pgtId']);
+				}
+			}else{
+				phpCAS::error('PGTiou format invalid' . $_GET['pgtIou']);
+			}
 			phpCAS::traceExit();
 			exit();
 		}
@@ -2007,53 +2015,62 @@ class CASClient
 			// create the storage object
 			$this->_pgt_storage = new PGTStorageDB($this,$user,$password,$database_type,$hostname,$port,$database,$table);
 		}
-
+		
 		// ########################################################################
 		//  PGT VALIDATION
 		// ########################################################################
 		/**
-	 * This method is used to validate a PGT; halt on failure.
-	 *
-	 * @param $validate_url the URL of the request to the CAS server.
-	 * @param $text_response the response of the CAS server, as is (XML text); result
-	 * of CASClient::validateST() or CASClient::validatePT().
-	 * @param $tree_response the response of the CAS server, as a DOM XML tree; result
-	 * of CASClient::validateST() or CASClient::validatePT().
-	 *
-	 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
-	 *
-	 * @private
-	 */
+		 * This method is used to validate a PGT; halt on failure.
+		 *
+		 * @param $validate_url the URL of the request to the CAS server.
+		 * @param $text_response the response of the CAS server, as is (XML text); result
+		 * of CASClient::validateST() or CASClient::validatePT().
+		 * @param $tree_response the response of the CAS server, as a DOM XML tree; result
+		 * of CASClient::validateST() or CASClient::validatePT().
+		 *
+		 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+		 *
+		 * @private
+		 */
 		function validatePGT(&$validate_url,$text_response,$tree_response)
-		{
+			{
 			// here cannot use phpCAS::traceBegin(); alongside domxml-php4-to-php5.php
 			phpCAS::log('start validatePGT()');
 			if ( sizeof($arr = $tree_response->getElementsByTagName("proxyGrantingTicket")) == 0) {
 				phpCAS::trace('<proxyGrantingTicket> not found');
 				// authentication succeded, but no PGT Iou was transmitted
 				$this->authError('Ticket validated but no PGT Iou transmitted',
-				$validate_url,
-				FALSE/*$no_response*/,
-				FALSE/*$bad_response*/,
-				$text_response);
-			} else {
-				// PGT Iou transmitted, extract it
-				$pgt_iou = trim($arr->item(0)->nodeValue);
-				$pgt = $this->loadPGT($pgt_iou);
-				if ( $pgt == FALSE ) {
-					phpCAS::trace('could not load PGT');
-					$this->authError('PGT Iou was transmitted but PGT could not be retrieved',
 					$validate_url,
 					FALSE/*$no_response*/,
 					FALSE/*$bad_response*/,
 					$text_response);
+			} else {
+				// PGT Iou transmitted, extract it
+				$pgt_iou = trim($arr->item(0)->nodeValue);
+				if(preg_match('/PGTIOU-[\.\-\w]/',$pgt_iou)){ 
+					$pgt = $this->loadPGT($pgt_iou);
+					if ( $pgt == FALSE ) {
+						phpCAS::trace('could not load PGT');
+						$this->authError('PGT Iou was transmitted but PGT could not be retrieved',
+							$validate_url,
+							FALSE/*$no_response*/,
+							FALSE/*$bad_response*/,
+							$text_response);
+					}
+					$this->setPGT($pgt);
+				}else{
+					phpCAS::trace('PGTiou format error');
+					$this->authError('PGT Iou was transmitted but has wrong fromat',
+						$validate_url,
+						FALSE/*$no_response*/,
+						FALSE/*$bad_response*/,
+						$text_response);
 				}
-				$this->setPGT($pgt);
 			}
-			// here, cannot use	phpCAS::traceEnd(TRUE); alongside domxml-php4-to-php5.php
 			phpCAS::log('end validatePGT()');
+			phpCAS::traceEnd(TRUE);
 			return TRUE;
-		}
+			}
 
 		// ########################################################################
 		//  PGT VALIDATION
