@@ -2359,20 +2359,47 @@ class CASClient
 				} else {
 					$service_url = $url.'&ticket='.$pt;
 				}
-					
 				phpCAS::trace('reading URL`'.$service_url.'\'');
 				if ( !$this->readURL($service_url,$cookies,$headers,$output,$err_msg) ) {
 					phpCAS::trace('could not read URL`'.$service_url.'\'');
 					$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
 					// give an error message
 					$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
-					$service_url,
-					$err_msg);
+						$service_url,
+						$err_msg);
 					$res = FALSE;
 				} else {
 					// URL has been fetched, extract the cookies
 					phpCAS::trace('URL`'.$service_url.'\' has been read, storing cookies:');
 					$this->setServiceCookies($service_url, $headers);
+				}
+				// Check for the redirect after authentication			
+				foreach($headers as $header){
+					if (preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches))
+					{
+						$redirect_url = trim(array_pop($matches));
+						phpCAS :: trace('Found redirect:'.$redirect_url);
+						$cookies = array();
+						foreach ( $this->getServiceCookies($redirect_url) as $name => $val ) {
+							$cookies[] = $name.'='.$val;
+						}
+						phpCAS::trace('reading URL`'.$redirect_url.'\'');
+						if ( !$this->readURL($redirect_url,$cookies,$headers,$output,$err_msg) ) {
+							phpCAS::trace('could not read URL`'.$redirect_url.'\'');
+							$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
+							// give an error message
+							$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
+								$service_url,
+								$err_msg);
+							$res = FALSE;
+						} else {
+							// URL has been fetched, extract the cookies
+							phpCAS::trace('URL`'.$redirect_url.'\' has been read, storing cookies:');
+							$this->setServiceCookies($redirect_url, $headers);
+						}
+						break;
+					}
+					
 				}
 			}
 
@@ -2397,8 +2424,8 @@ class CASClient
 				$_SESSION['phpCAS']['service_cookies'] = array();
 			}
 
-			$cookies = $this->parseCookieHeaders($response_headers);
-			var_dump($cookies);
+			$cookies = $this->parseCookieHeaders($response_headers,parse_url($service_url));
+			// var_dump($cookies);
 			foreach ($cookies as $cookie) {
 				// Enforce the same-origin policy by verifying that the cookie
 				// would match the service that is setting it
@@ -2439,10 +2466,6 @@ class CASClient
 			foreach ($_SESSION['phpCAS']['service_cookies'] as $key => $cookie) {
 				if ($this->cookieMatchesTarget($cookie, $target)) {
 					$matching_cookies[$cookie['name']] = $cookie['value'];
-
-					// Expire single-use cookies
-					if ($cookie['expires'] === 0)
-					unset($_SESSION['phpCAS']['service_cookies'][$key]);
 				}
 			}
 			return $matching_cookies;
@@ -2455,7 +2478,8 @@ class CASClient
 		 * @param $header
 		 * @return array of cookies
 		 */
-		function parseCookieHeaders( $header ) {
+		function parseCookieHeaders( $header, $service ) {
+			phpCAS::traceBegin();
 			$cookies = array();
 			foreach( $header as $line ) {
 				if( preg_match( '/^Set-Cookie2?: /i', $line ) ) {
@@ -2463,21 +2487,30 @@ class CASClient
 					$csplit = explode( ';', $line );
 					$cdata = array();
 					foreach( $csplit as $data ) {
+						phpCAS::trace("Cookie Line: $data");
 						$cinfo = explode( '=', $data );
 						$cinfo[0] = trim( $cinfo[0] );
 						if( $cinfo[0] == 'expires' ) $cinfo[1] = strtotime( $cinfo[1] );
-						if( $cinfo[0] == 'secure' ) $cinfo[1] = "true";
-						if( in_array( $cinfo[0], array( 'domain', 'expires', 'path', 'secure', 'comment' ) ) ) {
-							$cdata[trim( $cinfo[0] )] = $cinfo[1];
+						else if( $cinfo[0] == 'secure' )$cinfo[1] = "true";
+						if( in_array( $cinfo[0], array( 'domain', 'expires', 'path', 'secure', 'comment') ) ) {
+							$cdata[$cinfo[0]] = $cinfo[1];
+						} else {
+							$cdata['name'] = $cinfo[0];
+							$cdata['value'] = $cinfo[1];
 						}
-						else {
-							$cdata['value']['key'] = $cinfo[0];
-							$cdata['value']['value'] = $cinfo[1];
-						}
+					}
+					// Append a domain and path if they are not included in the cookie itself
+					if(!isset($cdata['domain'])){
+				 		$cdata['domain'] = $service['host'];
+					}
+					if(!isset($cdata['path'])){
+				 		$cdata['path'] = "/";
 					}
 					$cookies[] = $cdata;
 				}
 			}
+
+			phpCAS::traceEnd($cookies);
 			return $cookies;
 		}
 
@@ -2495,11 +2528,8 @@ class CASClient
 		function setServiceCookie ($cookie) {
 			// Discard any old versions of this cookie.
 			$this->discardServiceCookie($cookie);
+			$_SESSION['phpCAS']['service_cookies'][] = $cookie;
 
-			// Store the cookie
-			if (!$cookie['discard']) {
-				$_SESSION['phpCAS']['service_cookies'][] = $cookie;
-			}
 		}
 
 		/**
@@ -2531,7 +2561,7 @@ class CASClient
 		 */
 		function expireServiceCookies () {
 			foreach ($_SESSION['phpCAS']['service_cookies'] as $key => $cookie) {
-				if ($cookie['expires'] && $cookie['expires'] < time()) {
+				if (isset($cookie['expires']) && $cookie['expires'] < time()) {
 					unset($_SESSION['phpCAS']['service_cookies'][$key]);
 				}
 			}
@@ -2549,7 +2579,7 @@ class CASClient
 		 */
 		function cookieMatchesTarget ($cookie, $target) {
 			// Verify that the scheme matches
-			if ($cookie['secure'] && $target['scheme'] != 'http')
+			if (isset($cookie['secure']) && $target['scheme'] != 'http')
 			return false;
 
 			// Verify that the host matches
@@ -2571,7 +2601,7 @@ class CASClient
 			}
 
 			// Verify that the port matches
-			if ($cookie['ports'] && !in_array($target['port'], $cookie['ports']))
+			if (isset($cookie['ports']) && !in_array($target['port'], $cookie['ports']))
 			return false;
 
 			// Verify that the path matches
