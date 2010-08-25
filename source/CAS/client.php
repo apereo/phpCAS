@@ -588,7 +588,7 @@ class CASClient
 		}
 		$this->_start_session = $start_session;
 
-		if ($this->_start_session && session_id())
+		if ($this->_start_session && session_id() !== "")
 		{
 			phpCAS :: error("Another session was started before phpcas. Either disable the session" .
 				" handling for phpcas in the client() call or modify your application to leave" .
@@ -1238,7 +1238,7 @@ class CASClient
 		phpCAS::log("Session id: ".$session_id);
 		
 		// destroy a possible application session created before phpcas
-		if(session_id()){
+		if(session_id()  !== ""){
 			session_unset();
 			session_destroy();
 		}
