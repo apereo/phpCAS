@@ -23,13 +23,8 @@ class ServiceWebCookieTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-	if (isset($_SESSION['phpCAS']['service_cookies']))
-		unset($_SESSION['phpCAS']['service_cookies']);
-	    if (!isset($_SESSION['phpCAS']))
-		$_SESSION['phpCAS'] = array();
-	$_SESSION['phpCAS']['service_cookies'] = array();
-
-        $this->object = new ServiceCookieJar();
+	$this->cookieArray = array();
+        $this->object = new ServiceCookieJar($this->cookieArray);
 
         $this->serviceUrl_1 = 'http://service.example.com/lookup/?action=search&query=username';
         $this->responseHeaders_1 = array(
@@ -65,8 +60,7 @@ class ServiceWebCookieTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-	if (isset($_SESSION['phpCAS']['service_cookies']))
-		unset($_SESSION['phpCAS']['service_cookies']);
+
     }
 
     /**

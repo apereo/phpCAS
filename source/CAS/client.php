@@ -598,9 +598,14 @@ class CASClient
 
 			// are we in proxy mode ?
 			$this->_proxy = $proxy;
+
 			// Make cookie handling available.
 			if ($this->isProxy()) {
-				$this->_serviceCookieJar = new ServiceCookieJar();
+				if (!isset($_SESSION['phpCAS']))
+					$_SESSION['phpCAS'] = array();
+				if (!isset($_SESSION['phpCAS']['service_cookies']))
+					$_SESSION['phpCAS']['service_cookies'] = array();
+				$this->_serviceCookieJar = new ServiceCookieJar($_SESSION['phpCAS']['service_cookies']);
 			}
 
 			//check version

@@ -35,6 +35,19 @@
  */
 class ServiceCookieJar {
 
+	private $_cookies;
+
+	/**
+	 * Create a new cookie jar by passing it a reference to an array in which it
+	 * should store cookies.
+	 *
+	 * @param ref array $storageArray
+	 * @return void
+	 */
+	public function __construct (array &$storageArray) {
+		$this->_cookies =& $storageArray;
+	}
+
 	/**
 	 * Store cookies for a web service request.
 	 * Cookie storage is based on RFC 2965: http://www.ietf.org/rfc/rfc2965.txt
@@ -47,10 +60,6 @@ class ServiceCookieJar {
 	 * @access private
 	 */
 	function setServiceCookies ($service_url, $response_headers) {
-		if (!isset($_SESSION['phpCAS']['service_cookies'])) {
-			$_SESSION['phpCAS']['service_cookies'] = array();
-		}
-
 		$serviceUrlParts = parse_url($service_url);
 		$defaultDomain = $serviceUrlParts['host'];
 
@@ -81,8 +90,7 @@ class ServiceCookieJar {
 	 * @access private
 	 */
 	function getServiceCookies ($service_url) {
-		// If no cookies have been set:
-		if (!isset($_SESSION['phpCAS']['service_cookies']))
+		if (!count($this->_cookies))
 			return array();
 
 		// If our service URL can't be parsed, no cookies apply.
@@ -93,7 +101,7 @@ class ServiceCookieJar {
 		$this->expireServiceCookies();
 
 		$matching_cookies = array();
-		foreach ($_SESSION['phpCAS']['service_cookies'] as $key => $cookie) {
+		foreach ($this->_cookies as $key => $cookie) {
 			if ($this->cookieMatchesTarget($cookie, $target)) {
 				$matching_cookies[$cookie['name']] = $cookie['value'];
 			}
@@ -210,7 +218,7 @@ class ServiceCookieJar {
 	function setServiceCookie ($cookie) {
 		// Discard any old versions of this cookie.
 		$this->discardServiceCookie($cookie);
-		$_SESSION['phpCAS']['service_cookies'][] = $cookie;
+		$this->_cookies[] = $cookie;
 
 	}
 
@@ -227,12 +235,12 @@ class ServiceCookieJar {
 		if (!isset($cookie['domain']) || !isset($cookie['path']) || !isset($cookie['path']))
 			throw new InvalidArgumentException('Invalid Cookie array passed.');
 
-		foreach ($_SESSION['phpCAS']['service_cookies'] as $key => $old_cookie) {
+		foreach ($this->_cookies as $key => $old_cookie) {
 			if ($cookie['domain'] == $old_cookie['domain']
 			&& $cookie['path'] == $old_cookie['path']
 			&& $cookie['name'] == $old_cookie['name'])
 			{
-				unset($_SESSION['phpCAS']['service_cookies'][$key]);
+				unset($this->_cookies[$key]);
 			}
 		}
 	}
@@ -245,9 +253,9 @@ class ServiceCookieJar {
 	 * @access private
 	 */
 	function expireServiceCookies () {
-		foreach ($_SESSION['phpCAS']['service_cookies'] as $key => $cookie) {
+		foreach ($this->_cookies as $key => $cookie) {
 			if (isset($cookie['expires']) && $cookie['expires'] < time()) {
-				unset($_SESSION['phpCAS']['service_cookies'][$key]);
+				unset($this->_cookies[$key]);
 			}
 		}
 	}
