@@ -33,7 +33,7 @@
  * headers to pull out cookie values.
  *
  */
-class ServiceCookieJar {
+class CAS_CookieJar {
 
 	private $_cookies;
 

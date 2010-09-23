@@ -1,7 +1,7 @@
 <?php
 require_once 'PHPUnit/Framework.php';
 
-require_once '/home/afranco/private_html/phpcas/source/CAS/ServiceCookieJar.php';
+require_once '/home/afranco/private_html/phpcas/source/CAS/CookieJar.php';
 
 /**
  * Test class for verifying the operation of cookie handling methods used in
@@ -24,7 +24,7 @@ class ServiceWebCookieTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
 	$this->cookieArray = array();
-        $this->object = new ServiceCookieJar($this->cookieArray);
+        $this->object = new CAS_CookieJar($this->cookieArray);
 
         $this->serviceUrl_1 = 'http://service.example.com/lookup/?action=search&query=username';
         $this->responseHeaders_1 = array(

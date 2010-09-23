@@ -41,7 +41,7 @@ include_once(dirname(__FILE__).'/languages/languages.php');
 include_once(dirname(__FILE__).'/PGTStorage/pgt-main.php');
 
 // include class for storing service cookies.
-include_once(dirname(__FILE__).'/ServiceCookieJar.php');
+include_once(dirname(__FILE__).'/CookieJar.php');
 
 /**
  * @class CASClient
@@ -605,7 +605,7 @@ class CASClient
 					$_SESSION['phpCAS'] = array();
 				if (!isset($_SESSION['phpCAS']['service_cookies']))
 					$_SESSION['phpCAS']['service_cookies'] = array();
-				$this->_serviceCookieJar = new ServiceCookieJar($_SESSION['phpCAS']['service_cookies']);
+				$this->_serviceCookieJar = new CAS_CookieJar($_SESSION['phpCAS']['service_cookies']);
 			}
 
 			//check version
