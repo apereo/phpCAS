@@ -3,6 +3,20 @@ require_once 'PHPUnit/Framework.php';
 
 require_once '/home/afranco/private_html/phpcas/source/CAS/CookieJar.php';
 
+
+/**
+ * Test harness for the cookie Jar to allow us to test protected methods.
+ *
+ */
+class CAS_CookieJarExposed extends CAS_CookieJar {
+    public function __call($method, array $args = array()) {
+        if (!method_exists($this, $method))
+            throw new BadMethodCallException("method '$method' does not exist");
+        return call_user_method_array($method, $this, $args);
+    }
+}
+
+
 /**
  * Test class for verifying the operation of cookie handling methods used in
  * serviceWeb() proxy calls.
@@ -24,7 +38,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
 	$this->cookieArray = array();
-        $this->object = new CAS_CookieJar($this->cookieArray);
+        $this->object = new CAS_CookieJarExposed($this->cookieArray);
 
         $this->serviceUrl_1 = 'http://service.example.com/lookup/?action=search&query=username';
         $this->responseHeaders_1 = array(
