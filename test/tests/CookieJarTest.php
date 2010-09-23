@@ -59,13 +59,13 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
         $this->serviceUrl_1c = 'http://service.example.com/make_changes.php';
 
         // Verify that there are no cookies to start.
-	$this->assertEquals(0, count($this->object->getServiceCookies($this->serviceUrl_1)));
-	$this->assertEquals(0, count($this->object->getServiceCookies($this->serviceUrl_1b)));
-	$this->assertEquals(0, count($this->object->getServiceCookies($this->serviceUrl_1c)));
+	$this->assertEquals(0, count($this->object->getCookies($this->serviceUrl_1)));
+	$this->assertEquals(0, count($this->object->getCookies($this->serviceUrl_1b)));
+	$this->assertEquals(0, count($this->object->getCookies($this->serviceUrl_1c)));
 
 	// Add service cookies as if we just made are request to serviceUrl_1
 	// and recieved responseHeaders_1 as the header to the response.
-        $this->object->setServiceCookies($this->serviceUrl_1, $this->responseHeaders_1);
+        $this->object->storeCookies($this->serviceUrl_1, $this->responseHeaders_1);
     }
 
     /**
@@ -78,24 +78,13 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo Implement testServiceWeb().
-     */
-    public function testServiceWeb()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * Verify that our first response will set a cookie that will be available to
      * the same URL.
      */
     public function testSameUrlCookies()
     {
         // Verify that our cookie is available.
-        $cookies = $this->object->getServiceCookies($this->serviceUrl_1);
+        $cookies = $this->object->getCookies($this->serviceUrl_1);
         $this->assertEquals(1, count($cookies));
         $this->assertEquals('k1jut1r1bqrumpei837kk4jks0', $cookies['SID']);
     }
@@ -107,7 +96,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     public function testSamePathDifferentQueryCookies()
     {
         // Verify that our cookie is available.
-        $cookies = $this->object->getServiceCookies($this->serviceUrl_1b);
+        $cookies = $this->object->getCookies($this->serviceUrl_1b);
         $this->assertEquals(1, count($cookies));
         $this->assertEquals('k1jut1r1bqrumpei837kk4jks0', $cookies['SID']);
     }
@@ -119,7 +108,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     public function testDifferentPathCookies()
     {
         // Verify that our cookie is available.
-        $cookies = $this->object->getServiceCookies($this->serviceUrl_1c);
+        $cookies = $this->object->getCookies($this->serviceUrl_1c);
         $this->assertEquals(1, count($cookies));
         $this->assertEquals('k1jut1r1bqrumpei837kk4jks0', $cookies['SID']);
     }
@@ -131,15 +120,15 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     public function testDifferentHostCookies()
     {
         // Verify that our cookie isn't available when the hostname is changed.
-        $cookies = $this->object->getServiceCookies('http://service2.example.com/make_changes.php');
+        $cookies = $this->object->getCookies('http://service2.example.com/make_changes.php');
         $this->assertEquals(0, count($cookies));
 
         // Verify that our cookie isn't available when the domain is changed.
-        $cookies = $this->object->getServiceCookies('http://service.example2.com/make_changes.php');
+        $cookies = $this->object->getCookies('http://service.example2.com/make_changes.php');
         $this->assertEquals(0, count($cookies));
 
         // Verify that our cookie isn't available when the tdl is changed.
-        $cookies = $this->object->getServiceCookies('http://service.example.org/make_changes.php');
+        $cookies = $this->object->getCookies('http://service.example.org/make_changes.php');
         $this->assertEquals(0, count($cookies));
     }
 
@@ -340,9 +329,9 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test setting a single service cookie
      */
-    public function testSetServiceCookie()
+    public function testSetCookie()
     {
-        $cookies = $this->object->getServiceCookies($this->serviceUrl_1c);
+        $cookies = $this->object->getCookies($this->serviceUrl_1c);
         $this->assertType('array', $cookies);
         $this->assertEquals(1, count($cookies));
         $this->assertEquals('k1jut1r1bqrumpei837kk4jks0', $cookies['SID']);
@@ -351,17 +340,17 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test setting a single service cookie
      */
-    public function testSetServiceCookie_duplicates()
+    public function testStoreCookie_duplicates()
     {
 	$headers = array('Set-Cookie: SID="hello world"; path=/');
         $cookiesToSet = $this->object->parseCookieHeaders($headers, 'service.example.com');
-        $this->object->setServiceCookie($cookiesToSet[0]);
+        $this->object->storeCookie($cookiesToSet[0]);
 
         $headers = array('Set-Cookie: SID="goodbye world"; path=/');
         $cookiesToSet = $this->object->parseCookieHeaders($headers, 'service.example.com');
-        $this->object->setServiceCookie($cookiesToSet[0]);
+        $this->object->storeCookie($cookiesToSet[0]);
 
-        $cookies = $this->object->getServiceCookies($this->serviceUrl_1c);
+        $cookies = $this->object->getCookies($this->serviceUrl_1c);
         $this->assertType('array', $cookies);
         $this->assertEquals(1, count($cookies));
         $this->assertEquals('goodbye world', $cookies['SID']);
@@ -370,15 +359,15 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test setting two service cookies
      */
-    public function testSetServiceCookie_twoCookies()
+    public function testStoreCookie_twoCookies()
     {
         // Second cookie
         $headers = array('Set-Cookie: message="hello world"; path=/');
         $cookiesToSet = $this->object->parseCookieHeaders($headers, 'service.example.com');
-        $this->object->setServiceCookie($cookiesToSet[0]);
+        $this->object->storeCookie($cookiesToSet[0]);
 
 
-        $cookies = $this->object->getServiceCookies($this->serviceUrl_1c);
+        $cookies = $this->object->getCookies($this->serviceUrl_1c);
         $this->assertType('array', $cookies);
         $this->assertEquals(2, count($cookies));
         $this->assertEquals('k1jut1r1bqrumpei837kk4jks0', $cookies['SID']);
@@ -388,16 +377,16 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test setting two service cookies
      */
-    public function testSetServiceCookie_twoCookiesOneAtDomain()
+    public function testStoreCookie_twoCookiesOneAtDomain()
     {
 
         // Second cookie
         $headers = array('Set-Cookie: message="hello world"; path=/; domain=.example.com');
         $cookiesToSet = $this->object->parseCookieHeaders($headers, 'service.example.com');
-        $this->object->setServiceCookie($cookiesToSet[0]);
+        $this->object->storeCookie($cookiesToSet[0]);
 
 
-        $cookies = $this->object->getServiceCookies($this->serviceUrl_1c);
+        $cookies = $this->object->getCookies($this->serviceUrl_1c);
         $this->assertType('array', $cookies);
         $this->assertEquals(2, count($cookies));
         $this->assertEquals('k1jut1r1bqrumpei837kk4jks0', $cookies['SID']);
@@ -405,9 +394,9 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo Implement testDiscardServiceCookie().
+     * @todo Implement testDiscardCookie().
      */
-    public function testDiscardServiceCookie()
+    public function testDiscardCookie()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -416,9 +405,9 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo Implement testExpireServiceCookies().
+     * @todo Implement testExpireCookies().
      */
-    public function testExpireServiceCookies()
+    public function testExpireCookies()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -438,7 +427,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test setting two service cookies
+     * Test matching a domain cookie.
      */
     public function testDomainCookieMatchesTarget()
     {

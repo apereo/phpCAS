@@ -52,28 +52,28 @@ class CAS_CookieJar {
 	 * Store cookies for a web service request.
 	 * Cookie storage is based on RFC 2965: http://www.ietf.org/rfc/rfc2965.txt
 	 *
-	 * @param string $service_url The service that generated the response.
+	 * @param string $request_url The URL that generated the response headers.
 	 * @param array $response_headers An array of the HTTP response header strings.
 	 *
 	 * @return void
 	 *
 	 * @access private
 	 */
-	public function setServiceCookies ($service_url, $response_headers) {
-		$serviceUrlParts = parse_url($service_url);
-		$defaultDomain = $serviceUrlParts['host'];
+	public function storeCookies ($request_url, $response_headers) {
+		$urlParts = parse_url($request_url);
+		$defaultDomain = $urlParts['host'];
 
 		$cookies = $this->parseCookieHeaders($response_headers, $defaultDomain);
 
 		// var_dump($cookies);
 		foreach ($cookies as $cookie) {
 			// Enforce the same-origin policy by verifying that the cookie
-			// would match the service that is setting it
-			if (!$this->cookieMatchesTarget($cookie, $serviceUrlParts))
+			// would match the url that is setting it
+			if (!$this->cookieMatchesTarget($cookie, $urlParts))
 				continue;
 
 			// store the cookie
-			$this->setServiceCookie($cookie);
+			$this->storeCookie($cookie);
 
 			phpCAS::trace($cookie['name'].' -> '.$cookie['value']);
 		}
@@ -83,22 +83,22 @@ class CAS_CookieJar {
 	 * Retrieve cookies applicable for a web service request.
 	 * Cookie applicability is based on RFC 2965: http://www.ietf.org/rfc/rfc2965.txt
 	 *
-	 * @param string $service_url The service that generated the response.
+	 * @param string $request_url The url that the cookies will be for.
 	 *
 	 * @return array An array containing cookies. E.g. array('name' => 'val');
 	 *
 	 * @access private
 	 */
-	public function getServiceCookies ($service_url) {
+	public function getCookies ($request_url) {
 		if (!count($this->_cookies))
 			return array();
 
-		// If our service URL can't be parsed, no cookies apply.
-		$target = parse_url($service_url);
+		// If our request URL can't be parsed, no cookies apply.
+		$target = parse_url($request_url);
 		if ($target === FALSE)
 			return array();
 
-		$this->expireServiceCookies();
+		$this->expireCookies();
 
 		$matching_cookies = array();
 		foreach ($this->_cookies as $key => $cookie) {
@@ -215,9 +215,9 @@ class CAS_CookieJar {
 	 *
 	 * @access private
 	 */
-	protected function setServiceCookie ($cookie) {
+	protected function storeCookie ($cookie) {
 		// Discard any old versions of this cookie.
-		$this->discardServiceCookie($cookie);
+		$this->discardCookie($cookie);
 		$this->_cookies[] = $cookie;
 
 	}
@@ -231,7 +231,7 @@ class CAS_CookieJar {
 	 *
 	 * @access private
 	 */
-	protected function discardServiceCookie ($cookie) {
+	protected function discardCookie ($cookie) {
 		if (!isset($cookie['domain']) || !isset($cookie['path']) || !isset($cookie['path']))
 			throw new InvalidArgumentException('Invalid Cookie array passed.');
 
@@ -252,7 +252,7 @@ class CAS_CookieJar {
 	 *
 	 * @access private
 	 */
-	protected function expireServiceCookies () {
+	protected function expireCookies () {
 		foreach ($this->_cookies as $key => $cookie) {
 			if (isset($cookie['expires']) && $cookie['expires'] < time()) {
 				unset($this->_cookies[$key]);

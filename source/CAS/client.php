@@ -2368,7 +2368,7 @@ class CASClient
 			} else {
 				// add cookies if necessary
 				$cookies = array();
-				foreach ( $this->_serviceCookieJar->getServiceCookies($url) as $name => $val ) {
+				foreach ( $this->_serviceCookieJar->getCookies($url) as $name => $val ) {
 					$cookies[] = $name.'='.$val;
 				}
 					
@@ -2390,7 +2390,7 @@ class CASClient
 				} else {
 					// URL has been fetched, extract the cookies
 					phpCAS::trace('URL`'.$service_url.'\' has been read, storing cookies:');
-					$this->_serviceCookieJar->setServiceCookies($service_url, $headers);
+					$this->_serviceCookieJar->storeCookies($service_url, $headers);
 				}
 				// Check for the redirect after authentication			
 				foreach($headers as $header){
@@ -2399,7 +2399,7 @@ class CASClient
 						$redirect_url = trim(array_pop($matches));
 						phpCAS :: trace('Found redirect:'.$redirect_url);
 						$cookies = array();
-						foreach ( $this->_serviceCookieJar->getServiceCookies($redirect_url) as $name => $val ) {
+						foreach ( $this->_serviceCookieJar->getCookies($redirect_url) as $name => $val ) {
 							$cookies[] = $name.'='.$val;
 						}
 						phpCAS::trace('reading URL`'.$redirect_url.'\'');
@@ -2414,7 +2414,7 @@ class CASClient
 						} else {
 							// URL has been fetched, extract the cookies
 							phpCAS::trace('URL`'.$redirect_url.'\' has been read, storing cookies:');
-							$this->_serviceCookieJar->setServiceCookies($redirect_url, $headers);
+							$this->_serviceCookieJar->storeCookies($redirect_url, $headers);
 						}
 						break;
 					}
