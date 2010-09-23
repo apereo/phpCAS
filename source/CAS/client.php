@@ -2475,7 +2475,9 @@ class CASClient
 		/**
 		 * Parse Cookies without PECL
 		 * From the comments in http://php.net/manual/en/function.http-parse-cookie.php
-		 * @param $header
+		 * @param array $header 	An array of header lines.
+		 * @param array $service 	An array that is the result of parse_url() called 
+		 *							on the service URL for which $header is the response header.
 		 * @return array of cookies
 		 */
 		function parseCookieHeaders( $header, $service ) {
