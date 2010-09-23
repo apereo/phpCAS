@@ -2424,7 +2424,11 @@ class CASClient
 				$_SESSION['phpCAS']['service_cookies'] = array();
 			}
 
-			$cookies = $this->parseCookieHeaders($response_headers,parse_url($service_url));
+			$serviceUrlParts = parse_url($service_url);
+			$defaultDomain = $serviceUrlParts['host'];
+
+			$cookies = $this->parseCookieHeaders($response_headers, $defaultDomain);
+
 			// var_dump($cookies);
 			foreach ($cookies as $cookie) {
 				// Enforce the same-origin policy by verifying that the cookie
@@ -2476,39 +2480,15 @@ class CASClient
 		 * Parse Cookies without PECL
 		 * From the comments in http://php.net/manual/en/function.http-parse-cookie.php
 		 * @param array $header 	An array of header lines.
-		 * @param array $service 	An array that is the result of parse_url() called 
-		 *							on the service URL for which $header is the response header.
+		 * @param string $defaultDomain 	The domain to use if none is specified in the cookie.
 		 * @return array of cookies
 		 */
-		function parseCookieHeaders( $header, $service ) {
+		function parseCookieHeaders( $header, $defaultDomain ) {
 			phpCAS::traceBegin();
 			$cookies = array();
 			foreach( $header as $line ) {
 				if( preg_match( '/^Set-Cookie2?: /i', $line ) ) {
-					$line = preg_replace( '/^Set-Cookie2?: /i', '', trim( $line ) );
-					$csplit = explode( ';', $line );
-					$cdata = array();
-					foreach( $csplit as $data ) {
-						phpCAS::trace("Cookie Line: $data");
-						$cinfo = explode( '=', $data );
-						$cinfo[0] = trim( $cinfo[0] );
-						if( $cinfo[0] == 'expires' ) $cinfo[1] = strtotime( $cinfo[1] );
-						else if( $cinfo[0] == 'secure' )$cinfo[1] = "true";
-						if( in_array( $cinfo[0], array( 'domain', 'expires', 'path', 'secure', 'comment') ) ) {
-							$cdata[$cinfo[0]] = $cinfo[1];
-						} else {
-							$cdata['name'] = $cinfo[0];
-							$cdata['value'] = $cinfo[1];
-						}
-					}
-					// Append a domain and path if they are not included in the cookie itself
-					if(!isset($cdata['domain'])){
-				 		$cdata['domain'] = $service['host'];
-					}
-					if(!isset($cdata['path'])){
-				 		$cdata['path'] = "/";
-					}
-					$cookies[] = $cdata;
+					$cookies[] = $this->parseCookieHeader($line, $defaultDomain);
 				}
 			}
 
@@ -2516,12 +2496,86 @@ class CASClient
 			return $cookies;
 		}
 
+		/**
+		 * Parse a single cookie header line.
+		 *
+		 * Based on RFC2965 http://www.ietf.org/rfc/rfc2965.txt
+		 *
+		 * @param string $line The header line.
+		 * @param string $defaultDomain The domain to use if none is specified in the cookie.
+		 * @return array
+		 */
+		function parseCookieHeader ($line, $defaultDomain) {
+			if (!$defaultDomain)
+				throw new InvalidArgumentException('$defaultDomain was not provided.');
 
+			// Set our default values
+			$cookie = array(
+				'domain' => $defaultDomain,
+				'path' => '/',
+				'secure' => false,
+			);
+
+			$line = preg_replace( '/^Set-Cookie2?: /i', '', trim( $line ) );
+
+			// trim any trailing semicolons.
+			$line = trim($line, ';');
+
+			phpCAS::trace("Cookie Line: $line");
+
+			// This implementation makes the assumption that semicolons will not
+			// be present in quoted attribute values. While attribute values that
+			// contain semicolons are allowed by RFC2965, they are hopefully rare
+			// enough to ignore for our purposes.
+			$attributeStrings = explode( ';', $line );
+
+			foreach( $attributeStrings as $attributeString ) {
+				// This implementation makes the assumption that equals symbols will not
+				// be present in quoted attribute values. While attribute values that
+				// contain equals symbols are allowed by RFC2965, they are hopefully rare
+				// enough to ignore for our purposes.
+				$attributeParts = explode( '=', $attributeString );
+
+				$attributeName = trim($attributeParts[0]);
+				$attributeNameLC = strtolower($attributeName);
+
+				if (isset($attributeParts[1]))
+					$attributeValue = trim(trim($attributeParts[1], '"')); // Values may be quoted strings.
+				else
+					$attributeValue = null;
+
+				switch ($attributeNameLC) {
+					case 'expires':
+						$cookie['expires'] = strtotime($attributeValue);
+						break;
+					case 'max-age':
+						$cookie['max-age'] = (int)$attributeValue;
+						break;
+					case 'secure':
+						$cookie['secure'] = true;
+						break;
+					case 'domain':
+					case 'path':
+					case 'port':
+					case 'version':
+					case 'comment':
+					case 'commenturl':
+					case 'discard':
+						$cookie[$attributeNameLC] = $attributeValue;
+						break;
+					default:
+						$cookie['name'] = $attributeName;
+						$cookie['value'] = $attributeValue;
+				}
+			}
+
+			return $cookie;
+		}
 
 		/**
 		 * Add, update, or remove a cookie.
 		 *
-		 * @param stdClass $cookie A cookie object as created by http_parse_cookie()
+		 * @param array $cookie A cookie array as created by parseCookieHeaders()
 		 *
 		 * @return void
 		 *
