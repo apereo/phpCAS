@@ -77,11 +77,15 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
 
     }
 
+/*********************************************************
+ * Tests of public (interface) methods
+ *********************************************************/
+
     /**
      * Verify that our first response will set a cookie that will be available to
      * the same URL.
      */
-    public function testSameUrlCookies()
+    public function test_public_getCookies_SameUrl()
     {
         // Verify that our cookie is available.
         $cookies = $this->object->getCookies($this->serviceUrl_1);
@@ -93,7 +97,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
      * Verify that our first response will set a cookie that is available to a second
      * request to a different url on the same host.
      */
-    public function testSamePathDifferentQueryCookies()
+    public function test_public_getCookies_SamePathDifferentQuery()
     {
         // Verify that our cookie is available.
         $cookies = $this->object->getCookies($this->serviceUrl_1b);
@@ -105,7 +109,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
      * Verify that our first response will set a cookie that is available to a second
      * request to a different url on the same host.
      */
-    public function testDifferentPathCookies()
+    public function test_public_getCookies_DifferentPath()
     {
         // Verify that our cookie is available.
         $cookies = $this->object->getCookies($this->serviceUrl_1c);
@@ -117,7 +121,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
      * Verify that when no domain is set for the cookie, it will be unavailable
      * to other hosts
      */
-    public function testDifferentHostCookies()
+    public function test_public_getCookies_DifferentHost()
     {
         // Verify that our cookie isn't available when the hostname is changed.
         $cookies = $this->object->getCookies('http://service2.example.com/make_changes.php');
@@ -133,9 +137,121 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Verify that cookies are getting stored in our storage array.
+     *
+     */
+    public function test_public_storeCookies() {
+	$array = array();
+	$cookieJar = new CAS_CookieJar($array);
+	$this->assertEquals(0, count($array));
+	$cookieJar->storeCookies($this->serviceUrl_1, $this->responseHeaders_1);
+	$this->assertEquals(1, count($array));
+    }
+
+    /**
+     * Verify that cookie header with max-age=0 will remove the cookie.
+     * Documented in RFC2965 section 3.2.2
+     * http://www.ietf.org/rfc/rfc2965.txt
+     *
+     */
+    public function test_public_storeCookies_RemoveViaMaxAge0() {
+	// Verify that we have on cookie to start.
+	$this->assertEquals(1, count($this->object->getCookies($this->serviceUrl_1)));
+
+	// Send set-cookie header to remove the cookie
+	$headers = array('Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; max-age=0');
+	$this->object->storeCookies($this->serviceUrl_1, $headers);
+
+	$this->assertEquals(0, count($this->object->getCookies($this->serviceUrl_1)));
+    }
+
+    /**
+     * Verify that cookie header with expires in the past will remove the cookie.
+     * Documented in RFC2965 section 3.2.2
+     * http://www.ietf.org/rfc/rfc2965.txt
+     *
+     */
+    public function test_public_storeCookies_RemoveViaExpiresPast() {
+	// Verify that we have on cookie to start.
+	$this->assertEquals(1, count($this->object->getCookies($this->serviceUrl_1)));
+
+	// Send set-cookie header to remove the cookie
+	$headers = array('Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; expires=Fri, 31-Dec-2009 23:59:59 GMT');
+	$this->object->storeCookies($this->serviceUrl_1, $headers);
+
+	$this->assertEquals(0, count($this->object->getCookies($this->serviceUrl_1)));
+    }
+
+    /**
+     * Verify that cookie header that expires in the past will not be stored.
+     *
+     * http://www.ietf.org/rfc/rfc2965.txt
+     *
+     */
+    public function test_public_storeCookies_DontStoreExpiresPast() {
+	// Verify that we have on cookie to start.
+	$this->assertEquals(1, count($this->object->getCookies($this->serviceUrl_1)));
+
+	// Send set-cookie header to remove the cookie
+	$headers = array('Set-Cookie: bob=jones; path=/; expires='.gmdate('D, d-M-Y H:i:s e', time() - 90000));
+	$this->object->storeCookies($this->serviceUrl_1, $headers);
+
+	$cookies = $this->object->getCookies($this->serviceUrl_1);
+	$this->assertEquals(1, count($cookies));
+	$this->assertArrayNotHasKey('jones', $cookies);
+    }
+
+    /**
+     * Verify that cookie header that expires in the futre will not be removed.
+     *
+     * http://www.ietf.org/rfc/rfc2965.txt
+     *
+     */
+    public function test_public_storeCookies_ExpiresFuture() {
+	// Verify that we have on cookie to start.
+	$this->assertEquals(1, count($this->object->getCookies($this->serviceUrl_1)));
+
+	// Send set-cookie header to remove the cookie
+	$headers = array('Set-Cookie: bob=jones; path=/; expires='.gmdate('D, d-M-Y H:i:s e', time() + 600));
+	$this->object->storeCookies($this->serviceUrl_1, $headers);
+
+	$cookies = $this->object->getCookies($this->serviceUrl_1);
+	$this->assertEquals(2, count($cookies));
+	$this->assertEquals('jones', $cookies['bob']);
+    }
+
+    /**
+     * Test the inclusion of a semicolon in a quoted cookie value.
+     *
+     * Note: As of September 12th, the current implementation is known to
+     * fail this test since it explodes values on the semicolon symbol. This
+     * behavior is not ideal but should be ok for most cases.
+     */
+    public function test_public_storeCookies_QuotedSemicolon()
+    {
+	$headers = array('Set-Cookie: SID="hello;world"; path=/; domain=.example.com');
+        $this->object->storeCookies($this->serviceUrl_1, $headers);
+
+        $cookies = $this->object->getCookies($this->serviceUrl_1b);
+
+        $this->assertType('array', $cookies);
+        $this->assertEquals('hello;world', $cookies['SID'], "\tNote: The implementation as of Sept 15, 2010 makes the assumption \n\tthat semicolons will not be present in quoted attribute values. \n\tWhile attribute values that contain semicolons are allowed by \n\tRFC2965, they are hopefully rare enough to ignore for our purposes.");
+        $this->assertEquals(1, count($cookies));
+    }
+
+/*********************************************************
+ * Tests of protected (implementation) methods
+ *
+ * Most of these should likely be reworked to test their edge
+ * cases via the two public methods to allow refactoring of the
+ * protected methods without breaking the tests.
+ *********************************************************/
+
+
+    /**
      * Test the basic operation of parseCookieHeaders.
      */
-    public function testParseCookieHeaders()
+    public function test_protected_parseCookieHeaders()
     {
         $cookies = $this->object->parseCookieHeaders($this->responseHeaders_1, 'service.example.com');
 
@@ -151,7 +267,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test the addition of a domain to the parsing of cookie headers
      */
-    public function testParseCookieHeaders_Domain()
+    public function test_protected_parseCookieHeaders_WithDomain()
     {
 	$headers = array('Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; domain=.example.com');
         $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
@@ -168,7 +284,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test the addition of a domain to the parsing of cookie headers
      */
-    public function testParseCookieHeaders_hostname()
+    public function test_protected_parseCookieHeaders_WithHostname()
     {
 	$headers = array('Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; domain=service.example.com');
         $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
@@ -185,7 +301,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test the usage of a hostname that is different from the default URL.
      */
-    public function testParseCookieHeaders_altHostname()
+    public function test_protected_parseCookieHeaders_NonDefaultHostname()
     {
 	$headers = array('Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; domain=service2.example.com');
         $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
@@ -202,7 +318,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test the the inclusion of a path in the cookie.
      */
-    public function testParseCookieHeaders_path()
+    public function test_protected_parseCookieHeaders_WithPath()
     {
 	$headers = array('Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/something/; domain=service2.example.com');
         $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
@@ -219,7 +335,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test the addition of a 'Secure' parameter
      */
-    public function testParseCookieHeaders_secure()
+    public function test_protected_parseCookieHeaders_Secure()
     {
 	$headers = array('Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; Secure; path=/something/; domain=service2.example.com');
         $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
@@ -236,7 +352,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test the addition of a 'Secure' parameter that is lower-case
      */
-    public function testParseCookieHeaders_secureLC()
+    public function test_protected_parseCookieHeaders_SecureLC()
     {
 	$headers = array('Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; secure; path=/something/; domain=service2.example.com');
         $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
@@ -257,14 +373,14 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
      * fail this test since it explodes values on the semicolon symbol. This
      * behavior is not ideal but should be ok for most cases.
      */
-    public function testParseCookieHeaders_quotedSemicolon()
+    public function test_protected_parseCookieHeaders_QuotedSemicolon()
     {
 	$headers = array('Set-Cookie: SID="hello;world"; path=/; domain=.example.com');
         $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
 
         $this->assertType('array', $cookies);
         $this->assertEquals(1, count($cookies));
-        $this->assertEquals('SID', $cookies[0]['name']);
+        $this->assertEquals('SID', $cookies[0]['name'], "\tNote: The implementation as of Sept 15, 2010 makes the assumption \n\tthat semicolons will not be present in quoted attribute values. \n\tWhile attribute values that contain semicolons are allowed by \n\tRFC2965, they are hopefully rare enough to ignore for our purposes.");
         $this->assertEquals('hello;world', $cookies[0]['value']);
         $this->assertEquals('/', $cookies[0]['path']);
         $this->assertEquals('.example.com', $cookies[0]['domain']);
@@ -274,7 +390,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test the inclusion of an escaped quote in a quoted cookie value.
      */
-    public function testParseCookieHeaders_quotedQuote()
+    public function test_protected_parseCookieHeaders_QuotedQuote()
     {
 	$headers = array('Set-Cookie: SID="hello\"world"; path=/; domain=.example.com');
         $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
@@ -291,7 +407,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test the inclusion of a trailing semicolon
      */
-    public function testParseCookieHeaders_trailingSemicolon()
+    public function test_protected_parseCookieHeaders_trailingSemicolon()
     {
 	$headers = array('Set-Cookie: SID="hello world"; path=/;');
         $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
@@ -312,7 +428,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
      * fail this test since it explodes values on the equals symbol. This
      * behavior is not ideal but should be ok for most cases.
      */
-    public function testParseCookieHeaders_quotedEquals()
+    public function test_protected_parseCookieHeaders_quotedEquals()
     {
 	$headers = array('Set-Cookie: SID="hello=world"; path=/; domain=.example.com');
         $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
@@ -320,7 +436,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
         $this->assertType('array', $cookies);
         $this->assertEquals(1, count($cookies));
         $this->assertEquals('SID', $cookies[0]['name']);
-        $this->assertEquals('hello;world', $cookies[0]['value']);
+        $this->assertEquals('hello=world', $cookies[0]['value'], "\tNote: The implementation as of Sept 15, 2010 makes the assumption \n\tthat equals symbols will not be present in quoted attribute values. \n\tWhile attribute values that contain equals symbols are allowed by \n\tRFC2965, they are hopefully rare enough to ignore for our purposes.");
         $this->assertEquals('/', $cookies[0]['path']);
         $this->assertEquals('.example.com', $cookies[0]['domain']);
         $this->assertFalse($cookies[0]['secure']);
@@ -329,7 +445,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test setting a single service cookie
      */
-    public function testSetCookie()
+    public function test_protected_setCookie()
     {
         $cookies = $this->object->getCookies($this->serviceUrl_1c);
         $this->assertType('array', $cookies);
@@ -340,7 +456,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test setting a single service cookie
      */
-    public function testStoreCookie_duplicates()
+    public function test_protected_storeCookie_WithDuplicates()
     {
 	$headers = array('Set-Cookie: SID="hello world"; path=/');
         $cookiesToSet = $this->object->parseCookieHeaders($headers, 'service.example.com');
@@ -359,7 +475,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test setting two service cookies
      */
-    public function testStoreCookie_twoCookies()
+    public function test_protected_storeCookie_TwoCookies()
     {
         // Second cookie
         $headers = array('Set-Cookie: message="hello world"; path=/');
@@ -377,7 +493,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test setting two service cookies
      */
-    public function testStoreCookie_twoCookiesOneAtDomain()
+    public function test_protected_storeCookie_TwoCookiesOneAtDomain()
     {
 
         // Second cookie
@@ -396,7 +512,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * @todo Implement testDiscardCookie().
      */
-    public function testDiscardCookie()
+    public function test_protected_discardCookie()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -407,7 +523,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * @todo Implement testExpireCookies().
      */
-    public function testExpireCookies()
+    public function test_protected_expireCookies()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -418,7 +534,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * @todo Implement testCookieMatchesTarget().
      */
-    public function testCookieMatchesTarget()
+    public function test_protected_cookieMatchesTarget()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -429,7 +545,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Test matching a domain cookie.
      */
-    public function testDomainCookieMatchesTarget()
+    public function test_protected_cookieMatchesTarget_DomainCookie()
     {
         $headers = array('Set-Cookie: message="hello world"; path=/; domain=.example.com');
         $cookies = $this->object->parseCookieHeaders($headers, 'otherhost.example.com');
