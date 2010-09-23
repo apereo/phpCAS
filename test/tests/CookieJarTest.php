@@ -534,39 +534,6 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo Implement testDiscardCookie().
-     */
-    public function test_protected_discardCookie()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testExpireCookies().
-     */
-    public function test_protected_expireCookies()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testCookieMatchesTarget().
-     */
-    public function test_protected_cookieMatchesTarget()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * Test matching a domain cookie.
      */
     public function test_protected_cookieMatchesTarget_DomainCookie()
