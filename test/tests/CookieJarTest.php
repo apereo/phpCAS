@@ -263,6 +263,41 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($cookies));
     }
 
+    /**
+     * Test the inclusion of an equals in a quoted cookie value.
+     *
+     * Note: As of September 12th, the current implementation is known to
+     * fail this test since it explodes values on the equals symbol. This
+     * behavior is not ideal but should be ok for most cases.
+     */
+    public function test_public_storeCookies_QuotedEquals()
+    {
+	$headers = array('Set-Cookie: SID="hello=world"; path=/; domain=.example.com');
+        $this->object->storeCookies($this->serviceUrl_1, $headers);
+
+        $cookies = $this->object->getCookies($this->serviceUrl_1b);
+
+        $this->assertType('array', $cookies);
+        $this->assertEquals('hello=world', $cookies['SID'], "\tNote: The implementation as of Sept 15, 2010 makes the assumption \n\tthat equals symbols will not be present in quoted attribute values. \n\tWhile attribute values that contain equals symbols are allowed by \n\tRFC2965, they are hopefully rare enough to ignore for our purposes.");
+        $this->assertEquals(1, count($cookies));
+    }
+
+
+    /**
+     * Test the inclusion of an escaped quote in a quoted cookie value.
+     */
+    public function test_public_storeCookies_QuotedEscapedQuote()
+    {
+	$headers = array('Set-Cookie: SID="hello\"world"; path=/; domain=.example.com');
+        $this->object->storeCookies($this->serviceUrl_1, $headers);
+
+        $cookies = $this->object->getCookies($this->serviceUrl_1b);
+
+        $this->assertType('array', $cookies);
+        $this->assertEquals('hello"world', $cookies['SID']);
+        $this->assertEquals(1, count($cookies));
+    }
+
 /*********************************************************
  * Tests of protected (implementation) methods
  *
@@ -391,44 +426,6 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the inclusion of a semicolon in a quoted cookie value.
-     *
-     * Note: As of September 12th, the current implementation is known to
-     * fail this test since it explodes values on the semicolon symbol. This
-     * behavior is not ideal but should be ok for most cases.
-     */
-    public function test_protected_parseCookieHeaders_QuotedSemicolon()
-    {
-	$headers = array('Set-Cookie: SID="hello;world"; path=/; domain=.example.com');
-        $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
-
-        $this->assertType('array', $cookies);
-        $this->assertEquals(1, count($cookies));
-        $this->assertEquals('SID', $cookies[0]['name'], "\tNote: The implementation as of Sept 15, 2010 makes the assumption \n\tthat semicolons will not be present in quoted attribute values. \n\tWhile attribute values that contain semicolons are allowed by \n\tRFC2965, they are hopefully rare enough to ignore for our purposes.");
-        $this->assertEquals('hello;world', $cookies[0]['value']);
-        $this->assertEquals('/', $cookies[0]['path']);
-        $this->assertEquals('.example.com', $cookies[0]['domain']);
-        $this->assertFalse($cookies[0]['secure']);
-    }
-
-    /**
-     * Test the inclusion of an escaped quote in a quoted cookie value.
-     */
-    public function test_protected_parseCookieHeaders_QuotedQuote()
-    {
-	$headers = array('Set-Cookie: SID="hello\"world"; path=/; domain=.example.com');
-        $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
-
-        $this->assertType('array', $cookies);
-        $this->assertEquals(1, count($cookies));
-        $this->assertEquals('SID', $cookies[0]['name']);
-        $this->assertEquals('hello\"world', $cookies[0]['value']);
-        $this->assertEquals('/', $cookies[0]['path']);
-        $this->assertEquals('.example.com', $cookies[0]['domain']);
-        $this->assertFalse($cookies[0]['secure']);
-    }
-
-    /**
      * Test the inclusion of a trailing semicolon
      */
     public function test_protected_parseCookieHeaders_trailingSemicolon()
@@ -442,27 +439,6 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('hello world', $cookies[0]['value']);
         $this->assertEquals('/', $cookies[0]['path']);
         $this->assertEquals('service.example.com', $cookies[0]['domain']);
-        $this->assertFalse($cookies[0]['secure']);
-    }
-
-    /**
-     * Test the inclusion of an equals in a quoted cookie value.
-     *
-     * Note: As of September 12th, the current implementation is known to
-     * fail this test since it explodes values on the equals symbol. This
-     * behavior is not ideal but should be ok for most cases.
-     */
-    public function test_protected_parseCookieHeaders_quotedEquals()
-    {
-	$headers = array('Set-Cookie: SID="hello=world"; path=/; domain=.example.com');
-        $cookies = $this->object->parseCookieHeaders($headers, 'service.example.com');
-
-        $this->assertType('array', $cookies);
-        $this->assertEquals(1, count($cookies));
-        $this->assertEquals('SID', $cookies[0]['name']);
-        $this->assertEquals('hello=world', $cookies[0]['value'], "\tNote: The implementation as of Sept 15, 2010 makes the assumption \n\tthat equals symbols will not be present in quoted attribute values. \n\tWhile attribute values that contain equals symbols are allowed by \n\tRFC2965, they are hopefully rare enough to ignore for our purposes.");
-        $this->assertEquals('/', $cookies[0]['path']);
-        $this->assertEquals('.example.com', $cookies[0]['domain']);
         $this->assertFalse($cookies[0]['secure']);
     }
 

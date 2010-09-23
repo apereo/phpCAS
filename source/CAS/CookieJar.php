@@ -173,10 +173,17 @@ class CAS_CookieJar {
 			$attributeName = trim($attributeParts[0]);
 			$attributeNameLC = strtolower($attributeName);
 
-			if (isset($attributeParts[1]))
-				$attributeValue = trim(trim($attributeParts[1], '"')); // Values may be quoted strings.
-			else
+			if (isset($attributeParts[1])) {
+				$attributeValue = trim($attributeParts[1]);
+				// Values may be quoted strings.
+				if (strpos($attributeValue, '"') === 0) {
+					$attributeValue = trim($attributeValue, '"');
+					// unescape any escaped quotes:
+					$attributeValue = str_replace('\"', '"', $attributeValue);
+				}
+			} else {
 				$attributeValue = null;
+			}
 
 			switch ($attributeNameLC) {
 				case 'expires':
