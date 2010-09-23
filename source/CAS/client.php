@@ -2433,7 +2433,7 @@ class CASClient
 			foreach ($cookies as $cookie) {
 				// Enforce the same-origin policy by verifying that the cookie
 				// would match the service that is setting it
-				if (!$this->cookieMatchesTarget($cookie, parse_url($service_url)))
+				if (!$this->cookieMatchesTarget($cookie, $serviceUrlParts))
 				continue;
 
 				// store the cookie
