@@ -1,7 +1,7 @@
 <?php
 require_once 'PHPUnit/Framework.php';
 
-require_once '/home/afranco/private_html/phpcas/source/CAS/client.php';
+require_once '/home/afranco/private_html/phpcas/source/CAS/ServiceCookieJar.php';
 
 /**
  * Test class for verifying the operation of cookie handling methods used in
@@ -23,10 +23,13 @@ class ServiceWebCookieTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-	if (isset($_SESSION['phpCAS']))
-		unset($_SESSION['phpCAS']);
-	$_SESSION['phpCAS'] = array();
-        $this->object = new CASClient(CAS_VERSION_2_0, true, 'cas.example.edu', 443, '/cas/', false);
+	if (isset($_SESSION['phpCAS']['service_cookies']))
+		unset($_SESSION['phpCAS']['service_cookies']);
+	    if (!isset($_SESSION['phpCAS']))
+		$_SESSION['phpCAS'] = array();
+	$_SESSION['phpCAS']['service_cookies'] = array();
+
+        $this->object = new ServiceCookieJar();
 
         $this->serviceUrl_1 = 'http://service.example.com/lookup/?action=search&query=username';
         $this->responseHeaders_1 = array(
@@ -62,8 +65,8 @@ class ServiceWebCookieTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-	if (isset($_SESSION['phpCAS']))
-		unset($_SESSION['phpCAS']);
+	if (isset($_SESSION['phpCAS']['service_cookies']))
+		unset($_SESSION['phpCAS']['service_cookies']);
     }
 
     /**
