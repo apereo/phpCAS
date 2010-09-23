@@ -118,6 +118,52 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Verify that our cookies set with the 'secure' token will only go to https URLs.
+     */
+    public function test_public_getCookies_Secure()
+    {
+        $headers = array('Set-Cookie: person="bob jones"; path=/; Secure');
+        $url = 'https://service.example.com/lookup/?action=search&query=username';
+        $this->object->storeCookies($url, $headers);
+
+        // Ensure that only the SID cookie not available to non https URLs
+        $cookies = $this->object->getCookies('http://service.example.com/lookup/');
+        $this->assertArrayHasKey('SID', $cookies);
+        $this->assertEquals('k1jut1r1bqrumpei837kk4jks0', $cookies['SID']);
+        $this->assertArrayNotHasKey('person', $cookies);
+
+        // Ensure that the SID cookie is avalailable to https urls.
+        $cookies = $this->object->getCookies('https://service.example.com/lookup/');
+        $this->assertArrayHasKey('SID', $cookies);
+        $this->assertEquals('k1jut1r1bqrumpei837kk4jks0', $cookies['SID']);
+        $this->assertArrayHasKey('person', $cookies);
+        $this->assertEquals('bob jones', $cookies['person']);
+    }
+
+    /**
+     * Verify that our cookies set with the 'secure' token will only go to https URLs.
+     */
+    public function test_public_getCookies_SecureLC()
+    {
+        $headers = array('Set-Cookie: person="bob jones"; path=/; secure');
+        $url = 'https://service.example.com/lookup/?action=search&query=username';
+        $this->object->storeCookies($url, $headers);
+
+        // Ensure that only the SID cookie not available to non https URLs
+        $cookies = $this->object->getCookies('http://service.example.com/lookup/');
+        $this->assertArrayHasKey('SID', $cookies);
+        $this->assertEquals('k1jut1r1bqrumpei837kk4jks0', $cookies['SID']);
+        $this->assertArrayNotHasKey('person', $cookies);
+
+        // Ensure that the SID cookie is avalailable to https urls.
+        $cookies = $this->object->getCookies('https://service.example.com/lookup/');
+        $this->assertArrayHasKey('SID', $cookies);
+        $this->assertEquals('k1jut1r1bqrumpei837kk4jks0', $cookies['SID']);
+        $this->assertArrayHasKey('person', $cookies);
+        $this->assertEquals('bob jones', $cookies['person']);
+    }
+
+    /**
      * Verify that when no domain is set for the cookie, it will be unavailable
      * to other hosts
      */
@@ -157,7 +203,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
 	$this->assertEquals(1, count($this->object->getCookies($this->serviceUrl_1)));
 
 	// Send set-cookie header to remove the cookie
-	$headers = array('Set-Cookie: person="bob jones"; path=/; max-age=2');
+	$headers = array('Set-Cookie2: person="bob jones"; path=/; max-age=2');
 	$this->object->storeCookies($this->serviceUrl_1, $headers);
 
 	// Ensure that the cookie exists after 1 second
@@ -183,7 +229,7 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
 	$this->assertEquals(1, count($this->object->getCookies($this->serviceUrl_1)));
 
 	// Send set-cookie header to remove the cookie
-	$headers = array('Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; max-age=0');
+	$headers = array('Set-Cookie2: SID=k1jut1r1bqrumpei837kk4jks0; path=/; max-age=0');
 	$this->object->storeCookies($this->serviceUrl_1, $headers);
 
 	$this->assertEquals(0, count($this->object->getCookies($this->serviceUrl_1)));
