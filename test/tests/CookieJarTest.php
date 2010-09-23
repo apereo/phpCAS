@@ -149,6 +149,30 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Verify that cookie header with max-age value will be available for that
+     * length of time.
+     */
+    public function test_public_storeCookies_MaxAge() {
+	// Verify that we have on cookie to start.
+	$this->assertEquals(1, count($this->object->getCookies($this->serviceUrl_1)));
+
+	// Send set-cookie header to remove the cookie
+	$headers = array('Set-Cookie: person="bob jones"; path=/; max-age=2');
+	$this->object->storeCookies($this->serviceUrl_1, $headers);
+
+	// Ensure that the cookie exists after 1 second
+	sleep(1);
+	$cookies = $this->object->getCookies($this->serviceUrl_1);
+	$this->assertArrayHasKey('person', $cookies);
+	$this->assertEquals('bob jones', $cookies['person']);
+
+	// Wait 3 total seconds and then ensure that the cookie has been removed
+	sleep(2);
+	$cookies = $this->object->getCookies($this->serviceUrl_1);
+	$this->assertArrayNotHasKey('person', $cookies);
+    }
+
+    /**
      * Verify that cookie header with max-age=0 will remove the cookie.
      * Documented in RFC2965 section 3.2.2
      * http://www.ietf.org/rfc/rfc2965.txt

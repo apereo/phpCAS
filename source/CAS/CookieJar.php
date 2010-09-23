@@ -184,6 +184,13 @@ class CAS_CookieJar {
 					break;
 				case 'max-age':
 					$cookie['max-age'] = (int)$attributeValue;
+					// Set an expiry time based on the max-age
+					if ($cookie['max-age'])
+						$cookie['expires'] = time() + $cookie['max-age'];
+					// If max-age is zero, then the cookie should be removed imediately
+					// so set an expiry before now.
+					else
+						$cookie['expires'] = time() - 1;
 					break;
 				case 'secure':
 					$cookie['secure'] = true;
