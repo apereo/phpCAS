@@ -33,8 +33,10 @@
 //
 // hack by Vangelis Haniotakis to handle the absence of $_SERVER['REQUEST_URI'] in IIS
 //
-if (!isset($_SERVER['REQUEST_URI'])) {
-	$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
+if (php_sapi_name() != 'cli') {
+	if (!isset($_SERVER['REQUEST_URI'])) {
+		$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
+	}
 }
 
 /**
@@ -585,7 +587,15 @@ class phpCAS {
 				$str .= str_replace("\n", "", var_export($arg, TRUE));
 			}
 		}
-		$str .= ') [' . basename($dbg[2]['file']) . ':' . $dbg[2]['line'] . ']';
+		if (isset($dbg[2]['file']))
+			$file = basename($dbg[2]['file']);
+		else
+			$file = 'unknown_file';
+		if (isset($dbg[2]['line']))
+			$line = $dbg[2]['line'];
+		else
+			$line = 'unknown_line';
+		$str .= ') [' . $file . ':' . $line . ']';
 		phpCAS :: log($str);
 		$PHPCAS_DEBUG['indent']++;
 	}

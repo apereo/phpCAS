@@ -40,6 +40,9 @@ include_once(dirname(__FILE__).'/languages/languages.php');
 // include PGT storage classes
 include_once(dirname(__FILE__).'/PGTStorage/pgt-main.php');
 
+// include class for storing service cookies.
+include_once(dirname(__FILE__).'/CookieJar.php');
+
 /**
  * @class CASClient
  * The CASClient class is a client interface that provides CAS authentication
@@ -595,6 +598,15 @@ class CASClient
 
 			// are we in proxy mode ?
 			$this->_proxy = $proxy;
+
+			// Make cookie handling available.
+			if ($this->isProxy()) {
+				if (!isset($_SESSION['phpCAS']))
+					$_SESSION['phpCAS'] = array();
+				if (!isset($_SESSION['phpCAS']['service_cookies']))
+					$_SESSION['phpCAS']['service_cookies'] = array();
+				$this->_serviceCookieJar = new CAS_CookieJar($_SESSION['phpCAS']['service_cookies']);
+			}
 
 			//check version
 			switch ($server_version) {
@@ -1711,6 +1723,13 @@ class CASClient
 		var $_proxy;
 
 		/**
+		 * Handler for managing service cookies.
+		 *
+		 * @private
+		 */
+		var $_serviceCookieJar;
+
+		/**
 		 * Tells if a CAS client is a CAS proxy or not
 		 *
 		 * @return TRUE when the CAS client is a CAs proxy, FALSE otherwise
@@ -2350,11 +2369,9 @@ class CASClient
 				$res = FALSE;
 			} else {
 				// add cookies if necessary
-				if ( isset($_SESSION['phpCAS']['services'][$url]['cookies']) &&
-				is_array($_SESSION['phpCAS']['services'][$url]['cookies']) ) {
-					foreach ( $_SESSION['phpCAS']['services'][$url]['cookies'] as $name => $val ) {
-						$cookies[] = $name.'='.$val;
-					}
+				$cookies = array();
+				foreach ( $this->_serviceCookieJar->getCookies($url) as $name => $val ) {
+					$cookies[] = $name.'='.$val;
 				}
 					
 				// build the URL including the PT
@@ -2363,34 +2380,47 @@ class CASClient
 				} else {
 					$service_url = $url.'&ticket='.$pt;
 				}
-					
 				phpCAS::trace('reading URL`'.$service_url.'\'');
 				if ( !$this->readURL($service_url,$cookies,$headers,$output,$err_msg) ) {
 					phpCAS::trace('could not read URL`'.$service_url.'\'');
 					$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
 					// give an error message
 					$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
-					$service_url,
-					$err_msg);
+						$service_url,
+						$err_msg);
 					$res = FALSE;
 				} else {
 					// URL has been fetched, extract the cookies
 					phpCAS::trace('URL`'.$service_url.'\' has been read, storing cookies:');
-					foreach ( $headers as $header ) {
-						// test if the header is a cookie
-						if ( preg_match('/^Set-Cookie:/',$header) ) {
-							// the header is a cookie, remove the beginning
-							$header_val = preg_replace('/^Set-Cookie: */','',$header);
-							// extract interesting information
-							$name_val = strtok($header_val,'; ');
-							// extract the name and the value of the cookie
-							$cookie_name = strtok($name_val,'=');
-							$cookie_val = strtok('=');
-							// store the cookie
-							$_SESSION['phpCAS']['services'][$url]['cookies'][$cookie_name] = $cookie_val;
-							phpCAS::trace($cookie_name.' -> '.$cookie_val);
+					$this->_serviceCookieJar->storeCookies($service_url, $headers);
+				}
+				// Check for the redirect after authentication			
+				foreach($headers as $header){
+					if (preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches))
+					{
+						$redirect_url = trim(array_pop($matches));
+						phpCAS :: trace('Found redirect:'.$redirect_url);
+						$cookies = array();
+						foreach ( $this->_serviceCookieJar->getCookies($redirect_url) as $name => $val ) {
+							$cookies[] = $name.'='.$val;
 						}
+						phpCAS::trace('reading URL`'.$redirect_url.'\'');
+						if ( !$this->readURL($redirect_url,$cookies,$headers,$output,$err_msg) ) {
+							phpCAS::trace('could not read URL`'.$redirect_url.'\'');
+							$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
+							// give an error message
+							$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
+								$service_url,
+								$err_msg);
+							$res = FALSE;
+						} else {
+							// URL has been fetched, extract the cookies
+							phpCAS::trace('URL`'.$redirect_url.'\' has been read, storing cookies:');
+							$this->_serviceCookieJar->storeCookies($redirect_url, $headers);
+						}
+						break;
 					}
+					
 				}
 			}
 
@@ -2545,6 +2575,7 @@ class CASClient
 	 function validatePT(&$validate_url,&$text_response,&$tree_response)
 		{
 			phpCAS::traceBegin();
+			phpCAS::trace($text_response);
 			// build the URL to validate the ticket
 			$validate_url = $this->getServerProxyValidateURL().'&ticket='.$this->getPT();
 
