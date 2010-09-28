@@ -33,8 +33,10 @@
 //
 // hack by Vangelis Haniotakis to handle the absence of $_SERVER['REQUEST_URI'] in IIS
 //
-if (@!$_SERVER['REQUEST_URI']) {
-	@$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
+if (php_sapi_name() != 'cli') {
+	if (!isset($_SERVER['REQUEST_URI'])) {
+		$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
+	}
 }
 
 /**
