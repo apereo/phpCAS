@@ -170,6 +170,23 @@ class CASClient
 		$this->_output_footer = $footer;
 	}
 
+	/**
+	 * @var boolean $_exitOnAuthError; If true, phpCAS will exit on an authentication error.
+	 */
+	private $_exitOnAuthError = true;
+
+	/**
+	 * Configure the client to not call exit() when an authentication failure occurs.
+	 *
+	 * Needed for testing proper failure handling.
+	 *
+	 * @return void
+	 */
+	public function setNoExitOnAuthError () {
+		$this->_exitOnAuthError = false;
+	}
+
+
 	/** @} */
 	// ########################################################################
 	//  INTERNATIONALIZATION
@@ -2783,7 +2800,9 @@ class CASClient
 			}
 			$this->printHTMLFooter();
 			phpCAS::traceExit();
-			exit();
+
+			if ($this->_exitOnAuthError)
+				exit();
 		}
 
 		/** @} */
