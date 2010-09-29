@@ -1919,8 +1919,8 @@ class CASClient
 
 	 /**
 	  * an instance of a class inheriting of PGTStorage, used to deal with PGT
-	  * storage. Created by CASClient::setPGTStorageFile() or CASClient::setPGTStorageDB(), used
-	  * by CASClient::setPGTStorageFile(), CASClient::setPGTStorageDB() and CASClient::initPGTStorage().
+	  * storage. Created by CASClient::setPGTStorageFile(), used
+	  * by CASClient::setPGTStorageFile() and CASClient::initPGTStorage().
 	  *
 	  * @hideinitializer
 	  * @private
@@ -1998,42 +1998,6 @@ class CASClient
 			$this->_pgt_storage = new PGTStorageFile($this,$format,$path);
 		}
 
-		/**
-		 * This method is used to tell phpCAS to store the response of the
-		 * CAS server to PGT requests into a database.
-		 * @note The connection to the database is done only when needed.
-		 * As a consequence, bad parameters are detected only when
-		 * initializing PGT storage.
-		 *
-		 * @param $user the user to access the data with
-		 * @param $password the user's password
-		 * @param $database_type the type of the database hosting the data
-		 * @param $hostname the server hosting the database
-		 * @param $port the port the server is listening on
-		 * @param $database the name of the database
-		 * @param $table the name of the table storing the data
-		 *
-		 * @public
-		 */
-		function setPGTStorageDB($user,
-		$password,
-		$database_type,
-		$hostname,
-		$port,
-		$database,
-		$table)
-		{
-			// check that the storage has not already been set
-			if ( is_object($this->_pgt_storage) ) {
-				phpCAS::error('PGT storage already defined');
-			}
-
-			// warn the user that he should use file storage...
-			trigger_error('PGT storage into database is an experimental feature, use at your own risk',E_USER_WARNING);
-
-			// create the storage object
-			$this->_pgt_storage = new PGTStorageDB($this,$user,$password,$database_type,$hostname,$port,$database,$table);
-		}
 		
 		// ########################################################################
 		//  PGT VALIDATION
