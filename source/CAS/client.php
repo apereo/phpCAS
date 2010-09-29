@@ -544,6 +544,29 @@ class CASClient
 		}
 
 		/**
+		 * The class to instantiate for making web requests in readUrl().
+		 * The class specified must implement the CAS_RequestInterface.
+		 * By default CAS_CurlRequest is used, but this may be overridden to
+		 * supply alternate request mechanisms for testing.
+		 */
+		private $_requestImplementation = 'CAS_CurlRequest';
+
+		/**
+		 * Override the default implementation used to make web requests in readUrl().
+		 * This class must implement the CAS_RequestInterface.
+		 *
+		 * @param string $className
+		 * @return void
+		 */
+		public function setRequestImplementation ($className) {
+			$obj = new $className;
+			if (!($obj instanceof CAS_RequestInterface))
+				throw new InvalidArgumentException('$className must implement the CAS_RequestInterface');
+
+			$this->_requestImplementation = $className;
+		}
+
+		/**
 		 * This method checks to see if the request is secured via HTTPS
 		 * @return true if https, false otherwise
 		 * @private
@@ -2191,9 +2214,12 @@ class CASClient
 		 */
 		function readURL($url, array $cookies, &$headers, &$body, &$err_msg)
 		{
-			$request = new CAS_CurlRequest();
+			$className = $this->_requestImplementation;
+			$request = new $className();
 
-			$request->setCurlOptions($this->_curl_options);
+			if (count($this->_curl_options)) {
+				$request->setCurlOptions($this->_curl_options);
+			}
 
 			$request->setUrl($url);
 			$request->addCookies($cookies);
