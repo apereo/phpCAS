@@ -1,7 +1,7 @@
 <?php
 require_once 'PHPUnit/Framework.php';
 
-require_once '/home/afranco/private_html/phpcas/source/CAS/CookieJar.php';
+require_once dirname(__FILE__).'/../../source/CAS/CookieJar.php';
 
 
 /**
