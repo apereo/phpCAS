@@ -1480,6 +1480,7 @@ class CASClient
 					} else if ( $tree_response->getElementsByTagName("authenticationFailure")->length != 0) {
 						phpCAS::trace('<authenticationFailure> found');
 						// authentication failed, extract the error code and message
+						$auth_fail_list = $tree_response->getElementsByTagName("authenticationFailure");
 						$this->authError('ST not validated',
 						$validate_url,
 						FALSE/*$no_response*/,
