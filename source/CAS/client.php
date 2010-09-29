@@ -43,6 +43,9 @@ include_once(dirname(__FILE__).'/PGTStorage/pgt-main.php');
 // include class for storing service cookies.
 include_once(dirname(__FILE__).'/CookieJar.php');
 
+// include class for fetching web requests.
+include_once(dirname(__FILE__).'/CurlRequest.php');
+
 /**
  * @class CASClient
  * The CASClient class is a client interface that provides CAS authentication
@@ -1400,7 +1403,7 @@ class CASClient
 			}
 
 			// open and read the URL
-			if ( !$this->readURL($validate_url,''/*cookies*/,$headers,$text_response,$err_msg) ) {
+			if ( !$this->readURL($validate_url,array(),$headers,$text_response,$err_msg) ) {
 				phpCAS::trace('could not open URL \''.$validate_url.'\' to validate ('.$err_msg.')');
 				$this->authError('ST not validated',
 				$validate_url,
@@ -1575,7 +1578,7 @@ class CASClient
 			$validate_url = $this->getServerSamlValidateURL();
 
 			// open and read the URL
-			if ( !$this->readURL($validate_url,''/*cookies*/,$headers,$text_response,$err_msg) ) {
+			if ( !$this->readURL($validate_url,array(),$headers,$text_response,$err_msg) ) {
 				phpCAS::trace('could not open URL \''.$validate_url.'\' to validate ('.$err_msg.')');
 				$this->authError('SA not validated', $validate_url, TRUE/*$no_response*/);
 			}
@@ -2083,7 +2086,7 @@ class CASClient
 			$cas_url = $this->getServerProxyURL().'?targetService='.urlencode($target_service).'&pgt='.$this->getPGT();
 
 			// open and read the URL
-			if ( !$this->readURL($cas_url,''/*cookies*/,$headers,$cas_response,$err_msg) ) {
+			if ( !$this->readURL($cas_url,array(),$headers,$cas_response,$err_msg) ) {
 				phpCAS::trace('could not open URL \''.$cas_url.'\' to validate ('.$err_msg.')');
 				$err_code = PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE;
 				$err_msg = 'could not retrieve PT (no response from the CAS server)';
@@ -2186,91 +2189,48 @@ class CASClient
 		 *
 		 * @private
 		 */
-		function readURL($url,$cookies,&$headers,&$body,&$err_msg)
+		function readURL($url, array $cookies, &$headers, &$body, &$err_msg)
 		{
-			phpCAS::traceBegin();
-			$headers = '';
-			$body = '';
-			$err_msg = '';
+			$request = new CAS_CurlRequest();
 
-			$res = TRUE;
+			$request->setCurlOptions($this->_curl_options);
 
-			// initialize the CURL session
-			$ch = curl_init($url);
-
-			if (version_compare(PHP_VERSION,'5.1.3','>=')) {
-				//only avaible in php5
-				curl_setopt_array($ch, $this->_curl_options);
-			} else {
-				foreach ($this->_curl_options as $key => $value) {
-					curl_setopt($ch, $key, $value);
-				}
-			}
+			$request->setUrl($url);
+			$request->addCookies($cookies);
 
 			if ($this->_cas_server_cert == '' && $this->_cas_server_ca_cert == '' && !$this->_no_cas_server_validation) {
 				phpCAS::error('one of the methods phpCAS::setCasServerCert(), phpCAS::setCasServerCACert() or phpCAS::setNoCasServerValidation() must be called.');
 			}
-			if ($this->_cas_server_cert != '' && $this->_cas_server_ca_cert != '') {
-				// This branch added by IDMS. Seems phpCAS implementor got a bit confused about the curl options CURLOPT_SSLCERT and CURLOPT_CAINFO
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
-				curl_setopt($ch, CURLOPT_SSLCERT, $this->_cas_server_cert);
-				curl_setopt($ch, CURLOPT_CAINFO, $this->_cas_server_ca_cert);
-				curl_setopt($ch, CURLOPT_VERBOSE, '1');
-				phpCAS::trace('CURL: Set all required opts for mutual authentication ------');
-			} else if ($this->_cas_server_cert != '' ) {
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-				curl_setopt($ch, CURLOPT_SSLCERT, $this->_cas_server_cert);
-			} else if ($this->_cas_server_ca_cert != '') {
-				/// XXX Change this value back to 1 XXX
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-				curl_setopt($ch, CURLOPT_CAINFO, $this->_cas_server_ca_cert);
-			} else {
-				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+			if ($this->_cas_server_cert != '') {
+				$request->setSslCert($this->_cas_server_cert);
+			}
+			if ($this->_cas_server_ca_cert != '') {
+				$request->setSslCaCert($this->_cas_server_ca_cert);
 			}
 
-			// return the CURL output into a variable
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			// get the HTTP header with a callback
-			$this->_curl_headers = array(); // empty the headers array
-			curl_setopt($ch, CURLOPT_HEADERFUNCTION, array($this, '_curl_read_headers'));
-			// add cookies headers
-			if ( is_array($cookies) ) {
-				curl_setopt($ch,CURLOPT_COOKIE,implode(';',$cookies));
-			}
 			// add extra stuff if SAML
 			if ($this->hasSA()) {
-				$more_headers = array ("soapaction: http://www.oasis-open.org/committees/security",
-				"cache-control: no-cache",
-				"pragma: no-cache",
-				"accept: text/xml",
-				"connection: keep-alive",
-			"content-type: text/xml");
-					
-				curl_setopt($ch, CURLOPT_HTTPHEADER, $more_headers);
-				curl_setopt($ch, CURLOPT_POST, 1);
-				$data = $this->buildSAMLPayload();
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+				$request->addHeader("soapaction: http://www.oasis-open.org/committees/security");
+				$request->addHeader("cache-control: no-cache");
+				$request->addHeader("pragma: no-cache");
+				$request->addHeader("accept: text/xml");
+				$request->addHeader("connection: keep-alive");
+				$request->addHeader("content-type: text/xml");
+				$request->makePost();
+				$request->setPostBody($this->buildSAMLPayload());
 			}
-			// perform the query
-			$buf = curl_exec ($ch);
-			if ( $buf === FALSE ) {
-				phpCAS::trace('curl_exec() failed');
-				$err_msg = 'CURL error #'.curl_errno($ch).': '.curl_error($ch);
-				// close the CURL session
-				curl_close ($ch);
-				$res = FALSE;
+
+			if ($request->send()) {
+				$headers = $request->getResponseHeaders();
+				$body = $request->getResponseBody();
+				$err_msg = '';
+				return true;
 			} else {
-				// close the CURL session
-				curl_close ($ch);
-					
-				$headers = $this->_curl_headers;
-				$body = $buf;
+				$headers = '';
+				$body = '';
+				$err_msg = $request->getErrorMessage();
+				return false;
 			}
-			
-			phpCAS::traceEnd($res);
-			return $res;
 		}
 
 		/**
@@ -2550,7 +2510,7 @@ class CASClient
 			}
 
 			// open and read the URL
-			if ( !$this->readURL($validate_url,''/*cookies*/,$headers,$text_response,$err_msg) ) {
+			if ( !$this->readURL($validate_url,array(),$headers,$text_response,$err_msg) ) {
 				phpCAS::trace('could not open URL \''.$validate_url.'\' to validate ('.$err_msg.')');
 				$this->authError('PT not validated',
 				$validate_url,
