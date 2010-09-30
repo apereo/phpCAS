@@ -2222,8 +2222,7 @@ class CASClient
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
 				curl_setopt($ch, CURLOPT_SSLCERT, $this->_cas_server_cert);
 			} else if ($this->_cas_server_ca_cert != '') {
-				/// XXX Change this value back to 1 XXX
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
 				curl_setopt($ch, CURLOPT_CAINFO, $this->_cas_server_ca_cert);
 			} else {
 				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
