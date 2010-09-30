@@ -86,10 +86,11 @@ class CAS_CurlRequest
 		} else if ($this->certPath) {
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
 			curl_setopt($ch, CURLOPT_SSLCERT, $this->certPath);
+			phpCAS::trace('CURL: Set CURLOPT_SSLCERT');
 		} else if ($this->caCertPath) {
-			/// XXX Change this value back to 1 XXX
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
 			curl_setopt($ch, CURLOPT_CAINFO, $this->caCertPath);
+			phpCAS::trace('CURL: Set CURLOPT_CAINFO');
 		} else {
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
