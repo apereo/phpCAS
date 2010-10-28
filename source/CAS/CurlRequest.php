@@ -75,19 +75,8 @@ class CAS_CurlRequest
 		/*********************************************************
 		 * Set SSL configuration
 		 *********************************************************/
-		if ($this->certPath && $this->caCertPath) {
-			// This branch added by IDMS. Seems phpCAS implementor got a bit confused about the curl options CURLOPT_SSLCERT and CURLOPT_CAINFO
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+		if ($this->caCertPath) {
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
-			curl_setopt($ch, CURLOPT_SSLCERT, $this->certPath);
-			curl_setopt($ch, CURLOPT_CAINFO, $this->caCertPath);
-			curl_setopt($ch, CURLOPT_VERBOSE, '1');
-			phpCAS::trace('CURL: Set all required opts for mutual authentication ------');
-		} else if ($this->certPath) {
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-			curl_setopt($ch, CURLOPT_SSLCERT, $this->certPath);
-			phpCAS::trace('CURL: Set CURLOPT_SSLCERT');
-		} else if ($this->caCertPath) {
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
 			curl_setopt($ch, CURLOPT_CAINFO, $this->caCertPath);
 			phpCAS::trace('CURL: Set CURLOPT_CAINFO');

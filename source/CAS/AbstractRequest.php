@@ -42,7 +42,6 @@ abstract class CAS_AbstractRequest
 	protected $headers = array();
 	protected $isPost = FALSE;
 	protected $postBody = null;
-	protected $certPath = null;
 	protected $caCertPath = null;
 	private $sent = FALSE;
 	private $responseHeaders = array();
@@ -153,20 +152,6 @@ abstract class CAS_AbstractRequest
 			throw new CAS_OutOfSequenceException('Cannot add a POST body to a GET request, use makePost() first.');
 
 		$this->postBody = $body;
-	}
-
-	/**
-	 * Specify the path to an SSL certificate to validate the server with.
-	 *
-	 * @param string $sslCertPath
-	 * @return void
-	 * @throws CAS_OutOfSequenceException If called after the Request has been sent.
-	 */
-	public function setSslCert ($certPath) {
-		if ($this->sent)
-			throw new CAS_OutOfSequenceException('Request has already been sent cannot '.__METHOD__);
-
-		$this->certPath = $certPath;
 	}
 
 	/**

@@ -102,14 +102,6 @@ interface CAS_RequestInterface {
 	 */
 	public function setPostBody ($body);
 
-	/**
-	 * Specify the path to an SSL certificate to validate the server with.
-	 *
-	 * @param string $sslCertPath
-	 * @return void
-	 * @throws CAS_OutOfSequenceException If called after the Request has been sent.
-	 */
-	public function setSslCert ($certPath);
 
 	/**
 	 * Specify the path to an SSL CA certificate to validate the server with.

@@ -1330,24 +1330,6 @@ class phpCAS {
 	}
 
 	/**
-	 * Set the certificate of the CAS server.
-	 *
-	 * @param $cert the PEM certificate
-	 */
-	public static function setCasServerCert($cert) {
-		global $PHPCAS_CLIENT;
-		phpCAS :: traceBegin();
-		if (!is_object($PHPCAS_CLIENT)) {
-			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-		}
-		if (gettype($cert) != 'string') {
-			phpCAS :: error('type mismatched for parameter $cert (should be `string\')');
-		}
-		$PHPCAS_CLIENT->setCasServerCert($cert);
-		phpCAS :: traceEnd();
-	}
-
-	/**
 	 * Set the certificate of the CAS server CA.
 	 *
 	 * @param $cert the CA certificate

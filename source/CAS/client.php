@@ -1368,14 +1368,6 @@ class CASClient
 	 */
 
 	 /**
-	  * the certificate of the CAS server.
-	  *
-	  * @hideinitializer
-	  * @private
-	  */
-	 var $_cas_server_cert = '';
-
-	 /**
 	  * the certificate of the CAS server CA.
 	  *
 	  * @hideinitializer
@@ -1391,15 +1383,6 @@ class CASClient
 	  */
 	 var $_no_cas_server_validation = false;
 
-	 /**
-	  * Set the certificate of the CAS server.
-	  *
-	  * @param $cert the PEM certificate
-	  */
-	 function setCasServerCert($cert)
-		{
-			$this->_cas_server_cert = $cert;
-		}
 
 		/**
 		 * Set the CA certificate of the CAS server.
@@ -2241,11 +2224,8 @@ class CASClient
 			$request->setUrl($url);
 			$request->addCookies($cookies);
 
-			if ($this->_cas_server_cert == '' && $this->_cas_server_ca_cert == '' && !$this->_no_cas_server_validation) {
-				phpCAS::error('one of the methods phpCAS::setCasServerCert(), phpCAS::setCasServerCACert() or phpCAS::setNoCasServerValidation() must be called.');
-			}
-			if ($this->_cas_server_cert != '') {
-				$request->setSslCert($this->_cas_server_cert);
+			if (empty($this->_cas_server_ca_cert) && !$this->_no_cas_server_validation) {
+				phpCAS::error('one of the methods phpCAS::setCasServerCACert() or phpCAS::setNoCasServerValidation() must be called.');
 			}
 			if ($this->_cas_server_ca_cert != '') {
 				$request->setSslCaCert($this->_cas_server_ca_cert);

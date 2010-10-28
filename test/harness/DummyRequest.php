@@ -87,10 +87,6 @@ class CAS_TestHarness_DummyRequest
 					$this->storeErrorMessage('Validation of POST body failed.');
 					return false;
 				}
-				if (!$response->validateCert($this->certPath)) {
-					$this->storeErrorMessage('Validation of cert failed.');
-					return false;
-				}
 				if (!$response->validateCaCert($this->caCertPath)) {
 					$this->storeErrorMessage('Validation of CA cert failed.');
 					return false;
