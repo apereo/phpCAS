@@ -138,6 +138,12 @@
 	  		command="cd ${upload.remotedir} &amp;&amp; rm -f current &amp;&amp; ln -s ${phpcas.version} current &amp;&amp; echo 'done (you can kill the ant task)'" 
 	  		password="${upload.password}"
 	  		trust="true" />
+	  	<sshexec 
+	  		host="${upload.host}" 
+	  		username="${upload.username}" 
+	  		command="cd ${upload.remotedir} &amp;&amp; rm -f current.tgz &amp;&amp; ln -s ${phpcas.version}/CAS-${phpcas.version}.tgz current.tgz &amp;&amp; echo 'done (you can kill the ant task)'" 
+	  		password="${upload.password}"
+	  		trust="true" />
 	  </target>
 
   <!-- ==========================================================
