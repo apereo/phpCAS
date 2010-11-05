@@ -1937,7 +1937,7 @@ class CASClient
 		private function validatePGT(&$validate_url,$text_response,$tree_response)
 			{
 			phpCAS::traceBegin();
-			if ( sizeof($arr = $tree_response->getElementsByTagName("proxyGrantingTicket")) == 0) {
+			if ( $tree_response->getElementsByTagName("proxyGrantingTicket")->length == 0) {
 				phpCAS::trace('<proxyGrantingTicket> not found');
 				// authentication succeded, but no PGT Iou was transmitted
 				$this->authError('Ticket validated but no PGT Iou transmitted',
@@ -1947,7 +1947,7 @@ class CASClient
 					$text_response);
 			} else {
 				// PGT Iou transmitted, extract it
-				$pgt_iou = trim($arr->item(0)->nodeValue);
+				$pgt_iou = trim($tree_response->getElementsByTagName("proxyGrantingTicket")->item(0)->nodeValue);
 				if(preg_match('/PGTIOU-[\.\-\w]/',$pgt_iou)){ 
 					$pgt = $this->loadPGT($pgt_iou);
 					if ( $pgt == FALSE ) {
