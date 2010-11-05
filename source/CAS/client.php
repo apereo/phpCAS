@@ -969,7 +969,7 @@ class CASClient
 				// User has a additional ticket but was already authenticated
 				phpCAS::trace('ticket was present and will be discarded, use renewAuthenticate()');
 				header('Location: '.$this->getURL());
-				phpCAS::log( "Prepare redirect to remove ticket: ".$this->getURL() );
+				phpCAS::trace( "Prepare redirect to remove ticket: ".$this->getURL() );
 				phpCAS::traceExit();
 				exit();
 			}else{
@@ -1030,7 +1030,7 @@ class CASClient
 				// most of the checks and errors should have been made now, so we're safe for redirect without masking error messages.
 				// remove the ticket as a security precaution to prevent a ticket in the HTTP_REFERRER
 				header('Location: '.$this->getURL());
-				phpCAS::log( "Prepare redirect to : ".$this->getURL() );
+				phpCAS::trace( "Prepare redirect to : ".$this->getURL() );
 				phpCAS::traceExit();
 				exit();
 			}
@@ -1125,7 +1125,7 @@ class CASClient
 		phpCAS::traceBegin();
 		$cas_url = $this->getServerLoginURL($gateway,$renew);
 		header('Location: '.$cas_url);
-		phpCAS::log( "Redirect to : ".$cas_url );
+		phpCAS::trace( "Redirect to : ".$cas_url );
 
 		$this->printHTMLHeader($this->getString(CAS_STR_AUTHENTICATION_WANTED));
 
@@ -1153,7 +1153,7 @@ class CASClient
 			$cas_url = $cas_url . $paramSeparator . "service=" . urlencode($params['service']);
 		}
 		header('Location: '.$cas_url);
-		phpCAS::log( "Prepare redirect to : ".$cas_url );
+		phpCAS::trace( "Prepare redirect to : ".$cas_url );
 
 		session_unset();
 		session_destroy();
@@ -1183,30 +1183,30 @@ class CASClient
 	public function handleLogoutRequests($check_client=true, $allowed_clients=false) {
 		phpCAS::traceBegin();
 		if (!$this->isLogoutRequest()) {
-			phpCAS::log("Not a logout request");
+			phpCAS::trace("Not a logout request");
 			phpCAS::traceEnd();
 			return;
 		}
 		if(!$this->_start_session){
-			phpCAS::log("phpCAS can't handle logout requests if it does not manage the session.");
+			phpCAS::trace("phpCAS can't handle logout requests if it does not manage the session.");
 		}
-		phpCAS::log("Logout requested");
-		phpCAS::log("SAML REQUEST: ".$_POST['logoutRequest']);
+		phpCAS::trace("Logout requested");
+		phpCAS::trace("SAML REQUEST: ".$_POST['logoutRequest']);
 		if ($check_client) {
 			if (!$allowed_clients) {
 				$allowed_clients = array( $this->getServerHostname() );
 			}
 			$client_ip = $_SERVER['REMOTE_ADDR'];
 			$client = gethostbyaddr($client_ip);
-			phpCAS::log("Client: ".$client."/".$client_ip);
+			phpCAS::trace("Client: ".$client."/".$client_ip);
 			$allowed = false;
 			foreach ($allowed_clients as $allowed_client) {
 				if (($client == $allowed_client) or ($client_ip == $allowed_client)) {
-					phpCAS::log("Allowed client '".$allowed_client."' matches, logout request is allowed");
+					phpCAS::trace("Allowed client '".$allowed_client."' matches, logout request is allowed");
 					$allowed = true;
 					break;
 				} else {
-					phpCAS::log("Allowed client '".$allowed_client."' does not match");
+					phpCAS::trace("Allowed client '".$allowed_client."' does not match");
 				}
 			}
 			if (!$allowed) {
@@ -1216,15 +1216,15 @@ class CASClient
 				exit();
 			}
 		} else {
-			phpCAS::log("No access control set");
+			phpCAS::trace("No access control set");
 		}
 		// Extract the ticket from the SAML Request
 		preg_match("|<samlp:SessionIndex>(.*)</samlp:SessionIndex>|", $_POST['logoutRequest'], $tick, PREG_OFFSET_CAPTURE, 3);
 		$wrappedSamlSessionIndex = preg_replace('|<samlp:SessionIndex>|','',$tick[0][0]);
 		$ticket2logout = preg_replace('|</samlp:SessionIndex>|','',$wrappedSamlSessionIndex);
-		phpCAS::log("Ticket to logout: ".$ticket2logout);
+		phpCAS::trace("Ticket to logout: ".$ticket2logout);
 		$session_id = preg_replace('/[^\w]/','',$ticket2logout);
-		phpCAS::log("Session id: ".$session_id);
+		phpCAS::trace("Session id: ".$session_id);
 
 		// destroy a possible application session created before phpcas
 		if(session_id() !== ""){
