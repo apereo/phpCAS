@@ -42,7 +42,7 @@
  * @ingroup internalPGTStorage
  */
 
-class PGTStorage
+class CAS_PGTStorage
 {
 	/**
 	 * @addtogroup internalPGTStorage

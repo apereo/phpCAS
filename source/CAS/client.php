@@ -1915,7 +1915,7 @@ class CASClient
 		}
 
 		// create the storage object
-		$this->_pgt_storage = new PGTStorageFile($this,$format,$path);
+		$this->_pgt_storage = new CAS_PGTStorageFile($this,$format,$path);
 	}
 
 
