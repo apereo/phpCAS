@@ -564,13 +564,13 @@ class phpCAS {
 			}
 		}
 		if (isset($dbg[2]['file']))
-			$file = basename($dbg[2]['file']);
+		$file = basename($dbg[2]['file']);
 		else
-			$file = 'unknown_file';
+		$file = 'unknown_file';
 		if (isset($dbg[2]['line']))
-			$line = $dbg[2]['line'];
+		$line = $dbg[2]['line'];
 		else
-			$line = 'unknown_line';
+		$line = 'unknown_line';
 		$str .= ') [' . $file . ':' . $line . ']';
 		phpCAS :: log($str);
 		$PHPCAS_DEBUG['indent']++;
