@@ -1221,6 +1221,7 @@ class phpCAS {
 	/**
 	 * This method is used to logout from CAS. Halts by redirecting to the CAS server.
 	 * @param $url a URL that will be transmitted to the CAS server
+	 * @deprecated The url parameter has been removed from the CAS server as of version 3.3.5.1
 	 */
 	public static function logoutWithUrl($url) {
 		global $PHPCAS_CLIENT;
@@ -1242,6 +1243,7 @@ class phpCAS {
 	 * This method is used to logout from CAS. Halts by redirecting to the CAS server.
 	 * @param $service a URL that will be transmitted to the CAS server
 	 * @param $url a URL that will be transmitted to the CAS server
+	 * @deprecated The url parameter has been removed from the CAS server as of version 3.3.5.1
 	 */
 	public static function logoutWithRedirectServiceAndUrl($service, $url) {
 		global $PHPCAS_CLIENT;
