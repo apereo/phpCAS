@@ -12,7 +12,7 @@ class CAS_CookieJarExposed extends CAS_CookieJar {
     public function __call($method, array $args = array()) {
         if (!method_exists($this, $method))
             throw new BadMethodCallException("method '$method' does not exist");
-        return call_user_method_array($method, $this, $args);
+        return call_user_func_array(array($this, $method), $args);
     }
 }
 
