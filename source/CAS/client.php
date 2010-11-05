@@ -1275,21 +1275,21 @@ class CASClient
 	  * This method returns the Service Ticket provided in the URL of the request.
 	  * @return The service ticket.
 	  */
-	 private  function getST()
+	 public  function getST()
 		{ return $this->_st; }
 
 		/**
 		 * This method stores the Service Ticket.
 		 * @param $st The Service Ticket.
 		 */
-		private function setST($st)
+		public function setST($st)
 		{ $this->_st = $st; }
 
 		/**
 		 * This method tells if a Service Ticket was stored.
 		 * @return TRUE if a Service Ticket has been stored.
 		 */
-		private function hasST()
+		public function hasST()
 		{ return !empty($this->_st); }
 
 		/** @} */
@@ -1346,7 +1346,7 @@ class CASClient
 		 *
 		 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
 		 */
-		private function validateST($validate_url,&$text_response,&$tree_response)
+		public function validateST($validate_url,&$text_response,&$tree_response)
 		{
 			phpCAS::traceBegin();
 			// build the URL to validate the ticket
@@ -1520,7 +1520,7 @@ class CASClient
 		 *
 		 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
 		 */
-		private function validateSA($validate_url,&$text_response,&$tree_response)
+		public function validateSA($validate_url,&$text_response,&$tree_response)
 		{
 			phpCAS::traceBegin();
 
@@ -2339,7 +2339,7 @@ class CASClient
 	  * This method returns the Proxy Ticket provided in the URL of the request.
 	  * @return The proxy ticket.
 	  */
-	 private function getPT()
+	 public function getPT()
 		{
 			//      return 'ST'.substr($this->_pt, 2);
 			return $this->_pt;
@@ -2349,34 +2349,34 @@ class CASClient
 		 * This method stores the Proxy Ticket.
 		 * @param $pt The Proxy Ticket.
 		 */
-		private function setPT($pt)
+		public function setPT($pt)
 		{ $this->_pt = $pt; }
 
 		/**
 		 * This method tells if a Proxy Ticket was stored.
 		 * @return TRUE if a Proxy Ticket has been stored.
 		 */
-		private function hasPT()
+		public function hasPT()
 		{ return !empty($this->_pt); }
 		/**
 		 * This method returns the SAML Ticket provided in the URL of the request.
 		 * @return The SAML ticket.
 		 */
-		private function getSA()
+		public function getSA()
 		{ return 'ST'.substr($this->_sa, 2); }
 
 		/**
 		 * This method stores the SAML Ticket.
 		 * @param $sa The SAML Ticket.
 		 */
-		private function setSA($sa)
+		public function setSA($sa)
 		{ $this->_sa = $sa; }
 
 		/**
 		 * This method tells if a SAML Ticket was stored.
 		 * @return TRUE if a SAML Ticket has been stored.
 		 */
-		private function hasSA()
+		public function hasSA()
 		{ return !empty($this->_sa); }
 
 		/** @} */
@@ -2393,7 +2393,7 @@ class CASClient
 	  * Used for all CAS 2.0 validations
 	  * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
 	  */
-	 private function validatePT(&$validate_url,&$text_response,&$tree_response)
+	 public function validatePT(&$validate_url,&$text_response,&$tree_response)
 		{
 			phpCAS::traceBegin();
 			phpCAS::trace($text_response);
