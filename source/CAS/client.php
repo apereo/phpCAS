@@ -81,10 +81,8 @@ class CASClient
 	 * Used by CASClient::PrintHTMLHeader() and CASClient::printHTMLFooter().
 	 *
 	 * @param $str the string to filter and output
-	 *
-	 * @private
 	 */
-	function HTMLFilterOutput($str)
+	private function HTMLFilterOutput($str)
 	{
 		$str = str_replace('__CAS_VERSION__',$this->getServerVersion(),$str);
 		$str = str_replace('__PHPCAS_VERSION__',phpCAS::getVersion(),$str);
@@ -97,10 +95,9 @@ class CASClient
 	 * read by CASClient::printHTMLHeader().
 	 *
 	 * @hideinitializer
-	 * @private
 	 * @see CASClient::setHTMLHeader, CASClient::printHTMLHeader()
 	 */
-	var $_output_header = '';
+	private $_output_header = '';
 
 	/**
 	 * This method prints the header of the HTML output (after filtering). If
@@ -109,9 +106,8 @@ class CASClient
 	 * @param $title the title of the page
 	 *
 	 * @see HTMLFilterOutput()
-	 * @private
 	 */
-	function printHTMLHeader($title)
+	private function printHTMLHeader($title)
 	{
 		$this->HTMLFilterOutput(str_replace('__TITLE__',
 		$title,
@@ -127,19 +123,17 @@ class CASClient
 	 * read by printHTMLFooter().
 	 *
 	 * @hideinitializer
-	 * @private
 	 * @see CASClient::setHTMLFooter, CASClient::printHTMLFooter()
 	 */
-	var $_output_footer = '';
+	private $_output_footer = '';
 
 	/**
 	 * This method prints the footer of the HTML output (after filtering). If
 	 * CASClient::setHTMLFooter() was not used, a default footer is output.
 	 *
 	 * @see HTMLFilterOutput()
-	 * @private
 	 */
-	function printHTMLFooter()
+	private function printHTMLFooter()
 	{
 		$this->HTMLFilterOutput(empty($this->_output_footer)
 		?('<hr><address>phpCAS __PHPCAS_VERSION__ '.$this->getString(CAS_STR_USING_SERVER).' <a href="__SERVER_BASE_URL__">__SERVER_BASE_URL__</a> (CAS __CAS_VERSION__)</a></address></body></html>')
@@ -150,10 +144,8 @@ class CASClient
 	 * This method set the HTML header used for all outputs.
 	 *
 	 * @param $header the HTML header.
-	 *
-	 * @public
 	 */
-	function setHTMLHeader($header)
+	public function setHTMLHeader($header)
 	{
 		$this->_output_header = $header;
 	}
@@ -162,10 +154,8 @@ class CASClient
 	 * This method set the HTML footer used for all outputs.
 	 *
 	 * @param $footer the HTML footer.
-	 *
-	 * @public
 	 */
-	function setHTMLFooter($footer)
+	public function setHTMLFooter($footer)
 	{
 		$this->_output_footer = $footer;
 	}
@@ -202,19 +192,16 @@ class CASClient
 	 * @note debugging information is always in english (debug purposes only).
 	 *
 	 * @hideinitializer
-	 * @private
 	 * @sa CASClient::_strings, CASClient::getString()
 	 */
-	var $_lang = '';
+	private $_lang = '';
 
 	/**
 	 * This method returns the language used by phpCAS.
 	 *
 	 * @return a string representing the language
-	 *
-	 * @private
 	 */
-	function getLang()
+	private function getLang()
 	{
 		if ( empty($this->_lang) )
 		$this->setLang(PHPCAS_LANG_DEFAULT);
@@ -226,11 +213,10 @@ class CASClient
 	 * CASClient::getString() and used by CASClient::setLang().
 	 *
 	 * @note This array is filled by instructions in CAS/languages/<$this->_lang>.php
-	 *
-	 * @private
+	 * 
 	 * @see CASClient::_lang, CASClient::getString(), CASClient::setLang(), CASClient::getLang()
 	 */
-	var $_strings;
+	private $_strings;
 
 	/**
 	 * This method returns a string depending on the language.
@@ -239,9 +225,8 @@ class CASClient
 	 *
 	 * @return the string corresponding to $index in $string.
 	 *
-	 * @private
 	 */
-	function getString($str)
+	private function getString($str)
 	{
 		// call CASclient::getLang() to be sure the language is initialized
 		$this->getLang();
@@ -258,10 +243,9 @@ class CASClient
 	 *
 	 * @param $lang a string representing the language.
 	 *
-	 * @public
 	 * @sa CAS_LANG_FRENCH, CAS_LANG_ENGLISH
 	 */
-	function setLang($lang)
+	public function setLang($lang)
 	{
 		// include the corresponding language file
 		include_once(dirname(__FILE__).'/languages/'.$lang.'.php');
@@ -303,9 +287,8 @@ class CASClient
 	 * CASClient::getServerProxyValidateURL() and CASClient::getServerLogoutURL().
 	 *
 	 * @hideinitializer
-	 * @private
 	 */
-	var $_server = array(
+	private $_server = array(
 		'version' => -1,
 		'hostname' => 'none',
 		'port' => -1,
@@ -315,9 +298,8 @@ class CASClient
 		/**
 		 * This method is used to retrieve the version of the CAS server.
 		 * @return the version of the CAS server.
-		 * @private
 		 */
-		function getServerVersion()
+		private function getServerVersion()
 		{
 			return $this->_server['version'];
 		}
@@ -325,33 +307,29 @@ class CASClient
 		/**
 		 * This method is used to retrieve the hostname of the CAS server.
 		 * @return the hostname of the CAS server.
-		 * @private
 		 */
-		function getServerHostname()
+		private function getServerHostname()
 		{ return $this->_server['hostname']; }
 
 		/**
 		 * This method is used to retrieve the port of the CAS server.
 		 * @return the port of the CAS server.
-		 * @private
 		 */
-		function getServerPort()
+		private function getServerPort()
 		{ return $this->_server['port']; }
 
 		/**
 		 * This method is used to retrieve the URI of the CAS server.
 		 * @return a URI.
-		 * @private
 		 */
-		function getServerURI()
+		private function getServerURI()
 		{ return $this->_server['uri']; }
 
 		/**
 		 * This method is used to retrieve the base URL of the CAS server.
 		 * @return a URL.
-		 * @private
 		 */
-		function getServerBaseURL()
+		private function getServerBaseURL()
 		{
 			// the URL is build only when needed
 			if ( empty($this->_server['base_url']) ) {
@@ -372,9 +350,8 @@ class CASClient
 		 * NOTE : It is recommended that CAS implementations ignore the
 		 "gateway" parameter if "renew" is set
 		 * @return a URL.
-		 * @private
 		 */
-		function getServerLoginURL($gateway=false,$renew=false) {
+		private function getServerLoginURL($gateway=false,$renew=false) {
 			phpCAS::traceBegin();
 			// the URL is build only when needed
 			if ( empty($this->_server['login_url']) ) {
@@ -396,10 +373,9 @@ class CASClient
 		/**
 		 * This method sets the login URL of the CAS server.
 		 * @param $url the login URL
-		 * @private
 		 * @since 0.4.21 by Wyman Chan
 		 */
-		function setServerLoginURL($url)
+		public function setServerLoginURL($url)
 		{
 			return $this->_server['login_url'] = $url;
 		}
@@ -408,10 +384,9 @@ class CASClient
 		/**
 		 * This method sets the serviceValidate URL of the CAS server.
 		 * @param $url the serviceValidate URL
-		 * @private
 		 * @since 1.1.0 by Joachim Fritschi
 		 */
-		function setServerServiceValidateURL($url)
+		public function setServerServiceValidateURL($url)
 		{
 			return $this->_server['service_validate_url'] = $url;
 		}
@@ -420,10 +395,9 @@ class CASClient
 		/**
 		 * This method sets the proxyValidate URL of the CAS server.
 		 * @param $url the proxyValidate URL
-		 * @private
 		 * @since 1.1.0 by Joachim Fritschi
 		 */
-		function setServerProxyValidateURL($url)
+		public function setServerProxyValidateURL($url)
 		{
 			return $this->_server['proxy_validate_url'] = $url;
 		}
@@ -432,10 +406,9 @@ class CASClient
 		/**
 		 * This method sets the samlValidate URL of the CAS server.
 		 * @param $url the samlValidate URL
-		 * @private
 		 * @since 1.1.0 by Joachim Fritschi
 		 */
-		function setServerSamlValidateURL($url)
+		public function setServerSamlValidateURL($url)
 		{
 			return $this->_server['saml_validate_url'] = $url;
 		}
@@ -444,9 +417,8 @@ class CASClient
 		/**
 		 * This method is used to retrieve the service validating URL of the CAS server.
 		 * @return a URL.
-		 * @private
 		 */
-		function getServerServiceValidateURL()
+		public function getServerServiceValidateURL()
 		{
 			// the URL is build only when needed
 			if ( empty($this->_server['service_validate_url']) ) {
@@ -464,9 +436,8 @@ class CASClient
 		/**
 		 * This method is used to retrieve the SAML validating URL of the CAS server.
 		 * @return a URL.
-		 * @private
 		 */
-		function getServerSamlValidateURL()
+		public function getServerSamlValidateURL()
 		{
 			phpCAS::traceBegin();
 			// the URL is build only when needed
@@ -483,9 +454,8 @@ class CASClient
 		/**
 		 * This method is used to retrieve the proxy validating URL of the CAS server.
 		 * @return a URL.
-		 * @private
 		 */
-		function getServerProxyValidateURL()
+		public function getServerProxyValidateURL()
 		{
 			// the URL is build only when needed
 			if ( empty($this->_server['proxy_validate_url']) ) {
@@ -504,9 +474,8 @@ class CASClient
 		/**
 		 * This method is used to retrieve the proxy URL of the CAS server.
 		 * @return a URL.
-		 * @private
 		 */
-		function getServerProxyURL()
+		public function getServerProxyURL()
 		{
 			// the URL is build only when needed
 			if ( empty($this->_server['proxy_url']) ) {
@@ -525,9 +494,8 @@ class CASClient
 		/**
 		 * This method is used to retrieve the logout URL of the CAS server.
 		 * @return a URL.
-		 * @private
 		 */
-		function getServerLogoutURL()
+		private function getServerLogoutURL()
 		{
 			// the URL is build only when needed
 			if ( empty($this->_server['logout_url']) ) {
@@ -539,10 +507,9 @@ class CASClient
 		/**
 		 * This method sets the logout URL of the CAS server.
 		 * @param $url the logout URL
-		 * @private
 		 * @since 0.4.21 by Wyman Chan
 		 */
-		function setServerLogoutURL($url)
+		private function setServerLogoutURL($url)
 		{
 			return $this->_server['logout_url'] = $url;
 		}
@@ -550,12 +517,12 @@ class CASClient
 		/**
 		 * An array to store extra curl options.
 		 */
-		var $_curl_options = array();
+		private $_curl_options = array();
 
 		/**
 		 * This method is used to set additional user curl options.
 		 */
-		function setExtraCurlOption($key, $value)
+		public function setExtraCurlOption($key, $value)
 		{
 			$this->_curl_options[$key] = $value;
 		}
@@ -586,9 +553,8 @@ class CASClient
 		/**
 		 * This method checks to see if the request is secured via HTTPS
 		 * @return true if https, false otherwise
-		 * @private
 		 */
-		function isHttps() {
+		private function isHttps() {
 			if ( isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
 				return true;
 			} else {
@@ -610,10 +576,8 @@ class CASClient
 	 * @param $start_session Have phpCAS start PHP sessions (default true)
 	 *
 	 * @return a newly created CASClient object
-	 *
-	 * @public
 	 */
-		function CASClient(
+		public function CASClient(
 		$server_version,
 		$proxy,
 		$server_hostname,
@@ -754,16 +718,15 @@ class CASClient
 		/**
 		 * A variable to whether phpcas will use its own session handling. Default = true
 		 * @hideinitializer
-		 * @private
 		 */
-		var $_start_session = true;
+		private $_start_session = true;
 
-		function setStartSession($session)
+		private function setStartSession($session)
 		{
 			$this->_start_session = session;
 		}
 
-		function getStartSession($session)
+		public function getStartSession($session)
 		{
 			$this->_start_session = session;
 		}
@@ -771,7 +734,7 @@ class CASClient
 		/**
 		 * Renaming the session
 		 */
-		function renameSession($ticket)
+		private function renameSession($ticket)
 		{
 			phpCAS::traceBegin();
 			if($this->_start_session){
@@ -812,18 +775,16 @@ class CASClient
 		 * @attention client applications should use phpCAS::getUser().
 		 *
 		 * @hideinitializer
-		 * @private
 		 */
-		var $_user = '';
+		private $_user = '';
 
 		/**
 		 * This method sets the CAS user's login name.
 		 *
 		 * @param $user the login name of the authenticated user.
 		 *
-		 * @private
 		 */
-		function setUser($user)
+		private function setUser($user)
 		{
 			$this->_user = $user;
 		}
@@ -835,7 +796,7 @@ class CASClient
 		 *
 		 * @return the login name of the authenticated user
 		 */
-		function getUser()
+		public function getUser()
 		{
 			if ( empty($this->_user) ) {
 				phpCAS::error('this method should be used only after '.__CLASS__.'::forceAuthentication() or '.__CLASS__.'::isAuthenticated()');
@@ -856,27 +817,26 @@ class CASClient
 		 * @attention client applications should use phpCAS::getAttributes().
 		 *
 		 * @hideinitializer
-		 * @private
 		 */
-		var $_attributes = array();
+		private $_attributes = array();
 
-		function setAttributes($attributes)
+		private function setAttributes($attributes)
 		{ $this->_attributes = $attributes; }
 
-		function getAttributes() {
+		public function getAttributes() {
 			if ( empty($this->_user) ) { // if no user is set, there shouldn't be any attributes also...
 				phpCAS::error('this method should be used only after '.__CLASS__.'::forceAuthentication() or '.__CLASS__.'::isAuthenticated()');
 			}
 			return $this->_attributes;
 		}
 
-		function hasAttributes()
+		public function hasAttributes()
 		{ return !empty($this->_attributes); }
 
-		function hasAttribute($key)
+		public function hasAttribute($key)
 		{ return (is_array($this->_attributes) && array_key_exists($key, $this->_attributes)); }
 
-		function getAttribute($key)	{
+		public function getAttribute($key)	{
 			if($this->hasAttribute($key)) {
 				return $this->_attributes[$key];
 			}
@@ -886,9 +846,8 @@ class CASClient
 		 * This method is called to renew the authentication of the user
 		 * If the user is authenticated, renew the connection
 		 * If not, redirect to CAS
-		 * @public
 		 */
-		function renewAuthentication(){
+		public function renewAuthentication(){
 			phpCAS::traceBegin();
 			// Either way, the user is authenticated by CAS
 			if( isset( $_SESSION['phpCAS']['auth_checked'] ) )
@@ -906,9 +865,8 @@ class CASClient
 		 * This method is called to be sure that the user is authenticated. When not
 		 * authenticated, halt by redirecting to the CAS server; otherwise return TRUE.
 		 * @return TRUE when the user is authenticated; otherwise halt.
-		 * @public
 		 */
-		function forceAuthentication()
+		public function forceAuthentication()
 		{
 			phpCAS::traceBegin();
 
@@ -933,18 +891,15 @@ class CASClient
 		 * An integer that gives the number of times authentication will be cached before rechecked.
 		 *
 		 * @hideinitializer
-		 * @private
 		 */
-		var $_cache_times_for_auth_recheck = 0;
+		private $_cache_times_for_auth_recheck = 0;
 
 		/**
 		 * Set the number of times authentication will be cached before rechecked.
 		 *
 		 * @param $n an integer.
-		 *
-		 * @public
 		 */
-		function setCacheTimesForAuthRecheck($n)
+		public function setCacheTimesForAuthRecheck($n)
 		{
 			$this->_cache_times_for_auth_recheck = $n;
 		}
@@ -952,9 +907,8 @@ class CASClient
 		/**
 		 * This method is called to check whether the user is authenticated or not.
 		 * @return TRUE when the user is authenticated, FALSE otherwise.
-		 * @public
 		 */
-		function checkAuthentication()
+		public function checkAuthentication()
 		{
 			phpCAS::traceBegin();
 
@@ -1004,10 +958,8 @@ class CASClient
 		 * tickets given in the URL).
 		 *
 		 * @return TRUE when the user is authenticated. Also may redirect to the same URL without the ticket.
-		 *
-		 * @public
 		 */
-		function isAuthenticated()
+		public function isAuthenticated()
 		{
 			phpCAS::traceBegin();
 			$res = FALSE;
@@ -1094,7 +1046,7 @@ class CASClient
 		 * @return true if authenticated based soley on $_SESSION variable
 		 * @since 0.4.22 by Brendan Arnold
 		 */
-		function isSessionAuthenticated ()
+		public function isSessionAuthenticated ()
 		{
 			return !empty($_SESSION['phpCAS']['user']);
 		}
@@ -1106,10 +1058,8 @@ class CASClient
 		 * @note This function switches to callback mode when needed.
 		 *
 		 * @return TRUE when the user has already been authenticated; FALSE otherwise.
-		 *
-		 * @private
 		 */
-		function wasPreviouslyAuthenticated()
+		private function wasPreviouslyAuthenticated()
 		{
 			phpCAS::traceBegin();
 
@@ -1171,9 +1121,8 @@ class CASClient
 		 * It is used by CASClient::forceAuthentication() and CASClient::checkAuthentication().
 		 * @param $gateway true to check authentication, false to force it
 		 * @param $renew true to force the authentication with the CAS server
-		 * @public
 		 */
-		function redirectToCas($gateway=false,$renew=false){
+		public function redirectToCas($gateway=false,$renew=false){
 			phpCAS::traceBegin();
 			$cas_url = $this->getServerLoginURL($gateway,$renew);
 			header('Location: '.$cas_url);
@@ -1192,9 +1141,8 @@ class CASClient
 		/**
 		 * This method is used to logout from CAS.
 		 * @params $params an array that contains the optional url and service parameters that will be passed to the CAS server
-		 * @public
 		 */
-		function logout($params) {
+		public function logout($params) {
 			phpCAS::traceBegin();
 			$cas_url = $this->getServerLogoutURL();
 			$paramSeparator = '?';
@@ -1221,17 +1169,9 @@ class CASClient
 
 		/**
 		 * @return true if the current request is a logout request.
-		 * @private
 		 */
-		function isLogoutRequest() {
+		private function isLogoutRequest() {
 			return !empty($_POST['logoutRequest']);
-		}
-
-		/**
-		 * @return true if a logout request is allowed.
-		 * @private
-		 */
-		function isLogoutRequestAllowed() {
 		}
 
 		/**
@@ -1240,9 +1180,8 @@ class CASClient
 		 * false not to perform any access control. True by default.
 		 * @param $allowed_clients an array of host names allowed to send logout requests.
 		 * By default, only the CAs server (declared in the constructor) will be allowed.
-		 * @public
 		 */
-		function handleLogoutRequests($check_client=true, $allowed_clients=false) {
+		public function handleLogoutRequests($check_client=true, $allowed_clients=false) {
 			phpCAS::traceBegin();
 			if (!$this->isLogoutRequest()) {
 				phpCAS::log("Not a logout request");
@@ -1329,32 +1268,28 @@ class CASClient
 	  * CASClient::getST() and CASClient::hasPGT().
 	  *
 	  * @hideinitializer
-	  * @private
 	  */
-	 var $_st = '';
+	 private $_st = '';
 
 	 /**
 	  * This method returns the Service Ticket provided in the URL of the request.
 	  * @return The service ticket.
-	  * @private
 	  */
-	 function getST()
+	 private  function getST()
 		{ return $this->_st; }
 
 		/**
 		 * This method stores the Service Ticket.
 		 * @param $st The Service Ticket.
-		 * @private
 		 */
-		function setST($st)
+		private function setST($st)
 		{ $this->_st = $st; }
 
 		/**
 		 * This method tells if a Service Ticket was stored.
 		 * @return TRUE if a Service Ticket has been stored.
-		 * @private
 		 */
-		function hasST()
+		private function hasST()
 		{ return !empty($this->_st); }
 
 		/** @} */
@@ -1371,17 +1306,15 @@ class CASClient
 	  * the certificate of the CAS server CA.
 	  *
 	  * @hideinitializer
-	  * @private
 	  */
-	 var $_cas_server_ca_cert = '';
+	 private $_cas_server_ca_cert = '';
 
 	 /**
 	  * Set to true not to validate the CAS server.
 	  *
 	  * @hideinitializer
-	  * @private
 	  */
-	 var $_no_cas_server_validation = false;
+	 private $_no_cas_server_validation = false;
 
 
 		/**
@@ -1389,7 +1322,7 @@ class CASClient
 		 *
 		 * @param $cert the PEM certificate of the CA that emited the cert of the server
 		 */
-		function setCasServerCACert($cert)
+		public function setCasServerCACert($cert)
 		{
 			$this->_cas_server_ca_cert = $cert;
 		}
@@ -1397,7 +1330,7 @@ class CASClient
 		/**
 		 * Set no SSL validation for the CAS server.
 		 */
-		function setNoCasServerValidation()
+		public function setNoCasServerValidation()
 		{
 			$this->_no_cas_server_validation = true;
 		}
@@ -1412,10 +1345,8 @@ class CASClient
 		 * @param $tree_response the response of the CAS server, as a DOM XML tree.
 		 *
 		 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
-		 *
-		 * @private
 		 */
-		function validateST($validate_url,&$text_response,&$tree_response)
+		private function validateST($validate_url,&$text_response,&$tree_response)
 		{
 			phpCAS::traceBegin();
 			// build the URL to validate the ticket
@@ -1537,10 +1468,8 @@ class CASClient
 		 *
 		 * @param $text_response the XML payload.
 		 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
-		 *
-		 * @private
 		 */
-		function readExtraAttributesCas20($success_elements)
+		private function readExtraAttributesCas20($success_elements)
 		{
 			# PHPCAS-43 add CAS-2.0 extra attributes
 			#		phpCAS::trace('Searching extra attributes in' . Print_r($success_elements));
@@ -1590,10 +1519,8 @@ class CASClient
 		 * @param $tree_response the response of the CAS server, as a DOM XML tree.
 		 *
 		 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
-		 *
-		 * @private
 		 */
-		function validateSA($validate_url,&$text_response,&$tree_response)
+		private function validateSA($validate_url,&$text_response,&$tree_response)
 		{
 			phpCAS::traceBegin();
 
@@ -1673,10 +1600,8 @@ class CASClient
 		 *
 		 * @param $text_response the SAML payload.
 		 * @return bool TRUE when successfull and FALSE if no attributes a found
-		 *
-		 * @private
 		 */
-		function setSessionAttributes($text_response)
+		private function setSessionAttributes($text_response)
 		{
 			phpCAS::traceBegin();
 
@@ -1744,26 +1669,20 @@ class CASClient
 		/**
 		 * A boolean telling if the client is a CAS proxy or not. Written by CASClient::CASClient(),
 		 * read by CASClient::isProxy().
-		 *
-		 * @private
 		 */
-		var $_proxy;
+		private $_proxy;
 
 		/**
 		 * Handler for managing service cookies.
-		 *
-		 * @private
 		 */
-		var $_serviceCookieJar;
+		private $_serviceCookieJar;
 
 		/**
 		 * Tells if a CAS client is a CAS proxy or not
 		 *
 		 * @return TRUE when the CAS client is a CAs proxy, FALSE otherwise
-		 *
-		 * @private
 		 */
-		function isProxy()
+		public function isProxy()
 		{
 			return $this->_proxy;
 		}
@@ -1782,32 +1701,28 @@ class CASClient
 	  * Written by CASClient::setPGT(), read by CASClient::getPGT() and CASClient::hasPGT().
 	  *
 	  * @hideinitializer
-	  * @private
 	  */
-	 var $_pgt = '';
+	 private $_pgt = '';
 
 	 /**
 	  * This method returns the Proxy Granting Ticket given by the CAS server.
 	  * @return The Proxy Granting Ticket.
-	  * @private
 	  */
-	 function getPGT()
+	 private function getPGT()
 		{ return $this->_pgt; }
 
 		/**
 		 * This method stores the Proxy Granting Ticket.
 		 * @param $pgt The Proxy Granting Ticket.
-		 * @private
 		 */
-		function setPGT($pgt)
+		private function setPGT($pgt)
 		{ $this->_pgt = $pgt; }
 
 		/**
 		 * This method tells if a Proxy Granting Ticket was stored.
 		 * @return TRUE if a Proxy Granting Ticket has been stored.
-		 * @private
 		 */
-		function hasPGT()
+		private function hasPGT()
 		{ return !empty($this->_pgt); }
 
 		/** @} */
@@ -1830,18 +1745,15 @@ class CASClient
 	  * CASClient::setCallBackMode(), read by CASClient::isCallbackMode().
 	  *
 	  * @hideinitializer
-	  * @private
 	  */
-	 var $_callback_mode = FALSE;
+	 private $_callback_mode = FALSE;
 
 	 /**
 	  * This method sets/unsets callback mode.
 	  *
 	  * @param $callback_mode TRUE to set callback mode, FALSE otherwise.
-	  *
-	  * @private
 	  */
-	 function setCallbackMode($callback_mode)
+	 private function setCallbackMode($callback_mode)
 		{
 			$this->_callback_mode = $callback_mode;
 		}
@@ -1851,10 +1763,8 @@ class CASClient
 		 * FALSE otherwise.
 		 *
 		 * @return A boolean.
-		 *
-		 * @private
 		 */
-		function isCallbackMode()
+		private function isCallbackMode()
 		{
 			return $this->_callback_mode;
 		}
@@ -1865,9 +1775,8 @@ class CASClient
 		 * CASClient::getCallbackURL().
 		 *
 		 * @hideinitializer
-		 * @private
 		 */
-		var $_callback_url = '';
+		private $_callback_url = '';
 
 		/**
 		 * This method returns the URL that should be used for the PGT callback (in
@@ -1875,10 +1784,8 @@ class CASClient
 		 * phpCAS::setFixedCallbackURL() was used).
 		 *
 		 * @return The callback URL
-		 *
-		 * @private
 		 */
-		function getCallbackURL()
+		private function getCallbackURL()
 		{
 			// the URL is built when needed only
 			if ( empty($this->_callback_url) ) {
@@ -1898,10 +1805,8 @@ class CASClient
 		 * This method sets the callback url.
 		 *
 		 * @param $callback_url url to set callback
-		 *
-		 * @private
 		 */
-		function setCallbackURL($url)
+		private function setCallbackURL($url)
 		{
 			return $this->_callback_url = $url;
 		}
@@ -1909,10 +1814,8 @@ class CASClient
 		/**
 		 * This method is called by CASClient::CASClient() when running in callback
 		 * mode. It stores the PGT and its PGT Iou, prints its output and halts.
-		 *
-		 * @private
 		 */
-		function callback()
+		private function callback()
 		{
 			phpCAS::traceBegin();
 			if (preg_match('/PGTIOU-[\.\-\w]/', $_GET['pgtIou'])){
@@ -1950,17 +1853,14 @@ class CASClient
 	  * by CASClient::setPGTStorageFile() and CASClient::initPGTStorage().
 	  *
 	  * @hideinitializer
-	  * @private
 	  */
-	 var $_pgt_storage = null;
+	 private $_pgt_storage = null;
 
 	 /**
 	  * This method is used to initialize the storage of PGT's.
 	  * Halts on error.
-	  *
-	  * @private
 	  */
-	 function initPGTStorage()
+	 private function initPGTStorage()
 		{
 			// if no SetPGTStorageXxx() has been used, default to file
 			if ( !is_object($this->_pgt_storage) ) {
@@ -1976,10 +1876,8 @@ class CASClient
 		 *
 		 * @param $pgt the PGT to store
 		 * @param $pgt_iou its corresponding Iou
-		 *
-		 * @private
 		 */
-		function storePGT($pgt,$pgt_iou)
+		private function storePGT($pgt,$pgt_iou)
 		{
 			// ensure that storage is initialized
 			$this->initPGTStorage();
@@ -1993,10 +1891,8 @@ class CASClient
 		 * @param $pgt_iou the PGT Iou
 		 *
 		 * @return The PGT corresponding to the Iou, FALSE when not found.
-		 *
-		 * @private
 		 */
-		function loadPGT($pgt_iou)
+		private function loadPGT($pgt_iou)
 		{
 			// ensure that storage is initialized
 			$this->initPGTStorage();
@@ -2010,10 +1906,8 @@ class CASClient
 		 *
 		 * @param $format the format used to store the PGT's (`plain' and `xml' allowed)
 		 * @param $path the path where the PGT's should be stored
-		 *
-		 * @public
 		 */
-		function setPGTStorageFile($format='',
+		public function setPGTStorageFile($format='',
 		$path='')
 		{
 			// check that the storage has not already been set
@@ -2039,10 +1933,8 @@ class CASClient
 		 * of CASClient::validateST() or CASClient::validatePT().
 		 *
 		 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
-		 *
-		 * @private
 		 */
-		function validatePGT(&$validate_url,$text_response,$tree_response)
+		private function validatePGT(&$validate_url,$text_response,$tree_response)
 			{
 			phpCAS::traceBegin();
 			if ( sizeof($arr = $tree_response->getElementsByTagName("proxyGrantingTicket")) == 0) {
@@ -2092,10 +1984,8 @@ class CASClient
 		 * @param $err_msg an error message (empty on success).
 		 *
 		 * @return a Proxy Ticket, or FALSE on error.
-		 *
-		 * @private
 		 */
-		function retrievePT($target_service,&$err_code,&$err_msg)
+		private function retrievePT($target_service,&$err_code,&$err_msg)
 		{
 			phpCAS::traceBegin();
 
@@ -2209,10 +2099,8 @@ class CASClient
 		 *
 		 * @return TRUE on success, FALSE otherwise (in this later case, $err_msg
 		 * contains an error message).
-		 *
-		 * @private
 		 */
-		function readURL($url, array $cookies, &$headers, &$body, &$err_msg)
+		private function readURL($url, array $cookies, &$headers, &$body, &$err_msg)
 		{
 			$className = $this->_requestImplementation;
 			$request = new $className();
@@ -2260,10 +2148,8 @@ class CASClient
 		 * This method is used to build the SAML POST body sent to /samlValidate URL.
 		 *
 		 * @return the SOAP-encased SAMLP artifact (the ticket).
-		 *
-		 * @private
 		 */
-		function buildSAMLPayload()
+		private function buildSAMLPayload()
 		{
 			phpCAS::traceBegin();
 
@@ -2276,11 +2162,11 @@ class CASClient
 			return ($body);
 		}
 
+		private  $_curl_headers = array();
 		/**
 		 * This method is the callback used by readURL method to request HTTP headers.
 		 */
-		var $_curl_headers = array();
-		function _curl_read_headers($ch, $header)
+		public function _curl_read_headers($ch, $header)
 		{
 			$this->_curl_headers[] = $header;
 			return strlen($header);
@@ -2298,10 +2184,8 @@ class CASClient
 		 *
 		 * @return TRUE on success, FALSE otherwise (in this later case, $err_code
 		 * gives the reason why it failed and $output contains an error message).
-		 *
-		 * @public
 		 */
-		function serviceWeb($url,&$err_code,&$output)
+		public function serviceWeb($url,&$err_code,&$output)
 		{
 			phpCAS::traceBegin();
 			$cookies = array();
@@ -2392,10 +2276,8 @@ class CASClient
 		 *
 		 * @return an IMAP stream on success, FALSE otherwise (in this later case, $err_code
 		 * gives the reason why it failed and $err_msg contains an error message).
-		 *
-		 * @public
 		 */
-		function serviceMail($url,$service,$flags,&$err_code,&$err_msg,&$pt)
+		public function serviceMail($url,$service,$flags,&$err_code,&$err_msg,&$pt)
 		{
 			phpCAS::traceBegin();
 			// at first retrieve a PT
@@ -2450,16 +2332,14 @@ class CASClient
 	  * CASClient::getPT() and CASClient::hasPGT().
 	  *
 	  * @hideinitializer
-	  * @private
 	  */
-	 var $_pt = '';
+	 private  $_pt = '';
 
 	 /**
 	  * This method returns the Proxy Ticket provided in the URL of the request.
 	  * @return The proxy ticket.
-	  * @private
 	  */
-	 function getPT()
+	 private function getPT()
 		{
 			//      return 'ST'.substr($this->_pt, 2);
 			return $this->_pt;
@@ -2468,40 +2348,35 @@ class CASClient
 		/**
 		 * This method stores the Proxy Ticket.
 		 * @param $pt The Proxy Ticket.
-		 * @private
 		 */
-		function setPT($pt)
+		private function setPT($pt)
 		{ $this->_pt = $pt; }
 
 		/**
 		 * This method tells if a Proxy Ticket was stored.
 		 * @return TRUE if a Proxy Ticket has been stored.
-		 * @private
 		 */
-		function hasPT()
+		private function hasPT()
 		{ return !empty($this->_pt); }
 		/**
 		 * This method returns the SAML Ticket provided in the URL of the request.
 		 * @return The SAML ticket.
-		 * @private
 		 */
-		function getSA()
+		private function getSA()
 		{ return 'ST'.substr($this->_sa, 2); }
 
 		/**
 		 * This method stores the SAML Ticket.
 		 * @param $sa The SAML Ticket.
-		 * @private
 		 */
-		function setSA($sa)
+		private function setSA($sa)
 		{ $this->_sa = $sa; }
 
 		/**
 		 * This method tells if a SAML Ticket was stored.
 		 * @return TRUE if a SAML Ticket has been stored.
-		 * @private
 		 */
-		function hasSA()
+		private function hasSA()
 		{ return !empty($this->_sa); }
 
 		/** @} */
@@ -2517,10 +2392,8 @@ class CASClient
 	  * This method is used to validate a ST or PT; halt on failure
 	  * Used for all CAS 2.0 validations
 	  * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
-	  *
-	  * @private
 	  */
-	 function validatePT(&$validate_url,&$text_response,&$tree_response)
+	 private function validatePT(&$validate_url,&$text_response,&$tree_response)
 		{
 			phpCAS::traceBegin();
 			phpCAS::trace($text_response);
@@ -2632,19 +2505,16 @@ class CASClient
 	 * and read by CASClient::getURL().
 	 *
 	 * @hideinitializer
-	 * @private
 	 */
-		var $_url = '';
+		private $_url = '';
 
 		/**
 		 * This method returns the URL of the current request (without any ticket
 		 * CGI parameter).
 		 *
 		 * @return The URL
-		 *
-		 * @private
 		 */
-		function getURL()
+		private function getURL()
 		{
 			phpCAS::traceBegin();
 			// the URL is built when needed only
@@ -2679,7 +2549,7 @@ class CASClient
 		 * Try to figure out the server URL with possible Proxys / Ports etc.
 		 * @return Server URL with domain:port
 		 */
-		function getServerUrl(){
+		private function getServerUrl(){
 			$server_url = '';
 			if(!empty($_SERVER['HTTP_X_FORWARDED_HOST'])){
 				$server_url = $_SERVER['HTTP_X_FORWARDED_HOST'];
@@ -2713,7 +2583,7 @@ class CASClient
 		 *
 		 * @link http://stackoverflow.com/questions/1842681/regular-expression-to-remove-one-parameter-from-query-string
 		 */
-		function removeParameterFromQueryString($parameterName, $queryString)
+		private function removeParameterFromQueryString($parameterName, $queryString)
 		{
 			$parameterName	= preg_quote($parameterName);
 			return preg_replace("/&$parameterName(=[^&]*)?|^$parameterName(=[^&]*)?&?/", '', $queryString);
@@ -2724,10 +2594,8 @@ class CASClient
 		 * This method sets the URL of the current request
 		 *
 		 * @param $url url to set for service
-		 *
-		 * @private
 		 */
-		function setURL($url)
+		private function setURL($url)
 		{
 			$this->_url = $url;
 		}
@@ -2747,10 +2615,8 @@ class CASClient
 	 * @param $cas_response the response of the CAS server
 	 * @param $err_code the error code given by the CAS server
 	 * @param $err_msg the error message given by the CAS server
-	 *
-	 * @private
 	 */
-		function authError($failure,$cas_url,$no_response,$bad_response='',$cas_response='',$err_code='',$err_msg='')
+		private function authError($failure,$cas_url,$no_response,$bad_response='',$cas_response='',$err_code='',$err_msg='')
 		{
 			phpCAS::traceBegin();
 
