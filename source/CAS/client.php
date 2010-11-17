@@ -350,7 +350,7 @@ class CASClient
 	 "gateway" parameter if "renew" is set
 	 * @return a URL.
 	 */
-	private function getServerLoginURL($gateway=false,$renew=false) {
+	public function getServerLoginURL($gateway=false,$renew=false) {
 		phpCAS::traceBegin();
 		// the URL is build only when needed
 		if ( empty($this->_server['login_url']) ) {
@@ -494,7 +494,7 @@ class CASClient
 	 * This method is used to retrieve the logout URL of the CAS server.
 	 * @return a URL.
 	 */
-	private function getServerLogoutURL()
+	public function getServerLogoutURL()
 	{
 		// the URL is build only when needed
 		if ( empty($this->_server['logout_url']) ) {
@@ -508,7 +508,7 @@ class CASClient
 	 * @param $url the logout URL
 	 * @since 0.4.21 by Wyman Chan
 	 */
-	private function setServerLogoutURL($url)
+	public function setServerLogoutURL($url)
 	{
 		return $this->_server['logout_url'] = $url;
 	}
@@ -819,7 +819,7 @@ class CASClient
 	 */
 	private $_attributes = array();
 
-	private function setAttributes($attributes)
+	public function setAttributes($attributes)
 	{ $this->_attributes = $attributes; }
 
 	public function getAttributes() {
@@ -2594,7 +2594,7 @@ class CASClient
 	 *
 	 * @param $url url to set for service
 	 */
-	private function setURL($url)
+	public function setURL($url)
 	{
 		$this->_url = $url;
 	}
