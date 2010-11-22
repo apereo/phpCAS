@@ -1541,11 +1541,14 @@ class CASClient
 			phpCas :: trace("Testing for rubycas style attributes");
 			$childnodes = $success_elements->item(0)->childNodes;
 			foreach ($childnodes as $attr_node) {
-				if ($attr_node->localName != 'user'
-				|| $attr_node->localName != 'proxies'
-				|| $attr_node->localName != 'proxyGrantingTicket'){
-					phpCas :: trace("Attribute [".$attr_node->localName."] = ".$attr_node->nodeValue);
-					$extra_attributes[$attr_node->localName] = trim($attr_node->nodeValue);
+				switch ($attr_node->localName) {
+					case 'user':
+					case 'proxies':
+					case 'proxyGrantingTicket':
+						continue;
+					default:
+						phpCas :: trace("Attribute [".$attr_node->localName."] = ".$attr_node->nodeValue);
+						$extra_attributes[$attr_node->localName] = trim($attr_node->nodeValue);
 				}
 			}
 		}
