@@ -1549,8 +1549,45 @@ class CASClient
 					case 'proxyGrantingTicket':
 						continue;
 					default:
-						phpCas :: trace("Attribute [".$attr_node->localName."] = ".$attr_node->nodeValue);
-						$this->addAttributeToArray($extra_attributes, $attr_node->localName, $attr_node->nodeValue);
+						if (strlen(trim($attr_node->nodeValue))) {
+							phpCas :: trace("Attribute [".$attr_node->localName."] = ".$attr_node->nodeValue);
+							$this->addAttributeToArray($extra_attributes, $attr_node->localName, $attr_node->nodeValue);
+						}
+				}
+			}
+		}
+		
+		// "Name-Value" attributes.
+		// 
+		// Attribute format from these mailing list thread:
+		// http://jasig.275507.n4.nabble.com/CAS-attributes-and-how-they-appear-in-the-CAS-response-td264272.html
+		// Note: This is a less widely used format, but in use by at least two institutions.
+		// 
+		// 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+		// 		<cas:authenticationSuccess>
+		// 			<cas:user>jsmith</cas:user>
+		// 			
+		// 			<cas:attribute name='attraStyle' value='Name-Value' />
+		// 			<cas:attribute name='surname' value='Smith' />
+		// 			<cas:attribute name='givenName' value='John' />
+		// 			<cas:attribute name='memberOf' value='CN=Staff,OU=Groups,DC=example,DC=edu' />
+		// 			<cas:attribute name='memberOf' value='CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu' />
+		// 			
+		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+		// 		</cas:authenticationSuccess>
+		// 	</cas:serviceResponse>
+		// 
+		if (!count($extra_attributes) && $success_elements->item(0)->getElementsByTagName("attribute")->length != 0) {
+			$attr_nodes = $success_elements->item(0)->getElementsByTagName("attribute");
+			$firstAttr = $attr_nodes->item(0);
+			if (!$firstAttr->hasChildNodes() && $firstAttr->hasAttribute('name') && $firstAttr->hasAttribute('value')) {
+				phpCas :: trace("Found Name-Value style attributes");
+				// Nested Attributes
+				foreach ($attr_nodes as $attr_node) {
+					if ($attr_node->hasAttribute('name') && $attr_node->hasAttribute('value')) {
+						phpCas :: trace("Attribute [".$attr_node->getAttribute('name')."] = ".$attr_node->getAttribute('value'));
+						$this->addAttributeToArray($extra_attributes, $attr_node->getAttribute('name'), $attr_node->getAttribute('value'));
+					}
 				}
 			}
 		}

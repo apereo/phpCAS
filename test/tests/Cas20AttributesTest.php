@@ -166,6 +166,59 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Verify that phpCAS will successfully fetch name-value-style attributes:
+     *
+     * 
+     */
+    public function test_name_value_attributes() {
+		// Set up our response.
+		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/proxyValidate');
+		$response->setResponseHeaders(array(
+			'HTTP/1.1 200 OK',
+			'Date: Wed, 29 Sep 2010 19:20:57 GMT',
+			'Server: Apache-Coyote/1.1',
+			'Pragma: no-cache',
+			'Expires: Thu, 01 Jan 1970 00:00:00 GMT',
+			'Cache-Control: no-cache, no-store',
+			'Content-Type: text/html;charset=UTF-8',
+			'Content-Language: en-US',
+			'Via: 1.1 cas.example.edu',
+			'Connection: close',
+			'Transfer-Encoding: chunked',
+		));
+		$response->setResponseBody(
+"<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+    <cas:authenticationSuccess>
+        <cas:user>jsmith</cas:user>
+        
+        <cas:attribute name='attraStyle' value='Name-Value' />
+        <cas:attribute name='surname' value='Smith' />
+        <cas:attribute name='givenName' value='John' />
+        <cas:attribute name='memberOf' value='CN=Staff,OU=Groups,DC=example,DC=edu' />
+        <cas:attribute name='memberOf' value='CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu' />
+        
+        <cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+    </cas:authenticationSuccess>
+</cas:serviceResponse>
+");
+		CAS_TestHarness_DummyRequest::addResponse($response);
+		
+		$this->object->setPT('ST-123456-asdfasdfasgww2323radf3');
+		$this->object->isAuthenticated();
+		
+		// Verify that we have attributes from this response
+		$attras = $this->object->getAttributes();
+		$this->assertTrue($this->object->hasAttribute('attraStyle'), "Should have an attraStyle attribute");
+		// direct access
+		$this->assertEquals('Name-Value', $this->object->getAttribute('attraStyle'));
+		// array access
+		$this->assertArrayHasKey('attraStyle', $attras);
+		$this->assertEquals('Name-Value', $attras['attraStyle']);
+		
+		$this->validateUserAttributes();
+    }
+    
+    /**
      * Validate user attributes.
      * 
      * @return void
