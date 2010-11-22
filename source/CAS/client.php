@@ -1511,6 +1511,7 @@ class CASClient
 		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
 		// 		</cas:authenticationSuccess>
 		// 	</cas:serviceResponse>
+		// 
 		if ( $success_elements->item(0)->getElementsByTagName("attributes")->length != 0) {
 			$attr_nodes = $success_elements->item(0)->getElementsByTagName("attributes");
 			phpCas :: trace("Found nested jasig style attributes");
@@ -1518,7 +1519,18 @@ class CASClient
 				// Nested Attributes
 				foreach ($attr_nodes->item(0)->childNodes as $attr_child) {
 					phpCas :: trace("Attribute [".$attr_child->localName."] = ".$attr_child->nodeValue);
-					$extra_attributes[$attr_child->localName] = trim($attr_child->nodeValue);
+					// If multiple attributes exist, add as an array value
+					if (isset($extra_attributes[$attr_child->localName])) {
+						// Initialize the array with the existing value
+						if (!is_array($extra_attributes[$attr_child->localName])) {
+							$existingValue = $extra_attributes[$attr_child->localName];
+							$extra_attributes[$attr_child->localName] = array($existingValue);
+						}
+						
+						$extra_attributes[$attr_child->localName][] = trim($attr_child->nodeValue);
+					} else {
+						$extra_attributes[$attr_child->localName] = trim($attr_child->nodeValue);
+					}
 				}
 			}
 		} 
@@ -1537,6 +1549,7 @@ class CASClient
 		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
 		// 		</cas:authenticationSuccess>
 		// 	</cas:serviceResponse>
+		// 
 		else {
 			phpCas :: trace("Testing for rubycas style attributes");
 			$childnodes = $success_elements->item(0)->childNodes;
@@ -1548,7 +1561,18 @@ class CASClient
 						continue;
 					default:
 						phpCas :: trace("Attribute [".$attr_node->localName."] = ".$attr_node->nodeValue);
-						$extra_attributes[$attr_node->localName] = trim($attr_node->nodeValue);
+						// If multiple attributes exist, add as an array value
+						if (isset($extra_attributes[$attr_node->localName])) {
+							// Initialize the array with the existing value
+							if (!is_array($extra_attributes[$attr_node->localName])) {
+								$existingValue = $extra_attributes[$attr_node->localName];
+								$extra_attributes[$attr_node->localName] = array($existingValue);
+							}
+							
+							$extra_attributes[$attr_node->localName][] = trim($attr_node->nodeValue);
+						} else {
+							$extra_attributes[$attr_node->localName] = trim($attr_node->nodeValue);
+						}
 				}
 			}
 		}
