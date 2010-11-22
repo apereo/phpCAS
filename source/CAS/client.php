@@ -175,6 +175,25 @@ class CASClient
 	public function setNoExitOnAuthError () {
 		$this->_exitOnAuthError = false;
 	}
+	
+	/**
+	 * @var boolean $_exitOnAuthError; If true, phpCAS will clear session tickets from the URL.
+	 * After a successful authentication.
+	 */
+	private $_clearTicketsFromUrl = true;
+	
+	/**
+	 * Configure the client to not send redirect headers and call exit() on authentication
+	 * success. The normal redirect is used to remove the service ticket from the
+	 * client's URL, but for running unit tests we need to continue without exiting.
+	 *
+	 * Needed for testing authentication
+	 *
+	 * @return void
+	 */
+	public function setNoClearTicketsFromUrl () {
+		$this->_clearTicketsFromUrl = false;
+	}
 
 
 	/** @} */
@@ -1029,10 +1048,12 @@ class CASClient
 				// if called with a ticket parameter, we need to redirect to the app without the ticket so that CAS-ification is transparent to the browser (for later POSTS)
 				// most of the checks and errors should have been made now, so we're safe for redirect without masking error messages.
 				// remove the ticket as a security precaution to prevent a ticket in the HTTP_REFERRER
-				header('Location: '.$this->getURL());
-				phpCAS::trace( "Prepare redirect to : ".$this->getURL() );
-				phpCAS::traceExit();
-				exit();
+				if ($this->_clearTicketsFromUrl) {
+					header('Location: '.$this->getURL());
+					phpCAS::trace( "Prepare redirect to : ".$this->getURL() );
+					phpCAS::traceExit();
+					exit();
+				}
 			}
 		}
 
