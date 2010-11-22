@@ -267,7 +267,7 @@ class CASClient
 	public function setLang($lang)
 	{
 		// include the corresponding language file
-		include_once(dirname(__FILE__).'/languages/'.$lang.'.php');
+		include(dirname(__FILE__).'/languages/'.$lang.'.php');
 
 		if ( !is_array($this->_strings) ) {
 			trigger_error('language `'.$lang.'\' is not implemented',E_USER_ERROR);
