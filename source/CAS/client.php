@@ -1495,7 +1495,22 @@ class CASClient
 		#		phpCAS::trace('Searching extra attributes in' . Print_r($success_elements));
 
 		$extra_attributes = array();
-
+		
+		// "Jasig Style" Attributes:
+		// 
+		// 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+		// 		<cas:authenticationSuccess>
+		// 			<cas:user>jsmith</cas:user>
+		// 			
+		// 			<cas:attraStyle>RubyCAS</cas:attraStyle>
+		// 			<cas:surname>Smith</cas:surname>
+		// 			<cas:givenName>John</cas:givenName>
+		// 			<cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
+		// 			<cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
+		// 			
+		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+		// 		</cas:authenticationSuccess>
+		// 	</cas:serviceResponse>
 		if ( $success_elements->item(0)->getElementsByTagName("attributes")->length != 0) {
 			$attr_nodes = $success_elements->item(0)->getElementsByTagName("attributes");
 			phpCas :: trace("Found nested jasig style attributes");
@@ -1506,7 +1521,23 @@ class CASClient
 					$extra_attributes[$attr_child->localName] = trim($attr_child->nodeValue);
 				}
 			}
-		} else {
+		} 
+		// "RubyCAS Style" attributes
+		// 
+		// 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+		// 		<cas:authenticationSuccess>
+		// 			<cas:user>jsmith</cas:user>
+		// 			
+		// 			<cas:attraStyle>RubyCAS</cas:attraStyle>
+		// 			<cas:surname>Smith</cas:surname>
+		// 			<cas:givenName>John</cas:givenName>
+		// 			<cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
+		// 			<cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
+		// 			
+		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+		// 		</cas:authenticationSuccess>
+		// 	</cas:serviceResponse>
+		else {
 			phpCas :: trace("Testing for rubycas style attributes");
 			$childnodes = $success_elements->item(0)->childNodes;
 			foreach ($childnodes as $attr_node) {
@@ -1518,6 +1549,7 @@ class CASClient
 				}
 			}
 		}
+		
 		$this->setAttributes($extra_attributes);
 		return TRUE;
 	}
