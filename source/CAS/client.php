@@ -1519,18 +1519,7 @@ class CASClient
 				// Nested Attributes
 				foreach ($attr_nodes->item(0)->childNodes as $attr_child) {
 					phpCas :: trace("Attribute [".$attr_child->localName."] = ".$attr_child->nodeValue);
-					// If multiple attributes exist, add as an array value
-					if (isset($extra_attributes[$attr_child->localName])) {
-						// Initialize the array with the existing value
-						if (!is_array($extra_attributes[$attr_child->localName])) {
-							$existingValue = $extra_attributes[$attr_child->localName];
-							$extra_attributes[$attr_child->localName] = array($existingValue);
-						}
-						
-						$extra_attributes[$attr_child->localName][] = trim($attr_child->nodeValue);
-					} else {
-						$extra_attributes[$attr_child->localName] = trim($attr_child->nodeValue);
-					}
+					$this->addAttributeToArray($extra_attributes, $attr_child->localName, $attr_child->nodeValue);
 				}
 			}
 		} 
@@ -1561,18 +1550,7 @@ class CASClient
 						continue;
 					default:
 						phpCas :: trace("Attribute [".$attr_node->localName."] = ".$attr_node->nodeValue);
-						// If multiple attributes exist, add as an array value
-						if (isset($extra_attributes[$attr_node->localName])) {
-							// Initialize the array with the existing value
-							if (!is_array($extra_attributes[$attr_node->localName])) {
-								$existingValue = $extra_attributes[$attr_node->localName];
-								$extra_attributes[$attr_node->localName] = array($existingValue);
-							}
-							
-							$extra_attributes[$attr_node->localName][] = trim($attr_node->nodeValue);
-						} else {
-							$extra_attributes[$attr_node->localName] = trim($attr_node->nodeValue);
-						}
+						$this->addAttributeToArray($extra_attributes, $attr_node->localName, $attr_node->nodeValue);
 				}
 			}
 		}
@@ -1580,6 +1558,30 @@ class CASClient
 		$this->setAttributes($extra_attributes);
 		return TRUE;
 	}
+	
+	/**
+	 * Add an attribute value to an array of attributes.
+	 * 
+	 * @param ref array $array
+	 * @param string $name
+	 * @param string $value
+	 * @return void
+	 */
+	private function addAttributeToArray (array &$attributeArray, $name, $value) {
+		// If multiple attributes exist, add as an array value
+		if (isset($attributeArray[$name])) {
+			// Initialize the array with the existing value
+			if (!is_array($attributeArray[$name])) {
+				$existingValue = $attributeArray[$name];
+				$attributeArray[$name] = array($existingValue);
+			}
+			
+			$attributeArray[$name][] = trim($value);
+		} else {
+			$attributeArray[$name] = trim($value);
+		}
+	}
+	
 	// ########################################################################
 	//  SAML VALIDATION
 	// ########################################################################
