@@ -2,6 +2,14 @@ This document duplicates reference information found at https://wiki.jasig.org/d
 for interested parties, in the case the wiki wouldn't be available.
 
 ----
+Changes in version 1.2.0RC1
+Improvements
+   * add unit tests for cas 2.0 attribute support [PHPCAS-88] (Adam Franco)
+   * add deprecation messages to the logout functions with an url parameter [PHPCAS-85] (Joachim Fritschi)
+
+Bug Fixes
+	* fix  public/private modifier for some functions [PHPCAS-87] (Joachim Fritschi)
+
 Changes in version 1.2.0-beta1
 
 Bug Fixes
