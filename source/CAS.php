@@ -1379,6 +1379,26 @@ class phpCAS {
 		$PHPCAS_CLIENT->setExtraCurlOption($key, $value);
 		phpCAS :: traceEnd();
 	}
+	
+			
+	/**
+	 * Answer an array of proxies that are sitting in front of this application.
+	 *
+	 * This method will only return a non-empty array if we have received and validated
+	 * a Proxy Ticket.
+	 * 
+	 * @return array
+	 * @access public
+	 * @since 6/25/09
+	 */
+	public static function getProxies () {
+		global $PHPCAS_CLIENT;
+		if ( !is_object($PHPCAS_CLIENT) ) {
+			phpCAS::error('this method should only be called after '.__CLASS__.'::client()');
+		}  
+		
+		return($PHPCAS_CLIENT->getProxies());
+	}
 
 }
 
