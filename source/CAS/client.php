@@ -1924,7 +1924,7 @@ class CASClient
 	 *
 	 * @param $callback_url url to set callback
 	 */
-	private function setCallbackURL($url)
+	public function setCallbackURL($url)
 	{
 		return $this->_callback_url = $url;
 	}
