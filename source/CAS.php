@@ -1012,11 +1012,12 @@ class phpCAS {
 	}
 
 	/**
-	 * This method returns the CAS user's login name.
+	 * Answer attributes about the authenticated user.
+	 *
 	 * @warning should not be called only after phpCAS::forceAuthentication()
 	 * or phpCAS::checkAuthentication().
 	 *
-	 * @return the login name of the authenticated user
+	 * @return array
 	 */
 	public static function getAttributes() {
 		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
@@ -1031,6 +1032,75 @@ class phpCAS {
 		}
 		return $PHPCAS_CLIENT->getAttributes();
 	}
+	
+	/**
+	 * Answer true if there are attributes for the authenticated user.
+	 *
+	 * @warning should not be called only after phpCAS::forceAuthentication()
+	 * or phpCAS::checkAuthentication().
+	 *
+	 * @return boolean
+	 */
+	public static function hasAttributes() {
+		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['done']) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::forceAuthentication() or ' . __CLASS__ . '::isAuthenticated()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['result']) {
+			phpCAS :: error('authentication was checked (by ' . $PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . $PHPCAS_AUTH_CHECK_CALL['file'] . ':' . $PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		}
+		return $PHPCAS_CLIENT->hasAttributes();
+	}
+	
+	/**
+	 * Answer true if an attribute exists for the authenticated user.
+	 *
+	 * @warning should not be called only after phpCAS::forceAuthentication()
+	 * or phpCAS::checkAuthentication().
+	 *
+	 * @param string $key
+	 * @return boolean
+	 */
+	public static function hasAttribute($key) {
+		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['done']) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::forceAuthentication() or ' . __CLASS__ . '::isAuthenticated()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['result']) {
+			phpCAS :: error('authentication was checked (by ' . $PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . $PHPCAS_AUTH_CHECK_CALL['file'] . ':' . $PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		}
+		return $PHPCAS_CLIENT->hasAttribute($key);
+	}
+	
+	/**
+	 * Answer an attribute for the authenticated user.
+	 *
+	 * @warning should not be called only after phpCAS::forceAuthentication()
+	 * or phpCAS::checkAuthentication().
+	 *
+	 * @param string $key
+	 * @return mixed string for a single value or an array if multiple values exist.
+	 */
+	public static function getAttribute($key) {
+		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['done']) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::forceAuthentication() or ' . __CLASS__ . '::isAuthenticated()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['result']) {
+			phpCAS :: error('authentication was checked (by ' . $PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . $PHPCAS_AUTH_CHECK_CALL['file'] . ':' . $PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		}
+		return $PHPCAS_CLIENT->getAttribute($key);
+	}
+	
 	/**
 	 * Handle logout requests.
 	 */
