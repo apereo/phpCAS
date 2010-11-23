@@ -44,7 +44,7 @@ include_once(dirname(__FILE__).'/PGTStorage/pgt-main.php');
 include_once(dirname(__FILE__).'/CookieJar.php');
 
 // include class for fetching web requests.
-include_once(dirname(__FILE__).'/CurlRequest.php');
+include_once(dirname(__FILE__).'/Request/CurlRequest.php');
 
 /**
  * @class CASClient
