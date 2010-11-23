@@ -39,6 +39,11 @@ if (php_sapi_name() != 'cli') {
 	}
 }
 
+// Add a E_USER_DEPRECATED for php versions <= 5.2
+if (!defined('E_USER_DEPRECATED')){
+	define('E_USER_DEPRECATED', 16384);
+}
+
 /**
  * @file CAS/CAS.php
  * Interface class of the phpCAS library
@@ -1224,6 +1229,7 @@ class phpCAS {
 	 * @deprecated The url parameter has been removed from the CAS server as of version 3.3.5.1
 	 */
 	public static function logoutWithUrl($url) {
+		trigger_error('Function deprecated for cas servers >= 3.3.5.1', E_USER_DEPRECATED);
 		global $PHPCAS_CLIENT;
 		phpCAS :: traceBegin();
 		if (!is_object($PHPCAS_CLIENT)) {
@@ -1246,6 +1252,7 @@ class phpCAS {
 	 * @deprecated The url parameter has been removed from the CAS server as of version 3.3.5.1
 	 */
 	public static function logoutWithRedirectServiceAndUrl($service, $url) {
+		trigger_error('Function deprecated for cas servers >= 3.3.5.1', E_USER_DEPRECATED);
 		global $PHPCAS_CLIENT;
 		phpCAS :: traceBegin();
 		if (!is_object($PHPCAS_CLIENT)) {
