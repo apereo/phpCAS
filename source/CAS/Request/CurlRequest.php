@@ -126,6 +126,7 @@ class CAS_CurlRequest
 			$res = FALSE;
 		} else {
 			$this->storeResponseBody($buf);
+			phpCAS::trace("Response Body: \n".$buf."\n");
 			$res = TRUE;
 
 		}
