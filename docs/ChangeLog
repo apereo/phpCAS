@@ -4,6 +4,7 @@ for interested parties, in the case the wiki wouldn't be available.
 ----
 Changes in version 1.2.0RC1
 Improvements
+   * add hasAttribute($key) and getAttribute($key) [PHPCAS-43] (Adam Franco)
    * add unit tests for cas 2.0 attribute support [PHPCAS-88] (Adam Franco)
    * add deprecation messages to the logout functions with an url parameter [PHPCAS-85] (Joachim Fritschi)
 
