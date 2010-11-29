@@ -194,6 +194,33 @@ class CASClient
 	public function setNoClearTicketsFromUrl () {
 		$this->_clearTicketsFromUrl = false;
 	}
+	
+	/**
+	 * @var callback $_postAuthenticateCallbackFunction;  
+	 */
+	private $_postAuthenticateCallbackFunction = null;
+	
+	/**
+	 * @var array $_postAuthenticateCallbackArgs;  
+	 */
+	private $_postAuthenticateCallbackArgs = array();
+	
+	/**
+	 * Set a callback function to be run when a user authenticates.
+	 *
+	 * phpCAS::forceAuthentication() will always exit and forward client unless
+	 * they are already authenticated. To perform an action at the moment the user
+	 * logs in (such as registering an account, performing logging, etc), register
+	 * a callback function here.
+	 * 
+	 * @param callback $function
+	 * @param optional array $args
+	 * @return void
+	 */
+	public function setPostAuthenticateCallback ($function, array $args = array()) {
+		$this->_postAuthenticateCallbackFunction = $function;
+		$this->_postAuthenticateCallbackArgs = $args;
+	}
 
 
 	/** @} */
@@ -1045,6 +1072,11 @@ class CASClient
 				phpCAS::trace('no ticket found');
 			}
 			if ($res) {
+				// call the post-authenticate callback if registered.
+				if ($this->_postAuthenticateCallbackFunction) {
+					call_user_func_array($this->_postAuthenticateCallbackFunction, $this->_postAuthenticateCallbackArgs);
+				}
+				
 				// if called with a ticket parameter, we need to redirect to the app without the ticket so that CAS-ification is transparent to the browser (for later POSTS)
 				// most of the checks and errors should have been made now, so we're safe for redirect without masking error messages.
 				// remove the ticket as a security precaution to prevent a ticket in the HTTP_REFERRER

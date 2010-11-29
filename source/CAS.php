@@ -857,6 +857,27 @@ class phpCAS {
 		}
 		$PHPCAS_CLIENT->setCacheTimesForAuthRecheck($n);
 	}
+	
+	/**
+	 * Set a callback function to be run when a user authenticates.
+	 *
+	 * phpCAS::forceAuthentication() will always exit and forward client unless
+	 * they are already authenticated. To perform an action at the moment the user
+	 * logs in (such as registering an account, performing logging, etc), register
+	 * a callback function here.
+	 * 
+	 * @param callback $function
+	 * @param array $args
+	 * @return void
+	 */
+	public static function setPostAuthenticateCallback ($function, array $args = array()) {
+		global $PHPCAS_CLIENT;
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
+		}
+		
+		$PHPCAS_CLIENT->setPostAuthenticateCallback($function, $args);
+	}
 
 	/**
 	 * This method is called to check if the user is authenticated (use the gateway feature).
