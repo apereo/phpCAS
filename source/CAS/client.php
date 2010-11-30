@@ -1547,13 +1547,13 @@ class CASClient
 		// 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
 		// 		<cas:authenticationSuccess>
 		// 			<cas:user>jsmith</cas:user>
-		// 			
-		// 			<cas:attraStyle>RubyCAS</cas:attraStyle>
-		// 			<cas:surname>Smith</cas:surname>
-		// 			<cas:givenName>John</cas:givenName>
-		// 			<cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
-		// 			<cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
-		// 			
+		// 			<cas:attributes>
+		// 				<cas:attraStyle>RubyCAS</cas:attraStyle>
+		// 				<cas:surname>Smith</cas:surname>
+		// 				<cas:givenName>John</cas:givenName>
+		// 				<cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
+		// 				<cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
+		// 			</cas:attributes>
 		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
 		// 		</cas:authenticationSuccess>
 		// 	</cas:serviceResponse>
