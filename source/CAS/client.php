@@ -1538,7 +1538,7 @@ class CASClient
 	private function readExtraAttributesCas20($success_elements)
 	{
 		# PHPCAS-43 add CAS-2.0 extra attributes
-		#		phpCAS::trace('Searching extra attributes in' . Print_r($success_elements));
+		phpCAS::traceBegin();
 
 		$extra_attributes = array();
 		
@@ -1639,6 +1639,7 @@ class CASClient
 		}
 		
 		$this->setAttributes($extra_attributes);
+		phpCAS::traceEnd();
 		return TRUE;
 	}
 	
