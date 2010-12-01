@@ -208,18 +208,24 @@ class CASClient
 	/**
 	 * Set a callback function to be run when a user authenticates.
 	 *
+	 * The callback function will be passed a $logoutTicket as its first parameter,
+	 * followed by any $additionalArgs you pass. The $logoutTicket parameter is an
+	 * opaque string that can be used to map a session-id to the logout request in order
+	 * to support single-signout in applications that manage their own sessions 
+	 * (rather than letting phpCAS start the session).
+	 *
 	 * phpCAS::forceAuthentication() will always exit and forward client unless
 	 * they are already authenticated. To perform an action at the moment the user
 	 * logs in (such as registering an account, performing logging, etc), register
 	 * a callback function here.
 	 * 
 	 * @param callback $function
-	 * @param optional array $args
+	 * @param optional array $additionalArgs
 	 * @return void
 	 */
-	public function setPostAuthenticateCallback ($function, array $args = array()) {
+	public function setPostAuthenticateCallback ($function, array $additionalArgs = array()) {
 		$this->_postAuthenticateCallbackFunction = $function;
-		$this->_postAuthenticateCallbackArgs = $args;
+		$this->_postAuthenticateCallbackArgs = $additionalArgs;
 	}
 
 
@@ -1041,6 +1047,7 @@ class CASClient
 					$_SESSION['phpCAS']['attributes'] = $this->getAttributes();
 				}
 				$res = TRUE;
+				$logoutTicket = $this->getST();
 			}
 			elseif ( $this->hasPT() ) {
 				// if a Proxy Ticket was given, validate it
@@ -1057,6 +1064,7 @@ class CASClient
 					$_SESSION['phpCAS']['attributes'] = $this->getAttributes();
 				}
 				$res = TRUE;
+				$logoutTicket = $this->getPT();
 			}
 			elseif ( $this->hasSA() ) {
 				// if we have a SAML ticket, validate it.
@@ -1066,6 +1074,7 @@ class CASClient
 				$_SESSION['phpCAS']['user'] = $this->getUser();
 				$_SESSION['phpCAS']['attributes'] = $this->getAttributes();
 				$res = TRUE;
+				$logoutTicket = $this->getSA();
 			}
 			else {
 				// no ticket given, not authenticated
@@ -1074,7 +1083,9 @@ class CASClient
 			if ($res) {
 				// call the post-authenticate callback if registered.
 				if ($this->_postAuthenticateCallbackFunction) {
-					call_user_func_array($this->_postAuthenticateCallbackFunction, $this->_postAuthenticateCallbackArgs);
+					$args = $this->_postAuthenticateCallbackArgs;
+					array_unshift($args, $logoutTicket);
+					call_user_func_array($this->_postAuthenticateCallbackFunction, $args);
 				}
 				
 				// if called with a ticket parameter, we need to redirect to the app without the ticket so that CAS-ification is transparent to the browser (for later POSTS)

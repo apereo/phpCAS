@@ -861,22 +861,28 @@ class phpCAS {
 	/**
 	 * Set a callback function to be run when a user authenticates.
 	 *
+	 * The callback function will be passed a $logoutTicket as its first parameter,
+	 * followed by any $additionalArgs you pass. The $logoutTicket parameter is an
+	 * opaque string that can be used to map the session-id to logout request in order
+	 * to support single-signout in applications that manage their own sessions 
+	 * (rather than letting phpCAS start the session).
+	 *
 	 * phpCAS::forceAuthentication() will always exit and forward client unless
 	 * they are already authenticated. To perform an action at the moment the user
 	 * logs in (such as registering an account, performing logging, etc), register
 	 * a callback function here.
 	 * 
 	 * @param callback $function
-	 * @param array $args
+	 * @param optional array $additionalArgs
 	 * @return void
 	 */
-	public static function setPostAuthenticateCallback ($function, array $args = array()) {
+	public static function setPostAuthenticateCallback ($function, array $additionalArgs = array()) {
 		global $PHPCAS_CLIENT;
 		if (!is_object($PHPCAS_CLIENT)) {
 			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
 		}
 		
-		$PHPCAS_CLIENT->setPostAuthenticateCallback($function, $args);
+		$PHPCAS_CLIENT->setPostAuthenticateCallback($function, $additionalArgs);
 	}
 
 	/**
