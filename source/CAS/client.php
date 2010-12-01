@@ -227,6 +227,34 @@ class CASClient
 		$this->_postAuthenticateCallbackFunction = $function;
 		$this->_postAuthenticateCallbackArgs = $additionalArgs;
 	}
+	
+	/**
+	 * @var callback $_signoutCallbackFunction;  
+	 */
+	private $_signoutCallbackFunction = null;
+	
+	/**
+	 * @var array $_signoutCallbackArgs;  
+	 */
+	private $_signoutCallbackArgs = array();
+	
+	/**
+	 * Set a callback function to be run when a single-signout request is received.
+	 *
+	 * The callback function will be passed a $logoutTicket as its first parameter,
+	 * followed by any $additionalArgs you pass. The $logoutTicket parameter is an
+	 * opaque string that can be used to map a session-id to the logout request in order
+	 * to support single-signout in applications that manage their own sessions 
+	 * (rather than letting phpCAS start and destroy the session).
+	 * 
+	 * @param callback $function
+	 * @param optional array $additionalArgs
+	 * @return void
+	 */
+	public function setSingleSignoutCallback ($function, array $additionalArgs = array()) {
+		$this->_signoutCallbackFunction = $function;
+		$this->_signoutCallbackArgs = $additionalArgs;
+	}
 
 
 	/** @} */
@@ -1265,7 +1293,7 @@ class CASClient
 			phpCAS::traceEnd();
 			return;
 		}
-		if(!$this->_start_session){
+		if(!$this->_start_session && is_null($this->_signoutCallbackFunction)){
 			phpCAS::trace("phpCAS can't handle logout requests if it does not manage the session.");
 		}
 		phpCAS::trace("Logout requested");
@@ -1301,23 +1329,35 @@ class CASClient
 		$wrappedSamlSessionIndex = preg_replace('|<samlp:SessionIndex>|','',$tick[0][0]);
 		$ticket2logout = preg_replace('|</samlp:SessionIndex>|','',$wrappedSamlSessionIndex);
 		phpCAS::trace("Ticket to logout: ".$ticket2logout);
-		$session_id = preg_replace('/[^\w]/','',$ticket2logout);
-		phpCAS::trace("Session id: ".$session_id);
-
-		// destroy a possible application session created before phpcas
-		if(session_id() !== ""){
+		
+		// call the post-authenticate callback if registered.
+		if ($this->_signoutCallbackFunction) {
+			$args = $this->_signoutCallbackArgs;
+			array_unshift($args, $ticket2logout);
+			call_user_func_array($this->_signoutCallbackFunction, $args);
+		}
+		
+		// If phpCAS is managing the session, destroy it.
+		if ($this->_start_session) {
+			$session_id = preg_replace('/[^\w]/','',$ticket2logout);
+			phpCAS::trace("Session id: ".$session_id);
+	
+			// destroy a possible application session created before phpcas
+			if(session_id() !== ""){
+				session_unset();
+				session_destroy();
+			}
+			// fix session ID
+			session_id($session_id);
+			$_COOKIE[session_name()]=$session_id;
+			$_GET[session_name()]=$session_id;
+	
+			// Overwrite session
+			session_start();
 			session_unset();
 			session_destroy();
 		}
-		// fix session ID
-		session_id($session_id);
-		$_COOKIE[session_name()]=$session_id;
-		$_GET[session_name()]=$session_id;
-
-		// Overwrite session
-		session_start();
-		session_unset();
-		session_destroy();
+		
 		printf("Disconnected!");
 		phpCAS::traceExit();
 		exit();

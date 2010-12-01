@@ -884,6 +884,28 @@ class phpCAS {
 		
 		$PHPCAS_CLIENT->setPostAuthenticateCallback($function, $additionalArgs);
 	}
+	
+	/**
+	 * Set a callback function to be run when a single-signout request is received.
+	 *
+	 * The callback function will be passed a $logoutTicket as its first parameter,
+	 * followed by any $additionalArgs you pass. The $logoutTicket parameter is an
+	 * opaque string that can be used to map a session-id to the logout request in order
+	 * to support single-signout in applications that manage their own sessions 
+	 * (rather than letting phpCAS start and destroy the session).
+	 * 
+	 * @param callback $function
+	 * @param optional array $additionalArgs
+	 * @return void
+	 */
+	public static function setSingleSignoutCallback ($function, array $additionalArgs = array()) {
+		global $PHPCAS_CLIENT;
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
+		}
+		
+		$PHPCAS_CLIENT->setSingleSignoutCallback($function, $additionalArgs);
+	}
 
 	/**
 	 * This method is called to check if the user is authenticated (use the gateway feature).
