@@ -782,6 +782,47 @@ class phpCAS {
 		phpCAS :: traceEnd($res);
 		return $res;
 	}
+	
+	/**
+	 * This method is used to POST to an HTTP[S] service.
+	 *
+	 * @param string $url The service to access.
+	 * @param string $body The body of the post request to send.
+	 * @param array $headers Headers to send in the request. Content-Type and Content length are likely required for a well-formed request.
+	 * @param ref $err_code An error code Possible values are PHPCAS_SERVICE_OK (on
+	 * success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE,
+	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT AVAILABLE.
+	 * @param ref string $output the output of the service (also used to give an error
+	 * message on failure).
+	 *
+	 * @return TRUE on success, FALSE otherwise (in this later case, $err_code
+	 * gives the reason why it failed and $output contains an error message).
+	 */
+	public function serviceWebPost($url, $body, array $headers, &$err_code, &$output) {
+		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
+
+		phpCAS :: traceBegin();
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_CLIENT->isProxy()) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['done']) {
+			phpCAS :: error('this method should only be called after the programmer is sure the user has been authenticated (by calling ' . __CLASS__ . '::checkAuthentication() or ' . __CLASS__ . '::forceAuthentication()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['result']) {
+			phpCAS :: error('authentication was checked (by ' . $PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . $PHPCAS_AUTH_CHECK_CALL['file'] . ':' . $PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		}
+		if (gettype($url) != 'string') {
+			phpCAS :: error('type mismatched for parameter $url (should be `string\')');
+		}
+
+		$res = $PHPCAS_CLIENT->serviceWebPost($url, $body, $headers, $err_code, $output);
+
+		phpCAS :: traceEnd($res);
+		return $res;
+	}
 
 	/**
 	 * This method is used to access an IMAP/POP3/NNTP service.

@@ -2359,6 +2359,54 @@ class CASClient
 			return false;
 		}
 	}
+	
+	/**
+	 * This method is used to post to a remote URL.
+	 *
+	 * Cookie headers will be set by cookies passed in the cookies array.
+	 * Any additional header strings should be passed in the $requestHeaders array.
+	 *
+	 * @param string $url the URL to access.
+	 * @param string $body The post body.
+	 * @param array $cookies an array containing cookies strings such as 'name=val'
+	 * @param array $requestHeaders Additional headers other than cookies. Content-Type and Content-Length headers are likely required for a well-formed request.
+	 * @param ref array $responseHeaders an array containing the HTTP header lines of the response
+	 * (an empty array on failure).
+	 * @param ref string $responseBody the body of the response, as a string (empty on failure).
+	 * @param ref $err_msg an error message, filled on failure.
+	 *
+	 * @return TRUE on success, FALSE otherwise (in this later case, $err_msg
+	 * contains an error message).
+	 */
+	private function postToURL($url, $body, array $requestHeaders, array $cookies, &$responseHeaders, &$responseBody, &$err_msg)
+	{
+		$className = $this->_requestImplementation;
+		$request = new $className();
+
+		if (count($this->_curl_options)) {
+			$request->setCurlOptions($this->_curl_options);
+		}
+
+		$request->setUrl($url);
+		$request->makePost();
+		$request->addCookies($cookies);
+		foreach ($requestHeaders as $header) {
+			$request->addHeader($header);
+		}
+		$request->setPostBody($body);
+
+		if ($request->send()) {
+			$responseHeaders = $request->getResponseHeaders();
+			$responseBody = $request->getResponseBody();
+			$err_msg = '';
+			return true;
+		} else {
+			$responseHeaders = '';
+			$responseBody = '';
+			$err_msg = $request->getErrorMessage();
+			return false;
+		}
+	}
 
 	/**
 	 * This method is used to build the SAML POST body sent to /samlValidate URL.
@@ -2465,6 +2513,95 @@ class CASClient
 						// URL has been fetched, extract the cookies
 						phpCAS::trace('URL`'.$redirect_url.'\' has been read, storing cookies:');
 						$this->_serviceCookieJar->storeCookies($redirect_url, $headers);
+					}
+					break;
+				}
+
+			}
+		}
+
+		phpCAS::traceEnd($res);
+		return $res;
+	}
+	
+	/**
+	 * This method is used to POST to an HTTP[S] service.
+	 *
+	 * @param string $url The service to access.
+	 * @param string $body The body of the post request to send.
+	 * @param array $headers Headers to send in the request. Content-Type and Content length are likely required for a well-formed request.
+	 * @param ref $err_code An error code Possible values are PHPCAS_SERVICE_OK (on
+	 * success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE,
+	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT AVAILABLE.
+	 * @param ref string $output the output of the service (also used to give an error
+	 * message on failure).
+	 *
+	 * @return TRUE on success, FALSE otherwise (in this later case, $err_code
+	 * gives the reason why it failed and $output contains an error message).
+	 */
+	public function serviceWebPost($url, $body, array $headers, &$err_code, &$output) {
+		phpCAS::traceBegin();
+		$cookies = array();
+		// at first retrieve a PT
+		$pt = $this->retrievePT($url,$err_code,$ptoutput);
+
+		$res = TRUE;
+
+		// test if PT was retrieved correctly
+		if ( !$pt ) {
+			// note: $err_code and $err_msg are filled by CASClient::retrievePT()
+			phpCAS::trace('PT was not retrieved correctly');
+			$res = FALSE;
+		} else {
+			// add cookies if necessary
+			$cookies = array();
+			foreach ( $this->_serviceCookieJar->getCookies($url) as $name => $val ) {
+				$cookies[] = $name.'='.$val;
+			}
+				
+			// build the URL including the PT
+			if ( strstr($url,'?') === FALSE ) {
+				$service_url = $url.'?ticket='.$pt;
+			} else {
+				$service_url = $url.'&ticket='.$pt;
+			}
+			phpCAS::trace('Posting to URL`'.$service_url.'\'');
+			if ( !$this->postToURL($service_url, $body, $headers, $cookies, $responseHeaders,$output,$err_msg) ) {
+				phpCAS::trace('could not read URL`'.$service_url.'\'');
+				$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
+				// give an error message
+				$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
+				$service_url,
+				$err_msg);
+				$res = FALSE;
+			} else {
+				// URL has been fetched, extract the cookies
+				phpCAS::trace('URL`'.$service_url.'\' has been read, storing cookies:');
+				$this->_serviceCookieJar->storeCookies($service_url, $responseHeaders);
+			}
+			// Check for the redirect after authentication
+			foreach($responseHeaders as $header){
+				if (preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches))
+				{
+					$redirect_url = trim(array_pop($matches));
+					phpCAS :: trace('Found redirect:'.$redirect_url);
+					$cookies = array();
+					foreach ( $this->_serviceCookieJar->getCookies($redirect_url) as $name => $val ) {
+						$cookies[] = $name.'='.$val;
+					}
+					phpCAS::trace('reading URL`'.$redirect_url.'\'');
+					if ( !$this->postToURL($redirect_url, $body, $headers, $cookies, $responseHeaders,$output,$err_msg) ) {
+						phpCAS::trace('could not read URL`'.$redirect_url.'\'');
+						$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
+						// give an error message
+						$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
+						$service_url,
+						$err_msg);
+						$res = FALSE;
+					} else {
+						// URL has been fetched, extract the cookies
+						phpCAS::trace('URL`'.$redirect_url.'\' has been read, storing cookies:');
+						$this->_serviceCookieJar->storeCookies($redirect_url, $responseHeaders);
 					}
 					break;
 				}
