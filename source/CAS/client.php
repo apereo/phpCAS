@@ -2444,7 +2444,7 @@ class CASClient
 			}
 			// Check for the redirect after authentication
 			foreach($headers as $header){
-				if (preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches))
+				if (preg_match('/(Location:|URI:\s*)([^\s]+)\n/', $header, $matches))
 				{
 					$redirect_url = trim(array_pop($matches));
 					phpCAS :: trace('Found redirect:'.$redirect_url);
