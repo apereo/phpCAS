@@ -1109,6 +1109,18 @@ class CASClient
 				phpCAS::trace('no ticket found');
 			}
 			if ($res) {
+				// Mark the auth-check as complete to allow post-authentication
+				// callbacks to make use of phpCAS::getUser() and similar methods
+				$dbg = phpCAS :: backtrace();
+				global $PHPCAS_AUTH_CHECK_CALL;
+				$PHPCAS_AUTH_CHECK_CALL = array (
+					'done' => TRUE,
+					'file' => $dbg[0]['file'],
+					'line' => $dbg[0]['line'],
+					'method' => __CLASS__ . '::' . __FUNCTION__,
+					'result' => $res
+				);
+				
 				// call the post-authenticate callback if registered.
 				if ($this->_postAuthenticateCallbackFunction) {
 					$args = $this->_postAuthenticateCallbackArgs;
