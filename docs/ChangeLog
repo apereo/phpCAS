@@ -10,6 +10,7 @@ Changes in version 1.2.0RC1
 Improvements
    * add hasAttribute($key) and getAttribute($key) [PHPCAS-43] (Adam Franco)
    * add unit tests for cas 2.0 attribute support [PHPCAS-88] (Adam Franco)
+   * expose the proxy chain through the phpcas interface [PHPCAS-89] (Adam Franco)
    * add deprecation messages to the logout functions with an url parameter [PHPCAS-85] (Joachim Fritschi)
 
 Bug Fixes
@@ -27,7 +28,7 @@ Improvements
    * add a testing framwork that implement on and offline testing capabilities [PHPCAS-66] (Adam Franco)
    * add RFC compliant cookie storage for the proxy() mode. [PHPCAS-54] (Adam Franco)
    * removal of the domxml compatibility lib [PHPCAS-72] (Matthew Brooks, Joachim Fritschi)
-   * add support for attributes for the cas_2.0 protocol [PHPCAS-43] (Joachim Fritschi)
+   * add support for attributes for the cas_2.0 protocol [PHPCAS-43] (Joachim Fritschi, Adam Franco)
    * removal of unused code and comments [PHPCAS-63] (Joachim Fritschi)
    * fix static function warnings for php 5.x [PHPCAS-46] (Joachim Fritschi)
    
