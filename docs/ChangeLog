@@ -2,6 +2,9 @@ This document duplicates reference information found at https://wiki.jasig.org/d
 for interested parties, in the case the wiki wouldn't be available.
 
 ----
+Changes in version 1.2.0
+   * None
+   
 Changes in version 1.2.0RC2
 Improvements
    * add callback hooks during authentication and single sign-out [PHPCAS-76] (Adam Franco)
