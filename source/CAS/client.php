@@ -2565,52 +2565,85 @@ class CASClient
 			} else {
 				$service_url = $url.'&ticket='.$pt;
 			}
-			phpCAS::trace('Posting to URL`'.$service_url.'\'');
-			if ( !$this->postToURL($service_url, $body, $headers, $cookies, $responseHeaders,$output,$err_msg) ) {
-				phpCAS::trace('could not read URL`'.$service_url.'\'');
-				$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
-				// give an error message
-				$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
-				$service_url,
-				$err_msg);
-				$res = FALSE;
-			} else {
-				// URL has been fetched, extract the cookies
-				phpCAS::trace('URL`'.$service_url.'\' has been read, storing cookies:');
-				$this->_serviceCookieJar->storeCookies($service_url, $responseHeaders);
-			}
-			// Check for the redirect after authentication
-			foreach($responseHeaders as $header){
-				if (preg_match('/(Location:|URI:\s*)([^\s]+)\n/', $header, $matches))
-				{
-					$redirect_url = trim(array_pop($matches));
-					phpCAS :: trace('Found redirect:'.$redirect_url);
-					$cookies = array();
-					foreach ( $this->_serviceCookieJar->getCookies($redirect_url) as $name => $val ) {
-						$cookies[] = $name.'='.$val;
-					}
-					phpCAS::trace('reading URL`'.$redirect_url.'\'');
-					if ( !$this->postToURL($redirect_url, $body, $headers, $cookies, $responseHeaders,$output,$err_msg) ) {
-						phpCAS::trace('could not read URL`'.$redirect_url.'\'');
-						$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
-						// give an error message
-						$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
-						$service_url,
-						$err_msg);
-						$res = FALSE;
-					} else {
-						// URL has been fetched, extract the cookies
-						phpCAS::trace('URL`'.$redirect_url.'\' has been read, storing cookies:');
-						$this->_serviceCookieJar->storeCookies($redirect_url, $responseHeaders);
-					}
-					break;
-				}
-
-			}
+			$res = $this->postToUrlAndFollowRedirects($service_url, $body, $headers, $cookies, $responseHeaders,$output,$err_msg);
 		}
 
 		phpCAS::traceEnd($res);
 		return $res;
+	}
+	
+	/**
+	 * Answer a redirect URL if a redirect header is found, otherwise null.
+	 * 
+	 * @param array $responseHeaders
+	 * @return string or null
+	 */
+	private function getRedirectUrl (array $responseHeaders) {
+		// Check for the redirect after authentication
+		foreach($responseHeaders as $header){
+			if (preg_match('/^(Location:|URI:)\s*([^\s]+.*)$/', $header, $matches)) {
+				return trim(array_pop($matches));
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * This method is used to post to a remote URL and follow redirects.
+	 *
+	 * Cookie headers will be set by cookies passed in the cookies array.
+	 * Any additional header strings should be passed in the $requestHeaders array.
+	 *
+	 * @param string $url the URL to access.
+	 * @param string $body The post body.
+	 * @param array $cookies an array containing cookies strings such as 'name=val'
+	 * @param array $requestHeaders Additional headers other than cookies. Content-Type and Content-Length headers are likely required for a well-formed request.
+	 * @param ref array $responseHeaders an array containing the HTTP header lines of the response
+	 * (an empty array on failure).
+	 * @param ref string $responseBody the body of the response, as a string (empty on failure).
+	 * @param ref $err_msg an error message, filled on failure.
+	 *
+	 * @return TRUE on success, FALSE otherwise (in this later case, $err_msg
+	 * contains an error message).
+	 */
+	private function postToUrlAndFollowRedirects($url, $body, array $requestHeaders, array $cookies, &$responseHeaders, &$responseBody, &$err_msg, $maxRedirects = 3, $numRedirects = 0)
+	{
+		// Escape clause if we are in a redirect loop.
+		if ($numRedirects > $maxRedirects) {
+			phpCAS::trace('Exceeded the maximum number of redirects, '.$maxRedirects);
+			return FALSE;
+		}
+		
+		phpCAS::trace('Posting to URL`'.$url.'\'');
+		phpCAS::trace('sending cookies: '.implode(' ', $cookies).'');
+		if (!$this->postToURL($url, $body, $requestHeaders, $cookies, $responseHeaders, $responseBody, $err_msg)) {
+			phpCAS::trace('Could not read URL`'.$url.'\'');
+			$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
+			// give an error message
+			$responseBody = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
+			$url,
+			$err_msg);
+			return FALSE;
+		} else {
+			// URL has been fetched, extract the cookies
+			phpCAS::trace('URL`'.$url.'\' has been read, storing cookies:');
+			$this->_serviceCookieJar->storeCookies($url, $responseHeaders);
+		}
+		// Check for the redirect after authentication
+		if ($redirect_url = $this->getRedirectUrl($responseHeaders)) {
+			phpCAS :: trace('Found redirect:'.$redirect_url);
+			$cookies = array();
+			foreach ( $this->_serviceCookieJar->getCookies($redirect_url) as $name => $val ) {
+				$cookies[] = $name.'='.$val;
+			}
+			$responseHeaders = array();
+			$responseBody = '';
+			$err_msg = '';
+			return $this->postToUrlAndFollowRedirects($redirect_url, $body, $requestHeaders, $cookies, $responseHeaders, $responseBody, $err_msg, $maxRedirects, $numRedirects+1);
+		} else {
+			return TRUE;
+		}
+			
 	}
 
 	/**
