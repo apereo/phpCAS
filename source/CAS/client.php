@@ -985,7 +985,8 @@ class CASClient
 
 	/**
 	 * This method is called to check whether the user is authenticated or not.
-	 * @return TRUE when the user is authenticated, FALSE otherwise.
+	 * @return TRUE when the user is authenticated, FALSE when a previous gateway login failed or
+	 * the function will not return if the user is redirected to the cas server for a gateway login attempt
 	 */
 	public function checkAuthentication()
 	{

@@ -972,8 +972,10 @@ class phpCAS {
 	}
 
 	/**
-	 * This method is called to check if the user is authenticated (use the gateway feature).
-	 * @return TRUE when the user is authenticated; otherwise FALSE.
+	 * This method is called to check if the user is already authenticated locally or has a global cas session. A already
+	 * existing cas session is determined by a cas gateway call.(cas login call without any interactive prompt)
+	 * @return TRUE when the user is authenticated, FALSE when a previous gateway login failed or
+	 * the function will not return if the user is redirected to the cas server for a gateway login attempt
 	 */
 	public static function checkAuthentication() {
 		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
