@@ -2406,7 +2406,7 @@ class CASClient
 	 * @param $url the service to access.
 	 * @param $err_code an error code Possible values are PHPCAS_SERVICE_OK (on
 	 * success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE,
-	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT AVAILABLE.
+	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT_AVAILABLE.
 	 * @param $output the output of the service (also used to give an error
 	 * message on failure).
 	 *
@@ -2497,7 +2497,7 @@ class CASClient
 	 * @param $flags options given to imap_open().
 	 * @param $err_code an error code Possible values are PHPCAS_SERVICE_OK (on
 	 * success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE,
-	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT AVAILABLE.
+	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT_AVAILABLE.
 	 * @param $err_msg an error message on failure
 	 * @param $pt the Proxy Ticket (PT) retrieved from the CAS server to access the URL
 	 * on success, FALSE on error).
