@@ -2129,6 +2129,43 @@ class CASClient
 	}
 
 	/**
+	 * This method can be used to set a custom PGT storage object.
+	 *
+	 * @param $storage a PGT storage object that inherits from the CAS_PGTStorage class
+	 */
+	public function setPGTStorage($storage)
+	{
+		// check that the storage has not already been set
+		if ( is_object($this->_pgt_storage) ) {
+			phpCAS::error('PGT storage already defined');
+		}
+
+		// check to make sure a valid storage object was specified
+		if ( !($storage instanceof CAS_PGTStorage) ) {
+			phpCAS::error('Invalid PGT storage object');
+		}
+
+		// store the PGTStorage object
+		$this->_pgt_storage = $storage;
+	}
+
+	/**
+	 * This method is used to tell phpCAS to store the response of the
+	 * CAS server to PGT requests in a database.
+	 *
+	 * @param $dsn_or_pdo a dsn string to use for creating a PDO object or a PDO object
+	 * @param $username the username to use when connecting to the database
+	 * @param $password the password to use when connecting to the database
+	 * @param $table the table to use for storing and retrieving PGT's
+	 * @param $driver_options any driver options to use when connecting to the database
+	 */
+	public function setPGTStorageDb($dsn_or_pdo, $username='', $password='', $table='', $driver_options=null)
+	{
+		// create the storage object
+		$this->setPGTStorage(new CAS_PGTStorageDb($this, $dsn_or_pdo, $username, $password, $table, $driver_options));
+	}
+
+	/**
 	 * This method is used to tell phpCAS to store the response of the
 	 * CAS server to PGT requests onto the filesystem.
 	 *
@@ -2138,13 +2175,8 @@ class CASClient
 	public function setPGTStorageFile($format='',
 	$path='')
 	{
-		// check that the storage has not already been set
-		if ( is_object($this->_pgt_storage) ) {
-			phpCAS::error('PGT storage already defined');
-		}
-
 		// create the storage object
-		$this->_pgt_storage = new CAS_PGTStorageFile($this,$format,$path);
+		$this->setPGTStorage(new CAS_PGTStorageFile($this,$format,$path));
 	}
 
 

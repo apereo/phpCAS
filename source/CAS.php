@@ -706,6 +706,67 @@ class phpCAS {
 	 */
 
 	/**
+	 * This method can be used to set a custom PGT storage object.
+	 *
+	 * @param $storage a PGT storage object that inherits from the CAS_PGTStorage class
+	 */
+	public static function setPGTStorage($storage) {
+		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
+
+		phpCAS :: traceBegin();
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_CLIENT->isProxy()) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if ($PHPCAS_AUTH_CHECK_CALL['done']) {
+			phpCAS :: error('this method should only be called before ' . $PHPCAS_AUTH_CHECK_CALL['method'] . '() (called at ' . $PHPCAS_AUTH_CHECK_CALL['file'] . ':' . $PHPCAS_AUTH_CHECK_CALL['line'] . ')');
+		}
+		if ( !($storage instanceof CAS_PGTStorage) ) {
+			phpCAS :: error('type mismatched for parameter $storage (should be a CAS_PGTStorage `object\')');
+		}
+		$PHPCAS_CLIENT->setPGTStorage($storage);
+		phpCAS :: traceEnd();
+	}
+
+	/**
+	 * This method is used to tell phpCAS to store the response of the
+	 * CAS server to PGT requests in a database.
+	 *
+	 * @param $dsn_or_pdo a dsn string to use for creating a PDO object or a PDO object
+	 * @param $username the username to use when connecting to the database
+	 * @param $password the password to use when connecting to the database
+	 * @param $table the table to use for storing and retrieving PGT's
+	 * @param $driver_options any driver options to use when connecting to the database
+	 */
+	public static function setPGTStorageDb($dsn_or_pdo, $username='', $password='', $table='', $driver_options=null) {
+		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
+
+		phpCAS :: traceBegin();
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_CLIENT->isProxy()) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if ($PHPCAS_AUTH_CHECK_CALL['done']) {
+			phpCAS :: error('this method should only be called before ' . $PHPCAS_AUTH_CHECK_CALL['method'] . '() (called at ' . $PHPCAS_AUTH_CHECK_CALL['file'] . ':' . $PHPCAS_AUTH_CHECK_CALL['line'] . ')');
+		}
+		if (gettype($username) != 'string') {
+			phpCAS :: error('type mismatched for parameter $username (should be `string\')');
+		}
+		if (gettype($password) != 'string') {
+			phpCAS :: error('type mismatched for parameter $password (should be `string\')');
+		}
+		if (gettype($table) != 'string') {
+			phpCAS :: error('type mismatched for parameter $table (should be `string\')');
+		}
+		$PHPCAS_CLIENT->setPGTStorageDb($dsn_or_pdo, $username, $password, $table, $driver_options);
+		phpCAS :: traceEnd();
+	}
+
+	/**
 	 * This method is used to tell phpCAS to store the response of the
 	 * CAS server to PGT requests onto the filesystem.
 	 *
@@ -1584,6 +1645,9 @@ class phpCAS {
 
 /** @defgroup internalPGTStorage PGT storage
  *  @ingroup internalProxy */
+
+/** @defgroup internalPGTStorageDb PGT storage in a database
+ *  @ingroup internalPGTStorage */
 
 /** @defgroup internalPGTStorageFile PGT storage on the filesystem
  *  @ingroup internalPGTStorage */
