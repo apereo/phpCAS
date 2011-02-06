@@ -60,7 +60,7 @@ class CAS_PGTStorage
 	 *
 	 * @protected
 	 */
-	function PGTStorage($cas_parent)
+	function __construct($cas_parent)
 	{
 		phpCAS::traceBegin();
 		if ( !$cas_parent->isProxy() ) {
