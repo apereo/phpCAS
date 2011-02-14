@@ -289,6 +289,36 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
 	$this->assertEquals(2, count($cookies));
 	$this->assertEquals('jones', $cookies['bob']);
     }
+    
+    /**
+     * Test the inclusion of an httponly attribute.
+     */
+    public function test_public_storeCookies_httponly()
+    {
+	$headers = array('Set-Cookie: SID="hello world"; path=/; domain=.example.com; HttpOnly');
+        $this->object->storeCookies($this->serviceUrl_1, $headers);
+
+        $cookies = $this->object->getCookies($this->serviceUrl_1b);
+
+        $this->assertType('array', $cookies);
+        $this->assertEquals('hello world', $cookies['SID']);
+        $this->assertEquals(1, count($cookies), "Should only a single SID cookie, not a cookie for the HttpOnly attribute");
+    }
+    
+    /**
+     * Test the inclusion of an comment attribute.
+     */
+    public function test_public_storeCookies_comment()
+    {
+	$headers = array('Set-Cookie: SID="hello world"; path=/; domain=.example.com; HttpOnly; comment="A session cookie"');
+        $this->object->storeCookies($this->serviceUrl_1, $headers);
+
+        $cookies = $this->object->getCookies($this->serviceUrl_1b);
+
+        $this->assertType('array', $cookies);
+        $this->assertEquals('hello world', $cookies['SID']);
+        $this->assertEquals(1, count($cookies), "Should only a single SID cookie, not a cookie for the comment attribute");
+    }
 
     /**
      * Test the inclusion of a semicolon in a quoted cookie value.

@@ -135,7 +135,7 @@ class CAS_PGTStorageFile extends CAS_PGTStorage
 	{
 		phpCAS::traceBegin();
 		// call the ancestor's constructor
-		$this->PGTStorage($cas_parent);
+		parent::__construct($cas_parent);
 
 		if (empty($format) ) $format = CAS_PGT_STORAGE_FILE_DEFAULT_FORMAT;
 		if (empty($path) ) $path = CAS_PGT_STORAGE_FILE_DEFAULT_PATH;

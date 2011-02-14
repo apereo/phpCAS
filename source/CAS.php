@@ -191,7 +191,7 @@ define("PHPCAS_SERVICE_PT_FAILURE", 3);
 /**
  * phpCAS::service() error code when the service was not available.
  */
-define("PHPCAS_SERVICE_NOT AVAILABLE", 4);
+define("PHPCAS_SERVICE_NOT_AVAILABLE", 4);
 
 /** @} */
 // ------------------------------------------------------------------------
@@ -445,30 +445,33 @@ class phpCAS {
 		if ($filename != FALSE && gettype($filename) != 'string') {
 			phpCAS :: error('type mismatched for parameter $dbg (should be FALSE or the name of the log file)');
 		}
-
-		if (empty ($filename)) {
-			if (preg_match('/^Win.*/', getenv('OS'))) {
-				if (isset ($_ENV['TMP'])) {
-					$debugDir = $_ENV['TMP'] . '/';
-				} else
-				if (isset ($_ENV['TEMP'])) {
-					$debugDir = $_ENV['TEMP'] . '/';
+		if ($filename === FALSE){
+			unset($PHPCAS_DEBUG['filename']);
+		}else{
+			if (empty ($filename)) {
+				if (preg_match('/^Win.*/', getenv('OS'))) {
+					if (isset ($_ENV['TMP'])) {
+						$debugDir = $_ENV['TMP'] . '/';
+					} else
+						if (isset ($_ENV['TEMP'])) {
+							$debugDir = $_ENV['TEMP'] . '/';
+						} else {
+							$debugDir = '';
+						}
 				} else {
-					$debugDir = '';
+					$debugDir = DEFAULT_DEBUG_DIR;
 				}
-			} else {
-				$debugDir = DEFAULT_DEBUG_DIR;
+				$filename = $debugDir . 'phpCAS.log';
 			}
-			$filename = $debugDir . 'phpCAS.log';
+			
+			if (empty ($PHPCAS_DEBUG['unique_id'])) {
+				$PHPCAS_DEBUG['unique_id'] = substr(strtoupper(md5(uniqid(''))), 0, 4);
+			}
+			
+			$PHPCAS_DEBUG['filename'] = $filename;
+			
+			phpCAS :: trace('START phpCAS-' . PHPCAS_VERSION . ' ******************');
 		}
-
-		if (empty ($PHPCAS_DEBUG['unique_id'])) {
-			$PHPCAS_DEBUG['unique_id'] = substr(strtoupper(md5(uniqid(''))), 0, 4);
-		}
-
-		$PHPCAS_DEBUG['filename'] = $filename;
-
-		phpCAS :: trace('START phpCAS-' . PHPCAS_VERSION . ' ******************');
 	}
 
 	/** @} */
@@ -706,6 +709,67 @@ class phpCAS {
 	 */
 
 	/**
+	 * This method can be used to set a custom PGT storage object.
+	 *
+	 * @param $storage a PGT storage object that inherits from the CAS_PGTStorage class
+	 */
+	public static function setPGTStorage($storage) {
+		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
+
+		phpCAS :: traceBegin();
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_CLIENT->isProxy()) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if ($PHPCAS_AUTH_CHECK_CALL['done']) {
+			phpCAS :: error('this method should only be called before ' . $PHPCAS_AUTH_CHECK_CALL['method'] . '() (called at ' . $PHPCAS_AUTH_CHECK_CALL['file'] . ':' . $PHPCAS_AUTH_CHECK_CALL['line'] . ')');
+		}
+		if ( !($storage instanceof CAS_PGTStorage) ) {
+			phpCAS :: error('type mismatched for parameter $storage (should be a CAS_PGTStorage `object\')');
+		}
+		$PHPCAS_CLIENT->setPGTStorage($storage);
+		phpCAS :: traceEnd();
+	}
+
+	/**
+	 * This method is used to tell phpCAS to store the response of the
+	 * CAS server to PGT requests in a database.
+	 *
+	 * @param $dsn_or_pdo a dsn string to use for creating a PDO object or a PDO object
+	 * @param $username the username to use when connecting to the database
+	 * @param $password the password to use when connecting to the database
+	 * @param $table the table to use for storing and retrieving PGT's
+	 * @param $driver_options any driver options to use when connecting to the database
+	 */
+	public static function setPGTStorageDb($dsn_or_pdo, $username='', $password='', $table='', $driver_options=null) {
+		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
+
+		phpCAS :: traceBegin();
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_CLIENT->isProxy()) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if ($PHPCAS_AUTH_CHECK_CALL['done']) {
+			phpCAS :: error('this method should only be called before ' . $PHPCAS_AUTH_CHECK_CALL['method'] . '() (called at ' . $PHPCAS_AUTH_CHECK_CALL['file'] . ':' . $PHPCAS_AUTH_CHECK_CALL['line'] . ')');
+		}
+		if (gettype($username) != 'string') {
+			phpCAS :: error('type mismatched for parameter $username (should be `string\')');
+		}
+		if (gettype($password) != 'string') {
+			phpCAS :: error('type mismatched for parameter $password (should be `string\')');
+		}
+		if (gettype($table) != 'string') {
+			phpCAS :: error('type mismatched for parameter $table (should be `string\')');
+		}
+		$PHPCAS_CLIENT->setPGTStorageDb($dsn_or_pdo, $username, $password, $table, $driver_options);
+		phpCAS :: traceEnd();
+	}
+
+	/**
 	 * This method is used to tell phpCAS to store the response of the
 	 * CAS server to PGT requests onto the filesystem.
 	 *
@@ -750,7 +814,7 @@ class phpCAS {
 	 * @param $url the service to access.
 	 * @param $err_code an error code Possible values are PHPCAS_SERVICE_OK (on
 	 * success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE,
-	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT AVAILABLE.
+	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT_AVAILABLE.
 	 * @param $output the output of the service (also used to give an error
 	 * message on failure).
 	 *
@@ -833,7 +897,7 @@ class phpCAS {
 	 * @param $flags options given to imap_open().
 	 * @param $err_code an error code Possible values are PHPCAS_SERVICE_OK (on
 	 * success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE,
-	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT AVAILABLE.
+	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT_AVAILABLE.
 	 * @param $err_msg an error message on failure
 	 * @param $pt the Proxy Ticket (PT) retrieved from the CAS server to access the URL
 	 * on success, FALSE on error).
@@ -949,8 +1013,10 @@ class phpCAS {
 	}
 
 	/**
-	 * This method is called to check if the user is authenticated (use the gateway feature).
-	 * @return TRUE when the user is authenticated; otherwise FALSE.
+	 * This method is called to check if the user is already authenticated locally or has a global cas session. A already
+	 * existing cas session is determined by a cas gateway call.(cas login call without any interactive prompt)
+	 * @return TRUE when the user is authenticated, FALSE when a previous gateway login failed or
+	 * the function will not return if the user is redirected to the cas server for a gateway login attempt
 	 */
 	public static function checkAuthentication() {
 		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
@@ -1625,6 +1691,9 @@ class phpCAS {
 
 /** @defgroup internalPGTStorage PGT storage
  *  @ingroup internalProxy */
+
+/** @defgroup internalPGTStorageDb PGT storage in a database
+ *  @ingroup internalPGTStorage */
 
 /** @defgroup internalPGTStorageFile PGT storage on the filesystem
  *  @ingroup internalPGTStorage */

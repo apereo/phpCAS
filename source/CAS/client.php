@@ -985,7 +985,8 @@ class CASClient
 
 	/**
 	 * This method is called to check whether the user is authenticated or not.
-	 * @return TRUE when the user is authenticated, FALSE otherwise.
+	 * @return TRUE when the user is authenticated, FALSE when a previous gateway login failed or
+	 * the function will not return if the user is redirected to the cas server for a gateway login attempt
 	 */
 	public function checkAuthentication()
 	{
@@ -1109,6 +1110,18 @@ class CASClient
 				phpCAS::trace('no ticket found');
 			}
 			if ($res) {
+				// Mark the auth-check as complete to allow post-authentication
+				// callbacks to make use of phpCAS::getUser() and similar methods
+				$dbg = phpCAS :: backtrace();
+				global $PHPCAS_AUTH_CHECK_CALL;
+				$PHPCAS_AUTH_CHECK_CALL = array (
+					'done' => TRUE,
+					'file' => $dbg[0]['file'],
+					'line' => $dbg[0]['line'],
+					'method' => __CLASS__ . '::' . __FUNCTION__,
+					'result' => $res
+				);
+				
 				// call the post-authenticate callback if registered.
 				if ($this->_postAuthenticateCallbackFunction) {
 					$args = $this->_postAuthenticateCallbackArgs;
@@ -2117,6 +2130,43 @@ class CASClient
 	}
 
 	/**
+	 * This method can be used to set a custom PGT storage object.
+	 *
+	 * @param $storage a PGT storage object that inherits from the CAS_PGTStorage class
+	 */
+	public function setPGTStorage($storage)
+	{
+		// check that the storage has not already been set
+		if ( is_object($this->_pgt_storage) ) {
+			phpCAS::error('PGT storage already defined');
+		}
+
+		// check to make sure a valid storage object was specified
+		if ( !($storage instanceof CAS_PGTStorage) ) {
+			phpCAS::error('Invalid PGT storage object');
+		}
+
+		// store the PGTStorage object
+		$this->_pgt_storage = $storage;
+	}
+
+	/**
+	 * This method is used to tell phpCAS to store the response of the
+	 * CAS server to PGT requests in a database.
+	 *
+	 * @param $dsn_or_pdo a dsn string to use for creating a PDO object or a PDO object
+	 * @param $username the username to use when connecting to the database
+	 * @param $password the password to use when connecting to the database
+	 * @param $table the table to use for storing and retrieving PGT's
+	 * @param $driver_options any driver options to use when connecting to the database
+	 */
+	public function setPGTStorageDb($dsn_or_pdo, $username='', $password='', $table='', $driver_options=null)
+	{
+		// create the storage object
+		$this->setPGTStorage(new CAS_PGTStorageDb($this, $dsn_or_pdo, $username, $password, $table, $driver_options));
+	}
+
+	/**
 	 * This method is used to tell phpCAS to store the response of the
 	 * CAS server to PGT requests onto the filesystem.
 	 *
@@ -2126,13 +2176,8 @@ class CASClient
 	public function setPGTStorageFile($format='',
 	$path='')
 	{
-		// check that the storage has not already been set
-		if ( is_object($this->_pgt_storage) ) {
-			phpCAS::error('PGT storage already defined');
-		}
-
 		// create the storage object
-		$this->_pgt_storage = new CAS_PGTStorageFile($this,$format,$path);
+		$this->setPGTStorage(new CAS_PGTStorageFile($this,$format,$path));
 	}
 
 
@@ -2442,7 +2487,7 @@ class CASClient
 	 * @param $url the service to access.
 	 * @param $err_code an error code Possible values are PHPCAS_SERVICE_OK (on
 	 * success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE,
-	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT AVAILABLE.
+	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT_AVAILABLE.
 	 * @param $output the output of the service (also used to give an error
 	 * message on failure).
 	 *
@@ -2492,7 +2537,7 @@ class CASClient
 			}
 			// Check for the redirect after authentication
 			foreach($headers as $header){
-				if (preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches))
+				if (preg_match('/^(Location:|URI:)\s*([^\s]+.*)$/', $header, $matches))
 				{
 					$redirect_url = trim(array_pop($matches));
 					phpCAS :: trace('Found redirect:'.$redirect_url);
@@ -2655,7 +2700,7 @@ class CASClient
 	 * @param $flags options given to imap_open().
 	 * @param $err_code an error code Possible values are PHPCAS_SERVICE_OK (on
 	 * success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE,
-	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT AVAILABLE.
+	 * PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT_AVAILABLE.
 	 * @param $err_msg an error message on failure
 	 * @param $pt the Proxy Ticket (PT) retrieved from the CAS server to access the URL
 	 * on success, FALSE on error).
