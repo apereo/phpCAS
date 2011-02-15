@@ -528,7 +528,7 @@ class phpCAS {
 		$line = '?';
 		if (is_array($dbg)) {
 			for ($i = 1; $i < sizeof($dbg); $i++) {
-				if (is_array($dbg[$i])) {
+				if (is_array($dbg[$i]) && isset($dbg[$i]['class']) ) {
 					if ($dbg[$i]['class'] == __CLASS__) {
 						$function = $dbg[$i]['function'];
 						$file = $dbg[$i]['file'];
@@ -1046,7 +1046,7 @@ class phpCAS {
 		if (!is_object($PHPCAS_CLIENT)) {
 			phpCAS :: error('this method should not be called before' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
 		}
-
+		$auth = $PHPCAS_CLIENT->renewAuthentication();
 		// store where the authentication has been checked and the result
 		$dbg = phpCAS :: backtrace();
 		$PHPCAS_AUTH_CHECK_CALL = array (
@@ -1057,7 +1057,7 @@ class phpCAS {
 			'result' => $auth
 		);
 
-		$PHPCAS_CLIENT->renewAuthentication();
+		//$PHPCAS_CLIENT->renewAuthentication();
 		phpCAS :: traceEnd();
 	}
 
