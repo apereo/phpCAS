@@ -2861,7 +2861,9 @@ class CASClient
 	private function getServerUrl(){
 		$server_url = '';
 		if(!empty($_SERVER['HTTP_X_FORWARDED_HOST'])){
-			$server_url = $_SERVER['HTTP_X_FORWARDED_HOST'];
+			// explode the host list separated by comma and use the first host
+			$hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+			$server_url = $hosts[0];
 		}else if(!empty($_SERVER['HTTP_X_FORWARDED_SERVER'])){
 			$server_url = $_SERVER['HTTP_X_FORWARDED_SERVER'];
 		}else{
