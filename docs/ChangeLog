@@ -15,7 +15,7 @@ Bug Fixed
    * fix PGTStorage contructor name [PHPCAS-93] (Daniel Frett)
    * fix the PHPCAS_SERVICE_NOT_AVAILABLE constant [PHPCAS-91] (Daniel Frett)
    * fix redirection with multiple proxies in HTTP_X_FORWARDED_HOST [PHPCAS-98] (Joachim Fritschi)
-   * fix some undefinde variable warnings in debug mode [PHPCAS-96] (Joachim Fritschi
+   * fix some undefinde variable warnings in debug mode [PHPCAS-96] (Joachim Fritschi)
 
 Changes in version 1.2.0
    * None
