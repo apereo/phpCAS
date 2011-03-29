@@ -2823,7 +2823,7 @@ class CASClient
 	 *
 	 * @return The URL
 	 */
-	private function getURL()
+	public function getURL()
 	{
 		phpCAS::traceBegin();
 		// the URL is built when needed only
