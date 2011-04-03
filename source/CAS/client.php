@@ -499,6 +499,7 @@ class CASClient
 	 */
 	public function getServerServiceValidateURL()
 	{
+		phpCAS::traceBegin();
 		// the URL is build only when needed
 		if ( empty($this->_server['service_validate_url']) ) {
 			switch ($this->getServerVersion()) {
@@ -510,7 +511,9 @@ class CASClient
 					break;
 			}
 		}
-		return $this->_server['service_validate_url'].'?service='.urlencode($this->getURL());
+		$url = $this->buildQueryUrl($this->_server['service_validate_url'], 'service='.urlencode($this->getURL()));
+		phpCAS::traceEnd($url);
+		return $url;
 	}
 	/**
 	 * This method is used to retrieve the SAML validating URL of the CAS server.
@@ -527,15 +530,19 @@ class CASClient
 					break;
 			}
 		}
-		phpCAS::traceEnd($this->_server['saml_validate_url'].'?TARGET='.urlencode($this->getURL()));
-		return $this->_server['saml_validate_url'].'?TARGET='.urlencode($this->getURL());
+		
+		$url = $this->buildQueryUrl($this->_server['saml_validate_url'], 'TARGET='.urlencode($this->getURL()));
+		phpCAS::traceEnd($url);
+		return $url;
 	}
+	
 	/**
 	 * This method is used to retrieve the proxy validating URL of the CAS server.
 	 * @return a URL.
 	 */
 	public function getServerProxyValidateURL()
 	{
+		phpCAS::traceBegin();
 		// the URL is build only when needed
 		if ( empty($this->_server['proxy_validate_url']) ) {
 			switch ($this->getServerVersion()) {
@@ -547,8 +554,24 @@ class CASClient
 					break;
 			}
 		}
-		return $this->_server['proxy_validate_url'].'?service='.urlencode($this->getURL());
+		$url = $this->buildQueryUrl($this->_server['proxy_validate_url'], 'service='.urlencode($this->getURL()));
+		phpCAS::traceEnd($url);
+		return $url;
 	}
+	
+	/**
+	 * This method is used to append query parameters to an url. Since the url
+	 * might already contain parameter it has to be detected and to build a proper
+	 * URL
+	 * @param $url  base url to add the query params to
+	 * @param $query params in query form with & separated
+	 * @return url with query params 
+	 */
+	private function buildQueryUrl($url, $query) {
+		$url .= (strstr($url,'?') === FALSE) ? '?' : '&';
+		$url .= $query;
+		return $url;
+	}	
 
 	/**
 	 * This method is used to retrieve the proxy URL of the CAS server.
