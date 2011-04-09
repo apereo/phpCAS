@@ -437,16 +437,17 @@ class CASClient
 			$this->_server['login_url'] = $this->getServerBaseURL();
 			$this->_server['login_url'] .= 'login?service=';
 			$this->_server['login_url'] .= urlencode($this->getURL());
-			if($renew) {
-				// It is recommended that when the "renew" parameter is set, its value be "true"
-				$this->_server['login_url'] .= '&renew=true';
-			} elseif ($gateway) {
-				// It is recommended that when the "gateway" parameter is set, its value be "true"
-				$this->_server['login_url'] .= '&gateway=true';
-			}
 		}
-		phpCAS::traceEnd($this->_server['login_url']);
-		return $this->_server['login_url'];
+		$url = $this->_server['login_url'];
+		if($renew) {
+			// It is recommended that when the "renew" parameter is set, its value be "true"
+			$url = $this->buildQueryUrl($url, 'renew=true');
+		} elseif ($gateway) {
+			// It is recommended that when the "gateway" parameter is set, its value be "true"
+			$url = $this->buildQueryUrl($url, 'gateway=true');
+		}
+		phpCAS::traceEnd($url);
+		return $url;
 	}
 
 	/**
