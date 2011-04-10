@@ -164,11 +164,8 @@ class CAS_CookieJar {
 		$attributeStrings = explode( ';', $line );
 
 		foreach( $attributeStrings as $attributeString ) {
-			// This implementation makes the assumption that equals symbols will not
-			// be present in quoted attribute values. While attribute values that
-			// contain equals symbols are allowed by RFC2965, they are hopefully rare
-			// enough to ignore for our purposes.
-			$attributeParts = explode( '=', $attributeString );
+			// split on the first equals sign and use the rest as value
+			$attributeParts = explode( '=', $attributeString, 2);
 
 			$attributeName = trim($attributeParts[0]);
 			$attributeNameLC = strtolower($attributeName);
