@@ -2270,7 +2270,7 @@ class CASClient
 	 *
 	 * @return a Proxy Ticket, or FALSE on error.
 	 */
-	private function retrievePT($target_service,&$err_code,&$err_msg)
+	public function retrievePT($target_service,&$err_code,&$err_msg)
 	{
 		phpCAS::traceBegin();
 
