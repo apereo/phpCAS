@@ -437,16 +437,17 @@ class CASClient
 			$this->_server['login_url'] = $this->getServerBaseURL();
 			$this->_server['login_url'] .= 'login?service=';
 			$this->_server['login_url'] .= urlencode($this->getURL());
-			if($renew) {
-				// It is recommended that when the "renew" parameter is set, its value be "true"
-				$this->_server['login_url'] .= '&renew=true';
-			} elseif ($gateway) {
-				// It is recommended that when the "gateway" parameter is set, its value be "true"
-				$this->_server['login_url'] .= '&gateway=true';
-			}
 		}
-		phpCAS::traceEnd($this->_server['login_url']);
-		return $this->_server['login_url'];
+		$url = $this->_server['login_url'];
+		if($renew) {
+			// It is recommended that when the "renew" parameter is set, its value be "true"
+			$url = $this->buildQueryUrl($url, 'renew=true');
+		} elseif ($gateway) {
+			// It is recommended that when the "gateway" parameter is set, its value be "true"
+			$url = $this->buildQueryUrl($url, 'gateway=true');
+		}
+		phpCAS::traceEnd($url);
+		return $url;
 	}
 
 	/**
@@ -499,6 +500,7 @@ class CASClient
 	 */
 	public function getServerServiceValidateURL()
 	{
+		phpCAS::traceBegin();
 		// the URL is build only when needed
 		if ( empty($this->_server['service_validate_url']) ) {
 			switch ($this->getServerVersion()) {
@@ -510,7 +512,9 @@ class CASClient
 					break;
 			}
 		}
-		return $this->_server['service_validate_url'].'?service='.urlencode($this->getURL());
+		$url = $this->buildQueryUrl($this->_server['service_validate_url'], 'service='.urlencode($this->getURL()));
+		phpCAS::traceEnd($url);
+		return $url;
 	}
 	/**
 	 * This method is used to retrieve the SAML validating URL of the CAS server.
@@ -527,15 +531,19 @@ class CASClient
 					break;
 			}
 		}
-		phpCAS::traceEnd($this->_server['saml_validate_url'].'?TARGET='.urlencode($this->getURL()));
-		return $this->_server['saml_validate_url'].'?TARGET='.urlencode($this->getURL());
+		
+		$url = $this->buildQueryUrl($this->_server['saml_validate_url'], 'TARGET='.urlencode($this->getURL()));
+		phpCAS::traceEnd($url);
+		return $url;
 	}
+	
 	/**
 	 * This method is used to retrieve the proxy validating URL of the CAS server.
 	 * @return a URL.
 	 */
 	public function getServerProxyValidateURL()
 	{
+		phpCAS::traceBegin();
 		// the URL is build only when needed
 		if ( empty($this->_server['proxy_validate_url']) ) {
 			switch ($this->getServerVersion()) {
@@ -547,8 +555,24 @@ class CASClient
 					break;
 			}
 		}
-		return $this->_server['proxy_validate_url'].'?service='.urlencode($this->getURL());
+		$url = $this->buildQueryUrl($this->_server['proxy_validate_url'], 'service='.urlencode($this->getURL()));
+		phpCAS::traceEnd($url);
+		return $url;
 	}
+	
+	/**
+	 * This method is used to append query parameters to an url. Since the url
+	 * might already contain parameter it has to be detected and to build a proper
+	 * URL
+	 * @param $url  base url to add the query params to
+	 * @param $query params in query form with & separated
+	 * @return url with query params 
+	 */
+	private function buildQueryUrl($url, $query) {
+		$url .= (strstr($url,'?') === FALSE) ? '?' : '&';
+		$url .= $query;
+		return $url;
+	}	
 
 	/**
 	 * This method is used to retrieve the proxy URL of the CAS server.
@@ -2246,7 +2270,7 @@ class CASClient
 	 *
 	 * @return a Proxy Ticket, or FALSE on error.
 	 */
-	private function retrievePT($target_service,&$err_code,&$err_msg)
+	public function retrievePT($target_service,&$err_code,&$err_msg)
 	{
 		phpCAS::traceBegin();
 
@@ -2993,7 +3017,7 @@ class CASClient
 	 *
 	 * @return The URL
 	 */
-	private function getURL()
+	public function getURL()
 	{
 		phpCAS::traceBegin();
 		// the URL is built when needed only
@@ -3031,7 +3055,9 @@ class CASClient
 	private function getServerUrl(){
 		$server_url = '';
 		if(!empty($_SERVER['HTTP_X_FORWARDED_HOST'])){
-			$server_url = $_SERVER['HTTP_X_FORWARDED_HOST'];
+			// explode the host list separated by comma and use the first host
+			$hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+			$server_url = $hosts[0];
 		}else if(!empty($_SERVER['HTTP_X_FORWARDED_SERVER'])){
 			$server_url = $_SERVER['HTTP_X_FORWARDED_SERVER'];
 		}else{

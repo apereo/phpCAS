@@ -1,7 +1,18 @@
-This document duplicates reference information found at https://wiki.jasig.org/display/CASC/phpCAS+ChangeLog
-for interested parties, in the case the wiki wouldn't be available.
+Changes in version 1.2.1
+   * None
 
-----
+Changes in version 1.2.1RC1
+Improvements
+   * add support for storing PGTs in a database [PHPCAS-94] (Daniel Frett)
+    
+Bug Fixed
+   * phpCAS::setDebug(FALSE) should stop logging [PHPCAS-95] (Joachim Fritschi)
+   * fix checkAuthenticate return value documentation [PHPCAS-92] (Joachim Fritschi)
+   * fix PGTStorage contructor name [PHPCAS-93] (Daniel Frett)
+   * fix the PHPCAS_SERVICE_NOT_AVAILABLE constant [PHPCAS-91] (Daniel Frett)
+   * fix redirection with multiple proxies in HTTP_X_FORWARDED_HOST [PHPCAS-98] (Joachim Fritschi)
+   * fix some undefinde variable warnings in debug mode [PHPCAS-96] (Joachim Fritschi)
+
 Changes in version 1.2.0
    * None
    
