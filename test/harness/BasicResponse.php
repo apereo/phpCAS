@@ -212,7 +212,7 @@ class CAS_TestHarness_BasicResponse
 		if ($parts['host'] != $this->host)
 			return false;
 
-		if ($this->scheme = 'https')
+		if ($this->scheme == 'https')
 			$defaultPort = 443;
 		else
 			$defaultPort = 80;
