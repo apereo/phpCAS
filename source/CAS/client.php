@@ -49,6 +49,7 @@ include_once(dirname(__FILE__).'/Request/CurlRequest.php');
 // include classes for proxying access to services
 include_once(dirname(__FILE__).'/ProxiedService/Http/Get.php');
 include_once(dirname(__FILE__).'/ProxiedService/Http/Post.php');
+include_once(dirname(__FILE__).'/ProxiedService/Imap.php');
 
 /**
  * @class CASClient
@@ -2467,6 +2468,7 @@ class CASClient
 	 * @param string $type The service type. One of:
 	 *			PHPCAS_PROXIED_SERVICE_HTTP_GET
 	 *			PHPCAS_PROXIED_SERVICE_HTTP_POST
+	 *			PHPCAS_PROXIED_SERVICE_IMAP
 	 *			
 	 *		
 	 * @return CAS_ProxiedService
@@ -2482,6 +2484,11 @@ class CASClient
 					$request->setCurlOptions($this->_curl_options);
 				}
 				$proxiedService = new $type($request, $this->_serviceCookieJar);
+				if ($proxiedService instanceof CAS_ProxiedService_Testable)
+					$proxiedService->setCasClient($this);
+				return $proxiedService;
+			case PHPCAS_PROXIED_SERVICE_IMAP;
+				$proxiedService = new CAS_ProxiedService_Imap($this->getUser());
 				if ($proxiedService instanceof CAS_ProxiedService_Testable)
 					$proxiedService->setCasClient($this);
 				return $proxiedService;
@@ -2561,35 +2568,29 @@ class CASClient
 	 */
 	public function serviceMail($url,$service,$flags,&$err_code,&$err_msg,&$pt)
 	{
-		phpCAS::traceBegin();
-		// at first retrieve a PT
-		$pt = $this->retrievePT($service,$err_code,$ptoutput);
-
-		$stream = FALSE;
-
-		// test if PT was retrieved correctly
-		if ( !$pt ) {
-			// note: $err_code and $err_msg are filled by CASClient::retrievePT()
-			phpCAS::trace('PT was not retrieved correctly');
-		} else {
-			phpCAS::trace('opening IMAP URL `'.$url.'\'...');
-			$stream = @imap_open($url,$this->getUser(),$pt,$flags);
-			if ( !$stream ) {
-				phpCAS::trace('could not open URL');
-				$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
-				// give an error message
-				$err_msg = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
-				$url,
-				var_export(imap_errors(),TRUE));
-				$pt = FALSE;
-				$stream = FALSE;
+		try {
+			$service = $this->getProxiedService(PHPCAS_PROXIED_SERVICE_IMAP);
+			$service->setServiceUrl($service);
+			$service->setMailbox($url);
+			$service->setOptions($flags);
+			
+			$stream = $service->open();
+			if ($stream) {
+				$err_code = PHPCAS_SERVICE_OK;
+				$pt = $service->getImapProxyTicket();
+				return $stream;
 			} else {
-				phpCAS::trace('ok');
+				$err_msg = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE), $url, $service->getErrorMessage());
+				$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
+				$pt = FALSE;
+				return FALSE;
 			}
+		} catch (CAS_ProxiedService_Exception $e) {
+			$err_msg = $e->getMessage();
+			$err_code = $e->getCode();
+			$pt = FALSE;
+			return FALSE;
 		}
-
-		phpCAS::traceEnd($stream);
-		return $stream;
 	}
 
 	/** @} */

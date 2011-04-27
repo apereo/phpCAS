@@ -204,6 +204,10 @@ define("PHPCAS_PROXIED_SERVICE_HTTP_GET", 'CAS_ProxiedService_Http_Get');
  * phpCAS::getProxiedService() type for HTTP POST
  */
 define("PHPCAS_PROXIED_SERVICE_HTTP_POST", 'CAS_ProxiedService_Http_Post');
+/**
+ * phpCAS::getProxiedService() type for IMAP
+ */
+define("PHPCAS_PROXIED_SERVICE_IMAP", 'CAS_ProxiedService_Imap');
 
 
 /** @} */
