@@ -51,6 +51,10 @@ include_once(dirname(__FILE__).'/ProxiedService/Http/Get.php');
 include_once(dirname(__FILE__).'/ProxiedService/Http/Post.php');
 include_once(dirname(__FILE__).'/ProxiedService/Imap.php');
 
+// include Exception classes
+include_once(dirname(__FILE__).'/ProxyTicketException.php');
+
+
 /**
  * @class CASClient
  * The CASClient class is a client interface that provides CAS authentication

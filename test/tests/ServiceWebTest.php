@@ -112,6 +112,41 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
 		));
 		$response->setResponseBody("Hello from the service.");
 		CAS_TestHarness_DummyRequest::addResponse($response);		
+		
+		
+		/*********************************************************
+		 * 2. Proxy Ticket Error
+		 *********************************************************/
+		 
+		// Error Proxy ticket Response
+		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/proxy');
+		$response->matchQueryParameters(array(
+			'targetService' => 'http://www.service.com/my_other_webservice',
+			'pgt' => 'PGT-clientapp-abc123',
+		));
+		$response->setResponseHeaders(array(
+			'HTTP/1.1 200 OK',
+			'Date: Wed, 29 Sep 2010 19:20:57 GMT',
+			'Server: Apache-Coyote/1.1',
+			'Pragma: no-cache',
+			'Expires: Thu, 01 Jan 1970 00:00:00 GMT',
+			'Cache-Control: no-cache, no-store',
+			'Content-Type: text/html;charset=UTF-8',
+			'Content-Language: en-US',
+			'Via: 1.1 cas.example.edu',
+			'Connection: close',
+			'Transfer-Encoding: chunked',
+		));
+		$response->setResponseBody(
+"<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+    <cas:proxyFailure code='INTERNAL_ERROR'>
+        an internal error occurred during ticket validation
+    </cas:proxyFailure>
+</cas:serviceResponse>
+");
+		
+		$response->ensureCaCertPathEquals('/path/to/ca_cert.crt');
+		CAS_TestHarness_DummyRequest::addResponse($response);
     }
 
     /**
@@ -140,5 +175,19 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(PHPCAS_SERVICE_OK, $err_code);
 		$this->assertEquals("Hello from the service.", $output);
     }
+    
+    /**
+    /**
+     * Verify that a CAS_ProxyTicketException is thrown if we try to access a service
+     * that results in a proxy-ticket failure.
+     *
+     * @expectedException CAS_ProxyTicketException
+     */
+    public function test_pt_exception() {
+    	$service = $this->object->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
+    	$service->setUrl('http://www.service.com/my_other_webservice');
+    	$this->assertFalse($service->send(), 'Sending should have failed');
+    }
+    
 }
 ?>
