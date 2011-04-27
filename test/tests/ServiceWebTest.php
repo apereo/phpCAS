@@ -62,6 +62,11 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
 		 * Enumerate our responses
 		 *********************************************************/
 		
+		
+		/*********************************************************
+		 * 1. Valid Proxy ticket and service
+		 *********************************************************/
+		 
 		// Proxy ticket Response
 		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/proxy');
 		$response->matchQueryParameters(array(
@@ -90,7 +95,6 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
 ");
 		$response->ensureCaCertPathEquals('/path/to/ca_cert.crt');
 		CAS_TestHarness_DummyRequest::addResponse($response);
-		
 		
 		// Valid Service Response
 		$response = new CAS_TestHarness_BasicResponse('http', 'www.service.com', '/my_webservice');
@@ -147,6 +151,39 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
 		
 		$response->ensureCaCertPathEquals('/path/to/ca_cert.crt');
 		CAS_TestHarness_DummyRequest::addResponse($response);
+		
+		/*********************************************************
+		 * 3. Server that doesn't respond/exist (sending failure)
+		 *********************************************************/
+		
+		// Proxy ticket Response
+		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/proxy');
+		$response->matchQueryParameters(array(
+			'targetService' => 'ssh://me.example.net',
+			'pgt' => 'PGT-clientapp-abc123',
+		));
+		$response->setResponseHeaders(array(
+			'HTTP/1.1 200 OK',
+			'Date: Wed, 29 Sep 2010 19:20:57 GMT',
+			'Server: Apache-Coyote/1.1',
+			'Pragma: no-cache',
+			'Expires: Thu, 01 Jan 1970 00:00:00 GMT',
+			'Cache-Control: no-cache, no-store',
+			'Content-Type: text/html;charset=UTF-8',
+			'Content-Language: en-US',
+			'Via: 1.1 cas.example.edu',
+			'Connection: close',
+			'Transfer-Encoding: chunked',
+		));
+		$response->setResponseBody(
+"<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+    <cas:proxySuccess>
+        <cas:proxyTicket>PT-ssh-1234abce</cas:proxyTicket>
+    </cas:proxySuccess>
+</cas:serviceResponse>
+");
+		$response->ensureCaCertPathEquals('/path/to/ca_cert.crt');
+		CAS_TestHarness_DummyRequest::addResponse($response);
     }
 
     /**
@@ -177,6 +214,16 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Direct usage of the Proxied GET service.
+     */
+    public function test_http_get() {
+    	$service = $this->object->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
+    	$service->setUrl('http://www.service.com/my_webservice');
+    	$this->assertTrue($service->send(), 'Sending should have succeeded.');
+    	$this->assertEquals(200, $service->getResponseStatusCode());
+    	$this->assertEquals("Hello from the service.", $service->getResponseBody());
+    }
+    
     /**
      * Verify that a CAS_ProxyTicketException is thrown if we try to access a service
      * that results in a proxy-ticket failure.
@@ -187,6 +234,17 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
     	$service = $this->object->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
     	$service->setUrl('http://www.service.com/my_other_webservice');
     	$this->assertFalse($service->send(), 'Sending should have failed');
+    }
+    
+    /**
+     * Verify that sending fails if we try to access a service
+     * that has a valid proxy ticket, but where the service has a sending error.
+     */
+    public function test_http_get_service_failure() {
+    	$service = $this->object->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
+    	$service->setUrl('ssh://me.example.net');
+    	$this->assertFalse($service->send(), 'Sending should have failed');
+    	$this->assertGreaterThan(0, strlen($service->getErrorMessage()));
     }
     
 }
