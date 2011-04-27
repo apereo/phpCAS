@@ -2546,7 +2546,7 @@ class CASClient
 				$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
 				return FALSE;
 			}
-		} catch (CAS_ProxiedService_Exception $e) {
+		} catch (CAS_ProxyTicketException $e) {
 			$err_code = $e->getCode();
 			$output = $e->getMessage();
 			return FALSE;

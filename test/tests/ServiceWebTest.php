@@ -269,6 +269,16 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Verify that proxy-ticket Exceptions are caught and converted to error codes in serviceWeb().
+     */
+    public function test_serviceWeb_pt_error() {
+		$result = $this->object->serviceWeb('http://www.service.com/my_other_webservice', $err_code, $output);
+		$this->assertFalse($result, "serviceWeb() should have returned false on a PT error.");
+		$this->assertEquals(PHPCAS_SERVICE_PT_FAILURE, $err_code);
+		$this->assertStringStartsWith("PT retrieving failed", $output);
+    }
+    
+    /**
      * Direct usage of the Proxied GET service.
      */
     public function test_http_get() {
