@@ -184,6 +184,61 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
 ");
 		$response->ensureCaCertPathEquals('/path/to/ca_cert.crt');
 		CAS_TestHarness_DummyRequest::addResponse($response);
+		
+		/*********************************************************
+		 * 4. Service With Error status.
+		 *********************************************************/
+		
+		// Proxy ticket Response
+		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/proxy');
+		$response->matchQueryParameters(array(
+			'targetService' => 'http://www.service.com/my_webservice_that_has_problems',
+			'pgt' => 'PGT-clientapp-abc123',
+		));
+		$response->setResponseHeaders(array(
+			'HTTP/1.1 200 OK',
+			'Date: Wed, 29 Sep 2010 19:20:57 GMT',
+			'Server: Apache-Coyote/1.1',
+			'Pragma: no-cache',
+			'Expires: Thu, 01 Jan 1970 00:00:00 GMT',
+			'Cache-Control: no-cache, no-store',
+			'Content-Type: text/html;charset=UTF-8',
+			'Content-Language: en-US',
+			'Via: 1.1 cas.example.edu',
+			'Connection: close',
+			'Transfer-Encoding: chunked',
+		));
+		$response->setResponseBody(
+"<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+    <cas:proxySuccess>
+        <cas:proxyTicket>PT-12345-abscasdfasdf</cas:proxyTicket>
+    </cas:proxySuccess>
+</cas:serviceResponse>
+");
+		$response->ensureCaCertPathEquals('/path/to/ca_cert.crt');
+		CAS_TestHarness_DummyRequest::addResponse($response);
+		
+		// Service Error Response
+		$response = new CAS_TestHarness_BasicResponse('http', 'www.service.com', '/my_webservice_that_has_problems');
+		$response->matchQueryParameters(array(
+			'ticket' => 'PT-12345-abscasdfasdf',
+		));
+		$response->setResponseHeaders(array(
+			'HTTP/1.1 500 INTERNAL SERVER ERROR',
+			'Date: Wed, 29 Sep 2010 19:20:57 GMT',
+			'Server: Apache-Coyote/1.1',
+			'Pragma: no-cache',
+			'Expires: Thu, 01 Jan 1970 00:00:00 GMT',
+			'Cache-Control: no-cache, no-store',
+			'Content-Type: text/plain;charset=UTF-8',
+			'Content-Language: en-US',
+			'Via: 1.1 cas.example.edu',
+			'Connection: close',
+			'Transfer-Encoding: chunked',
+		));
+		$response->setResponseBody("Problems have Occurred.");
+		CAS_TestHarness_DummyRequest::addResponse($response);		
+		
     }
 
     /**
@@ -247,5 +302,16 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
     	$this->assertGreaterThan(0, strlen($service->getErrorMessage()));
     }
     
+    /**
+     * Verify that sending fails if we try to access a service
+     * that has a valid proxy ticket, but where the service has a sending error.
+     */
+    public function test_http_get_service_500_error() {
+    	$service = $this->object->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
+    	$service->setUrl('http://www.service.com/my_webservice_that_has_problems');
+    	$this->assertTrue($service->send(), 'Sending should have been successful even though the response is an error response');
+    	$this->assertEquals(500, $service->getResponseStatusCode());
+    	$this->assertEquals("Problems have Occurred.", $service->getResponseBody());
+    }
 }
 ?>

@@ -149,6 +149,13 @@ abstract class CAS_ProxiedService_Http_Abstract
 	private $_responseHeaders = array();
 	
 	/**
+	 * The response status code.
+	 *
+	 * @var string $_responseStatusCode;  
+	 */
+	private $_responseStatusCode = '';
+	
+	/**
 	 * The response headers.
 	 *
 	 * @var string $_responseBody;  
@@ -207,6 +214,7 @@ abstract class CAS_ProxiedService_Http_Abstract
 			
 			$this->_responseHeaders = $request->getResponseHeaders();
 			$this->_responseBody = $request->getResponseBody();
+			$this->_responseStatusCode = $request->getResponseStatusCode();
 			return true;
 		}
 	}
@@ -259,6 +267,19 @@ abstract class CAS_ProxiedService_Http_Abstract
 			throw new CAS_OutOfSequenceException('Cannot access response, request not sent yet.');
 		
 		return $this->_responseHeaders;
+	}
+	
+	/**
+	 * Answer HTTP status code of the response
+	 *
+	 * @return integer
+	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
+	 */
+	public function getResponseStatusCode () {
+		if (!$this->hasBeenSent())
+			throw new CAS_OutOfSequenceException('Cannot access response, request not sent yet.');
+		
+		return $this->_responseStatusCode;
 	}
 
 	/**

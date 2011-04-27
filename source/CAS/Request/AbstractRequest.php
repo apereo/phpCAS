@@ -251,6 +251,22 @@ abstract class CAS_AbstractRequest
 
 		return $this->responseHeaders;
 	}
+	
+	/**
+	 * Answer HTTP status code of the response
+	 *
+	 * @return integer
+	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
+	 */
+	public function getResponseStatusCode () {
+		if (!$this->sent)
+			throw new CAS_OutOfSequenceException('Request has not been sent yet. Cannot '.__METHOD__);
+		
+		if (!preg_match('/HTTP\/[0-9.]+\s+([0-9]+)\s*(.*)/', $this->responseHeaders[0], $matches))
+			throw new Exception("Bad response, no status code was found in the first line.");
+		
+		return intval($matches[1]);
+	}
 
 	/**
 	 * Answer the body of response.
