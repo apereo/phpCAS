@@ -193,6 +193,19 @@ define("PHPCAS_SERVICE_PT_FAILURE", 3);
  */
 define("PHPCAS_SERVICE_NOT_AVAILABLE", 4);
 
+// ------------------------------------------------------------------------
+// SERVICE TYPES
+// ------------------------------------------------------------------------
+/**
+ * phpCAS::getProxiedService() type for HTTP GET
+ */
+define("PHPCAS_PROXIED_SERVICE_HTTP_GET", 'CAS_ProxiedService_Http_Get');
+/**
+ * phpCAS::getProxiedService() type for HTTP POST
+ */
+define("PHPCAS_PROXIED_SERVICE_HTTP_POST", 'CAS_ProxiedService_Http_Post');
+
+
 /** @} */
 // ------------------------------------------------------------------------
 //  LANGUAGES
