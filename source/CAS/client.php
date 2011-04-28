@@ -1521,7 +1521,7 @@ class CASClient
 		}
 
 		// open and read the URL
-		if ( !$this->readURL($validate_url,array(),$headers,$text_response,$err_msg) ) {
+		if ( !$this->readURL($validate_url,$headers,$text_response,$err_msg) ) {
 			phpCAS::trace('could not open URL \''.$validate_url.'\' to validate ('.$err_msg.')');
 			$this->authError('ST not validated',
 			$validate_url,
@@ -1791,7 +1791,7 @@ class CASClient
 		$validate_url = $this->getServerSamlValidateURL();
 
 		// open and read the URL
-		if ( !$this->readURL($validate_url,array(),$headers,$text_response,$err_msg) ) {
+		if ( !$this->readURL($validate_url,$headers,$text_response,$err_msg) ) {
 			phpCAS::trace('could not open URL \''.$validate_url.'\' to validate ('.$err_msg.')');
 			$this->authError('SA not validated', $validate_url, TRUE/*$no_response*/);
 		}
@@ -2294,7 +2294,7 @@ class CASClient
 		$cas_url = $this->getServerProxyURL().'?targetService='.urlencode($target_service).'&pgt='.$this->getPGT();
 
 		// open and read the URL
-		if ( !$this->readURL($cas_url,array(),$headers,$cas_response,$err_msg) ) {
+		if ( !$this->readURL($cas_url,$headers,$cas_response,$err_msg) ) {
 			phpCAS::trace('could not open URL \''.$cas_url.'\' to validate ('.$err_msg.')');
 			$err_code = PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE;
 			$err_msg = 'could not retrieve PT (no response from the CAS server)';
@@ -2386,7 +2386,6 @@ class CASClient
 	 * This method is used to acces a remote URL.
 	 *
 	 * @param $url the URL to access.
-	 * @param $cookies an array containing cookies strings such as 'name=val'
 	 * @param $headers an array containing the HTTP header lines of the response
 	 * (an empty array on failure).
 	 * @param $body the body of the response, as a string (empty on failure).
@@ -2395,7 +2394,7 @@ class CASClient
 	 * @return TRUE on success, FALSE otherwise (in this later case, $err_msg
 	 * contains an error message).
 	 */
-	private function readURL($url, array $cookies, &$headers, &$body, &$err_msg)
+	private function readURL($url, &$headers, &$body, &$err_msg)
 	{
 		$className = $this->_requestImplementation;
 		$request = new $className();
@@ -2405,8 +2404,7 @@ class CASClient
 		}
 
 		$request->setUrl($url);
-		$request->addCookies($cookies);
-
+		
 		if (empty($this->_cas_server_ca_cert) && !$this->_no_cas_server_validation) {
 			phpCAS::error('one of the methods phpCAS::setCasServerCACert() or phpCAS::setNoCasServerValidation() must be called.');
 		}
@@ -2737,7 +2735,7 @@ class CASClient
 		}
 
 		// open and read the URL
-		if ( !$this->readURL($validate_url,array(),$headers,$text_response,$err_msg) ) {
+		if ( !$this->readURL($validate_url,$headers,$text_response,$err_msg) ) {
 			phpCAS::trace('could not open URL \''.$validate_url.'\' to validate ('.$err_msg.')');
 			$this->authError('PT not validated',
 			$validate_url,
