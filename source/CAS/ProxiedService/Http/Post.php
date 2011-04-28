@@ -29,6 +29,9 @@
  */
 
 require_once(dirname(__FILE__).'/Abstract.php');
+include_once(dirname(__FILE__).'/../Exception.php');
+include_once(dirname(__FILE__).'/../../InvalidArgumentException.php');
+include_once(dirname(__FILE__).'/../../OutOfSequenceException.php');
 
 /**
  * This class is used to make proxied service requests via the HTTP GET method.
@@ -87,7 +90,7 @@ class CAS_ProxiedService_Http_Post
 	 */
 	protected function populateRequest (CAS_RequestInterface $request) {
 		if (empty($this->_contentType) && !empty($this->_body))
-			throw new Exception("If you pass a POST body, you must specify a content type via ".get_class($this).'->setContentType($contentType).');
+			throw new CAS_ProxiedService_Exception("If you pass a POST body, you must specify a content type via ".get_class($this).'->setContentType($contentType).');
 		
 		$request->makePost();
 		$request->addHeader('Content-Type: '.$this->_contentType);

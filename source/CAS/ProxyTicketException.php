@@ -34,7 +34,8 @@ require_once(dirname(__FILE__).'/Exception.php');
  * An Exception for errors related to fetching or validating proxy tickets.
  */
 class CAS_ProxyTicketException
-	extends CAS_Exception
+	extends BadMethodCallException
+	implements CAS_Exception
 {
 	
 	/**

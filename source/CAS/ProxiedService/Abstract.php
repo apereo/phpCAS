@@ -30,6 +30,9 @@
 
 require_once(dirname(__FILE__).'/../ProxiedService.php');
 require_once(dirname(__FILE__).'/Testable.php');
+include_once(dirname(__FILE__).'/../InvalidArgumentException.php');
+include_once(dirname(__FILE__).'/../OutOfSequenceException.php');
+
 
 /**
  * This class implements common methods for ProxiedService implementations included
@@ -55,7 +58,7 @@ abstract class CAS_ProxiedService_Abstract
 	 */
 	public function setProxyTicket ($proxyTicket) {
 		if (empty($proxyTicket))
-			throw new InvalidArgumentException("Trying to initialize with an empty proxy ticket.");
+			throw new CAS_InvalidArgumentException("Trying to initialize with an empty proxy ticket.");
 		if (!empty($this->_proxyTicket))
 			throw new CAS_OutOfSequenceException('Already initialized, cannot change the proxy ticket.');
 		

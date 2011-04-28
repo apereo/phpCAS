@@ -28,24 +28,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+require_once(dirname(__FILE__).'/Exception.php');
 
 /**
- * A root exception interface for all exceptions in phpCAS.
- *
- * All exceptions thrown in phpCAS should implement this interface to allow them
- * to be caught as a category by clients. Each phpCAS exception should extend
- * an appropriate SPL exception class that best fits its type.
- *
- * For example, an InvalidArgumentException in phpCAS should be defined as
- *
- *		class CAS_InvalidArgumentException 
- *			extends InvalidArgumentException 
- *			implements CAS_Exception
- *		{ }
- *
- * This definition allows the CAS_InvalidArgumentException to be caught as either 
- * an InvalidArgumentException or as a CAS_Exception.
+ * This class defines Exceptions that should be thrown when the sequence of operations
+ * is invalid. Examples are:
+ *		- Requesting the response before executing a request.
+ *		- Changing the URL of a request after executing the request.
  */
-interface CAS_Exception {
+class CAS_OutOfSequenceException
+	extends BadMethodCallException
+	implements CAS_Exception
+{
 
 }

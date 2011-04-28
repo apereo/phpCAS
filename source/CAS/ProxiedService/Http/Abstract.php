@@ -30,6 +30,9 @@
 
 require_once(dirname(__FILE__).'/../Abstract.php');
 require_once(dirname(__FILE__).'/../Http.php');
+include_once(dirname(__FILE__).'/../Exception.php');
+include_once(dirname(__FILE__).'/../../InvalidArgumentException.php');
+include_once(dirname(__FILE__).'/../../OutOfSequenceException.php');
 
 
 /**
@@ -80,7 +83,7 @@ abstract class CAS_ProxiedService_Http_Abstract
 	 */
 	public function getServiceUrl () {
 		if (empty($this->_url))
-			throw new Exception('No URL set via '.get_class($this).'->setUrl($url).');
+			throw new CAS_ProxiedService_Exception('No URL set via '.get_class($this).'->setUrl($url).');
 		
 		return $this->_url;
 	}
@@ -100,7 +103,7 @@ abstract class CAS_ProxiedService_Http_Abstract
 		if ($this->hasBeenSent())
 			throw new CAS_OutOfSequenceException('Cannot set the URL, request already sent.');
 		if (!is_string($url))
-			throw new InvalidArgumentException('$url must be a string.');
+			throw new CAS_InvalidArgumentException('$url must be a string.');
 		
 		$this->_url = $url;
 	}

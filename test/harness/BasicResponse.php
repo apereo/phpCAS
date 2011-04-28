@@ -29,6 +29,9 @@
  */
 
 require_once dirname(__FILE__).'/ResponseInterface.php';
+require_once dirname(__FILE__).'/../../source/CAS/OutOfSequenceException.php';
+require_once dirname(__FILE__).'/../../source/CAS/Request/Exception.php';
+
 
 /**
  * The BasicResponse allows tests to dynamically create a response that can be used
@@ -267,7 +270,7 @@ class CAS_TestHarness_BasicResponse
 			throw new CAS_OutOfSequenceException('Request has not been sent yet. Cannot '.__METHOD__);
 		
 		if (!preg_match('/HTTP\/[0-9.]+\s+([0-9]+)\s*(.*)/', $this->responseHeaders[0], $matches))
-			throw new Exception("Bad response, no status code was found in the first line.");
+			throw new CAS_Request_Exception("Bad response, no status code was found in the first line.");
 		
 		return intval($matches[1]);
 	}

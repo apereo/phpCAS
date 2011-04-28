@@ -29,6 +29,9 @@
  */
 
 require_once(dirname(__FILE__).'/Abstract.php');
+include_once(dirname(__FILE__).'/../Exception.php');
+include_once(dirname(__FILE__).'/../InvalidArgumentException.php');
+include_once(dirname(__FILE__).'/../OutOfSequenceException.php');
 
 /**
  * Provides access to a proxy-authenticated IMAP stream
@@ -52,7 +55,7 @@ class CAS_ProxiedService_Imap
 	 */
 	public function __construct ($username) {
 		if (!is_string($username) || !strlen($username))
-			throw new InvalidArgumentException('Invalid username.');
+			throw new CAS_InvalidArgumentException('Invalid username.');
 		
 		$this->_username = $username;
 	}
@@ -71,7 +74,7 @@ class CAS_ProxiedService_Imap
 	 */
 	public function getServiceUrl () {
 		if (empty($this->_url))
-			throw new Exception('No URL set via '.get_class($this).'->getServiceUrl($url).');
+			throw new CAS_ProxiedService_Exception('No URL set via '.get_class($this).'->getServiceUrl($url).');
 		
 		return $this->_url;
 	}
@@ -91,7 +94,7 @@ class CAS_ProxiedService_Imap
 		if ($this->hasBeenOpened())
 			throw new CAS_OutOfSequenceException('Cannot set the URL, stream already opened.');
 		if (!is_string($url) || !strlen($url))
-			throw new InvalidArgumentException('Invalid url.');
+			throw new CAS_InvalidArgumentException('Invalid url.');
 		
 		$this->_url = $url;
 	}
@@ -114,7 +117,7 @@ class CAS_ProxiedService_Imap
 		if ($this->hasBeenOpened())
 			throw new CAS_OutOfSequenceException('Cannot set the mailbox, stream already opened.');
 		if (!is_string($mailbox) || !strlen($mailbox))
-			throw new InvalidArgumentException('Invalid mailbox.');
+			throw new CAS_InvalidArgumentException('Invalid mailbox.');
 		
 		$this->_mailbox = $mailbox;
 	}
@@ -137,7 +140,7 @@ class CAS_ProxiedService_Imap
 		if ($this->hasBeenOpened())
 			throw new CAS_OutOfSequenceException('Cannot set options, stream already opened.');
 		if (!is_int($options))
-			throw new InvalidArgumentException('Invalid options.');
+			throw new CAS_InvalidArgumentException('Invalid options.');
 		
 		$this->_options = $options;
 	}
@@ -156,7 +159,7 @@ class CAS_ProxiedService_Imap
 		if ($this->hasBeenOpened())
 			throw new CAS_OutOfSequenceException('Stream already opened.');
 		if (empty($this->_mailbox))
-			throw new Exception('You must specify a mailbox via '.get_class($this).'->setMailbox($mailbox)');
+			throw new CAS_ProxiedService_Exception('You must specify a mailbox via '.get_class($this).'->setMailbox($mailbox)');
 		
 		phpCAS::traceBegin();
 		

@@ -162,15 +162,3 @@ interface CAS_RequestInterface {
 	 */
 	public function getErrorMessage ();
 }
-
-/**
- * This class defines Exceptions that should be thrown when the sequence of operations
- * is invalid. Examples are:
- *		- Requesting the response before executing a request.
- *		- Changing the URL of a request after executing the request.
- */
-class CAS_OutOfSequenceException
-	extends BadMethodCallException
-{
-
-}

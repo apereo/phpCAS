@@ -34,7 +34,8 @@ require_once(dirname(__FILE__).'/../Exception.php');
  * An Exception for problems communicating with a proxied service.
  */
 class CAS_ProxiedService_Exception
-	extends CAS_Exception
+	extends Exception
+	implements CAS_Exception
 {
 
 }

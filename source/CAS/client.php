@@ -50,10 +50,11 @@ include_once(dirname(__FILE__).'/Request/CurlRequest.php');
 include_once(dirname(__FILE__).'/ProxiedService/Http/Get.php');
 include_once(dirname(__FILE__).'/ProxiedService/Http/Post.php');
 include_once(dirname(__FILE__).'/ProxiedService/Imap.php');
-include_once(dirname(__FILE__).'/ProxiedService/Exception.php');
 
 // include Exception classes
+include_once(dirname(__FILE__).'/ProxiedService/Exception.php');
 include_once(dirname(__FILE__).'/ProxyTicketException.php');
+include_once(dirname(__FILE__).'/InvalidArgumentException.php');
 
 
 /**
@@ -658,7 +659,7 @@ class CASClient
 	public function setRequestImplementation ($className) {
 		$obj = new $className;
 		if (!($obj instanceof CAS_RequestInterface))
-		throw new InvalidArgumentException('$className must implement the CAS_RequestInterface');
+		throw new CAS_InvalidArgumentException('$className must implement the CAS_RequestInterface');
 
 		$this->_requestImplementation = $className;
 	}
@@ -2496,7 +2497,7 @@ class CASClient
 					$proxiedService->setCasClient($this);
 				return $proxiedService;
 			default:
-				throw new InvalidArgumentException("Unknown proxied-service type, $type.");
+				throw new CAS_InvalidArgumentException("Unknown proxied-service type, $type.");
 		}
 	}
 	
