@@ -50,6 +50,7 @@ include_once(dirname(__FILE__).'/Request/CurlRequest.php');
 include_once(dirname(__FILE__).'/ProxiedService/Http/Get.php');
 include_once(dirname(__FILE__).'/ProxiedService/Http/Post.php');
 include_once(dirname(__FILE__).'/ProxiedService/Imap.php');
+include_once(dirname(__FILE__).'/ProxiedService/Exception.php');
 
 // include Exception classes
 include_once(dirname(__FILE__).'/ProxyTicketException.php');
@@ -2511,9 +2512,14 @@ class CASClient
 	 *			PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE 
 	 *			PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE
 	 *			PHPCAS_SERVICE_PT_FAILURE
+	 * @throws CAS_ProxiedService_Exception If there is a failure getting the url from the proxied service.
 	 */
 	public function initializeProxiedService (CAS_ProxiedService $proxiedService) {
-		$pt = $this->retrievePT($proxiedService->getServiceUrl(), $err_code, $err_msg);
+		$url = $proxiedService->getServiceUrl();
+		if (!is_string($url))
+			throw new CAS_ProxiedService_Exception("Proxied Service ".get_class($proxiedService)."->getServiceUrl() should have returned a string, returned a ".gettype($url)." instead.");
+		
+		$pt = $this->retrievePT($url, $err_code, $err_msg);
 		if (!$pt)
 			throw new CAS_ProxyTicketException($err_msg, $err_code);
 		$proxiedService->setProxyTicket($pt);

@@ -99,6 +99,8 @@ abstract class CAS_ProxiedService_Http_Abstract
 	public function setUrl ($url) {
 		if ($this->hasBeenSent())
 			throw new CAS_OutOfSequenceException('Cannot set the URL, request already sent.');
+		if (!is_string($url))
+			throw new InvalidArgumentException('$url must be a string.');
 		
 		$this->_url = $url;
 	}
