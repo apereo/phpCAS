@@ -2589,7 +2589,7 @@ class CASClient
 				$pt = FALSE;
 				return FALSE;
 			}
-		} catch (CAS_ProxiedService_Exception $e) {
+		} catch (CAS_ProxyTicketException $e) {
 			$err_msg = $e->getMessage();
 			$err_code = $e->getCode();
 			$pt = FALSE;
