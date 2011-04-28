@@ -303,11 +303,11 @@ class CAS_TestHarness_BasicResponse
 	 */
 	public function validateRequestHeaders (array $headers) {
 		foreach ($this->headersToHave as $headerToCheck) {
-			if (!in_array($headers, headerToCheck))
+			if (!in_array($headerToCheck, $headers))
 				return false;
 		}
 		foreach ($this->headersToNotHave as $headerToCheck) {
-			if (in_array($headers, headerToCheck))
+			if (in_array($headerToCheck, $headers))
 				return false;
 		}
 		return true;
@@ -355,7 +355,7 @@ class CAS_TestHarness_BasicResponse
 	 * @return boolean TRUE if the post body is valid.
 	 */
 	public function validatePostBody ($postBody) {
-		if (!is_null($this->postBodyToMatch) && $this->postBodyToMatch != $postBodyToMatch) {
+		if (!is_null($this->postBodyToMatch) && $this->postBodyToMatch != $postBody) {
 			return false;
 		}
 		return true;
