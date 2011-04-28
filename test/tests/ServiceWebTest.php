@@ -359,7 +359,7 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
     public function test_http_get() {
     	$service = $this->object->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
     	$service->setUrl('http://www.service.com/my_webservice');
-    	$this->assertTrue($service->send(), 'Sending should have succeeded.');
+    	$service->send();
     	$this->assertEquals(200, $service->getResponseStatusCode());
     	$this->assertEquals("Hello from the service.", $service->getResponseBody());
     }
@@ -379,22 +379,23 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
     /**
      * Verify that sending fails if we try to access a service
      * that has a valid proxy ticket, but where the service has a sending error.
+     *
+     * @expectedException CAS_ProxiedService_Exception
      */
     public function test_http_get_service_failure() {
     	$service = $this->object->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
     	$service->setUrl('ssh://me.example.net');
-    	$this->assertFalse($service->send(), 'Sending should have failed');
-    	$this->assertGreaterThan(0, strlen($service->getErrorMessage()));
+    	$service->send();
     }
     
     /**
      * Verify that sending fails if we try to access a service
-     * that has a valid proxy ticket, but where the service has a sending error.
+     * that has a valid proxy ticket, but where the service sends an HTTP error status.
      */
     public function test_http_get_service_500_error() {
     	$service = $this->object->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
     	$service->setUrl('http://www.service.com/my_webservice_that_has_problems');
-    	$this->assertTrue($service->send(), 'Sending should have been successful even though the response is an error response');
+    	$service->send();
     	$this->assertEquals(500, $service->getResponseStatusCode());
     	$this->assertEquals("Problems have Occurred.", $service->getResponseBody());
     }
@@ -407,7 +408,7 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
     	$service->setUrl('http://www.service.com/post_webservice');
     	$service->setBody('<request><method>doSomething</method><param type="string">with this</param></request>');
     	$service->setContentType('text/xml');
-    	$this->assertTrue($service->send(), 'Sending should have succeeded. Error: '.$service->getErrorMessage());
+    	$service->send();
     	$this->assertEquals(200, $service->getResponseStatusCode());
     	$this->assertEquals("<result><string>Yay, it worked.</string></result>", $service->getResponseBody());
     }

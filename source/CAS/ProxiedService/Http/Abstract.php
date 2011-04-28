@@ -115,8 +115,14 @@ abstract class CAS_ProxiedService_Http_Abstract
 	/**
 	 * Perform the request.
 	 *
-	 * @return boolean TRUE on success, FALSE on failure.
+	 * @return void
 	 * @throws CAS_OutOfSequenceException If called multiple times.
+	 * @throws CAS_ProxyTicketException If there is a proxy-ticket failure.
+	 *		The code of the Exception will be one of: 
+	 *			PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE 
+	 *			PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE
+	 *			PHPCAS_SERVICE_PT_FAILURE
+	 * @throws CAS_ProxiedService_Exception If there is a failure sending the request to the target service.
 	 */
 	public function send () {
 		if ($this->hasBeenSent())
@@ -133,10 +139,12 @@ abstract class CAS_ProxiedService_Http_Abstract
 			$url = $url.'&ticket='.$this->getProxyTicket();
 		}
 		
-		$result = $this->makeRequest($url);
-		
-		phpCAS::traceEnd($result);
-		return $result;
+		try {
+			$this->makeRequest($url);
+		} catch (Exception $e) {
+			phpCAS::traceEnd();
+			throw $e;
+		}
 	}
 	
 	/**
@@ -168,25 +176,24 @@ abstract class CAS_ProxiedService_Http_Abstract
 	private $_responseBody = '';
 	
 	/**
-	 * The Error Message
-	 *
-	 * @var string $_errorMessage;  
-	 */
-	private $_errorMessage = '';
-	
-	/**
 	 * Build and perform a request, following redirects
 	 * 
 	 * @param string $url
-	 * @return boolean TRUE on success, FALSE otherwise.
+	 * @return void
+	 * @throws CAS_ProxyTicketException If there is a proxy-ticket failure.
+	 *		The code of the Exception will be one of: 
+	 *			PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE 
+	 *			PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE
+	 *			PHPCAS_SERVICE_PT_FAILURE
+	 * @throws CAS_ProxiedService_Exception If there is a failure sending the request to the target service.
 	 */
 	protected function makeRequest ($url) {
 		// Verify that we are not in a redirect loop
 		$this->_numRequests++;
 		if ($this->_numRequests > 4) {
-			$this->_errorMessage = 'Exceeded the maximum number of redirects (3) in proxied service request.';
-			phpCAS::trace($this->_errorMessage);
-			return FALSE;
+			$message = 'Exceeded the maximum number of redirects (3) in proxied service request.';
+			phpCAS::trace($message);
+			throw new CAS_ProxiedService_Exception($message);
 		}
 		
 		// Create a new request.
@@ -202,10 +209,9 @@ abstract class CAS_ProxiedService_Http_Abstract
 		// Perform the request.
 		phpCAS::trace('Performing proxied service request to \''.$url.'\'');
 		if (!$request->send()) {
-			$this->_errorMessage = $request->getErrorMessage();
-			phpCAS::trace($this->_errorMessage);
-			phpCAS::trace('Could not perform proxied service request to URL`'.$url.'\'');
-			return false;
+			$message = 'Could not perform proxied service request to URL`'.$url.'\'. '.$request->getErrorMessage();
+			phpCAS::trace($message);
+			throw new CAS_ProxiedService_Exception($message);
 		}
 		
 		// Store any cookies from the response;
@@ -214,13 +220,12 @@ abstract class CAS_ProxiedService_Http_Abstract
 		// Follow any redirects
 		if ($redirectUrl = $this->getRedirectUrl($request->getResponseHeaders())) {
 			phpCAS :: trace('Found redirect:'.$redirectUrl);
-			return $this->makeRequest($redirectUrl);
+			$this->makeRequest($redirectUrl);
 		} else {
 			
 			$this->_responseHeaders = $request->getResponseHeaders();
 			$this->_responseBody = $request->getResponseBody();
 			$this->_responseStatusCode = $request->getResponseStatusCode();
-			return true;
 		}
 	}
 	
@@ -298,19 +303,6 @@ abstract class CAS_ProxiedService_Http_Abstract
 			throw new CAS_OutOfSequenceException('Cannot access response, request not sent yet.');
 		
 		return $this->_responseBody;
-	}
-
-	/**
-	 * Answer a message describing any errors if the request failed.
-	 *
-	 * @return string
-	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
-	 */
-	public function getErrorMessage () {
-		if (!$this->hasBeenSent())
-			throw new CAS_OutOfSequenceException('Cannot access response, request not sent yet.');
-		
-		return $this->_errorMessage;
 	}
 	
 }

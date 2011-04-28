@@ -2542,18 +2542,17 @@ class CASClient
 		try {
 			$service = $this->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
 			$service->setUrl($url);
-			if ($service->send()) {
-				$output = $service->getResponseBody();
-				$err_code = PHPCAS_SERVICE_OK;
-				return TRUE;
-			} else {
-				$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE), $url, $service->getErrorMessage());
-				$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
-				return FALSE;
-			}
+			$service->send();
+			$output = $service->getResponseBody();
+			$err_code = PHPCAS_SERVICE_OK;
+			return TRUE;
 		} catch (CAS_ProxyTicketException $e) {
 			$err_code = $e->getCode();
 			$output = $e->getMessage();
+			return FALSE;
+		} catch (CAS_ProxiedService_Exception $e) {
+			$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE), $url, $e->getMessage());
+			$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
 			return FALSE;
 		}
 	}
@@ -2584,19 +2583,17 @@ class CASClient
 			$service->setOptions($flags);
 			
 			$stream = $service->open();
-			if ($stream) {
-				$err_code = PHPCAS_SERVICE_OK;
-				$pt = $service->getImapProxyTicket();
-				return $stream;
-			} else {
-				$err_msg = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE), $url, $service->getErrorMessage());
-				$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
-				$pt = FALSE;
-				return FALSE;
-			}
+			$err_code = PHPCAS_SERVICE_OK;
+			$pt = $service->getImapProxyTicket();
+			return $stream;
 		} catch (CAS_ProxyTicketException $e) {
 			$err_msg = $e->getMessage();
 			$err_code = $e->getCode();
+			$pt = FALSE;
+			return FALSE;
+		} catch (CAS_ProxiedService_Exception $e) {
+			$err_msg = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE), $url, $e->getMessage());
+			$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
 			$pt = FALSE;
 			return FALSE;
 		}

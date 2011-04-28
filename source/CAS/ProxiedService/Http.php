@@ -78,12 +78,5 @@ interface CAS_ProxiedService_Http {
 	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
 	 */
 	public function getResponseBody ();
-
-	/**
-	 * Answer a message describing any errors if the request failed.
-	 *
-	 * @return string
-	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
-	 */
-	public function getErrorMessage ();
+	
 }

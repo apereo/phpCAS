@@ -152,9 +152,14 @@ class CAS_ProxiedService_Imap
 	/**
 	 * Open the IMAP stream (similar to imap_open()).
 	 *
-	 * @return resource Returns an IMAP stream on success or FALSE on error. 
+	 * @return resource Returns an IMAP stream on success
 	 * @throws CAS_OutOfSequenceException If called multiple times.
-	 */
+	 * @throws CAS_ProxyTicketException If there is a proxy-ticket failure.
+	 *		The code of the Exception will be one of: 
+	 *			PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE 
+	 *			PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE
+	 *			PHPCAS_SERVICE_PT_FAILURE
+	 * @throws CAS_ProxiedService_Exception If there is a failure sending the request to the target service.	 */
 	public function open () {
 		if ($this->hasBeenOpened())
 			throw new CAS_OutOfSequenceException('Stream already opened.');
@@ -173,10 +178,12 @@ class CAS_ProxiedService_Imap
 			phpCAS::trace('could not open mailbox');
 			// @todo add localization integration.
 // 			$this->_errorMessage = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE), $url, var_export(imap_errors(),TRUE));
-			$this->_errorMessage = 'IMAP Error: '.$url.' '. var_export(imap_errors(),TRUE);
+			$message = 'IMAP Error: '.$url.' '. var_export(imap_errors(),TRUE);
+			phpCAS::trace($message);
+			throw new CAS_ProxiedService_Exception($message);
 		}
 				
-		phpCAS::traceEnd($result);
+		phpCAS::traceEnd();
 		return $this->_stream;
 	}
 	
@@ -209,26 +216,6 @@ class CAS_ProxiedService_Imap
 			throw new CAS_OutOfSequenceException('Cannot access stream, not opened yet.');
 		
 		return $this->_stream;
-	}
-	
-	/**
-	 * The Error Message
-	 *
-	 * @var string $_errorMessage;  
-	 */
-	private $_errorMessage = '';
-	
-	/**
-	 * Answer a message describing any errors if the request failed.
-	 *
-	 * @return string
-	 * @throws CAS_OutOfSequenceException If called before the stream has been opened.
-	 */
-	public function getErrorMessage () {
-		if (!$this->hasBeenOpened())
-			throw new CAS_OutOfSequenceException('Cannot access errors, stream not opened yet.');
-		
-		return $this->_errorMessage;
 	}
 	
 	/**
