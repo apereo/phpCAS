@@ -98,7 +98,11 @@ class CAS_CurlRequest
 		 * Add cookie headers to our request.
 		 *********************************************************/
 		if (count($this->cookies)) {
-			curl_setopt($ch, CURLOPT_COOKIE, implode(';', $this->cookies));
+			$cookieStrings = array();
+			foreach ($this->cookies as $name => $val) {
+				$cookieStrings[] = $name.'='.$val;
+			}
+			curl_setopt($ch, CURLOPT_COOKIE, implode(';', $cookieStrings));
 		}
 
 		/*********************************************************
