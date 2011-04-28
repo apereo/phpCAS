@@ -344,6 +344,16 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Verify that proxied-service Exceptions are caught and converted to error codes in serviceWeb().
+     */
+    public function test_serviceWeb_service_error() {
+		$result = $this->object->serviceWeb('ssh://me.example.net', $err_code, $output);
+		$this->assertFalse($result, "serviceWeb() should have returned false on a service error.");
+		$this->assertEquals(PHPCAS_SERVICE_NOT_AVAILABLE, $err_code);
+		$this->assertStringStartsWith("The service", $output);
+    }
+    
+    /**
      * Direct usage of the Proxied GET service.
      */
     public function test_http_get() {
