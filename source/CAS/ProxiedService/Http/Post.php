@@ -93,8 +93,11 @@ class CAS_ProxiedService_Http_Post
 			throw new CAS_ProxiedService_Exception("If you pass a POST body, you must specify a content type via ".get_class($this).'->setContentType($contentType).');
 		
 		$request->makePost();
-		$request->addHeader('Content-Type: '.$this->_contentType);
-		$request->setPostBody($this->_postBody);
+		if (!empty($this->_body)) {
+			$request->addHeader('Content-Type: '.$this->_contentType);
+			$request->addHeader('Content-Length: '.strlen($this->_body));
+			$request->setPostBody($this->_body);
+		}
 	}
 
 	
