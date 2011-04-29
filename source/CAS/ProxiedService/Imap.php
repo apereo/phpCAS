@@ -127,7 +127,7 @@ class CAS_ProxiedService_Imap
 	 * 
 	 * @var int $_options
 	 */
-	private $_options = NIL;
+	private $_options = NULL;
 	
 	/**
 	 * Set the options for opening the stream. See the $options parameter of imap_open().
@@ -193,7 +193,7 @@ class CAS_ProxiedService_Imap
 	 * @return boolean
 	 */
 	protected function hasBeenOpened () {
-		return empty($this->_stream);
+		return !empty($this->_stream);
 	}
 
 	/*********************************************************

@@ -2574,11 +2574,11 @@ class CASClient
 	 * @return an IMAP stream on success, FALSE otherwise (in this later case, $err_code
 	 * gives the reason why it failed and $err_msg contains an error message).
 	 */
-	public function serviceMail($url,$service,$flags,&$err_code,&$err_msg,&$pt)
+	public function serviceMail($url,$serviceUrl,$flags,&$err_code,&$err_msg,&$pt)
 	{
 		try {
 			$service = $this->getProxiedService(PHPCAS_PROXIED_SERVICE_IMAP);
-			$service->setServiceUrl($service);
+			$service->setServiceUrl($serviceUrl);
 			$service->setMailbox($url);
 			$service->setOptions($flags);
 			
