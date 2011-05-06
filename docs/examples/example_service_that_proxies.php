@@ -10,7 +10,7 @@ include_once($phpcas_path.'/CAS.php');
 phpCAS::setDebug();
 
 // Initialize phpCAS
-phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
+phpCAS::proxy(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 
 // For production use set the CA certificate that is the issuer of the cert 
 // on the CAS server and uncomment the line below
@@ -35,10 +35,11 @@ phpCAS::forceAuthentication();
 ?>
 <html>
   <head>
-    <title>phpCAS proxied proxy example</title>
+    <title>phpCAS proxied proxy service example</title>
   </head>
   <body>
-    <h1>phpCAS proxied proxy example</h1>
+    <h1>I am a service that can be proxied. In turn, I proxy another service.</h1>
+    <?php include 'script_info.php' ?>
     <p>the user's login is <b><?php echo phpCAS::getUser(); ?></b>.</p>
     <h2>Response from service <?php echo $service; ?></h2><ul><hr>
 <?php

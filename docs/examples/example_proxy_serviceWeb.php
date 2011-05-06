@@ -1,5 +1,5 @@
 <?php
-// Example that changes the storage of the pgt tickets
+// Example for a proxy with session usage
 
 // Load the settings from the central config file
 include_once('config.php');
@@ -10,7 +10,7 @@ include_once($phpcas_path.'/CAS.php');
 phpCAS::setDebug();
 
 // Initialize phpCAS
-phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
+phpCAS::proxy(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 
 // For production use set the CA certificate that is the issuer of the cert 
 // on the CAS server and uncomment the line below
@@ -21,9 +21,6 @@ phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 // VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL! 
 phpCAS::setNoCasServerValidation();
 
-// set PGT storage to file in XML format in the same directory as session files
-phpCAS::setPGTStorageFile('xml',session_save_path());
-
 // force CAS authentication
 phpCAS::forceAuthentication();
 
@@ -33,15 +30,14 @@ phpCAS::forceAuthentication();
 // moreover, a PGT was retrieved from the CAS server that will
 // permit to gain accesses to new services.
 
-$service = 'https://cas.ifsic.univ-rennes1.fr/examples/example_service.php';
-
 ?>
 <html>
   <head>
-    <title>phpCAS proxy example with PGT storage to file</title>
+    <title>phpCAS proxied proxy example (with sessioning)</title>
   </head>
   <body>
-    <h1>phpCAS proxy example with PGT storage to file</h1>
+    <h1>phpCAS proxied proxy example (with sessioning)</h1>
+    <?php include 'script_info.php' ?>
     <p>the user's login is <b><?php echo phpCAS::getUser(); ?></b>.</p>
     <h2>Response from service <?php echo $service; ?></h2><ul><hr>
 <?php
@@ -57,3 +53,4 @@ $service = 'https://cas.ifsic.univ-rennes1.fr/examples/example_service.php';
 ?>
   </body>
 </html>
+

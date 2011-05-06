@@ -1,5 +1,5 @@
 <?php
-// Example for a simple client
+// Example that changes the storage of the pgt tickets
 
 // Load the settings from the central config file
 include_once('config.php');
@@ -10,7 +10,7 @@ include_once($phpcas_path.'/CAS.php');
 phpCAS::setDebug();
 
 // Initialize phpCAS
-phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
+phpCAS::proxy(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 
 // For production use set the CA certificate that is the issuer of the cert 
 // on the CAS server and uncomment the line below
@@ -21,28 +21,38 @@ phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 // VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL! 
 phpCAS::setNoCasServerValidation();
 
+// set PGT storage to file in XML format in the same directory as session files
+phpCAS::setPGTStorageFile('xml',session_save_path());
+
 // force CAS authentication
 phpCAS::forceAuthentication();
 
 // at this step, the user has been authenticated by the CAS server
 // and the user's login name can be read with phpCAS::getUser().
 
-// logout if desired
-if (isset($_REQUEST['logout'])) {
-	phpCAS::logout();
-}
+// moreover, a PGT was retrieved from the CAS server that will
+// permit to gain accesses to new services.
 
-// for this test, simply print that the authentication was successfull
 ?>
 <html>
   <head>
-    <title>phpCAS simple client</title>
+    <title>phpCAS proxy example with PGT storage to file</title>
   </head>
   <body>
-    <h1>Successfull Authentication!</h1>
+    <h1>phpCAS proxy example with PGT storage to file</h1>
     <?php include 'script_info.php' ?>
     <p>the user's login is <b><?php echo phpCAS::getUser(); ?></b>.</p>
-    <p>phpCAS version is <b><?php echo phpCAS::getVersion(); ?></b>.</p>
-    <p><a href="?logout=">Logout</a></p>
+    <h2>Response from service <?php echo $service; ?></h2><ul><hr>
+<?php
+  flush();
+  // call a service and change the color depending on the result
+  if ( phpCAS::serviceWeb($service,$err_code,$output) ) {
+    echo '<font color="#00FF00">';
+  } else {
+    echo '<font color="#FF0000">';
+  }
+  echo $output;
+  echo '</font><hr></ul>';
+?>
   </body>
 </html>

@@ -3,7 +3,7 @@
 // The purpose of this central config file is configuring all examples
 // in one place with minimal work for your working environment
 
-$phpcas_path = '../source/';
+$phpcas_path = '../../source/';
 
 ///////////////////////////////////////
 // Basic Config of the phpCAS client //
@@ -33,14 +33,16 @@ $cas_real_hosts = array (
 );
 
 // Generating the URLS for the local cas example services for proxy testing
+$curbase = 'http://'.$_SERVER['SERVER_NAME'];
+if ($_SERVER['SERVER_PORT'] != 80)
+	$curbase .= ':'.$_SERVER['SERVER_PORT'];
+
 $curdir = dirname($_SERVER['REQUEST_URI'])."/";
-// access to a singe service
-$service = $curdir.'/example_session_service.php';
-// access to external services
-$services = array (
-	$curdir.'example_session_service.php',
-	$curdir.'/example_proxy2.php'
-);
+
+// access to a single service
+$service = $curbase.$curdir.'/example_service.php';
+// access to a second service
+$service2 = $curbase.$curdir.'example_service_that_proxies.php';
 
 $cas_url = 'https://'.$cas_host;
 if ($cas_port != '443')
@@ -48,4 +50,10 @@ if ($cas_port != '443')
 	$cas_url = $cas_url.':'.$cas_port;
 }
 $cas_url = $cas_url.$cas_context;
+
+
+// Set the session-name to be unique to the current script so that the client script
+// doesn't share its session with a proxied script.
+// This is just useful when running the example code, but not normally.
+session_name('session_for:'.preg_replace('/[^a-z0-9-]/i', '_', basename($_SERVER['SCRIPT_NAME'])));
 ?>

@@ -41,6 +41,7 @@ phpCAS::forceAuthentication();
   </head>
   <body>
     <h1>Authentification r&eacute;ussie&nbsp;!</h1>
+    <?php include 'script_info.php' ?>
     <p>L'utilisateur connect&eacute; est <b><?php echo phpCAS::getUser(); ?></b>.</p>
     <p>La version de phpCAS est <b><?php echo phpCAS::getVersion(); ?></b>.</p>
   </body>
