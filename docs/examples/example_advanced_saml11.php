@@ -32,6 +32,7 @@ phpCAS::forceAuthentication();
 
 ?>
 <h2>Secure Page</h2>
+<?php include 'script_info.php' ?>
 
 Authentication succeeded for user
 <strong><?php echo phpCAS::getUser(); ?></strong>.

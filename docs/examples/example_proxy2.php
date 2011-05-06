@@ -39,6 +39,7 @@ phpCAS::forceAuthentication();
   </head>
   <body>
     <h1>phpCAS proxied proxy example</h1>
+    <?php include 'script_info.php' ?>
     <p>the user's login is <b><?php echo phpCAS::getUser(); ?></b>.</p>
     <h2>Response from service <?php echo $service; ?></h2><ul><hr>
 <?php
