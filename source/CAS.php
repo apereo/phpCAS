@@ -193,6 +193,23 @@ define("PHPCAS_SERVICE_PT_FAILURE", 3);
  */
 define("PHPCAS_SERVICE_NOT_AVAILABLE", 4);
 
+// ------------------------------------------------------------------------
+// SERVICE TYPES
+// ------------------------------------------------------------------------
+/**
+ * phpCAS::getProxiedService() type for HTTP GET
+ */
+define("PHPCAS_PROXIED_SERVICE_HTTP_GET", 'CAS_ProxiedService_Http_Get');
+/**
+ * phpCAS::getProxiedService() type for HTTP POST
+ */
+define("PHPCAS_PROXIED_SERVICE_HTTP_POST", 'CAS_ProxiedService_Http_Post');
+/**
+ * phpCAS::getProxiedService() type for IMAP
+ */
+define("PHPCAS_PROXIED_SERVICE_IMAP", 'CAS_ProxiedService_Imap');
+
+
 /** @} */
 // ------------------------------------------------------------------------
 //  LANGUAGES
@@ -807,7 +824,75 @@ class phpCAS {
 	 * @addtogroup publicServices
 	 * @{
 	 */
+	
+	/**
+	 * Answer a proxy-authenticated service handler.
+	 * 
+	 * @param string $type The service type. One of:
+	 *			PHPCAS_PROXIED_SERVICE_HTTP_GET
+	 *			PHPCAS_PROXIED_SERVICE_HTTP_POST
+	 *			PHPCAS_PROXIED_SERVICE_IMAP
+	 *			
+	 *		
+	 * @return CAS_ProxiedService
+	 * @throws InvalidArgumentException If the service type is unknown.
+	 */
+	public static function getProxiedService ($type) {
+		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
 
+		phpCAS :: traceBegin();
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_CLIENT->isProxy()) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['done']) {
+			phpCAS :: error('this method should only be called after the programmer is sure the user has been authenticated (by calling ' . __CLASS__ . '::checkAuthentication() or ' . __CLASS__ . '::forceAuthentication()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['result']) {
+			phpCAS :: error('authentication was checked (by ' . $PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . $PHPCAS_AUTH_CHECK_CALL['file'] . ':' . $PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		}
+		if (gettype($type) != 'string') {
+			phpCAS :: error('type mismatched for parameter $type (should be `string\')');
+		}
+
+		$res = $PHPCAS_CLIENT->getProxiedService($type);
+
+		phpCAS :: traceEnd();
+		return $res;
+	}
+	
+	/**
+	 * Initialize a proxied-service handler with the proxy-ticket it should use.
+	 * 
+	 * @param CAS_ProxiedService $proxiedService
+	 * @return void
+	 * @throws CAS_ProxyTicketException If there is a proxy-ticket failure.
+	 *		The code of the Exception will be one of: 
+	 *			PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE 
+	 *			PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE
+	 *			PHPCAS_SERVICE_PT_FAILURE
+	 */
+	public static function initializeProxiedService (CAS_ProxiedService $proxiedService) {
+		global $PHPCAS_CLIENT, $PHPCAS_AUTH_CHECK_CALL;
+
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_CLIENT->isProxy()) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['done']) {
+			phpCAS :: error('this method should only be called after the programmer is sure the user has been authenticated (by calling ' . __CLASS__ . '::checkAuthentication() or ' . __CLASS__ . '::forceAuthentication()');
+		}
+		if (!$PHPCAS_AUTH_CHECK_CALL['result']) {
+			phpCAS :: error('authentication was checked (by ' . $PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . $PHPCAS_AUTH_CHECK_CALL['file'] . ':' . $PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		}
+
+		$PHPCAS_CLIENT->initializeProxiedService($proxiedService);
+	}
+	
 	/**
 	 * This method is used to access an HTTP[S] service.
 	 *

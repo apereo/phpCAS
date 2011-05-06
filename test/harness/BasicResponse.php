@@ -29,6 +29,9 @@
  */
 
 require_once dirname(__FILE__).'/ResponseInterface.php';
+require_once dirname(__FILE__).'/../../source/CAS/OutOfSequenceException.php';
+require_once dirname(__FILE__).'/../../source/CAS/Request/Exception.php';
+
 
 /**
  * The BasicResponse allows tests to dynamically create a response that can be used
@@ -255,6 +258,22 @@ class CAS_TestHarness_BasicResponse
 	public function getResponseHeaders () {
 		return $this->responseHeaders;
 	}
+	
+	/**
+	 * Answer HTTP status code of the response
+	 *
+	 * @return integer
+	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
+	 */
+	public function getResponseStatusCode () {
+		if (!$this->sent)
+			throw new CAS_OutOfSequenceException('Request has not been sent yet. Cannot '.__METHOD__);
+		
+		if (!preg_match('/HTTP\/[0-9.]+\s+([0-9]+)\s*(.*)/', $this->responseHeaders[0], $matches))
+			throw new CAS_Request_Exception("Bad response, no status code was found in the first line.");
+		
+		return intval($matches[1]);
+	}
 
 	/**
 	 * Answer the response body
@@ -287,11 +306,11 @@ class CAS_TestHarness_BasicResponse
 	 */
 	public function validateRequestHeaders (array $headers) {
 		foreach ($this->headersToHave as $headerToCheck) {
-			if (!in_array($headers, headerToCheck))
+			if (!in_array($headerToCheck, $headers))
 				return false;
 		}
 		foreach ($this->headersToNotHave as $headerToCheck) {
-			if (in_array($headers, headerToCheck))
+			if (in_array($headerToCheck, $headers))
 				return false;
 		}
 		return true;
@@ -339,7 +358,7 @@ class CAS_TestHarness_BasicResponse
 	 * @return boolean TRUE if the post body is valid.
 	 */
 	public function validatePostBody ($postBody) {
-		if (!is_null($this->postBodyToMatch) && $this->postBodyToMatch != $postBodyToMatch) {
+		if (!is_null($this->postBodyToMatch) && $this->postBodyToMatch != $postBody) {
 			return false;
 		}
 		return true;

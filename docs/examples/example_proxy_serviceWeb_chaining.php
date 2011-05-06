@@ -39,11 +39,11 @@ phpCAS::forceAuthentication();
     <h1>phpCAS proxied proxy example</h1>
     <?php include 'script_info.php' ?>
     <p>the user's login is <b><?php echo phpCAS::getUser(); ?></b>.</p>
-    <h2>Response from service <?php echo $service2; ?></h2><ul><hr>
+    <h2>Response from service <?php echo $serviceUrl2; ?></h2><ul><hr>
 <?php
   flush();
   // call a service and change the color depending on the result
-  if ( phpCAS::serviceWeb($service2,$err_code,$output) ) {
+  if ( phpCAS::serviceWeb($serviceUrl2,$err_code,$output) ) {
     echo '<font color="#00aa00">';
   } else {
     echo '<font color="#aa0000">';

@@ -46,6 +46,17 @@ include_once(dirname(__FILE__).'/CookieJar.php');
 // include class for fetching web requests.
 include_once(dirname(__FILE__).'/Request/CurlRequest.php');
 
+// include classes for proxying access to services
+include_once(dirname(__FILE__).'/ProxiedService/Http/Get.php');
+include_once(dirname(__FILE__).'/ProxiedService/Http/Post.php');
+include_once(dirname(__FILE__).'/ProxiedService/Imap.php');
+
+// include Exception classes
+include_once(dirname(__FILE__).'/ProxiedService/Exception.php');
+include_once(dirname(__FILE__).'/ProxyTicketException.php');
+include_once(dirname(__FILE__).'/InvalidArgumentException.php');
+
+
 /**
  * @class CASClient
  * The CASClient class is a client interface that provides CAS authentication
@@ -648,7 +659,7 @@ class CASClient
 	public function setRequestImplementation ($className) {
 		$obj = new $className;
 		if (!($obj instanceof CAS_RequestInterface))
-		throw new InvalidArgumentException('$className must implement the CAS_RequestInterface');
+		throw new CAS_InvalidArgumentException('$className must implement the CAS_RequestInterface');
 
 		$this->_requestImplementation = $className;
 	}
@@ -1511,7 +1522,7 @@ class CASClient
 		}
 
 		// open and read the URL
-		if ( !$this->readURL($validate_url,array(),$headers,$text_response,$err_msg) ) {
+		if ( !$this->readURL($validate_url,$headers,$text_response,$err_msg) ) {
 			phpCAS::trace('could not open URL \''.$validate_url.'\' to validate ('.$err_msg.')');
 			$this->authError('ST not validated',
 			$validate_url,
@@ -1781,7 +1792,7 @@ class CASClient
 		$validate_url = $this->getServerSamlValidateURL();
 
 		// open and read the URL
-		if ( !$this->readURL($validate_url,array(),$headers,$text_response,$err_msg) ) {
+		if ( !$this->readURL($validate_url,$headers,$text_response,$err_msg) ) {
 			phpCAS::trace('could not open URL \''.$validate_url.'\' to validate ('.$err_msg.')');
 			$this->authError('SA not validated', $validate_url, TRUE/*$no_response*/);
 		}
@@ -2284,7 +2295,7 @@ class CASClient
 		$cas_url = $this->getServerProxyURL().'?targetService='.urlencode($target_service).'&pgt='.$this->getPGT();
 
 		// open and read the URL
-		if ( !$this->readURL($cas_url,array(),$headers,$cas_response,$err_msg) ) {
+		if ( !$this->readURL($cas_url,$headers,$cas_response,$err_msg) ) {
 			phpCAS::trace('could not open URL \''.$cas_url.'\' to validate ('.$err_msg.')');
 			$err_code = PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE;
 			$err_msg = 'could not retrieve PT (no response from the CAS server)';
@@ -2376,7 +2387,6 @@ class CASClient
 	 * This method is used to acces a remote URL.
 	 *
 	 * @param $url the URL to access.
-	 * @param $cookies an array containing cookies strings such as 'name=val'
 	 * @param $headers an array containing the HTTP header lines of the response
 	 * (an empty array on failure).
 	 * @param $body the body of the response, as a string (empty on failure).
@@ -2385,7 +2395,7 @@ class CASClient
 	 * @return TRUE on success, FALSE otherwise (in this later case, $err_msg
 	 * contains an error message).
 	 */
-	private function readURL($url, array $cookies, &$headers, &$body, &$err_msg)
+	private function readURL($url, &$headers, &$body, &$err_msg)
 	{
 		$className = $this->_requestImplementation;
 		$request = new $className();
@@ -2395,8 +2405,7 @@ class CASClient
 		}
 
 		$request->setUrl($url);
-		$request->addCookies($cookies);
-
+		
 		if (empty($this->_cas_server_ca_cert) && !$this->_no_cas_server_validation) {
 			phpCAS::error('one of the methods phpCAS::setCasServerCACert() or phpCAS::setNoCasServerValidation() must be called.');
 		}
@@ -2456,6 +2465,64 @@ class CASClient
 		$this->_curl_headers[] = $header;
 		return strlen($header);
 	}
+	
+	/**
+	 * Answer a proxy-authenticated service handler.
+	 * 
+	 * @param string $type The service type. One of:
+	 *			PHPCAS_PROXIED_SERVICE_HTTP_GET
+	 *			PHPCAS_PROXIED_SERVICE_HTTP_POST
+	 *			PHPCAS_PROXIED_SERVICE_IMAP
+	 *			
+	 *		
+	 * @return CAS_ProxiedService
+	 * @throws InvalidArgumentException If the service type is unknown.
+	 */
+	public function getProxiedService ($type) {
+		switch ($type) {
+			case PHPCAS_PROXIED_SERVICE_HTTP_GET:
+			case PHPCAS_PROXIED_SERVICE_HTTP_POST:
+				$requestClass = $this->_requestImplementation;
+				$request = new $requestClass();	
+				if (count($this->_curl_options)) {
+					$request->setCurlOptions($this->_curl_options);
+				}
+				$proxiedService = new $type($request, $this->_serviceCookieJar);
+				if ($proxiedService instanceof CAS_ProxiedService_Testable)
+					$proxiedService->setCasClient($this);
+				return $proxiedService;
+			case PHPCAS_PROXIED_SERVICE_IMAP;
+				$proxiedService = new CAS_ProxiedService_Imap($this->getUser());
+				if ($proxiedService instanceof CAS_ProxiedService_Testable)
+					$proxiedService->setCasClient($this);
+				return $proxiedService;
+			default:
+				throw new CAS_InvalidArgumentException("Unknown proxied-service type, $type.");
+		}
+	}
+	
+	/**
+	 * Initialize a proxied-service handler with the proxy-ticket it should use.
+	 * 
+	 * @param CAS_ProxiedService $proxiedService
+	 * @return void
+	 * @throws CAS_ProxyTicketException If there is a proxy-ticket failure.
+	 *		The code of the Exception will be one of: 
+	 *			PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE 
+	 *			PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE
+	 *			PHPCAS_SERVICE_PT_FAILURE
+	 * @throws CAS_ProxiedService_Exception If there is a failure getting the url from the proxied service.
+	 */
+	public function initializeProxiedService (CAS_ProxiedService $proxiedService) {
+		$url = $proxiedService->getServiceUrl();
+		if (!is_string($url))
+			throw new CAS_ProxiedService_Exception("Proxied Service ".get_class($proxiedService)."->getServiceUrl() should have returned a string, returned a ".gettype($url)." instead.");
+		
+		$pt = $this->retrievePT($url, $err_code, $err_msg);
+		if (!$pt)
+			throw new CAS_ProxyTicketException($err_msg, $err_code);
+		$proxiedService->setProxyTicket($pt);
+	}
 
 	/**
 	 * This method is used to access an HTTP[S] service.
@@ -2472,77 +2539,22 @@ class CASClient
 	 */
 	public function serviceWeb($url,&$err_code,&$output)
 	{
-		phpCAS::traceBegin();
-		$cookies = array();
-		// at first retrieve a PT
-		$pt = $this->retrievePT($url,$err_code,$ptoutput);
-
-		$res = TRUE;
-
-		// test if PT was retrieved correctly
-		if ( !$pt ) {
-			// note: $err_code and $err_msg are filled by CASClient::retrievePT()
-			phpCAS::trace('PT was not retrieved correctly');
-			$res = FALSE;
-		} else {
-			// add cookies if necessary
-			$cookies = array();
-			foreach ( $this->_serviceCookieJar->getCookies($url) as $name => $val ) {
-				$cookies[] = $name.'='.$val;
-			}
-				
-			// build the URL including the PT
-			if ( strstr($url,'?') === FALSE ) {
-				$service_url = $url.'?ticket='.$pt;
-			} else {
-				$service_url = $url.'&ticket='.$pt;
-			}
-			phpCAS::trace('reading URL`'.$service_url.'\'');
-			if ( !$this->readURL($service_url,$cookies,$headers,$output,$err_msg) ) {
-				phpCAS::trace('could not read URL`'.$service_url.'\'');
-				$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
-				// give an error message
-				$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
-				$service_url,
-				$err_msg);
-				$res = FALSE;
-			} else {
-				// URL has been fetched, extract the cookies
-				phpCAS::trace('URL`'.$service_url.'\' has been read, storing cookies:');
-				$this->_serviceCookieJar->storeCookies($service_url, $headers);
-			}
-			// Check for the redirect after authentication
-			foreach($headers as $header){
-				if (preg_match('/^(Location:|URI:)\s*([^\s]+.*)$/', $header, $matches))
-				{
-					$redirect_url = trim(array_pop($matches));
-					phpCAS :: trace('Found redirect:'.$redirect_url);
-					$cookies = array();
-					foreach ( $this->_serviceCookieJar->getCookies($redirect_url) as $name => $val ) {
-						$cookies[] = $name.'='.$val;
-					}
-					phpCAS::trace('reading URL`'.$redirect_url.'\'');
-					if ( !$this->readURL($redirect_url,$cookies,$headers,$output,$err_msg) ) {
-						phpCAS::trace('could not read URL`'.$redirect_url.'\'');
-						$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
-						// give an error message
-						$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
-						$service_url,
-						$err_msg);
-						$res = FALSE;
-					} else {
-						// URL has been fetched, extract the cookies
-						phpCAS::trace('URL`'.$redirect_url.'\' has been read, storing cookies:');
-						$this->_serviceCookieJar->storeCookies($redirect_url, $headers);
-					}
-					break;
-				}
-
-			}
+		try {
+			$service = $this->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
+			$service->setUrl($url);
+			$service->send();
+			$output = $service->getResponseBody();
+			$err_code = PHPCAS_SERVICE_OK;
+			return TRUE;
+		} catch (CAS_ProxyTicketException $e) {
+			$err_code = $e->getCode();
+			$output = $e->getMessage();
+			return FALSE;
+		} catch (CAS_ProxiedService_Exception $e) {
+			$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE), $url, $e->getMessage());
+			$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
+			return FALSE;
 		}
-
-		phpCAS::traceEnd($res);
-		return $res;
 	}
 
 	/**
@@ -2562,37 +2574,29 @@ class CASClient
 	 * @return an IMAP stream on success, FALSE otherwise (in this later case, $err_code
 	 * gives the reason why it failed and $err_msg contains an error message).
 	 */
-	public function serviceMail($url,$service,$flags,&$err_code,&$err_msg,&$pt)
+	public function serviceMail($url,$serviceUrl,$flags,&$err_code,&$err_msg,&$pt)
 	{
-		phpCAS::traceBegin();
-		// at first retrieve a PT
-		$pt = $this->retrievePT($service,$err_code,$ptoutput);
-
-		$stream = FALSE;
-
-		// test if PT was retrieved correctly
-		if ( !$pt ) {
-			// note: $err_code and $err_msg are filled by CASClient::retrievePT()
-			phpCAS::trace('PT was not retrieved correctly');
-		} else {
-			phpCAS::trace('opening IMAP URL `'.$url.'\'...');
-			$stream = @imap_open($url,$this->getUser(),$pt,$flags);
-			if ( !$stream ) {
-				phpCAS::trace('could not open URL');
-				$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
-				// give an error message
-				$err_msg = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE),
-				$url,
-				var_export(imap_errors(),TRUE));
-				$pt = FALSE;
-				$stream = FALSE;
-			} else {
-				phpCAS::trace('ok');
-			}
+		try {
+			$service = $this->getProxiedService(PHPCAS_PROXIED_SERVICE_IMAP);
+			$service->setServiceUrl($serviceUrl);
+			$service->setMailbox($url);
+			$service->setOptions($flags);
+			
+			$stream = $service->open();
+			$err_code = PHPCAS_SERVICE_OK;
+			$pt = $service->getImapProxyTicket();
+			return $stream;
+		} catch (CAS_ProxyTicketException $e) {
+			$err_msg = $e->getMessage();
+			$err_code = $e->getCode();
+			$pt = FALSE;
+			return FALSE;
+		} catch (CAS_ProxiedService_Exception $e) {
+			$err_msg = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE), $url, $e->getMessage());
+			$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
+			$pt = FALSE;
+			return FALSE;
 		}
-
-		phpCAS::traceEnd($stream);
-		return $stream;
 	}
 
 	/** @} */
@@ -2729,7 +2733,7 @@ class CASClient
 		}
 
 		// open and read the URL
-		if ( !$this->readURL($validate_url,array(),$headers,$text_response,$err_msg) ) {
+		if ( !$this->readURL($validate_url,$headers,$text_response,$err_msg) ) {
 			phpCAS::trace('could not open URL \''.$validate_url.'\' to validate ('.$err_msg.')');
 			$this->authError('PT not validated',
 			$validate_url,

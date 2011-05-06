@@ -40,9 +40,9 @@ if ($_SERVER['SERVER_PORT'] != 80)
 $curdir = dirname($_SERVER['REQUEST_URI'])."/";
 
 // access to a single service
-$service = $curbase.$curdir.'/example_service.php';
+$serviceUrl = $curbase.$curdir.'/example_service.php';
 // access to a second service
-$service2 = $curbase.$curdir.'example_service_that_proxies.php';
+$serviceUrl2 = $curbase.$curdir.'example_service_that_proxies.php';
 
 $cas_url = 'https://'.$cas_host;
 if ($cas_port != '443')

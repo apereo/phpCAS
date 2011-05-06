@@ -137,7 +137,15 @@ interface CAS_RequestInterface {
 	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
 	 */
 	public function getResponseHeaders ();
-
+	
+	/**
+	 * Answer HTTP status code of the response
+	 *
+	 * @return integer
+	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
+	 */
+	public function getResponseStatusCode ();
+	
 	/**
 	 * Answer the body of response.
 	 *
@@ -153,16 +161,4 @@ interface CAS_RequestInterface {
 	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
 	 */
 	public function getErrorMessage ();
-}
-
-/**
- * This class defines Exceptions that should be thrown when the sequence of operations
- * is invalid. Examples are:
- *		- Requesting the response before executing a request.
- *		- Changing the URL of a request after executing the request.
- */
-class CAS_OutOfSequenceException
-	extends BadMethodCallException
-{
-
 }

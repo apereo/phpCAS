@@ -97,7 +97,7 @@ class CAS_TestHarness_DummyRequest
 				return true;
 			}
 		}
-		print_r("\n404 URL ".$this->url." not found in test harness.\n");
+// 		print_r("\n404 URL ".$this->url." not found in test harness.\n");
 
 		$this->storeErrorMessage('404 URL '.$this->url.' not found in test harness.');
 		return false;
