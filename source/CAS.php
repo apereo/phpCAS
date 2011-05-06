@@ -1553,6 +1553,23 @@ class phpCAS {
 		$PHPCAS_CLIENT->setNoCasServerValidation();
 		phpCAS :: traceEnd();
 	}
+	
+	
+	/**
+	 * Disable the removal of a CAS-Ticket from the URL when authenticating
+	 * DISABLING POSES A SECURITY RISK:
+	 * We normally remove the ticket by an additional redirect as a security precaution
+     * to prevent a ticket in the HTTP_REFERRER or be carried over in the URL parameter
+	 */
+	public static function setNoClearTicketsFromUrl() {
+		global $PHPCAS_CLIENT;
+		phpCAS :: traceBegin();
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
+		}
+		$PHPCAS_CLIENT->setNoClearTicketsFromUrl();
+		phpCAS :: traceEnd();
+	}
 
 	/** @} */
 
