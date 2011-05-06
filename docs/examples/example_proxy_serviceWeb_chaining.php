@@ -1,5 +1,5 @@
 <?php
-// Example for proxied service with session support
+// Example for a proxy with session usage
 
 // Load the settings from the central config file
 include_once('config.php');
@@ -10,7 +10,7 @@ include_once($phpcas_path.'/CAS.php');
 phpCAS::setDebug();
 
 // Initialize phpCAS
-phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
+phpCAS::proxy(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 
 // For production use set the CA certificate that is the issuer of the cert 
 // on the CAS server and uncomment the line below
@@ -26,14 +26,31 @@ phpCAS::forceAuthentication();
 
 // at this step, the user has been authenticated by the CAS server
 // and the user's login name can be read with phpCAS::getUser().
-include 'script_info.php';
 
-// for this test, simply print that the authentication was successfull
-echo '<p>The user\'s login is <b>'.phpCAS::getUser().'</b>.</p>';
-
-// increment the number of requests of the session and print it
-if (!isset($_SESSION['n']))
-	$_SESSION['n'] = 0;
-echo '<p>request #'.(++$_SESSION['n']).'</p>';
+// moreover, a PGT was retrieved from the CAS server that will
+// permit to gain accesses to new services.
 
 ?>
+<html>
+  <head>
+    <title>phpCAS proxy example #2</title>
+  </head>
+  <body>
+    <h1>phpCAS proxied proxy example</h1>
+    <?php include 'script_info.php' ?>
+    <p>the user's login is <b><?php echo phpCAS::getUser(); ?></b>.</p>
+    <h2>Response from service <?php echo $service2; ?></h2><ul><hr>
+<?php
+  flush();
+  // call a service and change the color depending on the result
+  if ( phpCAS::serviceWeb($service2,$err_code,$output) ) {
+    echo '<font color="#00aa00">';
+  } else {
+    echo '<font color="#aa0000">';
+  }
+  echo $output;
+  echo '</font><hr></ul>';
+?>
+  </body>
+</html>
+
