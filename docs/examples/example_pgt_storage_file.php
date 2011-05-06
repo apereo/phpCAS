@@ -42,11 +42,11 @@ phpCAS::forceAuthentication();
     <h1>phpCAS proxy example with PGT storage to file</h1>
     <?php include 'script_info.php' ?>
     <p>the user's login is <b><?php echo phpCAS::getUser(); ?></b>.</p>
-    <h2>Response from service <?php echo $service; ?></h2><ul><hr>
+    <h2>Response from service <?php echo $serviceUrl; ?></h2><ul><hr>
 <?php
   flush();
   // call a service and change the color depending on the result
-  if ( phpCAS::serviceWeb($service,$err_code,$output) ) {
+  if ( phpCAS::serviceWeb($serviceUrl,$err_code,$output) ) {
     echo '<font color="#00FF00">';
   } else {
     echo '<font color="#FF0000">';
