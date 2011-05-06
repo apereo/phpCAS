@@ -3,7 +3,7 @@
 // The purpose of this central config file is configuring all examples
 // in one place with minimal work for your working environment
 
-$phpcas_path = '../source/';
+$phpcas_path = '../../source/';
 
 ///////////////////////////////////////
 // Basic Config of the phpCAS client //
@@ -33,13 +33,18 @@ $cas_real_hosts = array (
 );
 
 // Generating the URLS for the local cas example services for proxy testing
+$curbase = 'http://'.$_SERVER['SERVER_NAME'];
+if ($_SERVER['SERVER_PORT'] != 80)
+	$curbase .= ':'.$_SERVER['SERVER_PORT'];
+
 $curdir = dirname($_SERVER['REQUEST_URI'])."/";
-// access to a singe service
-$service = $curdir.'/example_session_service.php';
+
+// access to a single service
+$service = $curbase.$curdir.'/example_session_service.php';
 // access to external services
 $services = array (
-	$curdir.'example_session_service.php',
-	$curdir.'/example_proxy2.php'
+	$curbase.$curdir.'example_session_service.php',
+	$curbase.$curdir.'/example_proxy2.php'
 );
 
 $cas_url = 'https://'.$cas_host;

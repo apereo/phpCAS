@@ -31,6 +31,8 @@ phpCAS::forceAuthentication();
 echo '<p>The user\'s login is <b>'.phpCAS::getUser().'</b>.</p>';
 
 // increment the number of requests of the session and print it
+if (!isset($_SESSION['n']))
+	$_SESSION['n'] = 0;
 echo '<p>request #'.(++$_SESSION['n']).'</p>';
 
 ?>
