@@ -378,7 +378,7 @@ class phpCAS {
 		}
 
 		// store where the initializer is called from
-		$dbg = phpCAS :: backtrace();
+		$dbg = debug_backtrace();
 		$PHPCAS_INIT_CALL = array (
 			'done' => TRUE,
 			'file' => $dbg[0]['file'],
@@ -427,7 +427,7 @@ class phpCAS {
 		}
 
 		// store where the initialzer is called from
-		$dbg = phpCAS :: backtrace();
+		$dbg = debug_backtrace();
 		$PHPCAS_INIT_CALL = array (
 			'done' => TRUE,
 			'file' => $dbg[0]['file'],
@@ -491,24 +491,6 @@ class phpCAS {
 		}
 	}
 
-	/** @} */
-	/**
-	 * @addtogroup internalDebug
-	 * @{
-	 */
-
-	/**
-	 * This method is a wrapper for debug_backtrace() that is not available
-	 * in all PHP versions (>= 4.3.0 only)
-	 */
-	public static function backtrace() {
-		if (function_exists('debug_backtrace')) {
-			return debug_backtrace();
-		} else {
-			// poor man's hack ... but it does work ...
-			return array ();
-		}
-	}
 
 	/**
 	 * Logs a string in debug mode.
@@ -539,7 +521,7 @@ class phpCAS {
 	 * @private
 	 */
 	public static function error($msg) {
-		$dbg = phpCAS :: backtrace();
+		$dbg = debug_backtrace();
 		$function = '?';
 		$file = '?';
 		$line = '?';
@@ -564,7 +546,7 @@ class phpCAS {
 	 * This method is used to log something in debug mode.
 	 */
 	public static function trace($str) {
-		$dbg = phpCAS :: backtrace();
+		$dbg = debug_backtrace();
 		phpCAS :: log($str . ' [' . basename($dbg[1]['file']) . ':' . $dbg[1]['line'] . ']');
 	}
 
@@ -574,7 +556,7 @@ class phpCAS {
 	public static function traceBegin() {
 		global $PHPCAS_DEBUG;
 
-		$dbg = phpCAS :: backtrace();
+		$dbg = debug_backtrace();
 		$str = '=> ';
 		if (!empty ($dbg[2]['class'])) {
 			$str .= $dbg[2]['class'] . '::';
@@ -610,7 +592,7 @@ class phpCAS {
 		global $PHPCAS_DEBUG;
 
 		$PHPCAS_DEBUG['indent']--;
-		$dbg = phpCAS :: backtrace();
+		$dbg = debug_backtrace();
 		$str = '';
 		$str .= '<= ' . str_replace("\n", "", var_export($res, TRUE));
 		phpCAS :: log($str);
@@ -1073,7 +1055,7 @@ class phpCAS {
 		$auth = $PHPCAS_CLIENT->checkAuthentication();
 
 		// store where the authentication has been checked and the result
-		$dbg = phpCAS :: backtrace();
+		$dbg = debug_backtrace();
 		$PHPCAS_AUTH_CHECK_CALL = array (
 			'done' => TRUE,
 			'file' => $dbg[0]['file'],
@@ -1101,7 +1083,7 @@ class phpCAS {
 		$auth = $PHPCAS_CLIENT->forceAuthentication();
 
 		// store where the authentication has been checked and the result
-		$dbg = phpCAS :: backtrace();
+		$dbg = debug_backtrace();
 		$PHPCAS_AUTH_CHECK_CALL = array (
 			'done' => TRUE,
 			'file' => $dbg[0]['file'],
@@ -1133,7 +1115,7 @@ class phpCAS {
 		}
 		$auth = $PHPCAS_CLIENT->renewAuthentication();
 		// store where the authentication has been checked and the result
-		$dbg = phpCAS :: backtrace();
+		$dbg = debug_backtrace();
 		$PHPCAS_AUTH_CHECK_CALL = array (
 			'done' => TRUE,
 			'file' => $dbg[0]['file'],
@@ -1164,7 +1146,7 @@ class phpCAS {
 		$auth = $PHPCAS_CLIENT->isAuthenticated();
 
 		// store where the authentication has been checked and the result
-		$dbg = phpCAS :: backtrace();
+		$dbg = debug_backtrace();
 		$PHPCAS_AUTH_CHECK_CALL = array (
 			'done' => TRUE,
 			'file' => $dbg[0]['file'],

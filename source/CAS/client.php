@@ -1147,7 +1147,7 @@ class CASClient
 			if ($res) {
 				// Mark the auth-check as complete to allow post-authentication
 				// callbacks to make use of phpCAS::getUser() and similar methods
-				$dbg = phpCAS :: backtrace();
+				$dbg = debug_backtrace();
 				global $PHPCAS_AUTH_CHECK_CALL;
 				$PHPCAS_AUTH_CHECK_CALL = array (
 					'done' => TRUE,
