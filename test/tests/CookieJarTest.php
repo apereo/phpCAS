@@ -27,7 +27,7 @@ class CAS_CookieJarExposed extends CAS_CookieJar {
 class CookieJarTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var CASClient
+     * @var CAS_Client
      */
     protected $object;
 

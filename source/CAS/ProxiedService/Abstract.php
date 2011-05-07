@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright © 2003-2010, The ESUP-Portail consortium & the JA-SIG Collaborative.
+ * Copyright ï¿½ 2003-2010, The ESUP-Portail consortium & the JA-SIG Collaborative.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,24 +79,24 @@ abstract class CAS_ProxiedService_Abstract
 	}
 	
 	/**
-	 * @var CASClient $_casClient; 
+	 * @var CAS_Client $_casClient; 
 	 */
 	private $_casClient;
 	
 	/**
-	 * Use a particular CASClient->initializeProxiedService() rather than the 
+	 * Use a particular CAS_Client->initializeProxiedService() rather than the 
 	 * static phpCAS::initializeProxiedService().
 	 *
 	 * This method should not be called in standard operation, but is needed for unit
 	 * testing.
 	 * 
-	 * @param CASClient $casClient
+	 * @param CAS_Client $casClient
 	 * @return void
 	 * @throws CAS_OutOfSequenceException If called after a proxy ticket has already been initialized/set.
 	 */
-	public function setCasClient (CASClient $casClient) {
+	public function setCasClient (CAS_Client $casClient) {
 		if (!empty($this->_proxyTicket))
-			throw new CAS_OutOfSequenceException('Already initialized, cannot change the CASClient.');
+			throw new CAS_OutOfSequenceException('Already initialized, cannot change the CAS_Client.');
 		
 		$this->_casClient = $casClient;
 	}
@@ -114,7 +114,7 @@ abstract class CAS_ProxiedService_Abstract
 		if (!empty($this->_proxyTicket))
 			throw new CAS_OutOfSequenceException('Already initialized, cannot initialize again.');
 		
-		// Allow usage of a particular CASClient for unit testing.
+		// Allow usage of a particular CAS_Client for unit testing.
 		if (empty($this->_casClient))
 			phpCAS::initializeProxiedService($this);
 		else

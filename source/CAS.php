@@ -314,7 +314,7 @@ $GLOBALS['PHPCAS_DEBUG'] = array (
 // ########################################################################
 
 // include client class
-include_once (dirname(__FILE__) . '/CAS/client.php');
+include_once (dirname(__FILE__) . '/CAS/Client.php');
 
 // ########################################################################
 //  INTERFACE CLASS
@@ -329,7 +329,7 @@ include_once (dirname(__FILE__) . '/CAS/client.php');
  * @author Pascal Aubry <pascal.aubry at univ-rennes1.fr>
  *
  * \internal All its methods access the same object ($PHPCAS_CLIENT, declared
- * at the end of CAS/client.php).
+ * at the end of CAS/Client.php).
  */
 
 class phpCAS {
@@ -355,7 +355,7 @@ class phpCAS {
 	 * @param $server_uri the URI the CAS server is responding on
 	 * @param $start_session Have phpCAS start PHP sessions (default true)
 	 *
-	 * @return a newly created CASClient object
+	 * @return a newly created CAS_Client object
 	 */
 	public static function client($server_version, $server_hostname, $server_port, $server_uri, $start_session = true) {
 		global $PHPCAS_CLIENT, $PHPCAS_INIT_CALL;
@@ -387,7 +387,7 @@ class phpCAS {
 		);
 
 		// initialize the global object $PHPCAS_CLIENT
-		$PHPCAS_CLIENT = new CASClient($server_version, FALSE /*proxy*/
+		$PHPCAS_CLIENT = new CAS_Client($server_version, FALSE /*proxy*/
 		, $server_hostname, $server_port, $server_uri, $start_session);
 		phpCAS :: traceEnd();
 	}
@@ -404,7 +404,7 @@ class phpCAS {
 	 * @param $server_uri the URI the CAS server is responding on
 	 * @param $start_session Have phpCAS start PHP sessions (default true)
 	 *
-	 * @return a newly created CASClient object
+	 * @return a newly created CAS_Client object
 	 */
 	public static function proxy($server_version, $server_hostname, $server_port, $server_uri, $start_session = true) {
 		global $PHPCAS_CLIENT, $PHPCAS_INIT_CALL;
@@ -436,7 +436,7 @@ class phpCAS {
 		);
 
 		// initialize the global object $PHPCAS_CLIENT
-		$PHPCAS_CLIENT = new CASClient($server_version, TRUE /*proxy*/
+		$PHPCAS_CLIENT = new CAS_Client($server_version, TRUE /*proxy*/
 		, $server_hostname, $server_port, $server_uri, $start_session);
 		phpCAS :: traceEnd();
 	}

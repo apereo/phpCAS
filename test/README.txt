@@ -26,10 +26,10 @@ be added as a test file.
 
 A template test file can be created via the following:
 1. Create the skeleton.
-	phpunit --skeleton-test  CASClient source/CAS/client.php
+	phpunit --skeleton-test  CAS_Client source/CAS/Client.php
 
 2. Move the skeleton to our tests/ directory.
-	mv source/CAS/CASClientTest.php test/tests/ClientTest.php
+	mv source/CAS/CAS_ClientTest.php test/tests/ClientTest.php
 
 Notes:
 

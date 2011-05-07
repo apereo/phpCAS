@@ -30,7 +30,7 @@
  */
 
 /**
- * @file CAS/client.php
+ * @file CAS/Client.php
  * Main class of the phpCAS library
  */
 
@@ -58,14 +58,14 @@ include_once(dirname(__FILE__).'/InvalidArgumentException.php');
 
 
 /**
- * @class CASClient
- * The CASClient class is a client interface that provides CAS authentication
+ * @class CAS_Client
+ * The CAS_Client class is a client interface that provides CAS authentication
  * to PHP applications.
  *
  * @author Pascal Aubry <pascal.aubry at univ-rennes1.fr>
  */
 
-class CASClient
+class CAS_Client
 {
 
 	// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -89,7 +89,7 @@ class CASClient
 	 * - __PHPCAS_VERSION__
 	 * - __SERVER_BASE_URL__
 	 *
-	 * Used by CASClient::PrintHTMLHeader() and CASClient::printHTMLFooter().
+	 * Used by CAS_Client::PrintHTMLHeader() and CAS_Client::printHTMLFooter().
 	 *
 	 * @param $str the string to filter and output
 	 */
@@ -102,17 +102,17 @@ class CASClient
 	}
 
 	/**
-	 * A string used to print the header of HTML pages. Written by CASClient::setHTMLHeader(),
-	 * read by CASClient::printHTMLHeader().
+	 * A string used to print the header of HTML pages. Written by CAS_Client::setHTMLHeader(),
+	 * read by CAS_Client::printHTMLHeader().
 	 *
 	 * @hideinitializer
-	 * @see CASClient::setHTMLHeader, CASClient::printHTMLHeader()
+	 * @see CAS_Client::setHTMLHeader, CAS_Client::printHTMLHeader()
 	 */
 	private $_output_header = '';
 
 	/**
 	 * This method prints the header of the HTML output (after filtering). If
-	 * CASClient::setHTMLHeader() was not used, a default header is output.
+	 * CAS_Client::setHTMLHeader() was not used, a default header is output.
 	 *
 	 * @param $title the title of the page
 	 *
@@ -130,17 +130,17 @@ class CASClient
 	}
 
 	/**
-	 * A string used to print the footer of HTML pages. Written by CASClient::setHTMLFooter(),
+	 * A string used to print the footer of HTML pages. Written by CAS_Client::setHTMLFooter(),
 	 * read by printHTMLFooter().
 	 *
 	 * @hideinitializer
-	 * @see CASClient::setHTMLFooter, CASClient::printHTMLFooter()
+	 * @see CAS_Client::setHTMLFooter, CAS_Client::printHTMLFooter()
 	 */
 	private $_output_footer = '';
 
 	/**
 	 * This method prints the footer of the HTML output (after filtering). If
-	 * CASClient::setHTMLFooter() was not used, a default footer is output.
+	 * CAS_Client::setHTMLFooter() was not used, a default footer is output.
 	 *
 	 * @see HTMLFilterOutput()
 	 */
@@ -184,12 +184,12 @@ class CASClient
 	*/
 	/**
 	 * A string corresponding to the language used by phpCAS. Written by
-	 * CASClient::setLang(), read by CASClient::getLang().
+	 * CAS_Client::setLang(), read by CAS_Client::getLang().
 
 	 * @note debugging information is always in english (debug purposes only).
 	 *
 	 * @hideinitializer
-	 * @sa CASClient::_strings, CASClient::getString()
+	 * @sa CAS_Client::_strings, CAS_Client::getString()
 	 */
 	private $_lang = '';
 
@@ -206,12 +206,12 @@ class CASClient
 	}
 
 	/**
-	 * array containing the strings used by phpCAS. Written by CASClient::setLang(), read by
-	 * CASClient::getString() and used by CASClient::setLang().
+	 * array containing the strings used by phpCAS. Written by CAS_Client::setLang(), read by
+	 * CAS_Client::getString() and used by CAS_Client::setLang().
 	 *
 	 * @note This array is filled by instructions in CAS/languages/<$this->_lang>.php
 	 *
-	 * @see CASClient::_lang, CASClient::getString(), CASClient::setLang(), CASClient::getLang()
+	 * @see CAS_Client::_lang, CAS_Client::getString(), CAS_Client::setLang(), CAS_Client::getLang()
 	 */
 	private $_strings;
 
@@ -276,12 +276,12 @@ class CASClient
 	 * - $_server["logout_url"]: the logout URL of the CAS server
 	 *
 	 * $_server["version"], $_server["hostname"], $_server["port"] and $_server["uri"]
-	 * are written by CASClient::CASClient(), read by CASClient::getServerVersion(),
-	 * CASClient::getServerHostname(), CASClient::getServerPort() and CASClient::getServerURI().
+	 * are written by CAS_Client::CAS_Client(), read by CAS_Client::getServerVersion(),
+	 * CAS_Client::getServerHostname(), CAS_Client::getServerPort() and CAS_Client::getServerURI().
 	 *
-	 * The other fields are written and read by CASClient::getServerBaseURL(),
-	 * CASClient::getServerLoginURL(), CASClient::getServerServiceValidateURL(),
-	 * CASClient::getServerProxyValidateURL() and CASClient::getServerLogoutURL().
+	 * The other fields are written and read by CAS_Client::getServerBaseURL(),
+	 * CAS_Client::getServerLoginURL(), CAS_Client::getServerServiceValidateURL(),
+	 * CAS_Client::getServerProxyValidateURL() and CAS_Client::getServerLogoutURL().
 	 *
 	 * @hideinitializer
 	 */
@@ -675,7 +675,7 @@ class CASClient
 	*/
 	
 	/**
-	* CASClient constructor.
+	* CAS_Client constructor.
 	*
 	* @param $server_version the version of the CAS server
 	* @param $proxy TRUE if the CAS client is a CAS proxy, FALSE otherwise
@@ -684,9 +684,9 @@ class CASClient
 	* @param $server_uri the URI the CAS server is responding on
 	* @param $start_session Have phpCAS start PHP sessions (default true)
 	*
-	* @return a newly created CASClient object
+	* @return a newly created CAS_Client object
 	*/
-	public function CASClient(
+	public function __construct(
 	$server_version,
 	$proxy,
 	$server_hostname,
@@ -860,7 +860,7 @@ class CASClient
 	 */
 
 	/**
-	 * The Authenticated user. Written by CASClient::setUser(), read by CASClient::getUser().
+	 * The Authenticated user. Written by CAS_Client::setUser(), read by CAS_Client::getUser().
 	 * @attention client applications should use phpCAS::getUser().
 	 *
 	 * @hideinitializer
@@ -880,8 +880,8 @@ class CASClient
 
 	/**
 	 * This method returns the CAS user's login name.
-	 * @warning should be called only after CASClient::forceAuthentication() or
-	 * CASClient::isAuthenticated(), otherwise halt with an error.
+	 * @warning should be called only after CAS_Client::forceAuthentication() or
+	 * CAS_Client::isAuthenticated(), otherwise halt with an error.
 	 *
 	 * @return the login name of the authenticated user
 	 */
@@ -902,7 +902,7 @@ class CASClient
 	 *
 	 ***********************************************************************************************************************/
 	/**
-	 * The Authenticated users attributes. Written by CASClient::setAttributes(), read by CASClient::getAttributes().
+	 * The Authenticated users attributes. Written by CAS_Client::setAttributes(), read by CAS_Client::getAttributes().
 	 * @attention client applications should use phpCAS::getAttributes().
 	 *
 	 * @hideinitializer
@@ -1246,7 +1246,7 @@ class CASClient
 
 	/**
 	 * This method is used to redirect the client to the CAS server.
-	 * It is used by CASClient::forceAuthentication() and CASClient::checkAuthentication().
+	 * It is used by CAS_Client::forceAuthentication() and CAS_Client::checkAuthentication().
 	 * @param $gateway true to check authentication, false to force it
 	 * @param $renew true to force the authentication with the CAS server
 	 */
@@ -1404,8 +1404,8 @@ class CASClient
 
 	/**
 	 * the Service Ticket provided in the URL of the request if present
-	 * (empty otherwise). Written by CASClient::CASClient(), read by
-	 * CASClient::getST() and CASClient::hasPGT().
+	 * (empty otherwise). Written by CAS_Client::CAS_Client(), read by
+	 * CAS_Client::getST() and CAS_Client::hasPGT().
 	 *
 	 * @hideinitializer
 	 */
@@ -1478,13 +1478,13 @@ class CASClient
 	/**
 	 * This method is used to validate a ST; halt on failure, and sets $validate_url,
 	 * $text_reponse and $tree_response on success. These parameters are used later
-	 * by CASClient::validatePGT() for CAS proxies.
+	 * by CAS_Client::validatePGT() for CAS proxies.
 	 * Used for all CAS 1.0 validations
 	 * @param $validate_url the URL of the request to the CAS server.
 	 * @param $text_response the response of the CAS server, as is (XML text).
 	 * @param $tree_response the response of the CAS server, as a DOM XML tree.
 	 *
-	 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+	 * @return bool TRUE when successfull, halt otherwise by calling CAS_Client::authError().
 	 */
 	public function validateST($validate_url,&$text_response,&$tree_response)
 	{
@@ -1615,13 +1615,13 @@ class CASClient
 	/**
 	 * This method is used to validate a SAML TICKET; halt on failure, and sets $validate_url,
 	 * $text_reponse and $tree_response on success. These parameters are used later
-	 * by CASClient::validatePGT() for CAS proxies.
+	 * by CAS_Client::validatePGT() for CAS proxies.
 	 *
 	 * @param $validate_url the URL of the request to the CAS server.
 	 * @param $text_response the response of the CAS server, as is (XML text).
 	 * @param $tree_response the response of the CAS server, as a DOM XML tree.
 	 *
-	 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+	 * @return bool TRUE when successfull, halt otherwise by calling CAS_Client::authError().
 	 */
 	public function validateSA($validate_url,&$text_response,&$tree_response)
 	{
@@ -1791,8 +1791,8 @@ class CASClient
 	*/
 
 	/**
-	 * A boolean telling if the client is a CAS proxy or not. Written by CASClient::CASClient(),
-	 * read by CASClient::isProxy().
+	 * A boolean telling if the client is a CAS proxy or not. Written by CAS_Client::CAS_Client(),
+	 * read by CAS_Client::isProxy().
 	 */
 	private $_proxy;
 
@@ -1822,7 +1822,7 @@ class CASClient
 
 	/**
 	 * the Proxy Grnting Ticket given by the CAS server (empty otherwise).
-	 * Written by CASClient::setPGT(), read by CASClient::getPGT() and CASClient::hasPGT().
+	 * Written by CAS_Client::setPGT(), read by CAS_Client::getPGT() and CAS_Client::hasPGT().
 	 *
 	 * @hideinitializer
 	 */
@@ -1866,7 +1866,7 @@ class CASClient
 
 	/**
 	 * a boolean to know if the CAS client is running in callback mode. Written by
-	 * CASClient::setCallBackMode(), read by CASClient::isCallbackMode().
+	 * CAS_Client::setCallBackMode(), read by CAS_Client::isCallbackMode().
 	 *
 	 * @hideinitializer
 	 */
@@ -1896,7 +1896,7 @@ class CASClient
 	/**
 	 * the URL that should be used for the PGT callback (in fact the URL of the
 	 * current request without any CGI parameter). Written and read by
-	 * CASClient::getCallbackURL().
+	 * CAS_Client::getCallbackURL().
 	 *
 	 * @hideinitializer
 	 */
@@ -1936,7 +1936,7 @@ class CASClient
 	}
 
 	/**
-	 * This method is called by CASClient::CASClient() when running in callback
+	 * This method is called by CAS_Client::CAS_Client() when running in callback
 	 * mode. It stores the PGT and its PGT Iou, prints its output and halts.
 	 */
 	private function callback()
@@ -1973,8 +1973,8 @@ class CASClient
 
 	/**
 	 * an instance of a class inheriting of PGTStorage, used to deal with PGT
-	 * storage. Created by CASClient::setPGTStorageFile(), used
-	 * by CASClient::setPGTStorageFile() and CASClient::initPGTStorage().
+	 * storage. Created by CAS_Client::setPGTStorageFile(), used
+	 * by CAS_Client::setPGTStorageFile() and CAS_Client::initPGTStorage().
 	 *
 	 * @hideinitializer
 	 */
@@ -2084,11 +2084,11 @@ class CASClient
 	*
 	* @param $validate_url the URL of the request to the CAS server.
 	* @param $text_response the response of the CAS server, as is (XML text); result
-	* of CASClient::validateST() or CASClient::validatePT().
+	* of CAS_Client::validateST() or CAS_Client::validatePT().
 	* @param $tree_response the response of the CAS server, as a DOM XML tree; result
-	* of CASClient::validateST() or CASClient::validatePT().
+	* of CAS_Client::validateST() or CAS_Client::validatePT().
 	*
-	* @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+	* @return bool TRUE when successfull, halt otherwise by calling CAS_Client::authError().
 	*/
 	private function validatePGT(&$validate_url,$text_response,$tree_response)
 	{
@@ -2496,8 +2496,8 @@ class CASClient
 
 	/**
 	 * the Proxy Ticket provided in the URL of the request if present
-	 * (empty otherwise). Written by CASClient::CASClient(), read by
-	 * CASClient::getPT() and CASClient::hasPGT().
+	 * (empty otherwise). Written by CAS_Client::CAS_Client(), read by
+	 * CAS_Client::getPT() and CAS_Client::hasPGT().
 	 *
 	 * @hideinitializer
 	 */
@@ -2533,7 +2533,7 @@ class CASClient
 	 * property will only be populated if this script is being proxied rather than
 	 * accessed directly.
 	 *
-	 * It is set in CASClient::validatePT() and can be read by CASClient::getProxies()
+	 * It is set in CAS_Client::validatePT() and can be read by CAS_Client::getProxies()
 	 * @access private
 	 */
 	private $_proxies = array();
@@ -2577,7 +2577,7 @@ class CASClient
 	/**
 	 * This method is used to validate a ST or PT; halt on failure
 	 * Used for all CAS 2.0 validations
-	 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+	 * @return bool TRUE when successfull, halt otherwise by calling CAS_Client::authError().
 	 */
 	public function validatePT(&$validate_url,&$text_response,&$tree_response)
 	{
@@ -2686,7 +2686,7 @@ class CASClient
 	 * payload and put them into an array, then put the array into the session.
 	 *
 	 * @param $text_response the XML payload.
-	 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+	 * @return bool TRUE when successfull, halt otherwise by calling CAS_Client::authError().
 	 */
 	private function readExtraAttributesCas20($success_elements)
 	{
@@ -2837,7 +2837,7 @@ class CASClient
 	// ########################################################################
 	/**
 	* the URL of the current request (without any ticket CGI parameter). Written
-	* and read by CASClient::getURL().
+	* and read by CAS_Client::getURL().
 	*
 	* @hideinitializer
 	*/

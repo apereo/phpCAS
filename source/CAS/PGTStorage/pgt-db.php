@@ -122,7 +122,7 @@ class CAS_PGTStorageDb extends CAS_PGTStorage
 	/**
 	 * The class constructor.
 	 *
-	 * @param $cas_parent the CASClient instance that creates the object.
+	 * @param $cas_parent the CAS_Client instance that creates the object.
 	 * @param $dsn_or_pdo a dsn string to use for creating a PDO object or a PDO object
 	 * @param $username the username to use when connecting to the database
 	 * @param $password the password to use when connecting to the database

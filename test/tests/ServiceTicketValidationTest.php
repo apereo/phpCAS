@@ -12,7 +12,7 @@ require_once dirname(__FILE__).'/../harness/BasicResponse.php';
 class ServiceTicketValidationTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var CASClient
+     * @var CAS_Client
      */
     protected $object;
 
@@ -33,7 +33,7 @@ class ServiceTicketValidationTest extends PHPUnit_Framework_TestCase
 
 // 		$_GET['ticket'] = 'ST-123456-asdfasdfasgww2323radf3';
 
-		$this->object = new CASClient(
+		$this->object = new CAS_Client(
 			CAS_VERSION_2_0, 	// Server Version
 			false, 				// Proxy
 			'cas.example.edu',	// Server Hostname

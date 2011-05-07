@@ -35,7 +35,7 @@
 /**
  * @class CAS_PGTStorageFile
  * The PGTStorageFile class is a class for PGT file storage. An instance of
- * this class is returned by CASClient::SetPGTStorageFile().
+ * this class is returned by CAS_Client::SetPGTStorageFile().
  *
  * @author Pascal Aubry <pascal.aubry at univ-rennes1.fr>
  *
@@ -123,9 +123,9 @@ class CAS_PGTStorageFile extends CAS_PGTStorage
 	// ########################################################################
 
 	/**
-	 * The class constructor, called by CASClient::SetPGTStorageFile().
+	 * The class constructor, called by CAS_Client::SetPGTStorageFile().
 	 *
-	 * @param $cas_parent the CASClient instance that creates the object.
+	 * @param $cas_parent the CAS_Client instance that creates the object.
 	 * @param $format the format used to store the PGT's (`plain' and `xml' allowed).
 	 * @param $path the path where the PGT's should be stored
 	 *

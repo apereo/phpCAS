@@ -12,7 +12,7 @@ require_once dirname(__FILE__).'/../harness/BasicResponse.php';
 class ServiceWebTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var CASClient
+     * @var CAS_Client
      */
     protected $object;
 
@@ -34,7 +34,7 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
 		$_SERVER['PHP_SELF'] = '/index.php';
 		$_SESSION = array();
 
-		$this->object = new CASClient(
+		$this->object = new CAS_Client(
 			CAS_VERSION_2_0, 	// Server Version
 			true, 				// Proxy
 			'cas.example.edu',	// Server Hostname
@@ -47,7 +47,7 @@ class ServiceWebTest extends PHPUnit_Framework_TestCase
 		$this->object->setCasServerCACert('/path/to/ca_cert.crt');
 		$this->object->setNoExitOnAuthError();
 		
-		// Bypass PGT storage since CASClient->callback() will exit. Just build up the session manually
+		// Bypass PGT storage since CAS_Client->callback() will exit. Just build up the session manually
 		// so that we are in a state from which we can attempt to fetch proxy tickets and make proxied requests.
 		$_SESSION['phpCAS']['user'] = 'jdoe';
 		$_SESSION['phpCAS']['pgt'] = 'PGT-clientapp-abc123';

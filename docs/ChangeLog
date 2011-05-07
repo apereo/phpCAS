@@ -167,7 +167,7 @@ Bug fixes
     * fixed validatePGT() failing on phpCAS::traceBegin() with newer domxml-php4-to-php5.php [PHPCAS-35] (Olivier Berger) 	 
     * Fixed missing exit() at end of callback() method [PHPCAS-34] (Olivier Berger)
     * Update included domxml-php4-php5.php to most recent version now under LGPL [PHPCAS-30] (Olivier Berger) 	  
-    * fixed empty $target_service in CASClient:serviceMail [PHPCAS-22] (Julien Marchal).
+    * fixed empty $target_service in CAS_Client:serviceMail [PHPCAS-22] (Julien Marchal).
 
 Changes in version 1.0.1
 Bug fixes
@@ -263,7 +263,7 @@ New features
     * the service URL for the CAs server can be fixed with method phpCAS::setFixedServiceURL (Julien Marchal).
     * the callback URL used to receive PGTs can be fixed with method phpCAS::setFixedCallbackURL() (Julien Marchal).
 
-    * added a CASClient wrapper to class phpCAS for method retrievePGT() (Julien Marchal).
+    * added a CAS_Client wrapper to class phpCAS for method retrievePGT() (Julien Marchal).
 
 Changes in version 0.4.18
 Bug fixes
@@ -400,7 +400,7 @@ New features
 Changes in version 0.3.1
 Bug fixes
 
-    * syntax error in CAS/client.php (Julien Marchal)
+    * syntax error in CAS/Client.php (Julien Marchal)
 
 Changes in version 0.3
 New features

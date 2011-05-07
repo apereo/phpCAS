@@ -219,7 +219,7 @@ class CAS_ProxiedService_Imap
 	}
 	
 	/**
-	 * CASClient::serviceMail() needs to return the proxy ticket for some reason,
+	 * CAS_Client::serviceMail() needs to return the proxy ticket for some reason,
 	 * so this method provides access to it.
 	 * 
 	 * @return string 
