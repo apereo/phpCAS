@@ -170,105 +170,11 @@ class CASClient
 	{
 		$this->_output_footer = $footer;
 	}
-
-	/**
-	 * @var boolean $_exitOnAuthError; If true, phpCAS will exit on an authentication error.
-	 */
-	private $_exitOnAuthError = true;
-
-	/**
-	 * Configure the client to not call exit() when an authentication failure occurs.
-	 *
-	 * Needed for testing proper failure handling.
-	 *
-	 * @return void
-	 */
-	public function setNoExitOnAuthError () {
-		$this->_exitOnAuthError = false;
-	}
 	
-	/**
-	 * @var boolean $_exitOnAuthError; If true, phpCAS will clear session tickets from the URL.
-	 * After a successful authentication.
-	 */
-	private $_clearTicketsFromUrl = true;
 	
-	/**
-	 * Configure the client to not send redirect headers and call exit() on authentication
-	 * success. The normal redirect is used to remove the service ticket from the
-	 * client's URL, but for running unit tests we need to continue without exiting.
-	 *
-	 * Needed for testing authentication
-	 *
-	 * @return void
-	 */
-	public function setNoClearTicketsFromUrl () {
-		$this->_clearTicketsFromUrl = false;
-	}
-	
-	/**
-	 * @var callback $_postAuthenticateCallbackFunction;  
-	 */
-	private $_postAuthenticateCallbackFunction = null;
-	
-	/**
-	 * @var array $_postAuthenticateCallbackArgs;  
-	 */
-	private $_postAuthenticateCallbackArgs = array();
-	
-	/**
-	 * Set a callback function to be run when a user authenticates.
-	 *
-	 * The callback function will be passed a $logoutTicket as its first parameter,
-	 * followed by any $additionalArgs you pass. The $logoutTicket parameter is an
-	 * opaque string that can be used to map a session-id to the logout request in order
-	 * to support single-signout in applications that manage their own sessions 
-	 * (rather than letting phpCAS start the session).
-	 *
-	 * phpCAS::forceAuthentication() will always exit and forward client unless
-	 * they are already authenticated. To perform an action at the moment the user
-	 * logs in (such as registering an account, performing logging, etc), register
-	 * a callback function here.
-	 * 
-	 * @param callback $function
-	 * @param optional array $additionalArgs
-	 * @return void
-	 */
-	public function setPostAuthenticateCallback ($function, array $additionalArgs = array()) {
-		$this->_postAuthenticateCallbackFunction = $function;
-		$this->_postAuthenticateCallbackArgs = $additionalArgs;
-	}
-	
-	/**
-	 * @var callback $_signoutCallbackFunction;  
-	 */
-	private $_signoutCallbackFunction = null;
-	
-	/**
-	 * @var array $_signoutCallbackArgs;  
-	 */
-	private $_signoutCallbackArgs = array();
-	
-	/**
-	 * Set a callback function to be run when a single-signout request is received.
-	 *
-	 * The callback function will be passed a $logoutTicket as its first parameter,
-	 * followed by any $additionalArgs you pass. The $logoutTicket parameter is an
-	 * opaque string that can be used to map a session-id to the logout request in order
-	 * to support single-signout in applications that manage their own sessions 
-	 * (rather than letting phpCAS start and destroy the session).
-	 * 
-	 * @param callback $function
-	 * @param optional array $additionalArgs
-	 * @return void
-	 */
-	public function setSingleSignoutCallback ($function, array $additionalArgs = array()) {
-		$this->_signoutCallbackFunction = $function;
-		$this->_signoutCallbackArgs = $additionalArgs;
-	}
-
-
 	/** @} */
+
+
 	// ########################################################################
 	//  INTERNATIONALIZATION
 	// ########################################################################
@@ -571,19 +477,6 @@ class CASClient
 		return $url;
 	}
 	
-	/**
-	 * This method is used to append query parameters to an url. Since the url
-	 * might already contain parameter it has to be detected and to build a proper
-	 * URL
-	 * @param $url  base url to add the query params to
-	 * @param $query params in query form with & separated
-	 * @return url with query params 
-	 */
-	private function buildQueryUrl($url, $query) {
-		$url .= (strstr($url,'?') === FALSE) ? '?' : '&';
-		$url .= $query;
-		return $url;
-	}	
 
 	/**
 	 * This method is used to retrieve the proxy URL of the CAS server.
@@ -640,7 +533,18 @@ class CASClient
 	{
 		$this->_curl_options[$key] = $value;
 	}
+	
+	/** @} */
 
+	// ########################################################################
+	//  Change the internal behaviour of phpcas
+	// ########################################################################
+	
+	/**
+	* @addtogroup internalBehave
+	* @{
+	*/
+	
 	/**
 	 * The class to instantiate for making web requests in readUrl().
 	 * The class specified must implement the CAS_RequestInterface.
@@ -663,22 +567,113 @@ class CASClient
 
 		$this->_requestImplementation = $className;
 	}
+		
+	/**
+	 * @var boolean $_exitOnAuthError; If true, phpCAS will exit on an authentication error.
+	 */
+	private $_exitOnAuthError = true;
 
 	/**
-	 * This method checks to see if the request is secured via HTTPS
-	 * @return true if https, false otherwise
+	 * Configure the client to not call exit() when an authentication failure occurs.
+	 *
+	 * Needed for testing proper failure handling.
+	 *
+	 * @return void
 	 */
-	private function isHttps() {
-		if ( isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
-			return true;
-		} else {
-			return false;
-		}
+	public function setNoExitOnAuthError () {
+		$this->_exitOnAuthError = false;
 	}
+	
+	/**
+	 * @var boolean $_clearTicketsFromUrl; If true, phpCAS will clear session tickets from the URL.
+	 * After a successful authentication.
+	 */
+	private $_clearTicketsFromUrl = true;
+	
+	/**
+	 * Configure the client to not send redirect headers and call exit() on authentication
+	 * success. The normal redirect is used to remove the service ticket from the
+	 * client's URL, but for running unit tests we need to continue without exiting.
+	 *
+	 * Needed for testing authentication
+	 *
+	 * @return void
+	 */
+	public function setNoClearTicketsFromUrl () {
+		$this->_clearTicketsFromUrl = false;
+	}
+	
+	/**
+	 * @var callback $_postAuthenticateCallbackFunction;  
+	 */
+	private $_postAuthenticateCallbackFunction = null;
+	
+	/**
+	 * @var array $_postAuthenticateCallbackArgs;  
+	 */
+	private $_postAuthenticateCallbackArgs = array();
+	
+	/**
+	 * Set a callback function to be run when a user authenticates.
+	 *
+	 * The callback function will be passed a $logoutTicket as its first parameter,
+	 * followed by any $additionalArgs you pass. The $logoutTicket parameter is an
+	 * opaque string that can be used to map a session-id to the logout request in order
+	 * to support single-signout in applications that manage their own sessions 
+	 * (rather than letting phpCAS start the session).
+	 *
+	 * phpCAS::forceAuthentication() will always exit and forward client unless
+	 * they are already authenticated. To perform an action at the moment the user
+	 * logs in (such as registering an account, performing logging, etc), register
+	 * a callback function here.
+	 * 
+	 * @param callback $function
+	 * @param optional array $additionalArgs
+	 * @return void
+	 */
+	public function setPostAuthenticateCallback ($function, array $additionalArgs = array()) {
+		$this->_postAuthenticateCallbackFunction = $function;
+		$this->_postAuthenticateCallbackArgs = $additionalArgs;
+	}
+	
+	/**
+	 * @var callback $_signoutCallbackFunction;  
+	 */
+	private $_signoutCallbackFunction = null;
+	
+	/**
+	 * @var array $_signoutCallbackArgs;  
+	 */
+	private $_signoutCallbackArgs = array();
+	
+	/**
+	 * Set a callback function to be run when a single-signout request is received.
+	 *
+	 * The callback function will be passed a $logoutTicket as its first parameter,
+	 * followed by any $additionalArgs you pass. The $logoutTicket parameter is an
+	 * opaque string that can be used to map a session-id to the logout request in order
+	 * to support single-signout in applications that manage their own sessions 
+	 * (rather than letting phpCAS start and destroy the session).
+	 * 
+	 * @param callback $function
+	 * @param optional array $additionalArgs
+	 * @return void
+	 */
+	public function setSingleSignoutCallback ($function, array $additionalArgs = array()) {
+		$this->_signoutCallbackFunction = $function;
+		$this->_signoutCallbackArgs = $additionalArgs;
+	}
+	
+	/** @} */
 
 	// ########################################################################
 	//  CONSTRUCTOR
 	// ########################################################################
+	/**
+	* @addtogroup internalConfig
+	* @{
+	*/
+	
 	/**
 	* CASClient constructor.
 	*
@@ -830,6 +825,12 @@ class CASClient
 	// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 	/**
+	* @addtogroup internalConfig
+	* @{
+	*/
+	
+	
+	/**
 	 * A variable to whether phpcas will use its own session handling. Default = true
 	 * @hideinitializer
 	 */
@@ -845,34 +846,8 @@ class CASClient
 		$this->_start_session = session;
 	}
 
-	/**
-	 * Renaming the session
-	 */
-	private function renameSession($ticket)
-	{
-		phpCAS::traceBegin();
-		if($this->_start_session){
-			if (!empty ($this->_user))
-			{
-				$old_session = $_SESSION;
-				session_destroy();
-				// set up a new session, of name based on the ticket
-				$session_id = preg_replace('/[^\w]/', '', $ticket);
-				phpCAS :: trace("Session ID: ".$session_id);
-				session_id($session_id);
-				session_start();
-				phpCAS :: trace("Restoring old session vars");
-				$_SESSION = $old_session;
-			} else
-			{
-				phpCAS :: error('Session should only be renamed after successfull authentication');
-			}
-		}else{
-			phpCAS :: trace("Skipping session rename since phpCAS is not handling the session.");
-		}
-		phpCAS::traceEnd();
-	}
-
+	/** @} */
+	
 	// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	// XX                                                                    XX
 	// XX                           AUTHENTICATION                           XX
@@ -2868,6 +2843,17 @@ class CASClient
 	*/
 	private $_url = '';
 
+	
+	/**
+	 * This method sets the URL of the current request
+	 *
+	 * @param $url url to set for service
+	 */
+	public function setURL($url)
+	{
+		$this->_url = $url;
+	}
+	
 	/**
 	 * This method returns the URL of the current request (without any ticket
 	 * CGI parameter).
@@ -2904,6 +2890,7 @@ class CASClient
 		phpCAS::traceEnd($this->_url);
 		return $this->_url;
 	}
+	
 
 	/**
 	 * Try to figure out the server URL with possible Proxys / Ports etc.
@@ -2934,7 +2921,17 @@ class CASClient
 		return $server_url;
 	}
 
-
+	/**
+	 * This method checks to see if the request is secured via HTTPS
+	 * @return true if https, false otherwise
+	 */
+	private function isHttps() {
+		if ( isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * Removes a parameter from a query string
@@ -2950,18 +2947,50 @@ class CASClient
 		$parameterName	= preg_quote($parameterName);
 		return preg_replace("/&$parameterName(=[^&]*)?|^$parameterName(=[^&]*)?&?/", '', $queryString);
 	}
-
-
+	
 	/**
-	 * This method sets the URL of the current request
-	 *
-	 * @param $url url to set for service
+	 * This method is used to append query parameters to an url. Since the url
+	 * might already contain parameter it has to be detected and to build a proper
+	 * URL
+	 * @param $url  base url to add the query params to
+	 * @param $query params in query form with & separated
+	 * @return url with query params 
 	 */
-	public function setURL($url)
+	private function buildQueryUrl($url, $query) {
+		$url .= (strstr($url,'?') === FALSE) ? '?' : '&';
+		$url .= $query;
+		return $url;
+	}
+	
+	/**
+	 * Renaming the session
+	 */
+	private function renameSession($ticket)
 	{
-		$this->_url = $url;
+		phpCAS::traceBegin();
+		if($this->_start_session){
+			if (!empty ($this->_user))
+			{
+				$old_session = $_SESSION;
+				session_destroy();
+				// set up a new session, of name based on the ticket
+				$session_id = preg_replace('/[^\w]/', '', $ticket);
+				phpCAS :: trace("Session ID: ".$session_id);
+				session_id($session_id);
+				session_start();
+				phpCAS :: trace("Restoring old session vars");
+				$_SESSION = $old_session;
+			} else
+			{
+				phpCAS :: error('Session should only be renamed after successfull authentication');
+			}
+		}else{
+			phpCAS :: trace("Skipping session rename since phpCAS is not handling the session.");
+		}
+		phpCAS::traceEnd();
 	}
 
+	
 	// ########################################################################
 	//  AUTHENTICATION ERROR HANDLING
 	// ########################################################################

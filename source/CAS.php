@@ -1756,6 +1756,9 @@ class phpCAS {
 /** @defgroup internalConfig Configuration
  *  @ingroup internal */
 
+/** @defgroup internalBehave Internal behaviour of phpCAS
+ *  @ingroup internalConfig */
+
 /** @defgroup internalOutput HTML output
  *  @ingroup internalConfig */
 
