@@ -33,7 +33,7 @@
  */
 
 /**
- * @class PGTStorage
+ * @class CAS_PGTStorage
  * The PGTStorage class is a generic class for PGT storage. This class should
  * not be instanciated itself but inherited by specific PGT storage classes.
  *

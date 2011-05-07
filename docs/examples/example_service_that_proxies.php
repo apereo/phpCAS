@@ -41,7 +41,8 @@ phpCAS::forceAuthentication();
     <h1>I am a service that can be proxied. In turn, I proxy another service.</h1>
     <?php include 'script_info.php' ?>
     <p>the user's login is <b><?php echo phpCAS::getUser(); ?></b>.</p>
-    <h2>Response from service <?php echo $serviceUrl; ?></h2><ul><hr>
+    <h2>Response from service <?php echo $serviceUrl; ?></h2>
+    <hr/><ul>  
 <?php
   flush();
   // call a service and change the color depending on the result
@@ -51,8 +52,9 @@ phpCAS::forceAuthentication();
     echo '<font color="#FF0000">';
   }
   echo $output;
-  echo '</font><hr></ul>';
+  echo '</font>';
 ?>
+	</ul><hr/>
   </body>
 </html>
 

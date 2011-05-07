@@ -33,7 +33,7 @@
  */
 
 /**
- * @class PGTStorageFile
+ * @class CAS_PGTStorageFile
  * The PGTStorageFile class is a class for PGT file storage. An instance of
  * this class is returned by CASClient::SetPGTStorageFile().
  *

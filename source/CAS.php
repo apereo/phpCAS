@@ -1732,6 +1732,9 @@ class phpCAS {
 /** @defgroup internalProxy CAS Proxy features (CAS 2.0, Proxy Granting Tickets)
  *  @ingroup internal */
 
+/** @defgroup internalSAML CAS SAML features (SAML 1.1)
+ *  @ingroup internal */
+
 /** @defgroup internalPGTStorage PGT storage
  *  @ingroup internalProxy */
 
@@ -1742,6 +1745,9 @@ class phpCAS {
  *  @ingroup internalPGTStorage */
 
 /** @defgroup internalCallback Callback from the CAS server
+ *  @ingroup internalProxy */
+
+/** @defgroup internalProxyServices Proxy other services
  *  @ingroup internalProxy */
 
 /** @defgroup internalProxied CAS proxied client features (CAS 2.0, Proxy Tickets)

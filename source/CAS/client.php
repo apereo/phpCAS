@@ -1625,151 +1625,15 @@ class CASClient
 		phpCAS::traceEnd(TRUE);
 		return TRUE;
 	}
-
-
-	/**
-	 * This method will parse the DOM and pull out the attributes from the XML
-	 * payload and put them into an array, then put the array into the session.
-	 *
-	 * @param $text_response the XML payload.
-	 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
-	 */
-	private function readExtraAttributesCas20($success_elements)
-	{
-		# PHPCAS-43 add CAS-2.0 extra attributes
-		phpCAS::traceBegin();
-
-		$extra_attributes = array();
-		
-		// "Jasig Style" Attributes:
-		// 
-		// 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
-		// 		<cas:authenticationSuccess>
-		// 			<cas:user>jsmith</cas:user>
-		// 			<cas:attributes>
-		// 				<cas:attraStyle>RubyCAS</cas:attraStyle>
-		// 				<cas:surname>Smith</cas:surname>
-		// 				<cas:givenName>John</cas:givenName>
-		// 				<cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
-		// 				<cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
-		// 			</cas:attributes>
-		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
-		// 		</cas:authenticationSuccess>
-		// 	</cas:serviceResponse>
-		// 
-		if ( $success_elements->item(0)->getElementsByTagName("attributes")->length != 0) {
-			$attr_nodes = $success_elements->item(0)->getElementsByTagName("attributes");
-			phpCas :: trace("Found nested jasig style attributes");
-			if($attr_nodes->item(0)->hasChildNodes()){
-				// Nested Attributes
-				foreach ($attr_nodes->item(0)->childNodes as $attr_child) {
-					phpCas :: trace("Attribute [".$attr_child->localName."] = ".$attr_child->nodeValue);
-					$this->addAttributeToArray($extra_attributes, $attr_child->localName, $attr_child->nodeValue);
-				}
-			}
-		} 
-		// "RubyCAS Style" attributes
-		// 
-		// 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
-		// 		<cas:authenticationSuccess>
-		// 			<cas:user>jsmith</cas:user>
-		// 			
-		// 			<cas:attraStyle>RubyCAS</cas:attraStyle>
-		// 			<cas:surname>Smith</cas:surname>
-		// 			<cas:givenName>John</cas:givenName>
-		// 			<cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
-		// 			<cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
-		// 			
-		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
-		// 		</cas:authenticationSuccess>
-		// 	</cas:serviceResponse>
-		// 
-		else {
-			phpCas :: trace("Testing for rubycas style attributes");
-			$childnodes = $success_elements->item(0)->childNodes;
-			foreach ($childnodes as $attr_node) {
-				switch ($attr_node->localName) {
-					case 'user':
-					case 'proxies':
-					case 'proxyGrantingTicket':
-						continue;
-					default:
-						if (strlen(trim($attr_node->nodeValue))) {
-							phpCas :: trace("Attribute [".$attr_node->localName."] = ".$attr_node->nodeValue);
-							$this->addAttributeToArray($extra_attributes, $attr_node->localName, $attr_node->nodeValue);
-						}
-				}
-			}
-		}
-		
-		// "Name-Value" attributes.
-		// 
-		// Attribute format from these mailing list thread:
-		// http://jasig.275507.n4.nabble.com/CAS-attributes-and-how-they-appear-in-the-CAS-response-td264272.html
-		// Note: This is a less widely used format, but in use by at least two institutions.
-		// 
-		// 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
-		// 		<cas:authenticationSuccess>
-		// 			<cas:user>jsmith</cas:user>
-		// 			
-		// 			<cas:attribute name='attraStyle' value='Name-Value' />
-		// 			<cas:attribute name='surname' value='Smith' />
-		// 			<cas:attribute name='givenName' value='John' />
-		// 			<cas:attribute name='memberOf' value='CN=Staff,OU=Groups,DC=example,DC=edu' />
-		// 			<cas:attribute name='memberOf' value='CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu' />
-		// 			
-		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
-		// 		</cas:authenticationSuccess>
-		// 	</cas:serviceResponse>
-		// 
-		if (!count($extra_attributes) && $success_elements->item(0)->getElementsByTagName("attribute")->length != 0) {
-			$attr_nodes = $success_elements->item(0)->getElementsByTagName("attribute");
-			$firstAttr = $attr_nodes->item(0);
-			if (!$firstAttr->hasChildNodes() && $firstAttr->hasAttribute('name') && $firstAttr->hasAttribute('value')) {
-				phpCas :: trace("Found Name-Value style attributes");
-				// Nested Attributes
-				foreach ($attr_nodes as $attr_node) {
-					if ($attr_node->hasAttribute('name') && $attr_node->hasAttribute('value')) {
-						phpCas :: trace("Attribute [".$attr_node->getAttribute('name')."] = ".$attr_node->getAttribute('value'));
-						$this->addAttributeToArray($extra_attributes, $attr_node->getAttribute('name'), $attr_node->getAttribute('value'));
-					}
-				}
-			}
-		}
-		
-		$this->setAttributes($extra_attributes);
-		phpCAS::traceEnd();
-		return TRUE;
-	}
 	
-	/**
-	 * Add an attribute value to an array of attributes.
-	 * 
-	 * @param ref array $array
-	 * @param string $name
-	 * @param string $value
-	 * @return void
-	 */
-	private function addAttributeToArray (array &$attributeArray, $name, $value) {
-		// If multiple attributes exist, add as an array value
-		if (isset($attributeArray[$name])) {
-			// Initialize the array with the existing value
-			if (!is_array($attributeArray[$name])) {
-				$existingValue = $attributeArray[$name];
-				$attributeArray[$name] = array($existingValue);
-			}
-			
-			$attributeArray[$name][] = trim($value);
-		} else {
-			$attributeArray[$name] = trim($value);
-		}
-	}
+	/** @} */
+
 	
 	// ########################################################################
 	//  SAML VALIDATION
 	// ########################################################################
 	/**
-	* @addtogroup internalBasic
+	* @addtogroup internalSAML
 	* @{
 	*/
 
@@ -1913,6 +1777,27 @@ class CASClient
 		phpCAS::traceEnd($result);
 		return $result;
 	}
+	
+	/**
+	 * This method returns the SAML Ticket provided in the URL of the request.
+	 * @return The SAML ticket.
+	 */
+	public function getSA()
+	{ return 'ST'.substr($this->_sa, 2); }
+
+	/**
+	 * This method stores the SAML Ticket.
+	 * @param $sa The SAML Ticket.
+	 */
+	public function setSA($sa)
+	{ $this->_sa = $sa; }
+
+	/**
+	 * This method tells if a SAML Ticket was stored.
+	 * @return TRUE if a SAML Ticket has been stored.
+	 */
+	public function hasSA()
+	{ return !empty($this->_sa); }
 
 	/** @} */
 
@@ -2378,11 +2263,18 @@ class CASClient
 		phpCAS::traceEnd(FALSE);
 		return FALSE;
 	}
+	
+		/** @} */
 
 	// ########################################################################
-	// ACCESS TO EXTERNAL SERVICES
+	// READ CAS SERVER ANSWERS
 	// ########################################################################
-
+	
+	/**
+	* @addtogroup internalMisc
+	* @{
+	*/
+	
 	/**
 	 * This method is used to acces a remote URL.
 	 *
@@ -2465,6 +2357,18 @@ class CASClient
 		$this->_curl_headers[] = $header;
 		return strlen($header);
 	}
+	
+	/** @} **/
+	
+	// ########################################################################
+	// ACCESS TO EXTERNAL SERVICES
+	// ########################################################################
+	
+	/**
+	* @addtogroup internalProxyServices
+	* @{
+	*/
+	
 	
 	/**
 	 * Answer a proxy-authenticated service handler.
@@ -2599,7 +2503,7 @@ class CASClient
 		}
 	}
 
-	/** @} */
+	/** @} **/
 
 	// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	// XX                                                                    XX
@@ -2685,26 +2589,6 @@ class CASClient
 		$this->_proxies = $proxies;
 	}
 	
-	/**
-	 * This method returns the SAML Ticket provided in the URL of the request.
-	 * @return The SAML ticket.
-	 */
-	public function getSA()
-	{ return 'ST'.substr($this->_sa, 2); }
-
-	/**
-	 * This method stores the SAML Ticket.
-	 * @param $sa The SAML Ticket.
-	 */
-	public function setSA($sa)
-	{ $this->_sa = $sa; }
-
-	/**
-	 * This method tells if a SAML Ticket was stored.
-	 * @return TRUE if a SAML Ticket has been stored.
-	 */
-	public function hasSA()
-	{ return !empty($this->_sa); }
 
 	/** @} */
 	// ########################################################################
@@ -2819,6 +2703,145 @@ class CASClient
 
 		phpCAS::traceEnd(TRUE);
 		return TRUE;
+	}
+	
+	
+	/**
+	 * This method will parse the DOM and pull out the attributes from the XML
+	 * payload and put them into an array, then put the array into the session.
+	 *
+	 * @param $text_response the XML payload.
+	 * @return bool TRUE when successfull, halt otherwise by calling CASClient::authError().
+	 */
+	private function readExtraAttributesCas20($success_elements)
+	{
+		# PHPCAS-43 add CAS-2.0 extra attributes
+		phpCAS::traceBegin();
+
+		$extra_attributes = array();
+		
+		// "Jasig Style" Attributes:
+		// 
+		// 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+		// 		<cas:authenticationSuccess>
+		// 			<cas:user>jsmith</cas:user>
+		// 			<cas:attributes>
+		// 				<cas:attraStyle>RubyCAS</cas:attraStyle>
+		// 				<cas:surname>Smith</cas:surname>
+		// 				<cas:givenName>John</cas:givenName>
+		// 				<cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
+		// 				<cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
+		// 			</cas:attributes>
+		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+		// 		</cas:authenticationSuccess>
+		// 	</cas:serviceResponse>
+		// 
+		if ( $success_elements->item(0)->getElementsByTagName("attributes")->length != 0) {
+			$attr_nodes = $success_elements->item(0)->getElementsByTagName("attributes");
+			phpCas :: trace("Found nested jasig style attributes");
+			if($attr_nodes->item(0)->hasChildNodes()){
+				// Nested Attributes
+				foreach ($attr_nodes->item(0)->childNodes as $attr_child) {
+					phpCas :: trace("Attribute [".$attr_child->localName."] = ".$attr_child->nodeValue);
+					$this->addAttributeToArray($extra_attributes, $attr_child->localName, $attr_child->nodeValue);
+				}
+			}
+		} 
+		// "RubyCAS Style" attributes
+		// 
+		// 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+		// 		<cas:authenticationSuccess>
+		// 			<cas:user>jsmith</cas:user>
+		// 			
+		// 			<cas:attraStyle>RubyCAS</cas:attraStyle>
+		// 			<cas:surname>Smith</cas:surname>
+		// 			<cas:givenName>John</cas:givenName>
+		// 			<cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
+		// 			<cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
+		// 			
+		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+		// 		</cas:authenticationSuccess>
+		// 	</cas:serviceResponse>
+		// 
+		else {
+			phpCas :: trace("Testing for rubycas style attributes");
+			$childnodes = $success_elements->item(0)->childNodes;
+			foreach ($childnodes as $attr_node) {
+				switch ($attr_node->localName) {
+					case 'user':
+					case 'proxies':
+					case 'proxyGrantingTicket':
+						continue;
+					default:
+						if (strlen(trim($attr_node->nodeValue))) {
+							phpCas :: trace("Attribute [".$attr_node->localName."] = ".$attr_node->nodeValue);
+							$this->addAttributeToArray($extra_attributes, $attr_node->localName, $attr_node->nodeValue);
+						}
+				}
+			}
+		}
+		
+		// "Name-Value" attributes.
+		// 
+		// Attribute format from these mailing list thread:
+		// http://jasig.275507.n4.nabble.com/CAS-attributes-and-how-they-appear-in-the-CAS-response-td264272.html
+		// Note: This is a less widely used format, but in use by at least two institutions.
+		// 
+		// 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+		// 		<cas:authenticationSuccess>
+		// 			<cas:user>jsmith</cas:user>
+		// 			
+		// 			<cas:attribute name='attraStyle' value='Name-Value' />
+		// 			<cas:attribute name='surname' value='Smith' />
+		// 			<cas:attribute name='givenName' value='John' />
+		// 			<cas:attribute name='memberOf' value='CN=Staff,OU=Groups,DC=example,DC=edu' />
+		// 			<cas:attribute name='memberOf' value='CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu' />
+		// 			
+		// 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+		// 		</cas:authenticationSuccess>
+		// 	</cas:serviceResponse>
+		// 
+		if (!count($extra_attributes) && $success_elements->item(0)->getElementsByTagName("attribute")->length != 0) {
+			$attr_nodes = $success_elements->item(0)->getElementsByTagName("attribute");
+			$firstAttr = $attr_nodes->item(0);
+			if (!$firstAttr->hasChildNodes() && $firstAttr->hasAttribute('name') && $firstAttr->hasAttribute('value')) {
+				phpCas :: trace("Found Name-Value style attributes");
+				// Nested Attributes
+				foreach ($attr_nodes as $attr_node) {
+					if ($attr_node->hasAttribute('name') && $attr_node->hasAttribute('value')) {
+						phpCas :: trace("Attribute [".$attr_node->getAttribute('name')."] = ".$attr_node->getAttribute('value'));
+						$this->addAttributeToArray($extra_attributes, $attr_node->getAttribute('name'), $attr_node->getAttribute('value'));
+					}
+				}
+			}
+		}
+		
+		$this->setAttributes($extra_attributes);
+		phpCAS::traceEnd();
+		return TRUE;
+	}
+	
+	/**
+	 * Add an attribute value to an array of attributes.
+	 * 
+	 * @param ref array $array
+	 * @param string $name
+	 * @param string $value
+	 * @return void
+	 */
+	private function addAttributeToArray (array &$attributeArray, $name, $value) {
+		// If multiple attributes exist, add as an array value
+		if (isset($attributeArray[$name])) {
+			// Initialize the array with the existing value
+			if (!is_array($attributeArray[$name])) {
+				$existingValue = $attributeArray[$name];
+				$attributeArray[$name] = array($existingValue);
+			}
+			
+			$attributeArray[$name][] = trim($value);
+		} else {
+			$attributeArray[$name] = trim($value);
+		}
 	}
 
 	/** @} */
