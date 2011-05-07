@@ -28,13 +28,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * @file CAS/PGTStorage/pgt-main.php
+ * @file CAS/PGTStorage/AbstractStorage.php
  * Basic class for PGT storage
  */
 
 /**
- * @class CAS_PGTStorage
- * The PGTStorage class is a generic class for PGT storage. This class should
+ * @class CAS_PGTStorage_AbstractStorage
+ * The CAS_PGTStorage_AbstractStorage class is a generic class for PGT storage. This class should
  * not be instanciated itself but inherited by specific PGT storage classes.
  *
  * @author   Pascal Aubry <pascal.aubry at univ-rennes1.fr>
@@ -42,7 +42,7 @@
  * @ingroup internalPGTStorage
  */
 
-class CAS_PGTStorage
+abstract class CAS_PGTStorage_AbstractStorage
 {
 	/**
 	 * @addtogroup internalPGTStorage
@@ -209,7 +209,7 @@ class CAS_PGTStorage
 }
 
 // include specific PGT storage classes
-include_once(dirname(__FILE__).'/pgt-db.php');
-include_once(dirname(__FILE__).'/pgt-file.php');
+include_once(dirname(__FILE__).'/Db.php');
+include_once(dirname(__FILE__).'/File.php');
 
 ?>

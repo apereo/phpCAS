@@ -28,13 +28,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * @file CAS/PGTStorage/pgt-db.php
+ * @file CAS/PGTStorage/Db.php
  * Basic class for PGT database storage
  */
 
 /**
- * @class CAS_PGTStorageDb
- * The CAS_PGTStorageDb class is a class for PGT db storage.
+ * @class CAS_PGTStorage_Db
+ * The CAS_PGTStorage_Db class is a class for PGT database storage.
  *
  * @author Daniel Frett <daniel.frett at gmail.com>
  *
@@ -43,7 +43,7 @@
 
 define('CAS_PGT_STORAGE_DB_DEFAULT_TABLE', 'cas_pgts');
 
-class CAS_PGTStorageDb extends CAS_PGTStorage
+class CAS_PGTStorage_Db extends CAS_PGTStorage_AbstractStorage
 {
 	/**
 	 * @addtogroup internalCAS_PGTStorageDb

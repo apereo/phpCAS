@@ -28,13 +28,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * @file CAS/PGTStorage/pgt-file.php
+ * @file CAS/PGTStorage/File.php
  * Basic class for PGT file storage
  */
 
 /**
- * @class CAS_PGTStorageFile
- * The PGTStorageFile class is a class for PGT file storage. An instance of
+ * @class CAS_PGTStorage_File
+ * The CAS_PGTStorage_File class is a class for PGT file storage. An instance of
  * this class is returned by CAS_Client::SetPGTStorageFile().
  *
  * @author Pascal Aubry <pascal.aubry at univ-rennes1.fr>
@@ -42,7 +42,7 @@
  * @ingroup internalPGTStorageFile
  */
 
-class CAS_PGTStorageFile extends CAS_PGTStorage
+class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
 {
 	/**
 	 * @addtogroup internalPGTStorageFile

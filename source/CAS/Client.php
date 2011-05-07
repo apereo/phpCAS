@@ -38,7 +38,7 @@
 include_once(dirname(__FILE__).'/languages/languages.php');
 
 // include PGT storage classes
-include_once(dirname(__FILE__).'/PGTStorage/pgt-main.php');
+include_once(dirname(__FILE__).'/PGTStorage/AbstractStorage.php');
 
 // include class for storing service cookies.
 include_once(dirname(__FILE__).'/CookieJar.php');
@@ -2058,7 +2058,7 @@ class CAS_Client
 	public function setPGTStorageDb($dsn_or_pdo, $username='', $password='', $table='', $driver_options=null)
 	{
 		// create the storage object
-		$this->setPGTStorage(new CAS_PGTStorageDb($this, $dsn_or_pdo, $username, $password, $table, $driver_options));
+		$this->setPGTStorage(new CAS_PGTStorage_Db($this, $dsn_or_pdo, $username, $password, $table, $driver_options));
 	}
 
 	/**
@@ -2072,7 +2072,7 @@ class CAS_Client
 	$path='')
 	{
 		// create the storage object
-		$this->setPGTStorage(new CAS_PGTStorageFile($this,$format,$path));
+		$this->setPGTStorage(new CAS_PGTStorage_File($this,$format,$path));
 	}
 
 
