@@ -1775,10 +1775,25 @@ class phpCAS {
  * @example example_simple.php
  */
 /**
- * @example example_proxy.php
+ * @example example_service.php
  */
 /**
- * @example example_proxy2.php
+ * @example example_service_that_proxies.php
+ */
+/**
+ * @example example_service_POST.php
+ */
+/**
+ * @example example_proxy_serviceWeb.php
+ */
+/**
+ * @example example_proxy_serviceWeb_chaining.php
+ */
+/**
+ * @example example_proxy_POST.php
+ */
+/**
+ * @example example_proxy_GET.php
  */
 /**
  * @example example_lang.php
@@ -1787,24 +1802,18 @@ class phpCAS {
  * @example example_html.php
  */
 /**
- * @example example_file.php
- */
-/**
- * @example example_db.php
- */
-/**
- * @example example_service.php
- */
-/**
- * @example example_session_proxy.php
- */
-/**
- * @example example_session_service.php
+ * @example example_pgt_storage_file.php
  */
 /**
  * @example example_gateway.php
  */
 /**
+ * @example example_logout.php
+ */
+/**
  * @example example_custom_urls.php
+ */
+/**
+ * @example example_advanced_saml11.php
  */
 ?>
