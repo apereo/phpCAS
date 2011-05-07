@@ -47,13 +47,12 @@ $pfm->setAPIStability('${phpcas.apiStability}');
 $pfm->setReleaseStability('${phpcas.releaseStability}');
 $pfm->setAPIVersion('${phpcas.version}');
 $pfm->setReleaseVersion('${phpcas.version}');
-$pfm->setNotes('
-see http://www.ja-sig.org/wiki/display/CASC/phpCAS+ChangeLog
-');
-$pfm->addMaintainer('helper','saltybeagle','Brett Bieber','brett.bieber@gmail.com');
-$pfm->addMaintainer('lead','fritschi','Joachim Fritschi','fritschi@hrz.tu-darmstadt.de');
-$pfm->addMaintainer('lead','paubry','Pascal Aubry','pascal.aubry@univ-rennes1.fr');
-$pfm->setLicense('New BSD License', 'http://www.ja-sig.org/wiki/display/CASC/phpCAS');
+$pfm->setNotes('see https://source.jasig.org/cas-clients/phpcas/trunk/docs/ChangeLog');
+
+$pfm->addMaintainer('lead','fritschi','Joachim Fritschi','jfritschi@freenet.de');
+$pfm->addMaintainer('helper','adamfranco','Adam Franco','afranco@middlebury.edu');
+
+$pfm->setLicense('New BSD License', 'https://wiki.jasig.org/display/CASC/phpCAS+license');
 $pfm->clearDeps();
 $pfm->setPhpDep('5.0.0');
 $pfm->setPearinstallerDep('1.4.3');
@@ -62,8 +61,9 @@ $pfm->addExtensionDep('required', 'curl');
 $pfm->addExtensionDep('required', 'openssl');
 $pfm->addExtensionDep('required', 'dom');
 $pfm->addExtensionDep('required', 'zlib');
+$pfm->addExtensionDep('required', 'pdo');
 
-$pfm->addPackageDepWithChannel('required', 'DB', 'pear.php.net', '1.4.0');
+//$pfm->addPackageDepWithChannel('required', 'DB', 'pear.php.net', '1.4.0');
 
 $pfm->generateContents();
 //if (isset($_SERVER['argv']) && $_SERVER['argv'][1] == 'make') {
