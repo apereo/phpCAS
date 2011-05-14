@@ -30,13 +30,13 @@ phpCAS::forceAuthentication();
 // moreover, a PGT was retrieved from the CAS server that will
 // permit to gain accesses to new services.
 
-$serviceUrl = $curbase.$curdir.'/example_service_POST.php';
+$serviceUrl = $curbase.$curdir.'example_service_POST.php';
 
 ?>
 <html>
   <head>
     <title>phpCAS proxy POST example</title>
-    <link rel="stylesheet" type='text/css' href='../example.css'/>
+    <link rel="stylesheet" type='text/css' href='example.css'/>
   </head>
   <body>
     <h1>phpCAS proxy POST example</h1>

@@ -34,7 +34,7 @@ phpCAS::forceAuthentication();
 <html>
   <head>
     <title>phpCAS proxy example #2</title>
-    <link rel="stylesheet" type='text/css' href='../example.css'/>
+    <link rel="stylesheet" type='text/css' href='example.css'/>
   </head>
   <body>
     <h1>phpCAS proxied proxy example</h1>
