@@ -182,7 +182,7 @@ class CAS_PGTStorage_Db extends CAS_PGTStorage_AbstractStorage
 				phpCAS::error('Database connection error: ' . $e->getMessage());
 			}
 		}
-
+		
 		phpCAS::traceEnd();
 	}
 
@@ -230,7 +230,7 @@ class CAS_PGTStorage_Db extends CAS_PGTStorage_AbstractStorage
 	 */
 	protected function _createTableSql()
 	{
-		return 'CREATE TABLE ' . $this->getPdo()->quoteTable($this->getTable()) . ' (pgt_iou VARCHAR(255) NOT NULL PRIMARY KEY, pgt VARCHAR(255) NOT NULL)';
+		return 'CREATE TABLE ' . $this->getTable() . ' (pgt_iou VARCHAR(255) NOT NULL PRIMARY KEY, pgt VARCHAR(255) NOT NULL)';
 	}
 
 	/**
@@ -240,7 +240,7 @@ class CAS_PGTStorage_Db extends CAS_PGTStorage_AbstractStorage
 	 */
 	protected function _storePgtSql()
 	{
-		return 'INSERT INTO ' . $this->getPdo()->quoteTable($this->getTable()) . ' (pgt_iou, pgt) VALUES (:pgt_iou, :pgt)';
+		return 'INSERT INTO ' . $this->getTable() . ' (pgt_iou, pgt) VALUES (:pgt_iou, :pgt)';
 	}
 
 	/**
@@ -250,7 +250,7 @@ class CAS_PGTStorage_Db extends CAS_PGTStorage_AbstractStorage
 	 */
 	protected function _retrievePgtSql()
 	{
-		return 'SELECT pgt FROM ' . $this->getPdo()->quoteTable($this->getTable()) . ' WHERE pgt_iou = :pgt_iou';
+		return 'SELECT pgt FROM ' . $this->getTable() . ' WHERE pgt_iou = :pgt_iou';
 	}
 
 	/**
@@ -260,7 +260,7 @@ class CAS_PGTStorage_Db extends CAS_PGTStorage_AbstractStorage
 	 */
 	protected function _deletePgtSql()
 	{
-		return 'DELETE FROM ' . $this->getPdo()->quoteTable($this->getTable()) . ' WHERE pgt_iou = :pgt_iou';
+		return 'DELETE FROM ' . $this->getTable() . ' WHERE pgt_iou = :pgt_iou';
 	}
 
 	// ########################################################################
