@@ -2,6 +2,8 @@
 
 // The purpose of this central config file is configuring all examples
 // in one place with minimal work for your working environment
+// Just configure all the items in this config according to your environment
+// and rename the file to config.php
 
 $phpcas_path = '../../source/';
 
@@ -31,6 +33,10 @@ $cas_real_hosts = array (
 	'cas-real-1.example.com',
 	'cas-real-2.example.com'
 );
+
+///////////////////////////////////////////
+// End Configuration -- Don't edit below //
+///////////////////////////////////////////
 
 // Generating the URLS for the local cas example services for proxy testing
 if ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'){
