@@ -535,7 +535,7 @@ class phpCAS {
 	 */
 	public static function trace($str) {
 		$dbg = debug_backtrace();
-		phpCAS :: log($str . ' [' . basename($dbg[1]['file']) . ':' . $dbg[1]['line'] . ']');
+		phpCAS :: log($str . ' [' . basename($dbg[0]['file']) . ':' . $dbg[0]['line'] . ']');
 	}
 
 	/**
@@ -546,24 +546,24 @@ class phpCAS {
 
 		$dbg = debug_backtrace();
 		$str = '=> ';
-		if (!empty ($dbg[2]['class'])) {
-			$str .= $dbg[2]['class'] . '::';
+		if (!empty ($dbg[1]['class'])) {
+			$str .= $dbg[1]['class'] . '::';
 		}
-		$str .= $dbg[2]['function'] . '(';
-		if (is_array($dbg[2]['args'])) {
-			foreach ($dbg[2]['args'] as $index => $arg) {
+		$str .= $dbg[1]['function'] . '(';
+		if (is_array($dbg[1]['args'])) {
+			foreach ($dbg[1]['args'] as $index => $arg) {
 				if ($index != 0) {
 					$str .= ', ';
 				}
 				$str .= str_replace("\n", "", var_export($arg, TRUE));
 			}
 		}
-		if (isset($dbg[2]['file']))
-		$file = basename($dbg[2]['file']);
+		if (isset($dbg[1]['file']))
+		$file = basename($dbg[1]['file']);
 		else
 		$file = 'unknown_file';
-		if (isset($dbg[2]['line']))
-		$line = $dbg[2]['line'];
+		if (isset($dbg[1]['line']))
+		$line = $dbg[1]['line'];
 		else
 		$line = 'unknown_line';
 		$str .= ') [' . $file . ':' . $line . ']';
