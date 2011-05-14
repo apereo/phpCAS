@@ -70,26 +70,6 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
 		return $this->_path;
 	}
 
-	/**
-	 * a string telling the format to use to store PGT's (plain or xml). Written by
-	 * PGTStorageFile::PGTStorageFile(), read by getFormat().
-	 *
-	 * @private
-	 */
-	var $_format;
-
-	/**
-	 * This method returns the format to use when storing PGT's on the filesystem.
-	 *
-	 * @return a string corresponding to the format used (plain or xml).
-	 *
-	 * @private
-	 */
-	function getFormat()
-	{
-		return $this->_format;
-	}
-
 	// ########################################################################
 	//  DEBUGGING
 	// ########################################################################
@@ -115,7 +95,7 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
 	 */
 	function getStorageInfo()
 	{
-		return 'path=`'.$this->getPath().'\', format=`'.$this->getFormat().'\'';
+		return 'path=`'.$this->getPath().'\'';
 	}
 
 	// ########################################################################
@@ -126,20 +106,17 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
 	 * The class constructor, called by CAS_Client::SetPGTStorageFile().
 	 *
 	 * @param $cas_parent the CAS_Client instance that creates the object.
-	 * @param $format the format used to store the PGT's (`plain' and `xml' allowed).
 	 * @param $path the path where the PGT's should be stored
 	 *
 	 * @public
 	 */
-	function __construct($cas_parent,$format,$path)
+	function __construct($cas_parent,$path)
 	{
 		phpCAS::traceBegin();
 		// call the ancestor's constructor
 		parent::__construct($cas_parent);
-
-		if (empty($format) ) $format = CAS_PGT_STORAGE_FILE_DEFAULT_FORMAT;
+		
 		if (empty($path) ) $path = CAS_PGT_STORAGE_FILE_DEFAULT_PATH;
-
 		// check that the path is an absolute path
 		if (getenv("OS")=="Windows_NT"){
 			 
@@ -161,15 +138,6 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
 		}
 
 		$this->_path = $path;
-		// check the format and store it
-		switch ($format) {
-			case CAS_PGT_STORAGE_FILE_FORMAT_PLAIN:
-			case CAS_PGT_STORAGE_FILE_FORMAT_XML:
-				$this->_format = $format;
-				break;
-			default:
-				phpCAS::error('unknown PGT file storage format (`'.CAS_PGT_STORAGE_FILE_FORMAT_PLAIN.'\' and `'.CAS_PGT_STORAGE_FILE_FORMAT_XML.'\' allowed)');
-		}
 		phpCAS::traceEnd();
 	}
 
@@ -208,7 +176,7 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
 	function getPGTIouFilename($pgt_iou)
 	{
 		phpCAS::traceBegin();
-		$filename = $this->getPath().$pgt_iou.'.'.$this->getFormat();
+		$filename = $this->getPath().$pgt_iou.'.plain';
 		phpCAS::traceEnd($filename);
 		return $filename;
 	}

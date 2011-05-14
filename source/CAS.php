@@ -148,18 +148,6 @@ define("SAML_ATTRIBUTES", 'SAMLATTRIBS');
  * Default path used when storing PGT's to file
  */
 define("CAS_PGT_STORAGE_FILE_DEFAULT_PATH", '/tmp');
-/**
- * phpCAS::setPGTStorageFile()'s 2nd parameter to write plain text files
- */
-define("CAS_PGT_STORAGE_FILE_FORMAT_PLAIN", 'plain');
-/**
- * phpCAS::setPGTStorageFile()'s 2nd parameter to write xml files
- */
-define("CAS_PGT_STORAGE_FILE_FORMAT_XML", 'xml');
-/**
- * Default format used when storing PGT's to file
- */
-define("CAS_PGT_STORAGE_FILE_DEFAULT_FORMAT", CAS_PGT_STORAGE_FILE_FORMAT_PLAIN);
 /** @} */
 // ------------------------------------------------------------------------
 // SERVICE ACCESS ERRORS
@@ -767,12 +755,11 @@ class phpCAS {
 		$PHPCAS_CLIENT->setPGTStorageDb($dsn_or_pdo, $username, $password, $table, $driver_options);
 		phpCAS :: traceEnd();
 	}
-
+	
 	/**
 	 * This method is used to tell phpCAS to store the response of the
 	 * CAS server to PGT requests onto the filesystem.
-	 *
-	 * @param $format the format used to store the PGT's (`plain' and `xml' allowed)
+	 * @param $format the format used to store the PGT's. This parameter has no effect and is only for backwards compatibility
 	 * @param $path the path where the PGT's should be stored
 	 */
 	public static function setPGTStorageFile($format = '', $path = '') {
@@ -794,10 +781,10 @@ class phpCAS {
 		if (gettype($path) != 'string') {
 			phpCAS :: error('type mismatched for parameter $format (should be `string\')');
 		}
-		$PHPCAS_CLIENT->setPGTStorageFile($format, $path);
+		$PHPCAS_CLIENT->setPGTStorageFile($path);
 		phpCAS :: traceEnd();
 	}
-
+	
 	/** @} */
 	// ########################################################################
 	// ACCESS TO EXTERNAL SERVICES

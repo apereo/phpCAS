@@ -2068,11 +2068,10 @@ class CAS_Client
 	 * @param $format the format used to store the PGT's (`plain' and `xml' allowed)
 	 * @param $path the path where the PGT's should be stored
 	 */
-	public function setPGTStorageFile($format='',
-	$path='')
+	public function setPGTStorageFile($path='')
 	{
 		// create the storage object
-		$this->setPGTStorage(new CAS_PGTStorage_File($this,$format,$path));
+		$this->setPGTStorage(new CAS_PGTStorage_File($this,$path));
 	}
 
 
