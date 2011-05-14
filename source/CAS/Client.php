@@ -2037,7 +2037,7 @@ class CAS_Client
 		}
 
 		// check to make sure a valid storage object was specified
-		if ( !($storage instanceof CAS_PGTStorage) ) {
+		if ( !($storage instanceof CAS_PGTStorage_AbstractStorage) ) {
 			phpCAS::error('Invalid PGT storage object');
 		}
 
