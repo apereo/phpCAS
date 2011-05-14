@@ -555,7 +555,11 @@ class phpCAS {
 				if ($index != 0) {
 					$str .= ', ';
 				}
-				$str .= str_replace("\n", "", var_export($arg, TRUE));
+				if(is_object($arg)){
+					$str .= get_class($arg);
+				}else{
+					$str .= str_replace("\n", "", var_export($arg, TRUE));
+				}
 			}
 		}
 		if (isset($dbg[1]['file']))
