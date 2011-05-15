@@ -495,7 +495,9 @@ class phpCAS {
 			for ($i = 0; $i < $PHPCAS_DEBUG['indent']; $i++) {
 				$indent_str .= '|    ';
 			}
-			error_log($PHPCAS_DEBUG['unique_id'] . ' ' . $indent_str . $str . "\n", 3, $PHPCAS_DEBUG['filename']);
+			// allow for multiline output with proper identing. Usefull for dumping cas answers etc.
+			$str2 = str_replace("\n", "\n" . $PHPCAS_DEBUG['unique_id'] . ' ' . $indent_str, $str);
+			error_log($PHPCAS_DEBUG['unique_id'] . ' ' . $indent_str . $str2 . "\n", 3, $PHPCAS_DEBUG['filename']);
 		}
 
 	}
@@ -558,7 +560,7 @@ class phpCAS {
 				if(is_object($arg)){
 					$str .= get_class($arg);
 				}else{
-					$str .= str_replace("\n", "", var_export($arg, TRUE));
+					$str .= str_replace(array("\r\n", "\n", "\r"), "", var_export($arg, TRUE));
 				}
 			}
 		}
@@ -586,7 +588,12 @@ class phpCAS {
 		$PHPCAS_DEBUG['indent']--;
 		$dbg = debug_backtrace();
 		$str = '';
-		$str .= '<= ' . str_replace("\n", "", var_export($res, TRUE));
+		if(is_object($res)){
+			$str .= '<= ' . get_class($arg);
+		}else{
+			$str .= '<= ' . str_replace(array("\r\n", "\n", "\r"), "", var_export($res, TRUE));
+		}
+		
 		phpCAS :: log($str);
 	}
 
