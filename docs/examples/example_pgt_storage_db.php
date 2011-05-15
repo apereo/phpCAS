@@ -22,7 +22,7 @@ phpCAS::proxy(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 phpCAS::setNoCasServerValidation();
 
 // set PGT storage to file in plain format in the same directory as session files
-phpCAS::setPGTStorageDB('pgsql:host=localhost;port=5432','phpcas','1938r132rwv12cadl','phpcas');
+phpCAS::setPGTStorageDB($db,$db_user,$db_password,$db_table);
 
 // force CAS authentication
 phpCAS::forceAuthentication();
@@ -36,7 +36,7 @@ phpCAS::forceAuthentication();
 ?>
 <html>
   <head>
-    <title>phpCAS proxy example with PGT storage to file</title>
+    <title>phpCAS proxy example with PGT storage to a database</title>
     <link rel="stylesheet" type='text/css' href='example.css'/>
   </head>
   <body>

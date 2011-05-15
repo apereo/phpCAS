@@ -34,6 +34,12 @@ $cas_real_hosts = array (
 	'cas-real-2.example.com'
 );
 
+// Database config for PGT Storage
+$db = 'pgsql:host=localhost;port=5432';
+$db_user = 'phpcasuser';
+$db_password = 'mysupersecretpass';
+$db_table = 'phpcastabel';
+
 ///////////////////////////////////////////
 // End Configuration -- Don't edit below //
 ///////////////////////////////////////////
