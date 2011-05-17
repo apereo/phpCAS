@@ -1178,6 +1178,10 @@ class CAS_Client
 		phpCAS::traceBegin();
 
 		if ( $this->isCallbackMode() ) {
+			// Rebroadcast the pgtIou and pgtId to all nodes
+			if($this->rebroadcast&&!isset($_POST['rebroadcast'])) {
+				$this->pgtIouRebroadcast();
+			}
 			$this->callback();
 		}
 
@@ -1346,6 +1350,10 @@ class CAS_Client
 			}
 		} else {
 			phpCAS::trace("No access control set");
+		}
+		// Rebroadcast the logout request
+		if($this->rebroadcast&&!isset($_POST['rebroadcast'])) {
+				$this->logoutRebroadcast();
 		}
 		// Extract the ticket from the SAML Request
 		preg_match("|<samlp:SessionIndex>(.*)</samlp:SessionIndex>|", $_POST['logoutRequest'], $tick, PREG_OFFSET_CAPTURE, 3);
@@ -2037,7 +2045,7 @@ class CAS_Client
 		}
 
 		// check to make sure a valid storage object was specified
-		if ( !($storage instanceof CAS_PGTStorage) ) {
+		if ( !($storage instanceof CAS_PGTStorage_AbstractStorage) ) {
 			phpCAS::error('Invalid PGT storage object');
 		}
 
@@ -3042,6 +3050,147 @@ class CAS_Client
 		exit();
 	}
 
+	// ########################################################################
+	//  PGTIOU/PGTID and logoutRequest rebroadcasting
+	// ########################################################################
+	
+	/**
+	 * Boolean of whether to rebroadcast pgtIou/pgtId and logoutRequest, and array of the nodes.
+	 */
+	private $rebroadcast = false;
+	private $rebroadcast_nodes = array();
+
+	/**
+	 * Store the rebroadcast nodes for pgtIou/pgtId and logout requests.
+	 *
+	 * @param $rebroadcast_nodes Array containing the rebroadcast node URLs.
+	 */
+	public function setRebroadcastNodes($rebroadcast_nodes)
+	{
+		// Store the rebroadcast nodes
+		if(isset($rebroadcast_nodes) && !empty($rebroadcast_nodes)) {
+			$this->rebroadcast = true;
+			$this->rebroadcast_nodes = $rebroadcast_nodes;
+		}
+	}
+
+	/**
+	 * An array to store extra rebroadcast curl options.
+	 */
+	private $_rebroadcast_headers = array();
+
+	/**
+	 * This method is used to add header parameters when rebroadcasting 
+	 * pgtIou/pgtId or logoutRequest.
+	 * 
+	 * @param String $header Header to send when rebroadcasting.
+	 */
+	public function addRebroadcastHeader($header)
+	{
+		$this->_rebroadcast_headers[] = $header;
+	}
+	
+	/**
+	 * This method is used to add multiple header parameters when rebroadcasting 
+	 * pgtIou/pgtId or logoutRequest.
+	 * 
+	 * @param Array $headers Array of headers to send when rebroadcasting.
+	 */
+	public function addRebroadcastHeaders($headers)
+	{
+		$this->_rebroadcast_headers = array_merge($this->_rebroadcast_headers, $headers);
+	}
+	
+	/**
+	 * This method rebroadcasts logout requests.
+	 */
+	private function logoutRebroadcast() {		
+		phpCAS::traceBegin();
+		
+		$rebroadcast_curl_options = array(
+										CURLOPT_FAILONERROR => 1,
+										CURLOPT_FOLLOWLOCATION => 1,
+										CURLOPT_RETURNTRANSFER => 1,
+										CURLOPT_CONNECTTIMEOUT => 1,
+										CURLOPT_TIMEOUT => 4);
+		
+		foreach($this->rebroadcast_nodes as $rebroadcast_node) {
+			if(stripos($rebroadcast_node, gethostbyaddr($_SERVER['SERVER_ADDR'])) == false) {
+				phpCAS::log('Rebroadcast target URL: '.$rebroadcast_node.$_SERVER['REQUEST_URI']);
+				$className = $this->_requestImplementation;
+				$request = new $className();
+				
+				$url = $rebroadcast_node.$_SERVER['REQUEST_URI'];
+				$request->setUrl($url);
+				
+				if(count($this->_rebroadcast_headers)) {
+					$request->addHeaders($this->_rebroadcast_headers);
+				}
+				
+				$request->makePost();
+				$request->setPostBody('rebroadcast=false&logoutRequest='.$_POST['logoutRequest']);
+
+				$request->setCurlOptions($rebroadcast_curl_options);
+				
+				if($request->send()) {
+					phpCAS::log('Logout rebroadcast sent successfully to: '.$url);
+				} else {
+					phpCAS::log('Logout rebroadcast failed sending to: '.$url);
+					phpCAS::log('Error message: '.$request->getErrorMessage());
+				}
+			} else {
+				phpCAS::log('Logout rebroadcast not sent to self: '.$rebroadcast_node.' == '.gethostbyaddr($_SERVER['SERVER_ADDR']));
+			}
+		}
+
+		phpCAS::traceEnd();
+	}
+
+	/**
+	 * This method rebroadcasts pgtIou/pgtId requests.
+	 */
+	private function pgtIouRebroadcast() {
+		phpCAS::traceBegin();
+		
+		$rebroadcast_curl_options = array(
+										CURLOPT_FAILONERROR => 1,
+										CURLOPT_FOLLOWLOCATION => 1,
+										CURLOPT_RETURNTRANSFER => 1,
+										CURLOPT_CONNECTTIMEOUT => 1,
+										CURLOPT_TIMEOUT => 4);
+		
+		foreach($this->rebroadcast_nodes as $rebroadcast_node) {
+			if(stripos($rebroadcast_node, gethostbyaddr($_SERVER['SERVER_ADDR'])) == false) {
+				phpCAS::log('Rebroadcast target URL: '.$rebroadcast_node.$_SERVER['REQUEST_URI']);
+				$className = $this->_requestImplementation;
+				$request = new $className();
+				
+				$url = $rebroadcast_node.$_SERVER['REQUEST_URI'];
+				$request->setUrl($url);
+				
+				if(count($this->_rebroadcast_headers)) {
+					$request->addHeaders($this->_rebroadcast_headers);
+				}
+				
+				$request->makePost();
+				$request->setPostBody('rebroadcast=false');
+
+				$request->setCurlOptions($rebroadcast_curl_options);
+				
+				if($request->send()) {
+					phpCAS::log('pgtIou rebroadcast sent successfully to: '.$url);
+				} else {
+					phpCAS::log('pgtIou rebroadcast failed sending to: '.$url);
+					phpCAS::log('Error message: '.$request->getErrorMessage());
+				}
+			} else {
+				phpCAS::log('pgtIou rebroadcast not sent to self: '.$rebroadcast_node.' == '.gethostbyaddr($_SERVER['SERVER_ADDR']));
+			}
+		}	
+
+		phpCAS::traceEnd();
+	}
+	
 	/** @} */
 }
 
