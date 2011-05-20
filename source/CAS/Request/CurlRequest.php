@@ -61,6 +61,39 @@ class CAS_CurlRequest
 		/*********************************************************
 		 * initialize the CURL session
 		 *********************************************************/
+		$ch = $this->_initAndConfigure();
+
+		/*********************************************************
+		 * Perform the query
+		 *********************************************************/
+		$buf = curl_exec ($ch);
+		if ( $buf === FALSE ) {
+			phpCAS::trace('curl_exec() failed');
+			$this->storeErrorMessage('CURL error #'.curl_errno($ch).': '.curl_error($ch));
+			$res = FALSE;
+		} else {
+			$this->storeResponseBody($buf);
+			phpCAS::trace("Response Body: \n".$buf."\n");
+			$res = TRUE;
+
+		}
+		// close the CURL session
+		curl_close ($ch);
+
+		phpCAS::traceEnd($res);
+		return $res;
+	}
+	
+	/**
+	 * Internal method to initialize our cURL handle and configure the request.
+	 * This method should NOT be used outside of the CurlRequest or the CurlMultiRequest.
+	 * 
+	 * @return resource The cURL handle on success, FALSE on failure
+	 */
+	public function _initAndConfigure () {
+		/*********************************************************
+		 * initialize the CURL session
+		 *********************************************************/
 		$ch = curl_init($this->url);
 
 		if (version_compare(PHP_VERSION,'5.1.3','>=')) {
@@ -119,26 +152,19 @@ class CAS_CurlRequest
 			curl_setopt($ch, CURLOPT_POST, 1);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $this->postBody);
 		}
-
-		/*********************************************************
-		 * Perform the query
-		 *********************************************************/
-		$buf = curl_exec ($ch);
-		if ( $buf === FALSE ) {
-			phpCAS::trace('curl_exec() failed');
-			$this->storeErrorMessage('CURL error #'.curl_errno($ch).': '.curl_error($ch));
-			$res = FALSE;
-		} else {
-			$this->storeResponseBody($buf);
-			phpCAS::trace("Response Body: \n".$buf."\n");
-			$res = TRUE;
-
-		}
-		// close the CURL session
-		curl_close ($ch);
-
-		phpCAS::traceEnd($res);
-		return $res;
+		
+		return $ch;
+	}
+	
+	/**
+	 * Store the response body.
+	 * This method should NOT be used outside of the CurlRequest or the CurlMultiRequest.
+	 * 
+	 * @param string $body
+	 * @return void
+	 */
+	public function _storeResponseBody ($body) {
+		$this->storeResponseBody($body);
 	}
 
 	/**
