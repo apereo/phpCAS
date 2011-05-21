@@ -35,7 +35,8 @@ $cas_real_hosts = array (
 );
 
 // Database config for PGT Storage
-$db = 'pgsql:host=localhost;port=5432';
+$db = 'pgsql:host=localhost;dbname=phpcas';
+//$db = 'mysql:host=localhost;dbname=phpcas';
 $db_user = 'phpcasuser';
 $db_password = 'mysupersecretpass';
 $db_table = 'phpcastabel';
