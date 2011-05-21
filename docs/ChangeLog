@@ -1,3 +1,23 @@
+Changes in version 1.2.2RC1
+
+Bug Fixes:
+    * CASClient::getURL() cannot be private [PHPCAS-103] (Joachim Fritschi)
+    * CASClient::getServerServiceValidateURL() doesn't respect existing query strings [PHPCAS-104] (Bradley Froehle, Joachim Fritschi)
+    * CASClient::retrievePT() must be a public function [PHPCAS-107] (Joachim Fritschi)
+    * Expose setNoClearTicketsFromUrl() to the client [PHPCAS-108]  (Joachim Fritschi)
+    * Remove the PGT filestorage in xml format is not implemented [PHPCAS-112] (Joachim Fritschi)
+    * Fix compatibility of the PGT db storage interface with postgres [PHPCAS-113] (Joachim Fritschi)
+
+Improvement
+    * Support for proxied POST requests. [PHPCAS-90] (Adam Franco)
+    * Add missing example for the new pgt-db storage [PHPCAS-101] (Joachim Fritschi)
+    * CASClient::getServerLoginURL(): Don't cache gateway/renew parameters [PHPCAS-105] (Bradley Froehle)
+    * fix parsing of cookies with special symbols in their values [PHPCAS-106] (Joachim Fritschi)
+    * Removal of the debug_backtrace hack for php4 [PHPCAS-110] (Joachim Fritschi)
+    * Clean up the naming structure of the classes [PHPCAS-111] (Joachim Fritschi)
+    * Better debug log output format [PHPCAS-114] (Joachim Fritschi)
+    * Many more examples and one central config. Improved code documentation [PHPCAS-86] (Joachim Fritschi, Adam Franco)
+
 Changes in version 1.2.1
    * None
 
@@ -5,7 +25,7 @@ Changes in version 1.2.1RC1
 Improvements
    * add support for storing PGTs in a database [PHPCAS-94] (Daniel Frett)
     
-Bug Fixed
+Bug Fixes
    * phpCAS::setDebug(FALSE) should stop logging [PHPCAS-95] (Joachim Fritschi)
    * fix checkAuthenticate return value documentation [PHPCAS-92] (Joachim Fritschi)
    * fix PGTStorage contructor name [PHPCAS-93] (Daniel Frett)
