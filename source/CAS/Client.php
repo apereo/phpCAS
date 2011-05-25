@@ -3059,19 +3059,19 @@ class CAS_Client
 	 */
 	private $rebroadcast = false;
 	private $rebroadcast_nodes = array();
+	private $node_type = '';
 
 	/**
-	 * Store the rebroadcast nodes for pgtIou/pgtId and logout requests.
+	 * Store the rebroadcast node for pgtIou/pgtId and logout requests.
 	 *
-	 * @param $rebroadcast_nodes Array containing the rebroadcast node URLs.
+	 * @param $rebroadcastNodeUrl The rebroadcast node URL.
 	 */
-	public function setRebroadcastNodes($rebroadcast_nodes)
+	public function addRebroadcastNode($rebroadcastNodeUrl, $node_type)
 	{
-		// Store the rebroadcast nodes
-		if(isset($rebroadcast_nodes) && !empty($rebroadcast_nodes)) {
-			$this->rebroadcast = true;
-			$this->rebroadcast_nodes = $rebroadcast_nodes;
-		}
+		// Store the rebroadcast node and set flag
+		$this->rebroadcast = true;
+		$this->rebroadcast_nodes[] = $rebroadcastNodeUrl;
+		$this->node_type = $node_type;
 	}
 
 	/**
@@ -3089,18 +3089,7 @@ class CAS_Client
 	{
 		$this->_rebroadcast_headers[] = $header;
 	}
-	
-	/**
-	 * This method is used to add multiple header parameters when rebroadcasting 
-	 * pgtIou/pgtId or logoutRequest.
-	 * 
-	 * @param Array $headers Array of headers to send when rebroadcasting.
-	 */
-	public function addRebroadcastHeaders($headers)
-	{
-		$this->_rebroadcast_headers = array_merge($this->_rebroadcast_headers, $headers);
-	}
-	
+		
 	/**
 	 * This method rebroadcasts logout requests.
 	 */
@@ -3114,8 +3103,23 @@ class CAS_Client
 										CURLOPT_CONNECTTIMEOUT => 1,
 										CURLOPT_TIMEOUT => 4);
 		
+		// Try to determine the IP address of the server
+		if(!empty($_SERVER['SERVER_ADDR'])) {
+			$ip = $_SERVER['SERVER_ADDR'];
+		} else if(!empty($_SERVER['LOCAL_ADDR'])) {
+			// IIS 7
+			$ip = $_SERVER['LOCAL_ADDR'];
+		}
+		// Try to determine the DNS name of the server
+		if(!empty($ip)){
+			$dns = gethostbyaddr($ip);
+		}
+		phpCAS::log('point1');
+		$multiClassName = 'CAS_Request_CurlMultiRequest';
+		$multiRequest = new $multiClassName();
+		phpCAS::log('point2');
 		foreach($this->rebroadcast_nodes as $rebroadcast_node) {
-			if(stripos($rebroadcast_node, gethostbyaddr($_SERVER['SERVER_ADDR'])) == false) {
+			if((stripos('hostname',$this->node_type) !== false) && !empty($dns) && (stripos($rebroadcast_node, $dns) === false) && !empty($ip) && (stripos($rebroadcast_node, $ip) === false)) {
 				phpCAS::log('Rebroadcast target URL: '.$rebroadcast_node.$_SERVER['REQUEST_URI']);
 				$className = $this->_requestImplementation;
 				$request = new $className();
@@ -3132,16 +3136,21 @@ class CAS_Client
 
 				$request->setCurlOptions($rebroadcast_curl_options);
 				
+				$multiRequest->addRequest($request);
+				/*
 				if($request->send()) {
 					phpCAS::log('Logout rebroadcast sent successfully to: '.$url);
 				} else {
 					phpCAS::log('Logout rebroadcast failed sending to: '.$url);
 					phpCAS::log('Error message: '.$request->getErrorMessage());
 				}
+				*/
 			} else {
 				phpCAS::log('Logout rebroadcast not sent to self: '.$rebroadcast_node.' == '.gethostbyaddr($_SERVER['SERVER_ADDR']));
 			}
 		}
+		
+		$multiRequest->send();
 
 		phpCAS::traceEnd();
 	}
@@ -3159,8 +3168,20 @@ class CAS_Client
 										CURLOPT_CONNECTTIMEOUT => 1,
 										CURLOPT_TIMEOUT => 4);
 		
+		// Try to determine the IP address of the server
+		if(!empty($_SERVER['SERVER_ADDR'])) {
+			$ip = $_SERVER['SERVER_ADDR'];
+		} else if(!empty($_SERVER['LOCAL_ADDR'])) {
+			// IIS 7
+			$ip = $_SERVER['LOCAL_ADDR'];
+		}
+		// Try to determine the DNS name of the server
+		if(!empty($ip)){
+			$dns = gethostbyaddr($ip);
+		}
+										
 		foreach($this->rebroadcast_nodes as $rebroadcast_node) {
-			if(stripos($rebroadcast_node, gethostbyaddr($_SERVER['SERVER_ADDR'])) == false) {
+			if((stripos('hostname',$this->node_type) !== false) && !empty($dns) && (stripos($rebroadcast_node, $dns) === false) && !empty($ip) && (stripos($rebroadcast_node, $ip) === false)) {
 				phpCAS::log('Rebroadcast target URL: '.$rebroadcast_node.$_SERVER['REQUEST_URI']);
 				$className = $this->_requestImplementation;
 				$request = new $className();

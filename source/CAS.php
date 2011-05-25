@@ -1681,17 +1681,24 @@ class phpCAS {
 	// ########################################################################
 
 	/**
-	 * Set the pgtIou/pgtId and logoutRequest rebroadcast nodes.
+	 * Add a pgtIou/pgtId and logoutRequest rebroadcast node.
 	 * 
-	 * @param array $rebroadcast_nodes Array containing the rebroadcast node URLs.
+	 * @param $rebroadcastNodeUrl The rebroadcast node URL.
 	 */
-	function setRebroadcastNodes($rebroadcast_nodes) {
+	public static function addRebroadcastNode($rebroadcastNodeUrl,$node_type='') {
 		global $PHPCAS_CLIENT;
 		phpCAS::traceBegin();
+		phpCAS::log('rebroadcastNodeUrl:'.$rebroadcastNodeUrl);
 		if (!is_object($PHPCAS_CLIENT)) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
 		}
-		$PHPCAS_CLIENT->setRebroadcastNodes($rebroadcast_nodes);
+		if( !(bool)preg_match("/^(http|https):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i", $rebroadcastNodeUrl)) {
+    		phpCAS::error('type mismatched for parameter $node_type (should be `url\')');
+		}
+		if (gettype($node_type) != 'string') {
+			phpCAS :: error('type mismatched for parameter $rebroadcastNodeUrl (should be `string\')');
+		}
+		$PHPCAS_CLIENT->addRebroadcastNode($rebroadcastNodeUrl,$node_type);
 		phpCAS::traceEnd();
 	}
 	
@@ -1701,7 +1708,7 @@ class phpCAS {
 	 * 
 	 * @param String $header Header to send when rebroadcasting.
 	 */
-	function addRebroadcastHeader($header) {
+	public static function addRebroadcastHeader($header) {
 		global $PHPCAS_CLIENT;
 		phpCAS :: traceBegin();
 		if (!is_object($PHPCAS_CLIENT)) {
@@ -1709,24 +1716,7 @@ class phpCAS {
 		}
 		$PHPCAS_CLIENT->addRebroadcastHeader($header);
 		phpCAS :: traceEnd();
-	}
-	
-	/**
-	 * This method is used to add multiple header parameters when rebroadcasting 
-	 * pgtIou/pgtId or logoutRequest.
-	 * 
-	 * @param Array $headers Array of headers to send when rebroadcasting.
-	 */
-	function addRebroadcastHeaders($headers) {
-		global $PHPCAS_CLIENT;
-		phpCAS :: traceBegin();
-		if (!is_object($PHPCAS_CLIENT)) {
-			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-		}
-		$PHPCAS_CLIENT->addRebroadcastHeaders($headers);
-		phpCAS :: traceEnd();
-	}
-	
+	}	
 }
 
 // ########################################################################
