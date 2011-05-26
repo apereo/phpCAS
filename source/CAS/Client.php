@@ -45,6 +45,7 @@ include_once(dirname(__FILE__).'/CookieJar.php');
 
 // include class for fetching web requests.
 include_once(dirname(__FILE__).'/Request/CurlRequest.php');
+include_once(dirname(__FILE__).'/Request/CurlMultiRequest.php');
 
 // include classes for proxying access to services
 include_once(dirname(__FILE__).'/ProxiedService/Http/Get.php');
@@ -3059,7 +3060,7 @@ class CAS_Client
 	 */
 	private $rebroadcast = false;
 	private $rebroadcast_nodes = array();
-	private $node_type = '';
+	private $node_type = array();
 
 	/**
 	 * Store the rebroadcast node for pgtIou/pgtId and logout requests.
@@ -3071,7 +3072,7 @@ class CAS_Client
 		// Store the rebroadcast node and set flag
 		$this->rebroadcast = true;
 		$this->rebroadcast_nodes[] = $rebroadcastNodeUrl;
-		$this->node_type = $node_type;
+		$this->node_type[] = $node_type;
 	}
 
 	/**
@@ -3114,17 +3115,16 @@ class CAS_Client
 		if(!empty($ip)){
 			$dns = gethostbyaddr($ip);
 		}
-		phpCAS::log('point1');
 		$multiClassName = 'CAS_Request_CurlMultiRequest';
 		$multiRequest = new $multiClassName();
-		phpCAS::log('point2');
-		foreach($this->rebroadcast_nodes as $rebroadcast_node) {
-			if((stripos('hostname',$this->node_type) !== false) && !empty($dns) && (stripos($rebroadcast_node, $dns) === false) && !empty($ip) && (stripos($rebroadcast_node, $ip) === false)) {
-				phpCAS::log('Rebroadcast target URL: '.$rebroadcast_node.$_SERVER['REQUEST_URI']);
+		
+		for($i = 0; $i < sizeof($this->rebroadcast_nodes); $i++) {
+			if(((stripos('hostname',$this->node_type[$i]) !== false) && !empty($dns) && (stripos($this->rebroadcast_nodes[$i], $dns) === false)) || ((stripos('ip',$this->node_type[$i]) !== false) && !empty($ip) && (stripos($this->rebroadcast_nodes[$i], $ip) === false))) {
+				phpCAS::log('Rebroadcast target URL: '.$this->rebroadcast_nodes[$i].$_SERVER['REQUEST_URI']);
 				$className = $this->_requestImplementation;
 				$request = new $className();
 				
-				$url = $rebroadcast_node.$_SERVER['REQUEST_URI'];
+				$url = $this->rebroadcast_nodes[$i].$_SERVER['REQUEST_URI'];
 				$request->setUrl($url);
 				
 				if(count($this->_rebroadcast_headers)) {
@@ -3137,21 +3137,11 @@ class CAS_Client
 				$request->setCurlOptions($rebroadcast_curl_options);
 				
 				$multiRequest->addRequest($request);
-				/*
-				if($request->send()) {
-					phpCAS::log('Logout rebroadcast sent successfully to: '.$url);
-				} else {
-					phpCAS::log('Logout rebroadcast failed sending to: '.$url);
-					phpCAS::log('Error message: '.$request->getErrorMessage());
-				}
-				*/
 			} else {
-				phpCAS::log('Logout rebroadcast not sent to self: '.$rebroadcast_node.' == '.gethostbyaddr($_SERVER['SERVER_ADDR']));
+				phpCAS::log('pgtIou rebroadcast not sent to self: '.$this->rebroadcast_nodes[$i].' == '.(!empty($ip)?$ip:'').'/'.(!empty($dns)?$dns:''));
 			}
 		}
-		
 		$multiRequest->send();
-
 		phpCAS::traceEnd();
 	}
 
@@ -3179,14 +3169,16 @@ class CAS_Client
 		if(!empty($ip)){
 			$dns = gethostbyaddr($ip);
 		}
-										
-		foreach($this->rebroadcast_nodes as $rebroadcast_node) {
-			if((stripos('hostname',$this->node_type) !== false) && !empty($dns) && (stripos($rebroadcast_node, $dns) === false) && !empty($ip) && (stripos($rebroadcast_node, $ip) === false)) {
-				phpCAS::log('Rebroadcast target URL: '.$rebroadcast_node.$_SERVER['REQUEST_URI']);
+		
+		$multiClassName = 'CAS_Request_CurlMultiRequest';
+		$multiRequest = new $multiClassName();
+				for($i = 0; $i < sizeof($this->rebroadcast_nodes); $i++) {
+			if(((stripos('hostname',$this->node_type[$i]) !== false) && !empty($dns) && (stripos($this->rebroadcast_nodes[$i], $dns) === false)) || ((stripos('ip',$this->node_type[$i]) !== false) && !empty($ip) && (stripos($this->rebroadcast_nodes[$i], $ip) === false))) {
+				phpCAS::log('Rebroadcast target URL: '.$this->rebroadcast_nodes[$i].$_SERVER['REQUEST_URI']);
 				$className = $this->_requestImplementation;
 				$request = new $className();
 				
-				$url = $rebroadcast_node.$_SERVER['REQUEST_URI'];
+				$url = $this->rebroadcast_nodes[$i].$_SERVER['REQUEST_URI'];
 				$request->setUrl($url);
 				
 				if(count($this->_rebroadcast_headers)) {
@@ -3198,17 +3190,12 @@ class CAS_Client
 
 				$request->setCurlOptions($rebroadcast_curl_options);
 				
-				if($request->send()) {
-					phpCAS::log('pgtIou rebroadcast sent successfully to: '.$url);
-				} else {
-					phpCAS::log('pgtIou rebroadcast failed sending to: '.$url);
-					phpCAS::log('Error message: '.$request->getErrorMessage());
-				}
+				$multiRequest->addRequest($request);
 			} else {
-				phpCAS::log('pgtIou rebroadcast not sent to self: '.$rebroadcast_node.' == '.gethostbyaddr($_SERVER['SERVER_ADDR']));
+				phpCAS::log('pgtIou rebroadcast not sent to self: '.$this->rebroadcast_nodes[$i].' == '.(!empty($ip)?$ip:'').'/'.(!empty($dns)?$dns:''));
 			}
 		}	
-
+		$multiRequest->send();
 		phpCAS::traceEnd();
 	}
 	

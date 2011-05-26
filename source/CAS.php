@@ -1684,8 +1684,9 @@ class phpCAS {
 	 * Add a pgtIou/pgtId and logoutRequest rebroadcast node.
 	 * 
 	 * @param $rebroadcastNodeUrl The rebroadcast node URL.
+	 * @param $node_type The type of node (`hostname' and `ip' allowed).  Defaults to hostname.
 	 */
-	public static function addRebroadcastNode($rebroadcastNodeUrl,$node_type='') {
+	public static function addRebroadcastNode($rebroadcastNodeUrl,$node_type='hostname') {
 		global $PHPCAS_CLIENT;
 		phpCAS::traceBegin();
 		phpCAS::log('rebroadcastNodeUrl:'.$rebroadcastNodeUrl);
