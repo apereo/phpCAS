@@ -10,7 +10,7 @@ Bug Fixes:
     * CASClient::getServerServiceValidateURL() doesn't respect existing query strings [PHPCAS-104] (Bradley Froehle, Joachim Fritschi)
     * CASClient::retrievePT() must be a public function [PHPCAS-107] (Joachim Fritschi)
     * Expose setNoClearTicketsFromUrl() to the client [PHPCAS-108]  (Joachim Fritschi)
-    * Remove the PGT filestorage in xml format is not implemented [PHPCAS-112] (Joachim Fritschi)
+    * Remove the PGT filestorage in xml format that is not implemented [PHPCAS-112] (Joachim Fritschi)
     * Fix compatibility of the PGT db storage interface with postgres [PHPCAS-113] (Joachim Fritschi)
 
 Improvement
