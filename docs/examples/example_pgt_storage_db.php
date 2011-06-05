@@ -44,7 +44,6 @@ phpCAS::forceAuthentication();
     <?php include 'script_info.php' ?>
     <p>the user's login is <b><?php echo phpCAS::getUser(); ?></b>.</p>
     <h2>Response from service <?php echo $serviceUrl; ?></h2>
-    <hr/><ul>
 <?php
   flush();
   // call a service and change the color depending on the result
