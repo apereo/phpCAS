@@ -1,3 +1,8 @@
+Changes in version 1.2.2
+
+Bug Fixes:
+    * Improve compatibility with php < 5.3 for E_USER_DEPRECATED [PHPCAS-116] (Hugh Eaves)
+
 Changes in version 1.2.2RC1
 
 Bug Fixes:
