@@ -1325,7 +1325,6 @@ class CAS_Client
 			phpCAS::trace("phpCAS can't handle logout requests if it does not manage the session.");
 		}
 		phpCAS::trace("Logout requested");
-		phpCAS::trace("SAML REQUEST: ".$_POST['logoutRequest']);
 		if ($check_client) {
 			if (!$allowed_clients) {
 				$allowed_clients = array( $this->getServerHostname() );
@@ -3060,19 +3059,41 @@ class CAS_Client
 	 */
 	private $rebroadcast = false;
 	private $rebroadcast_nodes = array();
-	private $node_type = array();
-
+	
+	/**
+	 * Constants used for determining rebroadcast node type.
+	 */
+	const HOSTNAME = 0;
+	const IP = 1;
+	
+	/**
+	 * Determine the node type from the URL.
+	 *
+	 * @param String $nodeURL The node URL.
+	 * 
+	 */
+	private function getNodeType($nodeURL) {
+		phpCAS::traceBegin();
+		if(preg_match("/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/",$nodeURL))
+  		{
+  			phpCAS::traceEnd(IP);
+			return IP; 
+  		} else {
+  			phpCAS::traceEnd(HOSTNAME);
+			return HOSTNAME;
+  		}
+	}
+	
 	/**
 	 * Store the rebroadcast node for pgtIou/pgtId and logout requests.
 	 *
 	 * @param $rebroadcastNodeUrl The rebroadcast node URL.
 	 */
-	public function addRebroadcastNode($rebroadcastNodeUrl, $node_type)
+	public function addRebroadcastNode($rebroadcastNodeUrl)
 	{
 		// Store the rebroadcast node and set flag
 		$this->rebroadcast = true;
 		$this->rebroadcast_nodes[] = $rebroadcastNodeUrl;
-		$this->node_type[] = $node_type;
 	}
 
 	/**
@@ -3119,7 +3140,7 @@ class CAS_Client
 		$multiRequest = new $multiClassName();
 		
 		for($i = 0; $i < sizeof($this->rebroadcast_nodes); $i++) {
-			if(((stripos('hostname',$this->node_type[$i]) !== false) && !empty($dns) && (stripos($this->rebroadcast_nodes[$i], $dns) === false)) || ((stripos('ip',$this->node_type[$i]) !== false) && !empty($ip) && (stripos($this->rebroadcast_nodes[$i], $ip) === false))) {
+			if((($this->getNodeType($this->rebroadcast_nodes[$i]) == HOSTNAME) && !empty($dns) && (stripos($this->rebroadcast_nodes[$i], $dns) === false)) || (($this->getNodeType($this->rebroadcast_nodes[$i]) == IP) && !empty($ip) && (stripos($this->rebroadcast_nodes[$i], $ip) === false))) {
 				phpCAS::log('Rebroadcast target URL: '.$this->rebroadcast_nodes[$i].$_SERVER['REQUEST_URI']);
 				$className = $this->_requestImplementation;
 				$request = new $className();
@@ -3138,10 +3159,13 @@ class CAS_Client
 				
 				$multiRequest->addRequest($request);
 			} else {
-				phpCAS::log('pgtIou rebroadcast not sent to self: '.$this->rebroadcast_nodes[$i].' == '.(!empty($ip)?$ip:'').'/'.(!empty($dns)?$dns:''));
+				phpCAS::log('Logout request rebroadcast not sent to self: '.$this->rebroadcast_nodes[$i].' == '.(!empty($ip)?$ip:'').'/'.(!empty($dns)?$dns:''));
 			}
 		}
-		$multiRequest->send();
+		// We need at least 1 request
+		if($multiRequest->getNumRequests() > 0) {
+			$multiRequest->send();
+		}
 		phpCAS::traceEnd();
 	}
 
@@ -3172,8 +3196,9 @@ class CAS_Client
 		
 		$multiClassName = 'CAS_Request_CurlMultiRequest';
 		$multiRequest = new $multiClassName();
-				for($i = 0; $i < sizeof($this->rebroadcast_nodes); $i++) {
-			if(((stripos('hostname',$this->node_type[$i]) !== false) && !empty($dns) && (stripos($this->rebroadcast_nodes[$i], $dns) === false)) || ((stripos('ip',$this->node_type[$i]) !== false) && !empty($ip) && (stripos($this->rebroadcast_nodes[$i], $ip) === false))) {
+		for($i = 0; $i < sizeof($this->rebroadcast_nodes); $i++) {
+			if((($this->getNodeType($this->rebroadcast_nodes[$i]) == HOSTNAME) && !empty($dns) && (stripos($this->rebroadcast_nodes[$i], $dns) === false)) || 
+			(($this->getNodeType($this->rebroadcast_nodes[$i]) == IP) && !empty($ip) && (stripos($this->rebroadcast_nodes[$i], $ip) === false))) {
 				phpCAS::log('Rebroadcast target URL: '.$this->rebroadcast_nodes[$i].$_SERVER['REQUEST_URI']);
 				$className = $this->_requestImplementation;
 				$request = new $className();
@@ -3194,8 +3219,11 @@ class CAS_Client
 			} else {
 				phpCAS::log('pgtIou rebroadcast not sent to self: '.$this->rebroadcast_nodes[$i].' == '.(!empty($ip)?$ip:'').'/'.(!empty($dns)?$dns:''));
 			}
-		}	
-		$multiRequest->send();
+		}
+		// We need at least 1 request
+		if($multiRequest->getNumRequests() > 0) {
+			$multiRequest->send();
+		}
 		phpCAS::traceEnd();
 	}
 	
