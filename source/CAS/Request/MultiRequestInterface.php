@@ -49,6 +49,13 @@ interface CAS_Request_MultiRequestInterface {
 	 */
 	public function addRequest (CAS_RequestInterface $request);
 
+	/**
+	 * Retrieve the number of requests added to this batch.
+	 * 
+	 * @return number of request elements
+	 */
+	public function getNumRequests ();
+	
 	/*********************************************************
 	 * 2. Send the Request
 	 *********************************************************/
