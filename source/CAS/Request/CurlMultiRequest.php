@@ -62,6 +62,17 @@ class CAS_Request_CurlMultiRequest
 		$this->requests[] = $request;
 	}
 
+	/**
+	 * Retrieve the number of requests added to this batch.
+	 * 
+	 * @return number of request elements
+	 */
+	public function getNumRequests() {
+		if ($this->sent)
+			throw new CAS_OutOfSequenceException('Request has already been sent cannot '.__METHOD__);
+		return count($this->requests);
+	}
+	
 	/*********************************************************
 	 * 2. Send the Request
 	 *********************************************************/
