@@ -1683,10 +1683,9 @@ class phpCAS {
 	/**
 	 * Add a pgtIou/pgtId and logoutRequest rebroadcast node.
 	 * 
-	 * @param $rebroadcastNodeUrl The rebroadcast node URL.
-	 * @param $node_type The type of node (`hostname' and `ip' allowed).  Defaults to hostname.
+	 * @param $rebroadcastNodeUrl The rebroadcast node URL.  Can be hostname or IP.
 	 */
-	public static function addRebroadcastNode($rebroadcastNodeUrl,$node_type='hostname') {
+	public static function addRebroadcastNode($rebroadcastNodeUrl) {
 		global $PHPCAS_CLIENT;
 		phpCAS::traceBegin();
 		phpCAS::log('rebroadcastNodeUrl:'.$rebroadcastNodeUrl);
@@ -1696,10 +1695,7 @@ class phpCAS {
 		if( !(bool)preg_match("/^(http|https):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i", $rebroadcastNodeUrl)) {
     		phpCAS::error('type mismatched for parameter $node_type (should be `url\')');
 		}
-		if (gettype($node_type) != 'string') {
-			phpCAS :: error('type mismatched for parameter $rebroadcastNodeUrl (should be `string\')');
-		}
-		$PHPCAS_CLIENT->addRebroadcastNode($rebroadcastNodeUrl,$node_type);
+		$PHPCAS_CLIENT->addRebroadcastNode($rebroadcastNodeUrl);
 		phpCAS::traceEnd();
 	}
 	
