@@ -1693,7 +1693,7 @@ class phpCAS {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
 		}
 		if( !(bool)preg_match("/^(http|https):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i", $rebroadcastNodeUrl)) {
-    		phpCAS::error('type mismatched for parameter $node_type (should be `url\')');
+    		phpCAS::error('type mismatched for parameter $rebroadcastNodeUrl (should be `url\')');
 		}
 		$PHPCAS_CLIENT->addRebroadcastNode($rebroadcastNodeUrl);
 		phpCAS::traceEnd();
