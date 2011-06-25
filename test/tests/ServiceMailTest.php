@@ -45,7 +45,6 @@ class ServiceMailTest extends PHPUnit_Framework_TestCase
 		
 		$this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
 		$this->object->setCasServerCACert('/path/to/ca_cert.crt');
-		$this->object->setNoExitOnAuthError();
 		
 		// Bypass PGT storage since CAS_Client->callback() will exit. Just build up the session manually
 		// so that we are in a state from which we can attempt to fetch proxy tickets and make proxied requests.

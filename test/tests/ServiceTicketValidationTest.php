@@ -44,7 +44,6 @@ class ServiceTicketValidationTest extends PHPUnit_Framework_TestCase
 		
 		$this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
 		$this->object->setCasServerCACert('/path/to/ca_cert.crt');
-		$this->object->setNoExitOnAuthError();
 
 		/*********************************************************
 		 * Enumerate our responses
@@ -137,7 +136,9 @@ class ServiceTicketValidationTest extends PHPUnit_Framework_TestCase
     }
 
 	/**
-     * Test that a service ticket can be successfully validated.
+     * Test that a service ticket can be successfully fails.
+     * @expectedException CAS_AuthenticationException
+     * @outputBuffering enabled
      */
     public function test_invalid_ticket_failure() {
 		$this->object->setST('ST-1856339-aA5Yuvrxzpv8Tau1cYQ7');

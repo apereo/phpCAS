@@ -528,8 +528,8 @@ class phpCAS {
 		}
 		echo "<br />\n<b>phpCAS error</b>: <font color=\"FF0000\"><b>" . __CLASS__ . "::" . $function . '(): ' . htmlentities($msg) . "</b></font> in <b>" . $file . "</b> on line <b>" . $line . "</b><br />\n";
 		phpCAS :: trace($msg);
-		phpCAS :: traceExit();
-		exit ();
+		$PHPCAS_CLIENT->setProcessingDiabled(TRUE);
+		phpCAS :: traceEnd();
 	}
 
 	/**
@@ -1090,12 +1090,12 @@ class phpCAS {
 			'result' => $auth
 		);
 
-		if (!$auth) {
+/*		if (!$auth) {
 			phpCAS :: trace('user is not authenticated, redirecting to the CAS server');
 			$PHPCAS_CLIENT->forceAuthentication();
 		} else {
 			phpCAS :: trace('no need to authenticate (user `' . phpCAS :: getUser() . '\' is already authenticated)');
-		}
+		}*/
 
 		phpCAS :: traceEnd();
 		return $auth;

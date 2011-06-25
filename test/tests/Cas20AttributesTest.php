@@ -42,7 +42,6 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
 		
 		$this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
 		$this->object->setCasServerCACert('/path/to/ca_cert.crt');
-		$this->object->setNoExitOnAuthError();
 		$this->object->setNoClearTicketsFromUrl();
 // 		phpCAS::setDebug(dirname(__FILE__).'/../test.log');
     }
