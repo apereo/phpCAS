@@ -1181,7 +1181,7 @@ class CAS_Client
 		if ( $this->isCallbackMode() ) {
 			// Rebroadcast the pgtIou and pgtId to all nodes
 			if($this->rebroadcast&&!isset($_POST['rebroadcast'])) {
-				$this->pgtIouRebroadcast();
+				$this->rebroadcast(PGTIOU);
 			}
 			$this->callback();
 		}
@@ -1353,7 +1353,7 @@ class CAS_Client
 		}
 		// Rebroadcast the logout request
 		if($this->rebroadcast&&!isset($_POST['rebroadcast'])) {
-				$this->logoutRebroadcast();
+				$this->rebroadcast(LOGOUT);
 		}
 		// Extract the ticket from the SAML Request
 		preg_match("|<samlp:SessionIndex>(.*)</samlp:SessionIndex>|", $_POST['logoutRequest'], $tick, PREG_OFFSET_CAPTURE, 3);
@@ -3111,11 +3111,17 @@ class CAS_Client
 	{
 		$this->_rebroadcast_headers[] = $header;
 	}
-		
+	
 	/**
-	 * This method rebroadcasts logout requests.
+	 * Constants used for determining rebroadcast type (logout or pgtIou/pgtId).
 	 */
-	private function logoutRebroadcast() {		
+	const LOGOUT = 0;
+	const PGTIOU = 1;
+	
+	/**
+	 * This method rebroadcasts logout/pgtIou requests.
+	 */
+	private function rebroadcast($type) {		
 		phpCAS::traceBegin();
 		
 		$rebroadcast_curl_options = array(
@@ -3153,71 +3159,19 @@ class CAS_Client
 				}
 				
 				$request->makePost();
-				$request->setPostBody('rebroadcast=false&logoutRequest='.$_POST['logoutRequest']);
-
-				$request->setCurlOptions($rebroadcast_curl_options);
-				
-				$multiRequest->addRequest($request);
-			} else {
-				phpCAS::log('Logout request rebroadcast not sent to self: '.$this->rebroadcast_nodes[$i].' == '.(!empty($ip)?$ip:'').'/'.(!empty($dns)?$dns:''));
-			}
-		}
-		// We need at least 1 request
-		if($multiRequest->getNumRequests() > 0) {
-			$multiRequest->send();
-		}
-		phpCAS::traceEnd();
-	}
-
-	/**
-	 * This method rebroadcasts pgtIou/pgtId requests.
-	 */
-	private function pgtIouRebroadcast() {
-		phpCAS::traceBegin();
-		
-		$rebroadcast_curl_options = array(
-										CURLOPT_FAILONERROR => 1,
-										CURLOPT_FOLLOWLOCATION => 1,
-										CURLOPT_RETURNTRANSFER => 1,
-										CURLOPT_CONNECTTIMEOUT => 1,
-										CURLOPT_TIMEOUT => 4);
-		
-		// Try to determine the IP address of the server
-		if(!empty($_SERVER['SERVER_ADDR'])) {
-			$ip = $_SERVER['SERVER_ADDR'];
-		} else if(!empty($_SERVER['LOCAL_ADDR'])) {
-			// IIS 7
-			$ip = $_SERVER['LOCAL_ADDR'];
-		}
-		// Try to determine the DNS name of the server
-		if(!empty($ip)){
-			$dns = gethostbyaddr($ip);
-		}
-		
-		$multiClassName = 'CAS_Request_CurlMultiRequest';
-		$multiRequest = new $multiClassName();
-		for($i = 0; $i < sizeof($this->rebroadcast_nodes); $i++) {
-			if((($this->getNodeType($this->rebroadcast_nodes[$i]) == HOSTNAME) && !empty($dns) && (stripos($this->rebroadcast_nodes[$i], $dns) === false)) || 
-			(($this->getNodeType($this->rebroadcast_nodes[$i]) == IP) && !empty($ip) && (stripos($this->rebroadcast_nodes[$i], $ip) === false))) {
-				phpCAS::log('Rebroadcast target URL: '.$this->rebroadcast_nodes[$i].$_SERVER['REQUEST_URI']);
-				$className = $this->_requestImplementation;
-				$request = new $className();
-				
-				$url = $this->rebroadcast_nodes[$i].$_SERVER['REQUEST_URI'];
-				$request->setUrl($url);
-				
-				if(count($this->_rebroadcast_headers)) {
-					$request->addHeaders($this->_rebroadcast_headers);
+				if($type == LOGOUT) {
+					// Logout request
+					$request->setPostBody('rebroadcast=false&logoutRequest='.$_POST['logoutRequest']);
+				} else if($type == PGTIOU) {
+					// pgtIou/pgtId rebroadcast
+					$request->setPostBody('rebroadcast=false');
 				}
-				
-				$request->makePost();
-				$request->setPostBody('rebroadcast=false');
 
 				$request->setCurlOptions($rebroadcast_curl_options);
 				
 				$multiRequest->addRequest($request);
 			} else {
-				phpCAS::log('pgtIou rebroadcast not sent to self: '.$this->rebroadcast_nodes[$i].' == '.(!empty($ip)?$ip:'').'/'.(!empty($dns)?$dns:''));
+				phpCAS::log('Rebroadcast not sent to self: '.$this->rebroadcast_nodes[$i].' == '.(!empty($ip)?$ip:'').'/'.(!empty($dns)?$dns:''));
 			}
 		}
 		// We need at least 1 request
