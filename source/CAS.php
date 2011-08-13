@@ -491,7 +491,7 @@ class phpCAS {
 		$indent_str = ".";
 		global $PHPCAS_DEBUG;
 
-		if ($PHPCAS_DEBUG['filename']) {
+		if (isset($PHPCAS_DEBUG['filename']) && ($PHPCAS_DEBUG['filename'])) {
 			for ($i = 0; $i < $PHPCAS_DEBUG['indent']; $i++) {
 				$indent_str .= '|    ';
 			}
