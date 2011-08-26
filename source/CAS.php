@@ -1674,6 +1674,44 @@ class phpCAS {
 		return($PHPCAS_CLIENT->getProxies());
 	}
 
+	// ########################################################################
+	// PGTIOU/PGTID and logoutRequest rebroadcasting
+	// ########################################################################
+
+	/**
+	 * Add a pgtIou/pgtId and logoutRequest rebroadcast node.
+	 * 
+	 * @param $rebroadcastNodeUrl The rebroadcast node URL.  Can be hostname or IP.
+	 */
+	public static function addRebroadcastNode($rebroadcastNodeUrl) {
+		global $PHPCAS_CLIENT;
+		phpCAS::traceBegin();
+		phpCAS::log('rebroadcastNodeUrl:'.$rebroadcastNodeUrl);
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
+		}
+		if( !(bool)preg_match("/^(http|https):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i", $rebroadcastNodeUrl)) {
+    		phpCAS::error('type mismatched for parameter $rebroadcastNodeUrl (should be `url\')');
+		}
+		$PHPCAS_CLIENT->addRebroadcastNode($rebroadcastNodeUrl);
+		phpCAS::traceEnd();
+	}
+	
+	/**
+	 * This method is used to add header parameters when rebroadcasting 
+	 * pgtIou/pgtId or logoutRequest.
+	 * 
+	 * @param String $header Header to send when rebroadcasting.
+	 */
+	public static function addRebroadcastHeader($header) {
+		global $PHPCAS_CLIENT;
+		phpCAS :: traceBegin();
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
+		}
+		$PHPCAS_CLIENT->addRebroadcastHeader($header);
+		phpCAS :: traceEnd();
+	}	
 }
 
 // ########################################################################
