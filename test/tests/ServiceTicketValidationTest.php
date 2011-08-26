@@ -49,7 +49,7 @@ class ServiceTicketValidationTest extends PHPUnit_Framework_TestCase
 		 * Enumerate our responses
 		 *********************************************************/
 		// Valid ticket response
-		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/serviceValidate');
+		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/proxyValidate');
 		$response->matchQueryParameters(array(
 			'service' => 'http://www.service.com/',
 			'ticket' => 'ST-123456-asdfasdfasgww2323radf3',
@@ -79,7 +79,7 @@ class ServiceTicketValidationTest extends PHPUnit_Framework_TestCase
 		CAS_TestHarness_DummyRequest::addResponse($response);
 
 		// Invalid ticket response
-		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/serviceValidate');
+		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/proxyValidate');
 		$response->matchQueryParameters(array(
 			'service' => 'http://www.service.com/',
 		));
@@ -121,8 +121,8 @@ class ServiceTicketValidationTest extends PHPUnit_Framework_TestCase
      * Test that a service ticket can be successfully validated.
      */
     public function test_validation_success() {
-		$this->object->setST('ST-123456-asdfasdfasgww2323radf3');
-		$result = $this->object->validateST('', $text_response, $tree_response);
+		$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
+		$result = $this->object->validateCAS20($url, $text_response, $tree_response);
 		$this->assertTrue($result);
 		$this->assertEquals(
 "<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
@@ -141,9 +141,9 @@ class ServiceTicketValidationTest extends PHPUnit_Framework_TestCase
      * @outputBuffering enabled
      */
     public function test_invalid_ticket_failure() {
-		$this->object->setST('ST-1856339-aA5Yuvrxzpv8Tau1cYQ7');
+		$this->object->setTicket('ST-1856339-aA5Yuvrxzpv8Tau1cYQ7');
 		ob_start();
-		$result = $this->object->validateST('', $text_response, $tree_response);
+		$result = $this->object->validateCAS20($url, $text_response, $tree_response);
 		ob_end_clean();
 		$this->assertTrue($result);
 		$this->assertEquals(

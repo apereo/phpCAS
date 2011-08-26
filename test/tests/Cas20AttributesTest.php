@@ -93,7 +93,7 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
 ");
 		CAS_TestHarness_DummyRequest::addResponse($response);
 		
-		$this->object->setPT('ST-123456-asdfasdfasgww2323radf3');
+		$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
 		$this->object->isAuthenticated();
 		
 		// Verify that we have attributes from this response
@@ -148,7 +148,7 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
 ");
 		CAS_TestHarness_DummyRequest::addResponse($response);
 		
-		$this->object->setPT('ST-123456-asdfasdfasgww2323radf3');
+		$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
 		$this->object->isAuthenticated();
 		
 		// Verify that we have attributes from this response
@@ -202,7 +202,7 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
 ");
 		CAS_TestHarness_DummyRequest::addResponse($response);
 		
-		$this->object->setPT('ST-123456-asdfasdfasgww2323radf3');
+		$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
 		$this->object->isAuthenticated();
 		
 		// Verify that we have attributes from this response
