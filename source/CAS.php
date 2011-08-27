@@ -1654,7 +1654,19 @@ class phpCAS {
 		phpCAS :: traceEnd();
 	}
 	
-	public static function allowToBeProxied($enable,$proxies=array()){
+	/**
+	 *
+	 * Enable the client to be proxied from other legitimate cas clients. 
+	 * You either allow any proxy to be allowed by skipping the proxy definition
+	 * or you can define proxies that are explicitly allowed. The proxies can be
+	 * defined either with a string or a regexp. The strings will be matched
+	 * from the beginning and must match the proxies. (or at least the beginning
+	 * of the URL.) The regexp are matched with preg_match against the proxies.
+	 * Mixing both types is allowed.
+	 * @param Boolean $enable
+	 * @param array $proxies An array of strings and/or regexp that will be matched against the proxies requesting access
+	 */
+	public static function allowToBeProxied($enable,array $proxies=array()){
 		global $PHPCAS_CLIENT;
 		phpCAS :: traceBegin();
 		if (!is_object($PHPCAS_CLIENT)) {

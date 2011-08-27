@@ -2436,18 +2436,19 @@ class CAS_Client
 	private $_allowedProxies = array();
 	
 	/**
-	 * Define whether proxies are allow in front of the cas client
+	 * Define whether proxies are allow in front of the cas client and optionally
+	 * a list of acceptable proxies can be defined
 	 * @param $enable
 	 * @param array $proxies
 	 */
-	public function allowToBeProxied($enable,array $proxies){
+	public function allowToBeProxied($enable,array $proxies=array()){
 		$this->_allowedToBeProxied = $enable;
 		$this->_allowedProxies = $proxies;
 	}
 	
 	/**
 	 * 
-	 * Get the array of allowed proxies. Can an array of strings or regexp.
+	 * Get the array of allowed proxies. The array can be a mix of strings and regexp.
 	 * @return array of proxies
 	 */
 	public function getAllowedProxies(){
@@ -2471,11 +2472,11 @@ class CAS_Client
 		phpCAS::traceBegin();
 		if(empty($proxies)){
 			phpCAS::trace("No proxies found");
-			phpCAS::traceEnd();
+			phpCAS::traceEnd(true);
 			return true;
 		}elseif(!$this->isAllowedToBeProxied()){
 			phpCAS::trace("Proxies not allowed");
-			phpCAS::traceEnd();
+			phpCAS::traceEnd(true);
 			return false;
 		}else{
 			$allowedList = $this->getAllowedProxies();
@@ -2484,31 +2485,37 @@ class CAS_Client
 					$result = false;
 					foreach($allowedList as $allowed){
 						// check whether it's a regexp or a string
-						if(strpos($allowed,'/') == 0 && strrchr($allowed,'/') == strlen($allowed) -1){
+						if(preg_match('/^\/.*\//',$allowed)){
 							if(preg_match($allowed, $proxy)){
-								phpCAS::trace("Found regexp " +  $allowed + "matching " + $proxy);
+								phpCAS::trace("Found regexp " .  $allowed . " matching " . $proxy);
 								$result = true;
 								break;
+							}else{
+								phpCAS::trace("No regexp match " .  $allowed + " != " . $proxy);
 							}
 						}else{
-							if(strncasecmp($allowed,$proxy,strlen($allowed))){
-								phpCAS::trace("Found string " +  $allowed + "matching " + $proxy);
+							if(strncasecmp($allowed,$proxy,strlen($allowed)) == 0){
+								phpCAS::trace("Found string " .  $allowed . " matching " . $proxy);
 								$result =true;
 								break;
+							}else{
+								phpCAS::trace("No match " .  $allowed . " != " . $proxy);
 							}
 						}
 					}
 					if($result == false){
-						phpCAS::trace("No match found for " + $proxy);
+						phpCAS::trace("No match found for " . $proxy);
+						phpCAS::traceEnd(false);
 						return false;
 					}
 				}
 			}else{
 				phpCAS::trace("No allowed list definded. Allowing any proxy.");
 			}
+			phpCAS::traceEnd(true);
 			return true;
 		}
-		phpCAS::traceEnd();
+
 	}
 	
 	/** @} */

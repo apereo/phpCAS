@@ -21,6 +21,16 @@ phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 // VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL! 
 phpCAS::setNoCasServerValidation();
 
+// Allowing to be proxied should only be enabled when you want any other service
+// to proxy this service. By default it is disabled. You can allow any services
+// to proxy this service:
+//phpCAS::allowToBeProxied(true);
+// Or you can limit it by supplying an array() of acceptable proxies. The definition
+// can be either a string or a regexp(preg_match) that will be matched against the proxy list
+// supplied by the cas server. The strings are compared starting from the 
+// beginning and must fully match with the proxies in the list. 
+phpCAS::allowToBeProxied(true,array('/^https:\/\/myservice\.com\/.*$/','http://myservice.com','/^http.*$/'));
+
 // force CAS authentication
 phpCAS::forceAuthentication();
 
