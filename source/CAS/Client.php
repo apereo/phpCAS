@@ -2384,7 +2384,7 @@ class CAS_Client
 	//  PT
 	// ########################################################################
 	/**
-	* @addtogroup internalProxied
+	* @addtogroup internalService
 	* @{
 	*/
 	

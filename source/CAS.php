@@ -1807,7 +1807,7 @@ class phpCAS {
 /** @defgroup internalProxyServices Proxy other services
  *  @ingroup internalProxy */
 
-/** @defgroup internalProxied CAS proxied client features (CAS 2.0, Proxy Tickets)
+/** @defgroup internalService CAS client features (CAS 2.0, Proxied service)
  *  @ingroup internal */
 
 /** @defgroup internalConfig Configuration
