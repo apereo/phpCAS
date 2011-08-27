@@ -1672,6 +1672,9 @@ class phpCAS {
 		if (!is_object($PHPCAS_CLIENT)) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
 		}
+		if($PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_2_0){
+			phpCAS :: error('this method can only be used with the cas 2.0 protool');
+		}
 		$PHPCAS_CLIENT->allowToBeProxied($enable, $proxies);
 		phpCAS :: traceEnd();
 	}
