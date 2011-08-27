@@ -3167,7 +3167,7 @@ class CAS_Client
 		
 		for($i = 0; $i < sizeof($this->rebroadcast_nodes); $i++) {
 			if((($this->getNodeType($this->rebroadcast_nodes[$i]) == HOSTNAME) && !empty($dns) && (stripos($this->rebroadcast_nodes[$i], $dns) === false)) || (($this->getNodeType($this->rebroadcast_nodes[$i]) == IP) && !empty($ip) && (stripos($this->rebroadcast_nodes[$i], $ip) === false))) {
-				phpCAS::log('Rebroadcast target URL: '.$this->rebroadcast_nodes[$i].$_SERVER['REQUEST_URI']);
+				phpCAS::trace('Rebroadcast target URL: '.$this->rebroadcast_nodes[$i].$_SERVER['REQUEST_URI']);
 				$className = $this->_requestImplementation;
 				$request = new $className();
 				
@@ -3191,7 +3191,7 @@ class CAS_Client
 				
 				$multiRequest->addRequest($request);
 			} else {
-				phpCAS::log('Rebroadcast not sent to self: '.$this->rebroadcast_nodes[$i].' == '.(!empty($ip)?$ip:'').'/'.(!empty($dns)?$dns:''));
+				phpCAS::trace('Rebroadcast not sent to self: '.$this->rebroadcast_nodes[$i].' == '.(!empty($ip)?$ip:'').'/'.(!empty($dns)?$dns:''));
 			}
 		}
 		// We need at least 1 request
