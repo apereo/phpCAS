@@ -1654,7 +1654,16 @@ class phpCAS {
 		phpCAS :: traceEnd();
 	}
 	
-			
+	public static function allowToBeProxied($enable,$proxies=array()){
+		global $PHPCAS_CLIENT;
+		phpCAS :: traceBegin();
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
+		}
+		$PHPCAS_CLIENT->allowToBeProxied($enable, $proxies);
+		phpCAS :: traceEnd();
+	}
+	
 	/**
 	 * Answer an array of proxies that are sitting in front of this application.
 	 *

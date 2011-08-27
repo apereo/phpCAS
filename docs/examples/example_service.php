@@ -21,6 +21,8 @@ phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 // VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL! 
 phpCAS::setNoCasServerValidation();
 
+// Allow other cas clients to proxy this service
+phpCAS::allowToBeProxied(true);
 // force CAS authentication
 phpCAS::forceAuthentication();
 

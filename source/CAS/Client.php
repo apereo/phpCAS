@@ -1062,6 +1062,10 @@ class CAS_Client
 						if($this->hasAttributes()){
 							$_SESSION['phpCAS']['attributes'] = $this->getAttributes();
 						}
+						$proxies = $this->getProxies();
+						if(!empty($proxies)){
+							$_SESSION['phpCAS']['proxies'] = $this->getProxies();
+						}
 						$res = TRUE;
 						$logoutTicket = $this->getTicket();
 						break;
@@ -2420,7 +2424,93 @@ class CAS_Client
 		$this->_proxies = $proxies;
 	}
 	
-
+	/**
+	 * Allow a cas 2.0 client to be proxied
+	 * @var boolean
+	 */
+	private $_allowedToBeProxied = false;
+	/**
+	 * An ordered array of strings to be allowed as proxies in front of the cas client
+	 * @var array of strings
+	 */
+	private $_allowedProxies = array();
+	
+	/**
+	 * Define whether proxies are allow in front of the cas client
+	 * @param $enable
+	 * @param array $proxies
+	 */
+	public function allowToBeProxied($enable,array $proxies){
+		$this->_allowedToBeProxied = $enable;
+		$this->_allowedProxies = $proxies;
+	}
+	
+	/**
+	 * 
+	 * Get the array of allowed proxies. Can an array of strings or regexp.
+	 * @return array of proxies
+	 */
+	public function getAllowedProxies(){
+		return $this->_allowedProxies;
+	}
+	
+	/**
+	 * Check whether proxies are allowed by configuration 
+	 */
+	public function isAllowedToBeProxied(){
+		return $this->_allowedToBeProxied;
+	}
+	
+	/**
+	 * 
+	 * Check if the proxies found in the response match the allowed proxies
+	 * @param array $proxies
+	 * @return whether the proxies match the allowed proxies
+	 */
+	public function checkAllowedProxies(array $proxies){
+		phpCAS::traceBegin();
+		if(empty($proxies)){
+			phpCAS::trace("No proxies found");
+			phpCAS::traceEnd();
+			return true;
+		}elseif(!$this->isAllowedToBeProxied()){
+			phpCAS::trace("Proxies not allowed");
+			phpCAS::traceEnd();
+			return false;
+		}else{
+			$allowedList = $this->getAllowedProxies();
+			if(!empty($allowedList)){
+				foreach ($proxies as $proxy) {
+					$result = false;
+					foreach($allowedList as $allowed){
+						// check whether it's a regexp or a string
+						if(strpos($allowed,'/') == 0 && strrchr($allowed,'/') == strlen($allowed) -1){
+							if(preg_match($allowed, $proxy)){
+								phpCAS::trace("Found regexp " +  $allowed + "matching " + $proxy);
+								$result = true;
+								break;
+							}
+						}else{
+							if(strncasecmp($allowed,$proxy,strlen($allowed))){
+								phpCAS::trace("Found string " +  $allowed + "matching " + $proxy);
+								$result =true;
+								break;
+							}
+						}
+					}
+					if($result == false){
+						phpCAS::trace("No match found for " + $proxy);
+						return false;
+					}
+				}
+			}else{
+				phpCAS::trace("No allowed list definded. Allowing any proxy.");
+			}
+			return true;
+		}
+		phpCAS::traceEnd();
+	}
+	
 	/** @} */
 	// ########################################################################
 	//  PT VALIDATION
@@ -2431,7 +2521,7 @@ class CAS_Client
 	*/
 
 	/**
-	 * This method is used to validate a ST or PT; halt on failure
+	 * This method is used to validate a cas 2.0 ST or PT; halt on failure
 	 * Used for all CAS 2.0 validations
 	 * @return bool TRUE when successfull and issue a CAS_AuthenticationException
 	 * and FALSE on an error
@@ -2442,7 +2532,11 @@ class CAS_Client
 		phpCAS::trace($text_response);
 		$result = FALSE;
 		// build the URL to validate the ticket
-		$validate_url = $this->getServerProxyValidateURL().'&ticket='.$this->getTicket();
+		if($this->isAllowedToBeProxied()){
+			$validate_url = $this->getServerProxyValidateURL().'&ticket='.$this->getTicket();
+		}else{
+			$validate_url = $this->getServerServiceValidateURL().'&ticket='.$this->getTicket();
+		}
 
 		if ( $this->isProxy() ) {
 			// pass the callback url for CAS proxies
@@ -2452,7 +2546,7 @@ class CAS_Client
 		// open and read the URL
 		if ( !$this->readURL($validate_url,$headers,$text_response,$err_msg) ) {
 			phpCAS::trace('could not open URL \''.$validate_url.'\' to validate ('.$err_msg.')');
-			throw new CAS_AuthenticationException($this,'PT not validated',
+			throw new CAS_AuthenticationException($this,'Ticket not validated',
 			$validate_url,
 			TRUE/*$no_response*/);
 			$result = FALSE;
@@ -2465,7 +2559,7 @@ class CAS_Client
 		// read the response of the CAS server into a DOMDocument object
 		if ( !($dom->loadXML($text_response))) {
 			// read failed
-			throw new CAS_AuthenticationException($this,'PT not validated',
+			throw new CAS_AuthenticationException($this,'Ticket not validated',
 			$validate_url,
 			FALSE/*$no_response*/,
 			TRUE/*$bad_response*/,
@@ -2476,7 +2570,7 @@ class CAS_Client
 		// read the root node of the XML tree
 		else if ( !($tree_response = $dom->documentElement) ) {
 			// read failed
-			throw new CAS_AuthenticationException($this,'PT not validated',
+			throw new CAS_AuthenticationException($this,'Ticket not validated',
 			$validate_url,
 			FALSE/*$no_response*/,
 			TRUE/*$bad_response*/,
@@ -2486,7 +2580,7 @@ class CAS_Client
 		// insure that tag name is 'serviceResponse'
 		else if ( $tree_response->localName != 'serviceResponse' ) {
 			// bad root node
-			throw new CAS_AuthenticationException($this,'PT not validated',
+			throw new CAS_AuthenticationException($this,'Ticket not validated',
 			$validate_url,
 			FALSE/*$no_response*/,
 			TRUE/*$bad_response*/,
@@ -2498,7 +2592,7 @@ class CAS_Client
 			$success_elements = $tree_response->getElementsByTagName("authenticationSuccess");
 			if ( $success_elements->item(0)->getElementsByTagName("user")->length == 0) {
 				// no user specified => error
-				throw new CAS_AuthenticationException($this,'PT not validated',
+				throw new CAS_AuthenticationException($this,'Ticket not validated',
 				$validate_url,
 				FALSE/*$no_response*/,
 				TRUE/*$bad_response*/,
@@ -2508,19 +2602,29 @@ class CAS_Client
 				$this->setUser(trim($success_elements->item(0)->getElementsByTagName("user")->item(0)->nodeValue));
 				$this->readExtraAttributesCas20($success_elements);
 				// Store the proxies we are sitting behind for authorization checking
+				$proxyList = array();
 				if ( sizeof($arr = $success_elements->item(0)->getElementsByTagName("proxy")) > 0) {
 					foreach ($arr as $proxyElem) {
 						phpCAS::trace("Storing Proxy: ".$proxyElem->nodeValue);
-						$this->_proxies[] = trim($proxyElem->nodeValue);
+						$proxyList[] = trim($proxyElem->nodeValue);
 					}
-					$_SESSION['phpCAS']['proxies'] = $this->_proxies;
 				}
-				$result = TRUE;
-			}	
+				// Check if proxies are allowed
+				if(!$this->checkAllowedProxies($proxyList)){
+					throw new CAS_AuthenticationException($this,'Proxies not allowed',
+					$validate_url,
+					FALSE/*$no_response*/,
+					TRUE/*$bad_response*/,
+					$text_response);
+					$result = FALSE;
+				}else{
+					$result = TRUE;
+				}
+			}
 		} else if ( $tree_response->getElementsByTagName("authenticationFailure")->length != 0) {
 			// authentication succeded, extract the error code and message
 			$auth_fail_list = $tree_response->getElementsByTagName("authenticationFailure");
-			throw new CAS_AuthenticationException($this,'PT not validated',
+			throw new CAS_AuthenticationException($this,'Ticket not validated',
 			$validate_url,
 			FALSE/*$no_response*/,
 			FALSE/*$bad_response*/,
@@ -2529,7 +2633,7 @@ class CAS_Client
 			trim($auth_fail_list->item(0)->nodeValue)/*$err_msg*/);
 			$result = FALSE;
 		} else {
-			throw new CAS_AuthenticationException($this,'PT not validated',
+			throw new CAS_AuthenticationException($this,'Ticket not validated',
 			$validate_url,
 			FALSE/*$no_response*/,
 			TRUE/*$bad_response*/,
@@ -2539,7 +2643,7 @@ class CAS_Client
 		if($result){
 			$this->renameSession($this->getTicket());
 		}
-		// at this step, PT has been validated and $this->_user has been set,
+		// at this step, Ticket has been validated and $this->_user has been set,
 
 		phpCAS::traceEnd($result);
 		return $result;
