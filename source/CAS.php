@@ -1615,6 +1615,7 @@ class phpCAS {
 		if (!is_object($PHPCAS_CLIENT)) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
 		}
+		phpCAS :: trace('You have configured no validation of the legitimacy of the cas server. This is not recommended for production use.');
 		$PHPCAS_CLIENT->setNoCasServerValidation();
 		phpCAS :: traceEnd();
 	}
