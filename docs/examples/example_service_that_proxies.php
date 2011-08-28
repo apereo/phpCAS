@@ -25,8 +25,8 @@ phpCAS::setNoCasServerValidation();
 // and define an accepable list of proxies that are allowed to proxy your 
 // service. You have to define proxies as an array() of acceptable proxies. The 
 // definition can be either a string or a regexp(preg_match is used) that will 
-// be matched against the proxy list  supplied by the cas server when validatin 
-// proxy // tickets. The strings are compared starting from the beginning and 
+// be matched against the proxy list  supplied by the cas server when validating 
+// proxy tickets. The strings are compared starting from the beginning and 
 // must fully  match with the proxies in the list. 
 phpCAS::allowToBeProxied(true,array('/^https:\/\/myservice\.com\/.*$/','https://myservice.com',$pgtUrl));
 

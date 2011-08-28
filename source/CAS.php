@@ -1655,14 +1655,20 @@ class phpCAS {
 	}
 	
 	/**
-	 *
-	 * Enable the client to be proxied from other legitimate cas clients. 
-	 * You either allow any proxy to be allowed by skipping the proxy definition
-	 * or you can define proxies that are explicitly allowed. The proxies can be
-	 * defined either with a string or a regexp. The strings will be matched
-	 * from the beginning and must match the proxies. (or at least the beginning
-	 * of the URL.) The regexp are matched with preg_match against the proxies.
-	 * Mixing both types is allowed.
+	 * If you want your service to be proxied you have to enable it (default
+	 *  disabled) and define an accepable list of proxies that are allowed to 
+	 *  proxy your service. You have to define proxies as an array() of 
+	 *  acceptable proxies. The definition can be either a string or a 
+	 *  regexp(preg_match is used) that will be matched against the proxy list 
+	 *  supplied by the cas server when validating the proxy tickets. The 
+	 *  strings are compared starting from the beginning and must fully match 
+	 *  with the proxies in the list.
+	 *  For quick testing or in certain production screnarios you might want to 
+	 *  allow allow any other valid service to proxy your service. You can 
+	 *  simply ommit setting an array to validate against.
+	 *  THIS SETTING IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY 
+	 *  IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER
+	 *  ON THIS SERVICE.
 	 * @param Boolean $enable
 	 * @param array $proxies An array of strings and/or regexp that will be matched against the proxies requesting access
 	 */
