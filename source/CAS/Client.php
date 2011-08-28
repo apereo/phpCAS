@@ -2491,7 +2491,7 @@ class CAS_Client
 								$result = true;
 								break;
 							}else{
-								phpCAS::trace("No regexp match " .  $allowed + " != " . $proxy);
+								phpCAS::trace("No regexp match " .  $allowed . " != " . $proxy);
 							}
 						}else{
 							if(strncasecmp($allowed,$proxy,strlen($allowed)) == 0){

@@ -61,6 +61,8 @@ $serviceUrl = $curbase.$curdir.'example_service.php';
 // access to a second service
 $serviceUrl2 = $curbase.$curdir.'example_service_that_proxies.php';
 
+$pgtUrl = '/^'.preg_quote(preg_replace('/^http:/', 'https:', $curbase.$curdir),'/').'.*$/';
+
 $cas_url = 'https://'.$cas_host;
 if ($cas_port != '443')
 {
