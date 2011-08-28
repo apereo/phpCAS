@@ -1676,7 +1676,7 @@ class phpCAS {
 			phpCAS :: error('this method can only be used with the cas 2.0 protool');
 		}
 		if(empty($proxies)){
-			phpCAS :: trace('You have configured no acces control for being proxied. This is not recommended for production use.');
+			phpCAS :: trace('You have configured no access control for being proxied. This is not recommended for production use.');
 		}
 		$PHPCAS_CLIENT->allowToBeProxied($enable, $proxies);
 		phpCAS :: traceEnd();
