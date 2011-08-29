@@ -1672,7 +1672,7 @@ class phpCAS {
 	 * @param Boolean $enable
 	 * @param array $proxies An array of strings and/or regexp that will be matched against the proxies requesting access
 	 */
-	public static function allowToBeProxied($enable,ProxyChains &$proxies=null){
+	public static function allowToBeProxied($enable,CAS_ProxyChains &$proxies=null){
 		global $PHPCAS_CLIENT;
 		phpCAS :: traceBegin();
 		if (!is_object($PHPCAS_CLIENT)) {

@@ -1,6 +1,6 @@
 <?php
 
-class ProxyChains{
+class CAS_ProxyChains{
 	
 	private $_chains = array();
 	

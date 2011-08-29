@@ -2436,7 +2436,7 @@ class CAS_Client
 	 * An ordered array of strings to be allowed as proxies in front of the cas client
 	 * @var array of strings
 	 */
-	private $_allowedProxyChains;
+	private $_allowedCAS_ProxyChains;
 	
 	/**
 	 * Define whether proxies are allow in front of the cas client and optionally
@@ -2444,9 +2444,9 @@ class CAS_Client
 	 * @param $enable
 	 * @param array $proxies
 	 */
-	public function allowToBeProxied($enable,ProxyChains &$chains=null){
+	public function allowToBeProxied($enable,CAS_ProxyChains &$chains=null){
 		$this->_allowedToBeProxied = $enable;
-		 $this->_allowedProxyChains = $chains;
+		 $this->_allowedCAS_ProxyChains = $chains;
 	}
 	
 		
@@ -2473,8 +2473,8 @@ class CAS_Client
 			phpCAS::trace("Proxies not allowed");
 			phpCAS::traceEnd(false);
 			return false;
-		}elseif(is_object($this->_allowedProxyChains)){
-			$res = $this->_allowedProxyChains->contains($proxies);
+		}elseif(is_object($this->_allowedCAS_ProxyChains)){
+			$res = $this->_allowedCAS_ProxyChains->contains($proxies);
 			phpCAS::traceEnd($res);
 			return $res;
 		}else{
