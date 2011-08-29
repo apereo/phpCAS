@@ -166,7 +166,8 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
     
     public function test_allowed_proxies_string_success(){
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-    	$proxies = array('http://firstproxy.com','https://anotherdomain.org/mysite/test2', );
+    	$proxies = new ProxyChains(array('http://firstproxy.com','https://anotherdomain.org/mysite/test2'));
+    	$proxies->addChain(array('https://anotherdomain.php'));
     	$this->object->allowToBeProxied(true, $proxies);
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
   		$this->assertTrue($result);
@@ -185,12 +186,32 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test that proxies fail if one is missing from the chain
      * @expectedException CAS_AuthenticationException
      * @outputBuffering enabled
      */
-    public function test_allowed_proxies_string_failure(){
+    public function test_allowed_proxies_string_failure_missing_proxy(){
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-    	$proxies = array('http://anotherproxy.net');
+    	$list = array('https://anotherdomain.php');
+    	$proxies = new ProxyChains($list);
+    	$this->assertTrue(is_array($proxies->getProxyChain()));
+    	$this->assertEquals(1,sizeof($proxies->getProxyChain()));
+    	$this->object->allowToBeProxied(true, $proxies);
+    	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
+    	$this->assertFalse($result);
+    }
+    
+    /**
+     * Test that proxies fail if in wrong order and definded as string
+     * @expectedException CAS_AuthenticationException
+     * @outputBuffering enabled
+     */
+    public function test_allowed_proxies_string_failure_wrong_order(){
+    	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
+    	$proxies = new ProxyChains(array('https://anotherdomain.org/mysite/test2','http://firstproxy.com'));
+    	$proxies->addChain(array('https://anotherdomain.php'));
+    	$this->assertTrue(is_array($proxies->getProxyChain()));
+    	$this->assertEquals(2,sizeof($proxies->getProxyChain()));
     	$this->object->allowToBeProxied(true, $proxies);
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
     	$this->assertFalse($result);
@@ -214,7 +235,8 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
      */
     public function test_allowed_proxies_regexp_success(){
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-    	$proxies = array('/^http:\/\/firstproxy\.com/','/^https.*$/', );
+    	$proxies = new ProxyChains(array('/badregexp/'));
+    	$proxies->addChain(array('/http\:\/\/firstproxy\.com.*$/','/^https\:\/\/anotherdomain.org\/mysite\/test2$/'));
     	$this->object->allowToBeProxied(true, $proxies);
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
   		$this->assertTrue($result);
@@ -222,13 +244,26 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
 	
 
      /**
-     * Test that if proxies exist a response with proxies will fail
+     * Wrong regexp to mach proxies
      * @expectedException CAS_AuthenticationException
      * @outputBuffering enabled
      */
-    public function test_allowed_proxies_regexp_failure(){
+    public function test_allowed_proxies_regexp_failure_wrong(){
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-    	$proxies = array('/^http:\/\/secondproxy\.com/','/^httpx.*$/', );
+    	$proxies = new ProxyChains(array('/^http:\/\/secondproxy\.com/','/^https.*$/', ));
+    	$this->object->allowToBeProxied(true, $proxies);
+    	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
+  		$this->assertFalse($result);
+	}
+	
+     /**
+     * Wrong order of valid regexp
+     * @expectedException CAS_AuthenticationException
+     * @outputBuffering enabled
+     */
+    public function test_allowed_proxies_regexp_failure_wrong_order(){
+    	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
+    	$proxies = new ProxyChains(array('/^https\:\/\/anotherdomain.org\/mysite\/test2$/','/http\:\/\/firstproxy\.com.*$/'));
     	$this->object->allowToBeProxied(true, $proxies);
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
   		$this->assertFalse($result);

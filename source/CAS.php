@@ -1672,7 +1672,7 @@ class phpCAS {
 	 * @param Boolean $enable
 	 * @param array $proxies An array of strings and/or regexp that will be matched against the proxies requesting access
 	 */
-	public static function allowToBeProxied($enable,array $proxies=array()){
+	public static function allowToBeProxied($enable,ProxyChains &$proxies=null){
 		global $PHPCAS_CLIENT;
 		phpCAS :: traceBegin();
 		if (!is_object($PHPCAS_CLIENT)) {
@@ -1681,7 +1681,7 @@ class phpCAS {
 		if($PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_2_0){
 			phpCAS :: error('this method can only be used with the cas 2.0 protool');
 		}
-		if(empty($proxies)){
+		if(!is_object($proxies)){
 			phpCAS :: trace('You have configured no access control for being proxied. This is not recommended for production use.');
 		}
 		$PHPCAS_CLIENT->allowToBeProxied($enable, $proxies);

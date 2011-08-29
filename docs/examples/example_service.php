@@ -28,7 +28,10 @@ phpCAS::setNoCasServerValidation();
 // be matched against the proxy list  supplied by the cas server when validating 
 // proxy tickets. The strings are compared starting from the beginning and 
 // must fully  match with the proxies in the list. 
-phpCAS::allowToBeProxied(true,array('/^https:\/\/myservice\.com\/.*$/','https://myservice.com',$pgtUrl));
+$proxies = new ProxyChains(array($pgtUrlRegexp ));
+$proxies->addChain(array('/^https:\/\/myservice\.com\/.*$/','https://myservice.com'));
+$proxies->addChain(array('/^'.$pgtBase.'example_service_that_proxies.php$/','/^'.$pgtBase.'example_proxy_serviceWeb_chaining.php$/'));
+phpCAS::allowToBeProxied(true,$proxies);
 
 // For quick testing or in certain production screnarios you might want to allow
 // allow any other valid service to proxy your service.  
