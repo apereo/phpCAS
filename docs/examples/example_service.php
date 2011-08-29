@@ -23,8 +23,13 @@ phpCAS::setNoCasServerValidation();
 
 // If you want your service to be proxied you have to enable it (default disabled)
 // and define an accepable list of proxies that are allowed to proxy your 
-// service. You have to define proxies as an array() of acceptable proxies. The 
-// definition can be either a string or a regexp(preg_match is used) that will 
+// service. You have to define proxies in a ProxyChains() object which takes a 
+// first chain as an array of acceptable proxies. You can of course add more 
+// different chains as needed with addChain(). The list is in reverse just as
+// seen from the service. Proxies have to be defined in reverse from the service
+// to the user. If a user hits service A and gets proxied via B to service C the
+// list of acceptable on C would be array(B,A). The definition of an individual 
+// proxy can  be either a string or a regexp(preg_match is used) that will 
 // be matched against the proxy list  supplied by the cas server when validating 
 // proxy tickets. The strings are compared starting from the beginning and 
 // must fully  match with the proxies in the list. 
