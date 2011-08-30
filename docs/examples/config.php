@@ -39,6 +39,10 @@ if ($_SERVER['SERVER_PORT'] != 80)
 
 $curdir = dirname($_SERVER['REQUEST_URI'])."/";
 
+// CAS client nodes for rebroadcasting pgtIou/pgtId and logoutRequest
+$rebroadcast_node_1 = 'http://cas-client-1.example.com';
+$rebroadcast_node_2 = 'http://cas-client-2.example.com';
+
 // access to a single service
 $serviceUrl = $curbase.$curdir.'/example_service.php';
 // access to a second service
