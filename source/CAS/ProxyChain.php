@@ -69,7 +69,7 @@ class CAS_ProxyChain
 			$mismatch = false;
 			foreach ($this->_chain as $i => $search) {
 				$proxy_url = $list[$i];
-				if (preg_match('/^\/.*\//',$search)) {
+				if (preg_match('/^\/.*\/[ixASUXu]*$/s',$search)) {
 					if (preg_match($search, $proxy_url)) {
 						phpCAS::trace("Found regexp " .  $search . " matching " . $proxy_url);
 					} else {
