@@ -61,7 +61,7 @@ class CAS_ProxyChains {
 	 *
 	 * Check if the proxies found in the response match the allowed proxies
 	 * @param array $proxies
-	 * @return whether the proxies match the allowed proxies
+	 * @return boolean whether the proxies match the allowed proxies
 	 */
 	public function isProxyListAllowed(array $proxies){
 		phpCAS::traceBegin();
