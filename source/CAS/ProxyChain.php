@@ -39,7 +39,7 @@ class CAS_ProxyChain
 	implements CAS_ProxyChain_Interface 
 {
 	
-	private $_chain = array();
+	protected $_chain = array();
 	
 	/**
 	 * A chain is an array of strings or regexp strings that will be matched
@@ -65,7 +65,7 @@ class CAS_ProxyChain
 	 */
 	public function matches(array $list) {
 		$list = array_values($list);  // Ensure that we have an indexed array
-		if (sizeof($this->_chain) == sizeof($list)) {
+		if ($this->isSizeValid($list)) {
 			$mismatch = false;
 			foreach ($this->_chain as $i => $search) {
 				$proxy_url = $list[$i];
@@ -97,4 +97,13 @@ class CAS_ProxyChain
 		return false;
 	}
 	
+	/**
+	 * Validate the size of the the list as compared to our chain.
+	 * 
+	 * @param array $list
+	 * @return boolean
+	 */
+	protected function isSizeValid (array $list) {
+		return (sizeof($this->_chain) == sizeof($list));
+	}
 }

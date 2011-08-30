@@ -187,6 +187,32 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
     	, $text_response);
     	$this->assertType('DOMElement', $tree_response);
     }
+    /**
+     * Test that the trusted proxy allows any proxies beyond the one we trust.
+     */
+    public function test_allowed_proxies_trusted_success(){
+    	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain_Trusted(array(
+    			'http://firstproxy.com'
+    		)));
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain(array(
+    			'https://anotherdomain.php'
+    		)));
+    	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
+  		$this->assertTrue($result);
+    	$this->assertEquals(
+"<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+    <cas:authenticationSuccess>
+        <cas:user>jsmith</cas:user>
+        <cas:proxies>
+            <cas:proxy>http://firstproxy.com/mysite/test</cas:proxy>
+            <cas:proxy>https://anotherdomain.org/mysite/test2</cas:proxy>    
+        </cas:proxies>
+    </cas:authenticationSuccess>
+</cas:serviceResponse>"
+    	, $text_response);
+    	$this->assertType('DOMElement', $tree_response);
+    }
 
     /**
      * Test that proxies fail if one is missing from the chain

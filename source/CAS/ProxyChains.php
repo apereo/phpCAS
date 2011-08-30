@@ -32,6 +32,7 @@
 include_once(dirname(__FILE__).'/ProxyChain/Interface.php');
 include_once(dirname(__FILE__).'/ProxyChain.php');
 include_once(dirname(__FILE__).'/ProxyChain/Any.php');
+include_once(dirname(__FILE__).'/ProxyChain/Trusted.php');
 
 /**
  * ProxyChain is a container for storing chains of valid proxies that can
