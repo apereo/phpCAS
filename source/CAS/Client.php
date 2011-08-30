@@ -2428,63 +2428,22 @@ class CAS_Client
 	}
 	
 	/**
-	 * Allow a cas 2.0 client to be proxied
-	 * @var boolean
+	 * A container of patterns to be allowed as proxies in front of the cas client.
+	 * 
+	 * @var CAS_ProxyChains
 	 */
-	private $_allowedToBeProxied = false;
-	/**
-	 * An ordered array of strings to be allowed as proxies in front of the cas client
-	 * @var array of strings
-	 */
-	private $_allowedCAS_ProxyChains;
+	private $_proxy_chains;
 	
 	/**
-	 * Define whether proxies are allow in front of the cas client and optionally
-	 * a list of acceptable proxies can be defined
-	 * @param $enable
-	 * @param array $proxies
+	 * Answer the CAS_ProxyChains object for this client.
+	 * 
+	 * @return CAS_ProxyChains
 	 */
-	public function allowToBeProxied($enable,CAS_ProxyChains &$chains=null){
-		$this->_allowedToBeProxied = $enable;
-		 $this->_allowedCAS_ProxyChains = $chains;
+	public function getProxyChains () {
+		if (empty($this->_proxy_chains))
+			$this->_proxy_chains = new CAS_ProxyChains();
+		return $this->_proxy_chains;
 	}
-	
-		
-	/**
-	 * Check whether proxies are allowed by configuration 
-	 */
-	public function isAllowedToBeProxied(){
-		return $this->_allowedToBeProxied;
-	}
-	
-	/**
-	 *
-	 * Check if the proxies found in the response match the allowed proxies
-	 * @param array $proxies
-	 * @return whether the proxies match the allowed proxies
-	 */
-	public function checkAllowedProxies(array $proxies){
-		phpCAS::traceBegin();
-		if(empty($proxies)){
-			phpCAS::trace("No proxies found in response");
-			phpCAS::traceEnd(true);
-			return true;
-		}elseif(!$this->isAllowedToBeProxied()){
-			phpCAS::trace("Proxies not allowed");
-			phpCAS::traceEnd(false);
-			return false;
-		}elseif(is_object($this->_allowedCAS_ProxyChains)){
-			$res = $this->_allowedCAS_ProxyChains->contains($proxies);
-			phpCAS::traceEnd($res);
-			return $res;
-		}else{
-			phpCAS::trace("No chains defined. Allowing any proxy chain. This is not recommended for production use");
-			phpCAS::traceEnd(true);
-			return true;
-		}
-	}
-
-
 	
 	/** @} */
 	// ########################################################################
@@ -2507,7 +2466,7 @@ class CAS_Client
 		phpCAS::trace($text_response);
 		$result = FALSE;
 		// build the URL to validate the ticket
-		if($this->isAllowedToBeProxied()){
+		if($this->getProxyChains()->isProxyingAllowed()){
 			$validate_url = $this->getServerProxyValidateURL().'&ticket='.$this->getTicket();
 		}else{
 			$validate_url = $this->getServerServiceValidateURL().'&ticket='.$this->getTicket();
@@ -2584,9 +2543,9 @@ class CAS_Client
 						$proxyList[] = trim($proxyElem->nodeValue);
 					}
 				}
-				// Check if proxies are allowed
-				if(!$this->checkAllowedProxies($proxyList)){
-					throw new CAS_AuthenticationException($this,'Proxies not allowed',
+				// Check if the proxies in front of us are allowed
+				if(!$this->getProxyChains()->isProxyListAllowed($proxyList)){
+					throw new CAS_AuthenticationException($this,'Proxy not allowed',
 					$validate_url,
 					FALSE/*$no_response*/,
 					TRUE/*$bad_response*/,

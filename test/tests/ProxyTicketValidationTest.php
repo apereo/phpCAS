@@ -44,7 +44,6 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
 		
 		$this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
 		$this->object->setCasServerCACert('/path/to/ca_cert.crt');
-		$this->object->allowToBeProxied(true);
 
 		/*********************************************************
 		 * Enumerate our responses
@@ -125,6 +124,7 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
      */
     public function test_validation_success() {
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain_Any());
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
     	$this->assertTrue($result);
     	$this->assertEquals(
@@ -166,9 +166,12 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
     
     public function test_allowed_proxies_string_success(){
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-    	$proxies = new CAS_ProxyChains(array('http://firstproxy.com','https://anotherdomain.org/mysite/test2'));
-    	$proxies->addChain(array('https://anotherdomain.php'));
-    	$this->object->allowToBeProxied(true, $proxies);
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain(array(
+    			'http://firstproxy.com','https://anotherdomain.org/mysite/test2'
+    		)));
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain(array(
+    			'https://anotherdomain.php'
+    		)));
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
   		$this->assertTrue($result);
     	$this->assertEquals(
@@ -192,11 +195,9 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
      */
     public function test_allowed_proxies_string_failure_missing_proxy(){
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-    	$list = array('https://anotherdomain.php');
-    	$proxies = new CAS_ProxyChains($list);
-    	$this->assertTrue(is_array($proxies->getProxyChain()));
-    	$this->assertEquals(1,sizeof($proxies->getProxyChain()));
-    	$this->object->allowToBeProxied(true, $proxies);
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain(array(
+    			'https://anotherdomain.php'
+    		)));
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
     	$this->assertFalse($result);
     }
@@ -208,11 +209,12 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
      */
     public function test_allowed_proxies_string_failure_wrong_order(){
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-    	$proxies = new CAS_ProxyChains(array('https://anotherdomain.org/mysite/test2','http://firstproxy.com'));
-    	$proxies->addChain(array('https://anotherdomain.php'));
-    	$this->assertTrue(is_array($proxies->getProxyChain()));
-    	$this->assertEquals(2,sizeof($proxies->getProxyChain()));
-    	$this->object->allowToBeProxied(true, $proxies);
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain(array(
+    			'https://anotherdomain.org/mysite/test2','http://firstproxy.com'
+    		)));
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain(array(
+    			'https://anotherdomain.php'
+    		)));
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
     	$this->assertFalse($result);
     }
@@ -224,7 +226,7 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
      */
     public function test_allowed_proxies_failure(){
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-    	$this->object->allowToBeProxied(false);
+    	// By default no proxies are allowed.
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
     	$this->assertFalse($result);
     }
@@ -235,9 +237,12 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
      */
     public function test_allowed_proxies_regexp_success(){
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-    	$proxies = new CAS_ProxyChains(array('/badregexp/'));
-    	$proxies->addChain(array('/http\:\/\/firstproxy\.com.*$/','/^https\:\/\/anotherdomain.org\/mysite\/test2$/'));
-    	$this->object->allowToBeProxied(true, $proxies);
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain(array(
+    			'/badregexp/'
+    		)));
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain(array(
+    			'/http\:\/\/firstproxy\.com.*$/','/^https\:\/\/anotherdomain.org\/mysite\/test2$/'
+    		)));
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
   		$this->assertTrue($result);
 	}
@@ -250,8 +255,9 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
      */
     public function test_allowed_proxies_regexp_failure_wrong(){
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-    	$proxies = new CAS_ProxyChains(array('/^http:\/\/secondproxy\.com/','/^https.*$/', ));
-    	$this->object->allowToBeProxied(true, $proxies);
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain(array(
+    			'/^http:\/\/secondproxy\.com/','/^https.*$/'
+    		)));
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
   		$this->assertFalse($result);
 	}
@@ -263,8 +269,9 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
      */
     public function test_allowed_proxies_regexp_failure_wrong_order(){
     	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-    	$proxies = new CAS_ProxyChains(array('/^https\:\/\/anotherdomain.org\/mysite\/test2$/','/http\:\/\/firstproxy\.com.*$/'));
-    	$this->object->allowToBeProxied(true, $proxies);
+    	$this->object->getProxyChains()->allowProxyingBy(new CAS_ProxyChain(array(
+    			'/^https\:\/\/anotherdomain.org\/mysite\/test2$/','/http\:\/\/firstproxy\.com.*$/'
+    		)));
     	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
   		$this->assertFalse($result);
 	}

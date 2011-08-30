@@ -1,40 +1,82 @@
 <?php
 
-class CAS_ProxyChains{
+/*
+ * Copyright © 2003-2011, The ESUP-Portail consortium & the JA-SIG Collaborative.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright notice,
+ *       this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright notice,
+ *       this list of conditions and the following disclaimer in the documentation
+ *       and/or other materials provided with the distribution.
+ *     * Neither the name of the ESUP-Portail consortium & the JA-SIG
+ *       Collaborative nor the names of its contributors may be used to endorse or
+ *       promote products derived from this software without specific prior
+ *       written permission.
+
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+include_once(dirname(__FILE__).'/ProxyChain/Interface.php');
+include_once(dirname(__FILE__).'/ProxyChain.php');
+include_once(dirname(__FILE__).'/ProxyChain/Any.php');
+
+/**
+ * ProxyChain is a container for storing chains of valid proxies that can
+ * be used to validate proxied requests to a service
+ */
+class CAS_ProxyChains {
 	
 	private $_chains = array();
 	
 	/**
-	 * ProxyChain is a container for storing chains of valid proxies that can
-	 * be used to validate proxied requests to a service
-	 * A chain is an array of strings or regexp strings that will be matched
-	 * against. Regexp will be matched with preg_match and strings will be
-	 * matched from the beginning. A string must fully match the beginning of
-	 * an prox url. So you can define a full domain as acceptable or go further
-	 * down.
-	 * Proxies have to be defined in reverse from the service to the user. If a
-	 * user hits service A get proxied via B to service C the list of acceptable
-	 * proxies on C would be array(B,A);
-	 * @param array $chain The first chain of proxies.
+	 * Check whether proxies are allowed by configuration 
 	 */
-	public function __construct(array $chain){
-		$this->_chains[] = $chain;
+	public function isProxyingAllowed(){
+		return (count($this->_chains) > 0);
 	}
 	
 	/**
 	 * Add a chain of proxies to the list of possible chains
 	 * @param array $chain
 	 */
-	public function addChain(array $chain){
+	public function allowProxyingBy(CAS_ProxyChain_Interface $chain) {
 		$this->_chains[] = $chain;
 	}
 	
 	/**
-	 * Return the chains of proxies
-	 * @return array of arrays
+	 *
+	 * Check if the proxies found in the response match the allowed proxies
+	 * @param array $proxies
+	 * @return whether the proxies match the allowed proxies
 	 */
-	public function getProxyChain(){
-		return $this->_chains;
+	public function isProxyListAllowed(array $proxies){
+		phpCAS::traceBegin();
+		if(empty($proxies)){
+			phpCAS::trace("No proxies were found in the response");
+			phpCAS::traceEnd(true);
+			return true;
+		}elseif(!$this->isProxyingAllowed()){
+			phpCAS::trace("Proxies are not allowed");
+			phpCAS::traceEnd(false);
+			return false;
+		}else{
+			$res = $this->contains($proxies);
+			phpCAS::traceEnd($res);
+			return $res;
+		}
 	}
 	
 	/**
@@ -47,38 +89,15 @@ class CAS_ProxyChains{
 	public function contains(array $list){
 		phpCAS::traceBegin();
 		$count = 0;
-		foreach( $this->_chains as $chain) {
+		foreach ($this->_chains as $chain) {
 			phpCAS::trace("Checking chain ". $count++);
-			if(sizeof($chain) == sizeof($list)){
-				for($i = 0; $i < sizeof($list); $i++) {
-					$mismatch = false;
-					if(preg_match('/^\/.*\//',$chain[$i])){
-						if(preg_match($chain[$i], $list[$i])){
-							phpCAS::trace("Found regexp " .  $chain[$i] . " matching " . $list[$i]);
-						}else{
-							phpCAS::trace("No regexp match " .  $chain[$i] . " != " . $list[$i]);
-							$mismatch = true;
-							break;
-						}
-					}else{
-						if(strncasecmp($chain[$i],$list[$i],strlen($chain[$i])) == 0){
-							phpCAS::trace("Found string " .  $chain[$i] . " matching " . $list[$i]);
-						}else{
-							phpCAS::trace("No match " .  $chain[$i] . " != " . $list[$i]);
-							$mismatch = true;
-							break;
-						}
-					}
-				}
-				if(!$mismatch){
-					phpCAS::trace("Proxy chain matches");
-					return true;
-				}
-			}else{
-				phpCAS::trace("Proxy chain skipped: size mismatch");
+			if ($chain->matches($list)) {
+				phpCAS::traceEnd(true);
+				return true;
 			}
 		}
-		phpCAS::traceEnd();
+		phpCAS::trace("No proxy chain matches.");
+		phpCAS::traceEnd(false);
 		return false;
 	}
 	

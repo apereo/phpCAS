@@ -22,28 +22,37 @@ phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 phpCAS::setNoCasServerValidation();
 
 
-// If you want your service to be proxied you have to enable it (default disabled)
-// and define an accepable list of proxies that are allowed to proxy your 
-// service. You have to define proxies in a CAS_ProxyChains() object which takes a 
-// first chain as an array of acceptable proxies. You can of course add more 
-// different chains as needed with addChain(). The list is in reverse just as
-// seen from the service. Proxies have to be defined in reverse from the service
-// to the user. If a user hits service A and gets proxied via B to service C the
-// list of acceptable on C would be array(B,A). The definition of an individual 
-// proxy can  be either a string or a regexp(preg_match is used) that will 
-// be matched against the proxy list  supplied by the cas server when validating 
-// proxy tickets. The strings are compared starting from the beginning and 
-// must fully  match with the proxies in the list. 
-$proxies = new CAS_ProxyChains(array($pgtUrlRegexp));
-$proxies->addChain(array('/^https:\/\/myservice\.com\/.*$/','https://myservice.com'));
-phpCAS::allowToBeProxied(true,$proxies);
+// If you want your service to be proxied you have to enable it (default
+// disabled) and define an accepable list of proxies that are allowed to 
+// proxy your service. 
+// 
+// Add each allowed proxy definition object. For the normal CAS_ProxyChain
+// class, the constructor takes an array of proxies to match. The list is in 
+// reverse just as seen from the service. Proxies have to be defined in reverse 
+// from the service to the user. If a user hits service A and gets proxied via
+// B to service C the list of acceptable on C would be array(B,A). The definition
+// of an individual proxy can be either a string or a regexp (preg_match is used)
+// that will be matched against the proxy list supplied by the cas server 
+// when validating the proxy tickets. The strings are compared starting from 
+// the beginning and must fully match with the proxies in the list.
+// Example:
+// 		phpCAS::allowProxyingBy(new CAS_ProxyChain(array(
+// 				'https://app.example.com/'
+// 			)));
+// 		phpCAS::allowProxyingBy(new CAS_ProxyChain(array(
+// 				'/^https:\/\/app[0-9]\.example\.com\/rest\//',
+// 				'http://client.example.com/'
+// 			)));
+phpCAS::allowProxyingBy(new CAS_ProxyChain(array($pgtUrlRegexp)));
 
-// For quick testing or in certain production screnarios you might want to allow
-// allow any other valid service to proxy your service.  
+// For quick testing or in certain production screnarios you might want to 
+// allow allow any other valid service to proxy your service. To do so, add
+// the "Any" chain: 
+// 		phpcas::allowProxyingBy(new CAS_ProxyChain_Any);
 // THIS SETTING IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY 
 // IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER
 // ON THIS SERVICE.
-//phpCAS::allowToBeProxied(true);
+//phpcas::allowProxyingBy(new CAS_ProxyChain_Any);
 
 
 // force CAS authentication
