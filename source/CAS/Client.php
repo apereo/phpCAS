@@ -53,7 +53,7 @@ include_once(dirname(__FILE__).'/ProxiedService/Http/Post.php');
 include_once(dirname(__FILE__).'/ProxiedService/Imap.php');
 
 //include classes for storing proxy chains
-include_once(dirname(__FILE__).'/ProxyChains.php');
+include_once(dirname(__FILE__).'/ProxyChain/AllowedList.php');
 
 // include Exception classes
 include_once(dirname(__FILE__).'/ProxiedService/Exception.php');
@@ -2430,18 +2430,18 @@ class CAS_Client
 	/**
 	 * A container of patterns to be allowed as proxies in front of the cas client.
 	 * 
-	 * @var CAS_ProxyChains
+	 * @var CAS_ProxyChain_AllowedList
 	 */
 	private $_proxy_chains;
 	
 	/**
-	 * Answer the CAS_ProxyChains object for this client.
+	 * Answer the CAS_ProxyChain_AllowedList object for this client.
 	 * 
-	 * @return CAS_ProxyChains
+	 * @return CAS_ProxyChain_AllowedList
 	 */
 	public function getProxyChains () {
 		if (empty($this->_proxy_chains))
-			$this->_proxy_chains = new CAS_ProxyChains();
+			$this->_proxy_chains = new CAS_ProxyChain_AllowedList();
 		return $this->_proxy_chains;
 	}
 	

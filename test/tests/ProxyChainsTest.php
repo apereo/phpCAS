@@ -1,7 +1,7 @@
 <?php
 require_once 'PHPUnit/Framework.php';
 
-require_once dirname(__FILE__).'/../../source/CAS/ProxyChains.php';
+require_once dirname(__FILE__).'/../../source/CAS/ProxyChain/AllowedList.php';
 
 
 /**
@@ -23,7 +23,7 @@ class ProxyChainsTest extends PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->object = new CAS_ProxyChains;
+		$this->object = new CAS_ProxyChain_AllowedList;
 		$this->list_size_0 = array();
 		$this->list_size_1 = array(
 			'https://service1.example.com/rest',

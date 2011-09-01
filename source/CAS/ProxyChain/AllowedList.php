@@ -29,16 +29,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-include_once(dirname(__FILE__).'/ProxyChain/Interface.php');
-include_once(dirname(__FILE__).'/ProxyChain.php');
-include_once(dirname(__FILE__).'/ProxyChain/Any.php');
-include_once(dirname(__FILE__).'/ProxyChain/Trusted.php');
+include_once(dirname(__FILE__).'/Interface.php');
+include_once(dirname(__FILE__).'/../ProxyChain.php');
+include_once(dirname(__FILE__).'/Any.php');
+include_once(dirname(__FILE__).'/Trusted.php');
 
 /**
  * ProxyChain is a container for storing chains of valid proxies that can
  * be used to validate proxied requests to a service
  */
-class CAS_ProxyChains {
+class CAS_ProxyChain_AllowedList {
 	
 	private $_chains = array();
 	
