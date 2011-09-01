@@ -53,7 +53,7 @@ class CAS_ProxyChains {
 	 * Add a chain of proxies to the list of possible chains
 	 * @param array $chain
 	 */
-	public function allowProxyingBy(CAS_ProxyChain_Interface $chain) {
+	public function allowProxyChain(CAS_ProxyChain_Interface $chain) {
 		$this->_chains[] = $chain;
 	}
 	

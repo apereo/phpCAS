@@ -35,15 +35,15 @@ phpCAS::setNoCasServerValidation();
 // when validating the proxy tickets. The strings are compared starting from 
 // the beginning and must fully match with the proxies in the list.
 // Example:
-// 		phpCAS::allowProxyingBy(new CAS_ProxyChain(array(
+// 		phpCAS::allowProxyChain(new CAS_ProxyChain(array(
 // 				'https://app.example.com/'
 // 			)));
-// 		phpCAS::allowProxyingBy(new CAS_ProxyChain(array(
+// 		phpCAS::allowProxyChain(new CAS_ProxyChain(array(
 // 				'/^https:\/\/app[0-9]\.example\.com\/rest\//',
 // 				'http://client.example.com/'
 // 			)));
-phpCAS::allowProxyingBy(new CAS_ProxyChain(array($pgtUrlRegexp)));
-phpCAS::allowProxyingBy(new CAS_ProxyChain(array(
+phpCAS::allowProxyChain(new CAS_ProxyChain(array($pgtUrlRegexp)));
+phpCAS::allowProxyChain(new CAS_ProxyChain(array(
 	'/^'.$pgtBase.'example_service_that_proxies.php$/',
 	'/^'.$pgtBase.'example_proxy_serviceWeb_chaining.php$/'
 )));
@@ -51,11 +51,11 @@ phpCAS::allowProxyingBy(new CAS_ProxyChain(array(
 // For quick testing or in certain production screnarios you might want to 
 // allow allow any other valid service to proxy your service. To do so, add
 // the "Any" chain: 
-// 		phpcas::allowProxyingBy(new CAS_ProxyChain_Any);
+// 		phpcas::allowProxyChain(new CAS_ProxyChain_Any);
 // THIS SETTING IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY 
 // IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER
 // ON THIS SERVICE.
-//phpcas::allowProxyingBy(new CAS_ProxyChain_Any);
+//phpcas::allowProxyChain(new CAS_ProxyChain_Any);
 
 // force CAS authentication
 phpCAS::forceAuthentication();

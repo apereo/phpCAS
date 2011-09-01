@@ -75,7 +75,7 @@ class ProxyChainsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_any()
 	{
-		$this->object->allowProxyingBy(new CAS_ProxyChain_Any);
+		$this->object->allowProxyChain(new CAS_ProxyChain_Any);
 		$this->assertTrue($this->object->isProxyListAllowed($this->list_size_0), 'Should allow any proxies in front.');
 		$this->assertTrue($this->object->isProxyListAllowed($this->list_size_1), 'Should allow any proxies in front.');
 		$this->assertTrue($this->object->isProxyListAllowed($this->list_size_1), 'Should allow any proxies in front.');
@@ -88,7 +88,7 @@ class ProxyChainsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_exact_match_2()
 	{
-		$this->object->allowProxyingBy(new CAS_ProxyChain(array(
+		$this->object->allowProxyChain(new CAS_ProxyChain(array(
 			'https://service1.example.com/rest',
 			'http://service2.example.com/my/path',
 		)));
@@ -104,7 +104,7 @@ class ProxyChainsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_exact_match_2_failure()
 	{
-		$this->object->allowProxyingBy(new CAS_ProxyChain(array(
+		$this->object->allowProxyChain(new CAS_ProxyChain(array(
 			'https://service1.example.com/rest',
 			'http://other.example.com/my/path',
 		)));
@@ -120,7 +120,7 @@ class ProxyChainsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_trusted_match_2()
 	{
-		$this->object->allowProxyingBy(new CAS_ProxyChain_Trusted(array(
+		$this->object->allowProxyChain(new CAS_ProxyChain_Trusted(array(
 			'https://service1.example.com/rest',
 			'http://service2.example.com/my/path',
 		)));
@@ -136,7 +136,7 @@ class ProxyChainsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_prefix_match_3()
 	{
-		$this->object->allowProxyingBy(new CAS_ProxyChain(array(
+		$this->object->allowProxyChain(new CAS_ProxyChain(array(
 			'https://service1.example.com/',
 			'http://service2.example.com/my',
 			'http://service3.example.com/',
@@ -153,7 +153,7 @@ class ProxyChainsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_regex_match_2()
 	{
-		$this->object->allowProxyingBy(new CAS_ProxyChain(array(
+		$this->object->allowProxyChain(new CAS_ProxyChain(array(
 			'/^https?:\/\/service1\.example\.com\/.*/',
 			'/^http:\/\/service[0-9]\.example\.com\/[^\/]+\/path/',
 		)));
@@ -169,7 +169,7 @@ class ProxyChainsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_mixed_regex_match_3()
 	{
-		$this->object->allowProxyingBy(new CAS_ProxyChain(array(
+		$this->object->allowProxyChain(new CAS_ProxyChain(array(
 			'https://service1.example.com/',
 			'/^http:\/\/service[0-9]\.example\.com\/[^\/]+\/path/',
 			'http://service3.example.com/',
@@ -186,7 +186,7 @@ class ProxyChainsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_mixed_regex_trusted_3()
 	{
-		$this->object->allowProxyingBy(new CAS_ProxyChain_Trusted(array(
+		$this->object->allowProxyChain(new CAS_ProxyChain_Trusted(array(
 			'https://service1.example.com/',
 			'/^http:\/\/service[0-9]\.example\.com\/[^\/]+\/path/',
 			'http://service3.example.com/',
@@ -203,7 +203,7 @@ class ProxyChainsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_regex_modifiers()
 	{
-		$this->object->allowProxyingBy(new CAS_ProxyChain(array(
+		$this->object->allowProxyChain(new CAS_ProxyChain(array(
 			'/^https?:\/\/service1\.EXAMPLE\.com\/.*/i',
 			'/^http:\/\/serVice[0-9]\.exa   # A comment
 			mple\.com\/[^\/]+\/path/ix',

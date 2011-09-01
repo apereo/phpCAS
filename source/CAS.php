@@ -1669,10 +1669,10 @@ class phpCAS {
 	 * when validating the proxy tickets. The strings are compared starting from 
 	 * the beginning and must fully match with the proxies in the list.
 	 * Example:
-	 * 		phpCAS::allowProxyingBy(new CAS_ProxyChain(array(
+	 * 		phpCAS::allowProxyChain(new CAS_ProxyChain(array(
 	 *				'https://app.example.com/'
 	 *			)));
-	 * 		phpCAS::allowProxyingBy(new CAS_ProxyChain(array(
+	 * 		phpCAS::allowProxyChain(new CAS_ProxyChain(array(
 	 *				'/^https:\/\/app[0-9]\.example\.com\/rest\//',
 	 *				'http://client.example.com/'
 	 *			)));
@@ -1680,14 +1680,14 @@ class phpCAS {
 	 * For quick testing or in certain production screnarios you might want to 
 	 * allow allow any other valid service to proxy your service. To do so, add
 	 * the "Any" chain: 
-	 *		phpcas::allowProxyingBy(new CAS_ProxyChain_Any);
+	 *		phpcas::allowProxyChain(new CAS_ProxyChain_Any);
 	 * THIS SETTING IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY 
 	 * IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER
 	 * ON THIS SERVICE.
 	 *
 	 * @param CAS_ProxyChain_Interface $proxy_chain A proxy-chain that will be matched against the proxies requesting access
 	 */
-	public static function allowProxyingBy(CAS_ProxyChain_Interface $proxy_chain){
+	public static function allowProxyChain(CAS_ProxyChain_Interface $proxy_chain){
 		global $PHPCAS_CLIENT;
 		phpCAS :: traceBegin();
 		if (!is_object($PHPCAS_CLIENT)) {
@@ -1696,7 +1696,7 @@ class phpCAS {
 		if($PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_2_0){
 			phpCAS :: error('this method can only be used with the cas 2.0 protool');
 		}
-		$PHPCAS_CLIENT->getProxyChains()->allowProxyingBy($proxy_chain);
+		$PHPCAS_CLIENT->getProxyChains()->allowProxyChain($proxy_chain);
 		phpCAS :: traceEnd();
 	}
 	
