@@ -1696,7 +1696,7 @@ class phpCAS {
 		if($PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_2_0){
 			phpCAS :: error('this method can only be used with the cas 2.0 protool');
 		}
-		$PHPCAS_CLIENT->getProxyChains()->allowProxyChain($proxy_chain);
+		$PHPCAS_CLIENT->getAllowedProxyChains()->allowProxyChain($proxy_chain);
 		phpCAS :: traceEnd();
 	}
 	

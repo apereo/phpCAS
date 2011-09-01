@@ -2432,17 +2432,17 @@ class CAS_Client
 	 * 
 	 * @var CAS_ProxyChain_AllowedList
 	 */
-	private $_proxy_chains;
+	private $_allowed_proxy_chains;
 	
 	/**
 	 * Answer the CAS_ProxyChain_AllowedList object for this client.
 	 * 
 	 * @return CAS_ProxyChain_AllowedList
 	 */
-	public function getProxyChains () {
-		if (empty($this->_proxy_chains))
-			$this->_proxy_chains = new CAS_ProxyChain_AllowedList();
-		return $this->_proxy_chains;
+	public function getAllowedProxyChains () {
+		if (empty($this->_allowed_proxy_chains))
+			$this->_allowed_proxy_chains = new CAS_ProxyChain_AllowedList();
+		return $this->_allowed_proxy_chains;
 	}
 	
 	/** @} */
@@ -2466,7 +2466,7 @@ class CAS_Client
 		phpCAS::trace($text_response);
 		$result = FALSE;
 		// build the URL to validate the ticket
-		if($this->getProxyChains()->isProxyingAllowed()){
+		if($this->getAllowedProxyChains()->isProxyingAllowed()){
 			$validate_url = $this->getServerProxyValidateURL().'&ticket='.$this->getTicket();
 		}else{
 			$validate_url = $this->getServerServiceValidateURL().'&ticket='.$this->getTicket();
@@ -2544,7 +2544,7 @@ class CAS_Client
 					}
 				}
 				// Check if the proxies in front of us are allowed
-				if(!$this->getProxyChains()->isProxyListAllowed($proxyList)){
+				if(!$this->getAllowedProxyChains()->isProxyListAllowed($proxyList)){
 					throw new CAS_AuthenticationException($this,'Proxy not allowed',
 					$validate_url,
 					FALSE/*$no_response*/,
