@@ -1172,7 +1172,7 @@ class CAS_Client
 		if ( $this->isCallbackMode() ) {
 			// Rebroadcast the pgtIou and pgtId to all nodes
 			if($this->rebroadcast&&!isset($_POST['rebroadcast'])) {
-				$this->rebroadcast(PGTIOU);
+				$this->rebroadcast(self::PGTIOU);
 			}
 			$this->callback();
 		}
@@ -1338,6 +1338,11 @@ class CAS_Client
 		}
 		// If Logout command is permitted proceed with the logout
 		if ($allowed) {
+			phpCAS::trace("Logout command allowed");
+			// Rebroadcast the logout request
+			if($this->rebroadcast&&!isset($_POST['rebroadcast'])) {
+				$this->rebroadcast(self::LOGOUT);
+			}
 			// Extract the ticket from the SAML Request
 			preg_match("|<samlp:SessionIndex>(.*)</samlp:SessionIndex>|", $_POST['logoutRequest'], $tick, PREG_OFFSET_CAPTURE, 3);
 			$wrappedSamlSessionIndex = preg_replace('|<samlp:SessionIndex>|','',$tick[0][0]);
@@ -1370,6 +1375,7 @@ class CAS_Client
 				session_start();
 				session_unset();
 				session_destroy();
+				phpCAS::trace("Session ". $session_id . " destroyed");
 			}
 		}else{
 			phpCAS::error("Unauthorized logout request from client '".$client."'");
@@ -3096,11 +3102,11 @@ class CAS_Client
 		phpCAS::traceBegin();
 		if(preg_match("/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/",$nodeURL))
   		{
-  			phpCAS::traceEnd(IP);
-			return IP; 
+  			phpCAS::traceEnd(self::IP);
+			return self::IP; 
   		} else {
-  			phpCAS::traceEnd(HOSTNAME);
-			return HOSTNAME;
+  			phpCAS::traceEnd(self::HOSTNAME);
+			return self::HOSTNAME;
   		}
 	}
 	
@@ -3166,7 +3172,7 @@ class CAS_Client
 		$multiRequest = new $multiClassName();
 		
 		for($i = 0; $i < sizeof($this->rebroadcast_nodes); $i++) {
-			if((($this->getNodeType($this->rebroadcast_nodes[$i]) == HOSTNAME) && !empty($dns) && (stripos($this->rebroadcast_nodes[$i], $dns) === false)) || (($this->getNodeType($this->rebroadcast_nodes[$i]) == IP) && !empty($ip) && (stripos($this->rebroadcast_nodes[$i], $ip) === false))) {
+			if((($this->getNodeType($this->rebroadcast_nodes[$i]) == self::HOSTNAME) && !empty($dns) && (stripos($this->rebroadcast_nodes[$i], $dns) === false)) || (($this->getNodeType($this->rebroadcast_nodes[$i]) == self::IP) && !empty($ip) && (stripos($this->rebroadcast_nodes[$i], $ip) === false))) {
 				phpCAS::trace('Rebroadcast target URL: '.$this->rebroadcast_nodes[$i].$_SERVER['REQUEST_URI']);
 				$className = $this->_requestImplementation;
 				$request = new $className();
@@ -3179,10 +3185,10 @@ class CAS_Client
 				}
 				
 				$request->makePost();
-				if($type == LOGOUT) {
+				if($type == self::LOGOUT) {
 					// Logout request
 					$request->setPostBody('rebroadcast=false&logoutRequest='.$_POST['logoutRequest']);
-				} else if($type == PGTIOU) {
+				} else if($type == self::PGTIOU) {
 					// pgtIou/pgtId rebroadcast
 					$request->setPostBody('rebroadcast=false');
 				}
