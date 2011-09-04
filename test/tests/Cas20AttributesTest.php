@@ -62,7 +62,7 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
      */
     public function test_rubycas_attributes() {
 		// Set up our response.
-		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/proxyValidate');
+		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/serviceValidate');
 		$response->setResponseHeaders(array(
 			'HTTP/1.1 200 OK',
 			'Date: Wed, 29 Sep 2010 19:20:57 GMT',
@@ -93,7 +93,7 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
 ");
 		CAS_TestHarness_DummyRequest::addResponse($response);
 		
-		$this->object->setPT('ST-123456-asdfasdfasgww2323radf3');
+		$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
 		$this->object->isAuthenticated();
 		
 		// Verify that we have attributes from this response
@@ -115,7 +115,7 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
      */
     public function test_jasig_attributes() {
 		// Set up our response.
-		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/proxyValidate');
+		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/serviceValidate');
 		$response->setResponseHeaders(array(
 			'HTTP/1.1 200 OK',
 			'Date: Wed, 29 Sep 2010 19:20:57 GMT',
@@ -148,7 +148,7 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
 ");
 		CAS_TestHarness_DummyRequest::addResponse($response);
 		
-		$this->object->setPT('ST-123456-asdfasdfasgww2323radf3');
+		$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
 		$this->object->isAuthenticated();
 		
 		// Verify that we have attributes from this response
@@ -171,7 +171,7 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
      */
     public function test_name_value_attributes() {
 		// Set up our response.
-		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/proxyValidate');
+		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/serviceValidate');
 		$response->setResponseHeaders(array(
 			'HTTP/1.1 200 OK',
 			'Date: Wed, 29 Sep 2010 19:20:57 GMT',
@@ -202,7 +202,7 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
 ");
 		CAS_TestHarness_DummyRequest::addResponse($response);
 		
-		$this->object->setPT('ST-123456-asdfasdfasgww2323radf3');
+		$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
 		$this->object->isAuthenticated();
 		
 		// Verify that we have attributes from this response

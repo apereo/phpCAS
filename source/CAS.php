@@ -1655,7 +1655,52 @@ class phpCAS {
 		phpCAS :: traceEnd();
 	}
 	
-			
+	/**
+	 * If you want your service to be proxied you have to enable it (default
+	 * disabled) and define an accepable list of proxies that are allowed to 
+	 * proxy your service. 
+	 *
+	 * Add each allowed proxy definition object. For the normal CAS_ProxyChain
+	 * class, the constructor takes an array of proxies to match. The list is in 
+	 * reverse just as seen from the service. Proxies have to be defined in reverse 
+	 * from the service to the user. If a user hits service A and gets proxied via
+	 * B to service C the list of acceptable on C would be array(B,A). The definition
+	 * of an individual proxy can be either a string or a regexp (preg_match is used)
+	 * that will be matched against the proxy list supplied by the cas server 
+	 * when validating the proxy tickets. The strings are compared starting from 
+	 * the beginning and must fully match with the proxies in the list.
+	 * Example:
+	 * 		phpCAS::allowProxyChain(new CAS_ProxyChain(array(
+	 *				'https://app.example.com/'
+	 *			)));
+	 * 		phpCAS::allowProxyChain(new CAS_ProxyChain(array(
+	 *				'/^https:\/\/app[0-9]\.example\.com\/rest\//',
+	 *				'http://client.example.com/'
+	 *			)));
+	 *
+	 * For quick testing or in certain production screnarios you might want to 
+	 * allow allow any other valid service to proxy your service. To do so, add
+	 * the "Any" chain: 
+	 *		phpcas::allowProxyChain(new CAS_ProxyChain_Any);
+	 * THIS SETTING IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY 
+	 * IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER
+	 * ON THIS SERVICE.
+	 *
+	 * @param CAS_ProxyChain_Interface $proxy_chain A proxy-chain that will be matched against the proxies requesting access
+	 */
+	public static function allowProxyChain(CAS_ProxyChain_Interface $proxy_chain){
+		global $PHPCAS_CLIENT;
+		phpCAS :: traceBegin();
+		if (!is_object($PHPCAS_CLIENT)) {
+			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
+		}
+		if($PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_2_0){
+			phpCAS :: error('this method can only be used with the cas 2.0 protool');
+		}
+		$PHPCAS_CLIENT->getAllowedProxyChains()->allowProxyChain($proxy_chain);
+		phpCAS :: traceEnd();
+	}
+	
 	/**
 	 * Answer an array of proxies that are sitting in front of this application.
 	 *
@@ -1787,7 +1832,7 @@ class phpCAS {
 /** @defgroup internalProxyServices Proxy other services
  *  @ingroup internalProxy */
 
-/** @defgroup internalProxied CAS proxied client features (CAS 2.0, Proxy Tickets)
+/** @defgroup internalService CAS client features (CAS 2.0, Proxied service)
  *  @ingroup internal */
 
 /** @defgroup internalConfig Configuration
