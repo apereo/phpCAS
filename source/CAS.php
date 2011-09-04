@@ -1851,10 +1851,16 @@ class phpCAS {
  * @example example_pgt_storage_file.php
  */
 /**
+ * @example example_pgt_storage_db.php
+ */
+/**
  * @example example_gateway.php
  */
 /**
  * @example example_logout.php
+ */
+/**
+ * @example example_rebroadcast.php
  */
 /**
  * @example example_custom_urls.php
