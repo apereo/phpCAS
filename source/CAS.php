@@ -528,7 +528,6 @@ class phpCAS {
 		}
 		echo "<br />\n<b>phpCAS error</b>: <font color=\"FF0000\"><b>" . __CLASS__ . "::" . $function . '(): ' . htmlentities($msg) . "</b></font> in <b>" . $file . "</b> on line <b>" . $line . "</b><br />\n";
 		phpCAS :: trace($msg);
-		$PHPCAS_CLIENT->setProcessingDiabled(TRUE);
 		phpCAS :: traceEnd();
 	}
 
