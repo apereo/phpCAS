@@ -1115,8 +1115,7 @@ class CAS_Client
 					// Mark the auth-check as complete to allow post-authentication
 					// callbacks to make use of phpCAS::getUser() and similar methods
 					$dbg = debug_backtrace();
-					global $PHPCAS_AUTH_CHECK_CALL;
-					$PHPCAS_AUTH_CHECK_CALL = array (
+					phpCAS::$PHPCAS_AUTH_CHECK_CALL = array (
 					'done' => TRUE,
 					'file' => $dbg[0]['file'],
 					'line' => $dbg[0]['line'],
