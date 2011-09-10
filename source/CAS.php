@@ -541,7 +541,10 @@ class phpCAS {
 		$line = 'unknown_line';
 		$str .= ') [' . $file . ':' . $line . ']';
 		phpCAS :: log($str);
-		self::$PHPCAS_DEBUG['indent']++;
+		if (empty(self::$PHPCAS_DEBUG['indent']))
+			self::$PHPCAS_DEBUG['indent'] = 0;
+		else
+			self::$PHPCAS_DEBUG['indent']++;
 	}
 
 	/**
@@ -550,7 +553,11 @@ class phpCAS {
 	 * @param $res the result of the function
 	 */
 	public static function traceEnd($res = '') {
-		self::$PHPCAS_DEBUG['indent']--;
+		if (empty(self::$PHPCAS_DEBUG['indent']))
+			self::$PHPCAS_DEBUG['indent'] = 0;
+		else
+			self::$PHPCAS_DEBUG['indent']--;
+		
 		$dbg = debug_backtrace();
 		$str = '';
 		if(is_object($res)){
