@@ -171,7 +171,7 @@ class ServiceMailTest extends PHPUnit_Framework_TestCase
 		$this->markTestIncomplete('This test has not been implemented yet.');
 		
 // 		$stream = $this->object->serviceMail('mailbox_name', 'imap://mail.example.edu/path/to/something', OP_READONLY, $err_code, $err_msg, $pt);
-// 		$this->assertType('resource', $stream);
+// 		$this->assertInternalType('resource', $stream);
 // 		$this->assertEquals(PHPCAS_SERVICE_OK, $err_code);
 // 		$this->assertEquals('', $err_msg);
 // 		$this->assertEquals('PT-asdfas-dfasgww2323radf3', $pt);
@@ -214,8 +214,8 @@ class ServiceMailTest extends PHPUnit_Framework_TestCase
 //     	$service->setMailbox('mailbox_name');
 //     	$service->setOptions(OP_READONLY);
 //     	$stream = $service->open();
-//     	$this->assertType('resource', $stream);
-//     	$this->assertType('resource', $service->getStream());
+//     	$this->assertInternalType('resource', $stream);
+//     	$this->assertInternalType('resource', $service->getStream());
 //     	$this->assertEquals('PT-asdfas-dfasgww2323radf3', $service->getImapProxyTicket());
 
     }
