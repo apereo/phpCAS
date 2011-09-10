@@ -1,5 +1,4 @@
 <?php
-require_once 'PHPUnit/Framework.php';
 require_once dirname(__FILE__).'/../harness/DummyRequest.php';
 require_once dirname(__FILE__).'/../harness/BasicResponse.php';
 
