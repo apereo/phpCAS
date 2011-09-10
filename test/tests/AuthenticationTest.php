@@ -24,7 +24,7 @@ class AuthenticationTest extends PHPUnit_Framework_TestCase
 //     	phpCAS::setDebug(dirname(__FILE__).'/../test.log');
 // 		error_reporting(E_ALL);
 
-		phpCAS::throwExceptionsInsteadOfExiting();
+		CAS_GracefullTerminationException::throwInsteadOfExiting();
 
 		$_SERVER['SERVER_NAME'] = 'www.clientapp.com';
 		$_SERVER['SERVER_PORT'] = '80';
