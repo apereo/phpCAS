@@ -1756,7 +1756,30 @@ class phpCAS {
 		}
 		$PHPCAS_CLIENT->addRebroadcastHeader($header);
 		phpCAS :: traceEnd();
-	}	
+	}
+	
+	private static $throwExceptionsInsteadOfExiting = false;
+	/**
+	 * Force phpcas to thow Exceptions instead of calling exit()
+	 * Needed for unit testing. Generally shouldn't be used in production
+	 * due to an increase in Apache error logging if CAS_GracefulTerminiationExceptions
+	 * are not caught and handled.
+	 */
+	public static function throwExceptionsInsteadOfExiting() {
+		self::$throwExceptionsInsteadOfExiting = true;
+	}
+	
+	/**
+	 * Answer true if throwExceptionsInsteadOfExiting() has been set.
+	 * Needed for unit testing. Generally shouldn't be used in production
+	 * due to an increase in Apache error logging if CAS_GracefulTerminiationExceptions
+	 * are not caught and handled.
+	 * 
+	 * @return boolean
+	 */
+	public static function shouldThrowExceptionsInsteadOfExiting () {
+		return self::$throwExceptionsInsteadOfExiting;
+	}
 }
 
 // ########################################################################
