@@ -1227,10 +1227,7 @@ class CAS_Client
 	public function redirectToCas($gateway=false,$renew=false){
 		phpCAS::traceBegin();
 		$cas_url = $this->getServerLoginURL($gateway,$renew);
-		if (php_sapi_name() === 'cli')
-			@header('Location: '.$cas_url);
-		else
-			header('Location: '.$cas_url);
+		header('Location: '.$cas_url);
 		phpCAS::trace( "Redirect to : ".$cas_url );
 
 		$this->printHTMLHeader($this->getString(CAS_STR_AUTHENTICATION_WANTED));

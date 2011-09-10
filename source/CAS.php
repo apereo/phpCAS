@@ -1756,7 +1756,7 @@ class phpCAS {
 		}
 		$PHPCAS_CLIENT->addRebroadcastHeader($header);
 		phpCAS :: traceEnd();
-	}
+	}	
 }
 
 // ########################################################################
