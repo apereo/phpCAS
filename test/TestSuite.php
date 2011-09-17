@@ -2,8 +2,6 @@
 
 require_once dirname(__FILE__).'/../source/CAS.php';
 
-require_once 'PHPUnit/Framework.php';
-
 class PhpcasTestSuite extends PHPUnit_Framework_TestSuite
 {
 	public static function suite()

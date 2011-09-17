@@ -1,5 +1,4 @@
 <?php
-require_once 'PHPUnit/Framework.php';
 require_once dirname(__FILE__).'/../harness/DummyRequest.php';
 require_once dirname(__FILE__).'/../harness/BasicResponse.php';
 
@@ -224,7 +223,7 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
      */
     public function validateUserAttributes () {
     	$attras = $this->object->getAttributes();
-		$this->assertType('array', $attras);
+		$this->assertInternalType('array', $attras);
 		
 		if (count($attras) != 4 || !is_array($attras['memberOf'])) {
 			print "\n";
@@ -250,13 +249,13 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($this->object->hasAttribute('memberOf'));
 		// direct access
 		$memberOf = $this->object->getAttribute('memberOf');
-		$this->assertType('array', $memberOf);
+		$this->assertInternalType('array', $memberOf);
 		$this->assertEquals(2, count($memberOf));
 		$this->assertTrue(in_array('CN=Staff,OU=Groups,DC=example,DC=edu', $memberOf));
 		$this->assertTrue(in_array('CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu', $memberOf));
 		// array access
 		$this->assertArrayHasKey('memberOf', $attras);
-		$this->assertType('array', $attras['memberOf']);
+		$this->assertInternalType('array', $attras['memberOf']);
 		$this->assertEquals(2, count($attras['memberOf']));
 		$this->assertTrue(in_array('CN=Staff,OU=Groups,DC=example,DC=edu', $attras['memberOf']));
 		$this->assertTrue(in_array('CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu', $attras['memberOf']));

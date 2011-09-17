@@ -1,5 +1,4 @@
 <?php
-require_once 'PHPUnit/Framework.php';
 require_once dirname(__FILE__).'/../harness/DummyRequest.php';
 require_once dirname(__FILE__).'/../harness/BasicResponse.php';
 
@@ -138,7 +137,7 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
     </cas:authenticationSuccess>
 </cas:serviceResponse>"
     	, $text_response);
-    	$this->assertType('DOMElement', $tree_response);
+    	$this->assertInstanceOf('DOMElement', $tree_response);
     }
 
 	/**
@@ -160,7 +159,7 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
 </cas:serviceResponse>
 
 ", $text_response);
-		$this->assertType('DOMElement', $tree_response);
+		$this->assertInstanceOf('DOMElement', $tree_response);
     }
     
     
@@ -185,7 +184,7 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
     </cas:authenticationSuccess>
 </cas:serviceResponse>"
     	, $text_response);
-    	$this->assertType('DOMElement', $tree_response);
+    	$this->assertInstanceOf('DOMElement', $tree_response);
     }
     /**
      * Test that the trusted proxy allows any proxies beyond the one we trust.
@@ -211,7 +210,7 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
     </cas:authenticationSuccess>
 </cas:serviceResponse>"
     	, $text_response);
-    	$this->assertType('DOMElement', $tree_response);
+    	$this->assertInstanceOf('DOMElement', $tree_response);
     }
 
     /**
