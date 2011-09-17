@@ -2499,6 +2499,8 @@ class CAS_Client
 		$dom = new DOMDocument();
 		// Fix possible whitspace problems
 		$dom->preserveWhiteSpace = false;
+		// CAS servers should only return data in utf-8
+		$dom->encoding = "utf-8";
 		// read the response of the CAS server into a DOMDocument object
 		if ( !($dom->loadXML($text_response))) {
 			// read failed

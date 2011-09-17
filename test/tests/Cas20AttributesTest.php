@@ -163,6 +163,59 @@ class Cas20AttributesTest extends PHPUnit_Framework_TestCase
 		
     }
     
+    
+    
+    public function test_jasig_attributes_international() {
+		// Set up our response.
+		$response = new CAS_TestHarness_BasicResponse('https', 'cas.example.edu', '/cas/serviceValidate');
+		$response->setResponseHeaders(array(
+			'HTTP/1.1 200 OK',
+			'Date: Wed, 29 Sep 2010 19:20:57 GMT',
+			'Server: Apache-Coyote/1.1',
+			'Pragma: no-cache',
+			'Expires: Thu, 01 Jan 1970 00:00:00 GMT',
+			'Cache-Control: no-cache, no-store',
+			'Content-Type: text/html;charset=UTF-8',
+			'Content-Language: en-US',
+			'Via: 1.1 cas.example.edu',
+			'Connection: close',
+			'Transfer-Encoding: chunked',
+		));
+		$response->setResponseBody(
+"<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+    <cas:authenticationSuccess>
+        <cas:user>Iñtërnâtiônàlizætiøn</cas:user>
+		<cas:attributes>
+			<cas:attraStyle>Jasig</cas:attraStyle>
+			<cas:givenName>Iñtërnâtiônàlizætiøn</cas:givenName>
+		</cas:attributes>
+        <cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+    </cas:authenticationSuccess>
+</cas:serviceResponse>
+");
+		CAS_TestHarness_DummyRequest::addResponse($response);
+		
+		$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
+		$this->object->isAuthenticated();
+		
+		// Verify that we have attributes from this response
+		$attras = $this->object->getAttributes();
+		$this->assertTrue($this->object->hasAttribute('attraStyle'));
+		// direct access
+		$this->assertEquals('Jasig', $this->object->getAttribute('attraStyle'));
+		// array access
+		$this->assertArrayHasKey('attraStyle', $attras);
+		$this->assertEquals('Jasig', $attras['attraStyle']);
+		
+		$this->assertTrue($this->object->hasAttribute('givenName'));
+		// direct access
+		$this->assertEquals('Iñtërnâtiônàlizætiøn', $this->object->getAttribute('givenName'));
+		// array access
+		$this->assertArrayHasKey('givenName', $attras);
+		$this->assertEquals('Iñtërnâtiônàlizætiøn', $attras['givenName']);
+			
+    }
+    
     /**
      * Verify that phpCAS will successfully fetch name-value-style attributes:
      *
