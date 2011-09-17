@@ -46,22 +46,7 @@ class CAS_AuthenticationException
 			phpCAS::trace('CAS response: '.$cas_response);
 		}
 		$client->printHTMLFooter();
-		phpCAS::traceEnd();
-	}
-	
-	/**
-	 * Decide what to do with the exception
-	 * @param CAS_Client $client
-	 */
-	public function handleException(CAS_Client $client){
-		phpCAS::traceBegin();
-		if($client->isThrowingExceptionsEnabled() || php_sapi_name() === 'cli'){
-			phpCAS::traceEnd();
-			throw $this;
-		}else{
-			phpCAS::traceExit();
-			exit();
-		}
+		phpCAS::traceExit();
 	}
 	
 }

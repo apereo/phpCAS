@@ -1635,20 +1635,6 @@ class phpCAS {
 		$PHPCAS_CLIENT->setNoClearTicketsFromUrl();
 		phpCAS :: traceEnd();
 	}
-	
-	/**
-	 * 
-	 * Force phpcas to thow Exceptions instead of calling exit()
-	 */
-	public static function throwExceptionsInsteadOfExiting(){
-		global $PHPCAS_CLIENT;
-		phpCAS :: traceBegin();
-		if (!is_object($PHPCAS_CLIENT)) {
-			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-		}
-		$PHPCAS_CLIENT->throwExceptionsInsteadOfExiting();
-		phpCAS :: traceEnd();
-	}
 
 	/** @} */
 
