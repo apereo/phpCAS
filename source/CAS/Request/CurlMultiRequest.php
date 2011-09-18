@@ -56,8 +56,8 @@ class CAS_Request_CurlMultiRequest
 	public function addRequest (CAS_RequestInterface $request) {
 		if ($this->sent)
 			throw new CAS_OutOfSequenceException('Request has already been sent cannot '.__METHOD__);
-		if (!$request instanceof CAS_CurlRequest)
-			throw new CAS_InvalidArgumentException('As a CAS_Request_CurlMultiRequest, I can only work with CAS_CurlRequest objects.');
+		if (!$request instanceof CAS_Request_CurlRequest)
+			throw new CAS_InvalidArgumentException('As a CAS_Request_CurlMultiRequest, I can only work with CAS_Request_CurlRequest objects.');
 		
 		$this->requests[] = $request;
 	}

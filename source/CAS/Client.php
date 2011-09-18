@@ -34,34 +34,6 @@
  * Main class of the phpCAS library
  */
 
-// include internationalization stuff
-include_once(dirname(__FILE__).'/languages/languages.php');
-
-// include PGT storage classes
-include_once(dirname(__FILE__).'/PGTStorage/AbstractStorage.php');
-
-// include class for storing service cookies.
-include_once(dirname(__FILE__).'/CookieJar.php');
-
-// include class for fetching web requests.
-include_once(dirname(__FILE__).'/Request/CurlRequest.php');
-include_once(dirname(__FILE__).'/Request/CurlMultiRequest.php');
-
-// include classes for proxying access to services
-include_once(dirname(__FILE__).'/ProxiedService/Http/Get.php');
-include_once(dirname(__FILE__).'/ProxiedService/Http/Post.php');
-include_once(dirname(__FILE__).'/ProxiedService/Imap.php');
-
-//include classes for storing proxy chains
-include_once(dirname(__FILE__).'/ProxyChain/AllowedList.php');
-
-// include Exception classes
-include_once(dirname(__FILE__).'/ProxiedService/Exception.php');
-include_once(dirname(__FILE__).'/ProxyTicketException.php');
-include_once(dirname(__FILE__).'/InvalidArgumentException.php');
-include_once(dirname(__FILE__).'/GracefullTerminationException.php');
-include_once(dirname(__FILE__).'/AuthenticationException.php');
-
 /**
  * @class CAS_Client
  * The CAS_Client class is a client interface that provides CAS authentication
@@ -151,8 +123,9 @@ class CAS_Client
 	 */
 	public function printHTMLFooter()
 	{
+		$lang = $this->getLangObj();
 		$this->HTMLFilterOutput(empty($this->_output_footer)
-		?('<hr><address>phpCAS __PHPCAS_VERSION__ '.$this->getString(CAS_STR_USING_SERVER).' <a href="__SERVER_BASE_URL__">__SERVER_BASE_URL__</a> (CAS __CAS_VERSION__)</a></address></body></html>')
+		?('<hr><address>phpCAS __PHPCAS_VERSION__ '.$lang->getUsingServer().' <a href="__SERVER_BASE_URL__">__SERVER_BASE_URL__</a> (CAS __CAS_VERSION__)</a></address></body></html>')
 		:$this->_output_footer);
 	}
 
@@ -192,70 +165,28 @@ class CAS_Client
 	 * CAS_Client::setLang(), read by CAS_Client::getLang().
 
 	 * @note debugging information is always in english (debug purposes only).
-	 *
-	 * @hideinitializer
-	 * @sa CAS_Client::_strings, CAS_Client::getString()
 	 */
-	private $_lang = '';
-
-	/**
-	 * This method returns the language used by phpCAS.
-	 *
-	 * @return a string representing the language
-	 */
-	private function getLang()
-	{
-		if ( empty($this->_lang) )
-		$this->setLang(PHPCAS_LANG_DEFAULT);
-		return $this->_lang;
-	}
-
-	/**
-	 * array containing the strings used by phpCAS. Written by CAS_Client::setLang(), read by
-	 * CAS_Client::getString() and used by CAS_Client::setLang().
-	 *
-	 * @note This array is filled by instructions in CAS/languages/<$this->_lang>.php
-	 *
-	 * @see CAS_Client::_lang, CAS_Client::getString(), CAS_Client::setLang(), CAS_Client::getLang()
-	 */
-	private $_strings;
-
-	/**
-	 * This method returns a string depending on the language.
-	 *
-	 * @param $str the index of the string in $_string.
-	 *
-	 * @return the string corresponding to $index in $string.
-	 *
-	 */
-	public function getString($str)
-	{
-		// call CASclient::getLang() to be sure the language is initialized
-		$this->getLang();
-
-		if ( !isset($this->_strings[$str]) ) {
-			trigger_error('string `'.$str.'\' not defined for language `'.$this->getLang().'\'',E_USER_ERROR);
-		}
-		return $this->_strings[$str];
-	}
+	private $_lang = PHPCAS_LANG_DEFAULT;
 
 	/**
 	 * This method is used to set the language used by phpCAS.
-	 * @note Can be called only once.
-	 *
 	 * @param $lang a string representing the language.
-	 *
-	 * @sa CAS_LANG_FRENCH, CAS_LANG_ENGLISH
 	 */
 	public function setLang($lang)
 	{
-		// include the corresponding language file
-		include(dirname(__FILE__).'/languages/'.$lang.'.php');
+		$obj = new $className;
+		if (!($obj instanceof CAS_Languages_LanguageInterface))
+		throw new CAS_InvalidArgumentException('$className must implement the CAS_Languages_LanguageInterface');
 
-		if ( !is_array($this->_strings) ) {
-			trigger_error('language `'.$lang.'\' is not implemented',E_USER_ERROR);
-		}
-		$this->_lang = $lang;
+		$this->_lang = $className;
+	}
+	/**
+	 * Create the language 
+	 * @return Class implementing the CAS_Languages_LanguageInterface
+	 */
+	public function getLangObj(){
+		$classname = $this->_lang;
+		return new $classname();
 	}
 
 	/** @} */
@@ -553,10 +484,10 @@ class CAS_Client
 	/**
 	 * The class to instantiate for making web requests in readUrl().
 	 * The class specified must implement the CAS_RequestInterface.
-	 * By default CAS_CurlRequest is used, but this may be overridden to
+	 * By default CAS_Request_CurlRequest is used, but this may be overridden to
 	 * supply alternate request mechanisms for testing.
 	 */
-	private $_requestImplementation = 'CAS_CurlRequest';
+	private $_requestImplementation = 'CAS_Request_CurlRequest';
 
 	/**
 	 * Override the default implementation used to make web requests in readUrl().
@@ -699,7 +630,6 @@ class CAS_Client
 			phpCAS :: trace("Starting a new session");
 			session_start();
 		}
-
 
 		// are we in proxy mode ?
 		$this->_proxy = $proxy;
@@ -1232,10 +1162,9 @@ class CAS_Client
 		else
 			header('Location: '.$cas_url);
 		phpCAS::trace( "Redirect to : ".$cas_url );
-
-		$this->printHTMLHeader($this->getString(CAS_STR_AUTHENTICATION_WANTED));
-
-		printf('<p>'.$this->getString(CAS_STR_SHOULD_HAVE_BEEN_REDIRECTED).'</p>',$cas_url);
+		$lang = $this->getLangObj();
+		$this->printHTMLHeader($lang->getAuthenticationWanted());
+		printf('<p>'.$lang->getShouldHaveBeenRedirected().'</p>',$cas_url);
 		$this->printHTMLFooter();
 		phpCAS::traceExit();	
 		throw new CAS_GracefullTerminationException();
@@ -1262,9 +1191,9 @@ class CAS_Client
 
 		session_unset();
 		session_destroy();
-
-		$this->printHTMLHeader($this->getString(CAS_STR_LOGOUT));
-		printf('<p>'.$this->getString(CAS_STR_SHOULD_HAVE_BEEN_REDIRECTED).'</p>',$cas_url);
+		$lang = $this->getLangObj();
+		$this->printHTMLHeader($lang->getLogout());
+		printf('<p>'.$lang->getShouldHaveBeenRedirected().'</p>',$cas_url);
 		$this->printHTMLFooter();
 		phpCAS::traceExit();
 		throw new CAS_GracefullTerminationException();
@@ -2336,7 +2265,8 @@ class CAS_Client
 			$output = $e->getMessage();
 			return FALSE;
 		} catch (CAS_ProxiedService_Exception $e) {
-			$output = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE), $url, $e->getMessage());
+			$lang = $this->getLangObj();
+			$output = sprintf($lang->getServiceUnavailable(), $url, $e->getMessage());
 			$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
 			return FALSE;
 		}
@@ -2377,7 +2307,8 @@ class CAS_Client
 			$pt = FALSE;
 			return FALSE;
 		} catch (CAS_ProxiedService_Exception $e) {
-			$err_msg = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE), $url, $e->getMessage());
+			$lang = $this->getLangObj();
+			$err_msg = sprintf($lang->getServiceUnavailable(), $url, $e->getMessage());
 			$err_code = PHPCAS_SERVICE_NOT_AVAILABLE;
 			$pt = FALSE;
 			return FALSE;
@@ -2924,9 +2855,9 @@ class CAS_Client
 	private function authError($failure,$cas_url,$no_response,$bad_response='',$cas_response='',$err_code='',$err_msg='')
 	{
 		phpCAS::traceBegin();
-
-		$this->printHTMLHeader($this->getString(CAS_STR_AUTHENTICATION_FAILED));
-		printf($this->getString(CAS_STR_YOU_WERE_NOT_AUTHENTICATED),htmlentities($this->getURL()),$_SERVER['SERVER_ADMIN']);
+		$lang = $this->getLangObj();
+		$this->printHTMLHeader($lang->getAuthenticationFailed());
+		printf($lang->getYouWereNotAuthenticated(),htmlentities($this->getURL()),$_SERVER['SERVER_ADMIN']);
 		phpCAS::trace('CAS URL: '.$cas_url);
 		phpCAS::trace('Authentication failure: '.$failure);
 		if ( $no_response ) {

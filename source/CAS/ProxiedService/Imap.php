@@ -177,7 +177,6 @@ class CAS_ProxiedService_Imap
 		} else {
 			phpCAS::trace('could not open mailbox');
 			// @todo add localization integration.
-// 			$this->_errorMessage = sprintf($this->getString(CAS_STR_SERVICE_UNAVAILABLE), $url, var_export(imap_errors(),TRUE));
 			$message = 'IMAP Error: '.$url.' '. var_export(imap_errors(),TRUE);
 			phpCAS::trace($message);
 			throw new CAS_ProxiedService_Exception($message);

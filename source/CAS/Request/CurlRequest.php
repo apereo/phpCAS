@@ -34,7 +34,7 @@ require_once dirname(__FILE__).'/AbstractRequest.php';
 /**
  * Provides support for performing web-requests via curl
  */
-class CAS_CurlRequest
+class CAS_Request_CurlRequest
 	extends CAS_AbstractRequest
 	implements CAS_RequestInterface
 {
