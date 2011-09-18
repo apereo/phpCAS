@@ -301,8 +301,7 @@ $GLOBALS['PHPCAS_DEBUG'] = array (
 //  CLIENT CLASS
 // ########################################################################
 
-// include client class
-include_once (dirname(__FILE__) . '/CAS/Client.php');
+// include the class autoloader
 include_once (dirname(__FILE__) . '/CAS/Autoload.php');
 
 // ########################################################################

@@ -28,8 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once dirname(__FILE__).'/MultiRequestInterface.php';
-
 /**
  * This interface defines a class library for performing multiple web requests in batches.
  * Implementations of this interface may perform requests serially or in parallel.
