@@ -66,10 +66,10 @@ class CAS_ProxiedService_Http_Get
 	/**
 	 * Add any other parts of the request needed by concrete classes
 	 * 
-	 * @param CAS_RequestInterface $request
+	 * @param CAS_Request_RequestInterface $request
 	 * @return void
 	 */
-	protected function populateRequest (CAS_RequestInterface $request) {
+	protected function populateRequest (CAS_Request_RequestInterface $request) {
 		// do nothing, since the URL has already been sent and that is our
 		// only data.
 	}

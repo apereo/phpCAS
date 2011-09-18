@@ -31,8 +31,8 @@
 /**
  * Provides support for performing web-requests via curl
  */
-abstract class CAS_AbstractRequest
-	implements CAS_RequestInterface
+abstract class CAS_Request_AbstractRequest
+	implements CAS_Request_RequestInterface
 {
 
 	protected $url = null;

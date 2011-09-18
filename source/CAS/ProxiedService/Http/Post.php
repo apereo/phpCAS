@@ -109,10 +109,10 @@ class CAS_ProxiedService_Http_Post
 	/**
 	 * Add any other parts of the request needed by concrete classes
 	 * 
-	 * @param CAS_RequestInterface $request
+	 * @param CAS_Request_RequestInterface $request
 	 * @return void
 	 */
-	protected function populateRequest (CAS_RequestInterface $request) {
+	protected function populateRequest (CAS_Request_RequestInterface $request) {
 		if (empty($this->_contentType) && !empty($this->_body))
 			throw new CAS_ProxiedService_Exception("If you pass a POST body, you must specify a content type via ".get_class($this).'->setContentType($contentType).');
 		

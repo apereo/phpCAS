@@ -39,7 +39,7 @@ abstract class CAS_ProxiedService_Http_Abstract
 	/**
 	 * The HTTP request mechanism talking to the target service.
 	 *
-	 * @var CAS_RequestInterface $_requestHandler
+	 * @var CAS_Request_RequestInterface $_requestHandler
 	 */
 	protected $_requestHandler;
 	
@@ -53,11 +53,11 @@ abstract class CAS_ProxiedService_Http_Abstract
 	/**
 	 * Constructor.
 	 * 
-	 * @param CAS_RequestInterface $requestHandler
+	 * @param CAS_Request_RequestInterface $requestHandler
 	 * @param CAS_CookieJar $cookieJar
 	 * @return void
 	 */
-	public function __construct (CAS_RequestInterface $requestHandler, CAS_CookieJar $cookieJar) {
+	public function __construct (CAS_Request_RequestInterface $requestHandler, CAS_CookieJar $cookieJar) {
 		$this->_requestHandler = $requestHandler;
 		$this->_cookieJar = $cookieJar;
 	}
@@ -225,10 +225,10 @@ abstract class CAS_ProxiedService_Http_Abstract
 	/**
 	 * Add any other parts of the request needed by concrete classes
 	 * 
-	 * @param CAS_RequestInterface $request
+	 * @param CAS_Request_RequestInterface $request
 	 * @return void
 	 */
-	abstract protected function populateRequest (CAS_RequestInterface $request);
+	abstract protected function populateRequest (CAS_Request_RequestInterface $request);
 	
 	/**
 	 * Answer a redirect URL if a redirect header is found, otherwise null.

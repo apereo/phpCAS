@@ -67,7 +67,7 @@ $serviceUrl = $curbase.$curdir.'example_service.php';
 $serviceUrl2 = $curbase.$curdir.'example_service_that_proxies.php';
 
 $pgtBase = preg_quote(preg_replace('/^http:/', 'https:', $curbase.$curdir),'/');
-$pgtUrlRegexp = '/^'.$pgtbase.'.*$/';
+$pgtUrlRegexp = '/^'.$pgtBase.'.*$/';
 
 $cas_url = 'https://'.$cas_host;
 if ($cas_port != '443')

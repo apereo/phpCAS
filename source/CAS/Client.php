@@ -174,11 +174,11 @@ class CAS_Client
 	 */
 	public function setLang($lang)
 	{
-		$obj = new $className;
+		$obj = new $lang();
 		if (!($obj instanceof CAS_Languages_LanguageInterface))
 		throw new CAS_InvalidArgumentException('$className must implement the CAS_Languages_LanguageInterface');
 
-		$this->_lang = $className;
+		$this->_lang = $lang;
 	}
 	/**
 	 * Create the language 
@@ -483,7 +483,7 @@ class CAS_Client
 	
 	/**
 	 * The class to instantiate for making web requests in readUrl().
-	 * The class specified must implement the CAS_RequestInterface.
+	 * The class specified must implement the CAS_Request_RequestInterface.
 	 * By default CAS_Request_CurlRequest is used, but this may be overridden to
 	 * supply alternate request mechanisms for testing.
 	 */
@@ -491,15 +491,15 @@ class CAS_Client
 
 	/**
 	 * Override the default implementation used to make web requests in readUrl().
-	 * This class must implement the CAS_RequestInterface.
+	 * This class must implement the CAS_Request_RequestInterface.
 	 *
 	 * @param string $className
 	 * @return void
 	 */
 	public function setRequestImplementation ($className) {
 		$obj = new $className;
-		if (!($obj instanceof CAS_RequestInterface))
-		throw new CAS_InvalidArgumentException('$className must implement the CAS_RequestInterface');
+		if (!($obj instanceof CAS_Request_RequestInterface))
+		throw new CAS_InvalidArgumentException('$className must implement the CAS_Request_RequestInterface');
 
 		$this->_requestImplementation = $className;
 	}

@@ -32,8 +32,8 @@
  * Provides support for performing web-requests via curl
  */
 class CAS_Request_CurlRequest
-	extends CAS_AbstractRequest
-	implements CAS_RequestInterface
+	extends CAS_Request_AbstractRequest
+	implements CAS_Request_RequestInterface
 {
 
 	/**

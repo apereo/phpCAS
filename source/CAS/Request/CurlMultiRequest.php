@@ -46,12 +46,12 @@ class CAS_Request_CurlMultiRequest
 	 * Add a new Request to this batch.
 	 * Note, implementations will likely restrict requests to their own concrete class hierarchy.
 	 * 
-	 * @param CAS_RequestInterface $request
+	 * @param CAS_Request_RequestInterface $request
 	 * @return void
 	 * @throws CAS_OutOfSequenceException If called after the Request has been sent.
 	 * @throws CAS_InvalidArgumentException If passed a Request of the wrong implmentation.
 	 */
-	public function addRequest (CAS_RequestInterface $request) {
+	public function addRequest (CAS_Request_RequestInterface $request) {
 		if ($this->sent)
 			throw new CAS_OutOfSequenceException('Request has already been sent cannot '.__METHOD__);
 		if (!$request instanceof CAS_Request_CurlRequest)
