@@ -38,7 +38,7 @@ phpCAS::forceAuthentication();
 <html>
   <head>
     <title>phpCAS proxy rebroadcast example</title>
-    <link rel="stylesheet" type='text/css' href='../example.css'/>
+    <link rel="stylesheet" type='text/css' href='example.css'/>
   </head>
   <body>
     <h1>phpCAS proxy rebroadcast example</h1>
