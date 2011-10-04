@@ -981,7 +981,7 @@ class phpCAS {
 			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
 		}
 		if (gettype($n) != 'integer') {
-			phpCAS :: error('type mismatched for parameter $header (should be `string\')');
+			phpCAS :: error('type mismatched for parameter $n (should be `integer\')');
 		}
 		$PHPCAS_CLIENT->setCacheTimesForAuthRecheck($n);
 	}
