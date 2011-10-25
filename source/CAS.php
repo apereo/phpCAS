@@ -491,6 +491,8 @@ class phpCAS {
 		echo "<br />\n<b>phpCAS error</b>: <font color=\"FF0000\"><b>" . __CLASS__ . "::" . $function . '(): ' . htmlentities($msg) . "</b></font> in <b>" . $file . "</b> on line <b>" . $line . "</b><br />\n";
 		phpCAS :: trace($msg);
 		phpCAS :: traceEnd();
+		
+		throw new CAS_GracefullTerminationException(__CLASS__ . "::" . $function . '(): ' . $msg);
 	}
 
 	/**
