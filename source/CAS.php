@@ -284,14 +284,6 @@ class phpCAS {
 	private static $PHPCAS_INIT_CALL;
 	
 	/**
-	 * This global variable is used to store where the method checking
-	 * the authentication is called from (to print comprehensive errors)
-	 *
-	 * @hideinitializer
-	 */
-	public static $PHPCAS_AUTH_CHECK_CALL; // Note that this has to be public due to usage by the CAS_client.
-	
-	/**
 	 * This global variable is used to store phpCAS debug mode.
 	 *
 	 * @hideinitializer
@@ -686,8 +678,8 @@ class phpCAS {
 		if (!self::$PHPCAS_CLIENT->isProxy()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
 		}
-		if (self::$PHPCAS_AUTH_CHECK_CALL['done']) {
-			phpCAS :: error('this method should only be called before ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() (called at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ')');
+		if (self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
+			phpCAS :: error('this method should only be called before ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() (called at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ')');
 		}
 		if ( !($storage instanceof CAS_PGTStorage) ) {
 			phpCAS :: error('type mismatched for parameter $storage (should be a CAS_PGTStorage `object\')');
@@ -714,8 +706,8 @@ class phpCAS {
 		if (!self::$PHPCAS_CLIENT->isProxy()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
 		}
-		if (self::$PHPCAS_AUTH_CHECK_CALL['done']) {
-			phpCAS :: error('this method should only be called before ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() (called at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ')');
+		if (self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
+			phpCAS :: error('this method should only be called before ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() (called at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ')');
 		}
 		if (gettype($username) != 'string') {
 			phpCAS :: error('type mismatched for parameter $username (should be `string\')');
@@ -744,8 +736,8 @@ class phpCAS {
 		if (!self::$PHPCAS_CLIENT->isProxy()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
 		}
-		if (self::$PHPCAS_AUTH_CHECK_CALL['done']) {
-			phpCAS :: error('this method should only be called before ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() (called at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ')');
+		if (self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
+			phpCAS :: error('this method should only be called before ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() (called at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ')');
 		}
 		if (gettype($format) != 'string') {
 			phpCAS :: error('type mismatched for parameter $format (should be `string\')');
@@ -786,11 +778,11 @@ class phpCAS {
 		if (!self::$PHPCAS_CLIENT->isProxy()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['done']) {
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
 			phpCAS :: error('this method should only be called after the programmer is sure the user has been authenticated (by calling ' . __CLASS__ . '::checkAuthentication() or ' . __CLASS__ . '::forceAuthentication()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['result']) {
-			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCallSuccessful()) {
+			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ') but the method returned FALSE');
 		}
 		if (gettype($type) != 'string') {
 			phpCAS :: error('type mismatched for parameter $type (should be `string\')');
@@ -820,11 +812,11 @@ class phpCAS {
 		if (!self::$PHPCAS_CLIENT->isProxy()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['done']) {
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
 			phpCAS :: error('this method should only be called after the programmer is sure the user has been authenticated (by calling ' . __CLASS__ . '::checkAuthentication() or ' . __CLASS__ . '::forceAuthentication()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['result']) {
-			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCallSuccessful()) {
+			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ') but the method returned FALSE');
 		}
 
 		self::$PHPCAS_CLIENT->initializeProxiedService($proxiedService);
@@ -851,11 +843,11 @@ class phpCAS {
 		if (!self::$PHPCAS_CLIENT->isProxy()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['done']) {
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
 			phpCAS :: error('this method should only be called after the programmer is sure the user has been authenticated (by calling ' . __CLASS__ . '::checkAuthentication() or ' . __CLASS__ . '::forceAuthentication()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['result']) {
-			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCallSuccessful()) {
+			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ') but the method returned FALSE');
 		}
 		if (gettype($url) != 'string') {
 			phpCAS :: error('type mismatched for parameter $url (should be `string\')');
@@ -892,11 +884,11 @@ class phpCAS {
 		if (!self::$PHPCAS_CLIENT->isProxy()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['done']) {
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
 			phpCAS :: error('this method should only be called after the programmer is sure the user has been authenticated (by calling ' . __CLASS__ . '::checkAuthentication() or ' . __CLASS__ . '::forceAuthentication()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['result']) {
-			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCallSuccessful()) {
+			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ') but the method returned FALSE');
 		}
 		if (gettype($url) != 'string') {
 			phpCAS :: error('type mismatched for parameter $url (should be `string\')');
@@ -1001,14 +993,8 @@ class phpCAS {
 		$auth = self::$PHPCAS_CLIENT->checkAuthentication();
 
 		// store where the authentication has been checked and the result
-		$dbg = debug_backtrace();
-		self::$PHPCAS_AUTH_CHECK_CALL = array (
-			'done' => TRUE,
-			'file' => $dbg[0]['file'],
-			'line' => $dbg[0]['line'],
-			'method' => __CLASS__ . '::' . __FUNCTION__,
-			'result' => $auth
-		);
+		self::$PHPCAS_CLIENT->markAuthenticationCall($auth);
+		
 		phpCAS :: traceEnd($auth);
 		return $auth;
 	}
@@ -1027,14 +1013,7 @@ class phpCAS {
 		$auth = self::$PHPCAS_CLIENT->forceAuthentication();
 
 		// store where the authentication has been checked and the result
-		$dbg = debug_backtrace();
-		self::$PHPCAS_AUTH_CHECK_CALL = array (
-			'done' => TRUE,
-			'file' => $dbg[0]['file'],
-			'line' => $dbg[0]['line'],
-			'method' => __CLASS__ . '::' . __FUNCTION__,
-			'result' => $auth
-		);
+		self::$PHPCAS_CLIENT->markAuthenticationCall($auth);
 
 /*		if (!$auth) {
 			phpCAS :: trace('user is not authenticated, redirecting to the CAS server');
@@ -1056,15 +1035,9 @@ class phpCAS {
 			phpCAS :: error('this method should not be called before' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
 		}
 		$auth = self::$PHPCAS_CLIENT->renewAuthentication();
+		
 		// store where the authentication has been checked and the result
-		$dbg = debug_backtrace();
-		self::$PHPCAS_AUTH_CHECK_CALL = array (
-			'done' => TRUE,
-			'file' => $dbg[0]['file'],
-			'line' => $dbg[0]['line'],
-			'method' => __CLASS__ . '::' . __FUNCTION__,
-			'result' => $auth
-		);
+		self::$PHPCAS_CLIENT->markAuthenticationCall($auth);
 
 		//self::$PHPCAS_CLIENT->renewAuthentication();
 		phpCAS :: traceEnd();
@@ -1086,14 +1059,8 @@ class phpCAS {
 		$auth = self::$PHPCAS_CLIENT->isAuthenticated();
 
 		// store where the authentication has been checked and the result
-		$dbg = debug_backtrace();
-		self::$PHPCAS_AUTH_CHECK_CALL = array (
-			'done' => TRUE,
-			'file' => $dbg[0]['file'],
-			'line' => $dbg[0]['line'],
-			'method' => __CLASS__ . '::' . __FUNCTION__,
-			'result' => $auth
-		);
+		self::$PHPCAS_CLIENT->markAuthenticationCall($auth);
+		
 		phpCAS :: traceEnd($auth);
 		return $auth;
 	}
@@ -1122,11 +1089,11 @@ class phpCAS {
 		if (!is_object(self::$PHPCAS_CLIENT)) {
 			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['done']) {
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::forceAuthentication() or ' . __CLASS__ . '::isAuthenticated()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['result']) {
-			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCallSuccessful()) {
+			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ') but the method returned FALSE');
 		}
 		return self::$PHPCAS_CLIENT->getUser();
 	}
@@ -1143,11 +1110,11 @@ class phpCAS {
 		if (!is_object(self::$PHPCAS_CLIENT)) {
 			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['done']) {
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::forceAuthentication() or ' . __CLASS__ . '::isAuthenticated()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['result']) {
-			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCallSuccessful()) {
+			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ') but the method returned FALSE');
 		}
 		return self::$PHPCAS_CLIENT->getAttributes();
 	}
@@ -1164,11 +1131,11 @@ class phpCAS {
 		if (!is_object(self::$PHPCAS_CLIENT)) {
 			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['done']) {
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::forceAuthentication() or ' . __CLASS__ . '::isAuthenticated()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['result']) {
-			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCallSuccessful()) {
+			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ') but the method returned FALSE');
 		}
 		return self::$PHPCAS_CLIENT->hasAttributes();
 	}
@@ -1186,11 +1153,11 @@ class phpCAS {
 		if (!is_object(self::$PHPCAS_CLIENT)) {
 			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['done']) {
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::forceAuthentication() or ' . __CLASS__ . '::isAuthenticated()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['result']) {
-			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCallSuccessful()) {
+			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ') but the method returned FALSE');
 		}
 		return self::$PHPCAS_CLIENT->hasAttribute($key);
 	}
@@ -1208,11 +1175,11 @@ class phpCAS {
 		if (!is_object(self::$PHPCAS_CLIENT)) {
 			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['done']) {
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCalled()) {
 			phpCAS :: error('this method should only be called after ' . __CLASS__ . '::forceAuthentication() or ' . __CLASS__ . '::isAuthenticated()');
 		}
-		if (!self::$PHPCAS_AUTH_CHECK_CALL['result']) {
-			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_AUTH_CHECK_CALL['method'] . '() at ' . self::$PHPCAS_AUTH_CHECK_CALL['file'] . ':' . self::$PHPCAS_AUTH_CHECK_CALL['line'] . ') but the method returned FALSE');
+		if (!self::$PHPCAS_CLIENT->wasAuthenticationCallSuccessful()) {
+			phpCAS :: error('authentication was checked (by ' . self::$PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() at ' . self::$PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$PHPCAS_CLIENT->getAuthenticationCallerLine() . ') but the method returned FALSE');
 		}
 		return self::$PHPCAS_CLIENT->getAttribute($key);
 	}

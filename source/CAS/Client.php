@@ -673,6 +673,99 @@ class CAS_Client
 		$this->_signoutCallbackArgs = $additionalArgs;
 	}
 	
+	// ########################################################################
+	//  Methods for supplying code-flow feedback to integrators.
+	// ########################################################################
+	
+	/**
+	 * Mark the caller of authentication. This will help client integraters determine
+	 * problems with their code flow if they call a function such as getUser() before
+	 * authentication has occurred.
+	 * 
+	 * @param boolean $result True if authentication was successful, false otherwise.
+	 * @return null
+	 */
+	public function markAuthenticationCall ($auth) {
+		// store where the authentication has been checked and the result
+		$dbg = debug_backtrace();
+		$this->_authentication_caller = array (
+			'file' => $dbg[1]['file'],
+			'line' => $dbg[1]['line'],
+			'method' => $dbg[1]['class'] . '::' . $dbg[1]['function'],
+			'result' => (boolean)$auth
+		);
+	}
+	private $_authentication_caller;
+	
+	/**
+	 * Answer true if authentication has been checked.
+	 * 
+	 * @return boolean
+	 */
+	public function wasAuthenticationCalled () {
+		return !empty($this->_authentication_caller);
+	}
+	
+	/**
+	 * Answer the result of the authentication call.
+	 *
+	 * Throws a CAS_OutOfSequenceException if wasAuthenticationCalled() is false
+	 * and markAuthenticationCall() didn't happen.
+	 * 
+	 * @return boolean
+	 */
+	public function wasAuthenticationCallSuccessful () {
+		if (empty($this->_authentication_caller))
+			throw new CAS_OutOfSequenceException('markAuthenticationCall() hasn\'t happened.');
+		
+		return $this->_authentication_caller['result'];
+	}
+	
+	/**
+	 * Answer information about the authentication caller.
+	 *
+	 * Throws a CAS_OutOfSequenceException if wasAuthenticationCalled() is false
+	 * and markAuthenticationCall() didn't happen.
+	 * 
+	 * @return array Keys are 'file', 'line', and 'method'
+	 */
+	public function getAuthenticationCallerFile () {
+		if (empty($this->_authentication_caller))
+			throw new CAS_OutOfSequenceException('markAuthenticationCall() hasn\'t happened.');
+		
+		return $this->_authentication_caller['file'];
+	}
+	
+	/**
+	 * Answer information about the authentication caller.
+	 *
+	 * Throws a CAS_OutOfSequenceException if wasAuthenticationCalled() is false
+	 * and markAuthenticationCall() didn't happen.
+	 * 
+	 * @return array Keys are 'file', 'line', and 'method'
+	 */
+	public function getAuthenticationCallerLine () {
+		if (empty($this->_authentication_caller))
+			throw new CAS_OutOfSequenceException('markAuthenticationCall() hasn\'t happened.');
+		
+		return $this->_authentication_caller['line'];
+	}
+	
+	/**
+	 * Answer information about the authentication caller.
+	 *
+	 * Throws a CAS_OutOfSequenceException if wasAuthenticationCalled() is false
+	 * and markAuthenticationCall() didn't happen.
+	 * 
+	 * @return array Keys are 'file', 'line', and 'method'
+	 */
+	public function getAuthenticationCallerMethod () {
+		if (empty($this->_authentication_caller))
+			throw new CAS_OutOfSequenceException('markAuthenticationCall() hasn\'t happened.');
+		
+		return $this->_authentication_caller['method'];
+	}
+	
 	/** @} */
 
 	// ########################################################################
@@ -1114,14 +1207,7 @@ class CAS_Client
 				if ($res) {
 					// Mark the auth-check as complete to allow post-authentication
 					// callbacks to make use of phpCAS::getUser() and similar methods
-					$dbg = debug_backtrace();
-					phpCAS::$PHPCAS_AUTH_CHECK_CALL = array (
-					'done' => TRUE,
-					'file' => $dbg[0]['file'],
-					'line' => $dbg[0]['line'],
-					'method' => __CLASS__ . '::' . __FUNCTION__,
-					'result' => $res
-					);
+					$this->markAuthenticationCall($res);
 
 					// call the post-authenticate callback if registered.
 					if ($this->_postAuthenticateCallbackFunction) {
