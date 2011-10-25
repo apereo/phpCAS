@@ -451,7 +451,7 @@ class phpCAS {
 			phpCAS :: error('type mismatched for parameter $dbg (should be FALSE or the name of the log file)');
 		}
 		if ($filename === FALSE){
-			unset($PHPCAS_DEBUG['filename']);
+			$PHPCAS_DEBUG['filename'] = FALSE;
 		}else{
 			if (empty ($filename)) {
 				if (preg_match('/^Win.*/', getenv('OS'))) {
@@ -491,7 +491,7 @@ class phpCAS {
 		$indent_str = ".";
 		global $PHPCAS_DEBUG;
 
-		if (isset($PHPCAS_DEBUG['filename']) && ($PHPCAS_DEBUG['filename'])) {
+		if (!empty($PHPCAS_DEBUG['filename'])) {
 			for ($i = 0; $i < $PHPCAS_DEBUG['indent']; $i++) {
 				$indent_str .= '|    ';
 			}
