@@ -269,14 +269,14 @@ include_once (dirname(__FILE__) . '/CAS/Client.php');
 class phpCAS {
 	
 	/**
-	 * This global variable is used by the interface class phpCAS.
+	 * This variable is used by the interface class phpCAS.
 	 *
 	 * @hideinitializer
 	 */
 	private static $PHPCAS_CLIENT;
 	
 	/**
-	 * This global variable is used to store where the initializer is called from
+	 * This variable is used to store where the initializer is called from
 	 * (to print a comprehensive error in case of multiple calls).
 	 *
 	 * @hideinitializer
@@ -284,7 +284,7 @@ class phpCAS {
 	private static $PHPCAS_INIT_CALL;
 	
 	/**
-	 * This global variable is used to store phpCAS debug mode.
+	 * This variable is used to store phpCAS debug mode.
 	 *
 	 * @hideinitializer
 	 */
@@ -341,7 +341,7 @@ class phpCAS {
 			'method' => __CLASS__ . '::' . __FUNCTION__
 		);
 
-		// initialize the global object $PHPCAS_CLIENT
+		// initialize the object $PHPCAS_CLIENT
 		self::$PHPCAS_CLIENT = new CAS_Client($server_version, FALSE /*proxy*/
 		, $server_hostname, $server_port, $server_uri, $start_session);
 		phpCAS :: traceEnd();
@@ -388,7 +388,7 @@ class phpCAS {
 			'method' => __CLASS__ . '::' . __FUNCTION__
 		);
 
-		// initialize the global object $PHPCAS_CLIENT
+		// initialize the object $PHPCAS_CLIENT
 		self::$PHPCAS_CLIENT = new CAS_Client($server_version, TRUE /*proxy*/
 		, $server_hostname, $server_port, $server_uri, $start_session);
 		phpCAS :: traceEnd();
@@ -1060,7 +1060,7 @@ class phpCAS {
 			phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
 		}
 
-		// call the isAuthenticated method of the global $PHPCAS_CLIENT object
+		// call the isAuthenticated method of the $PHPCAS_CLIENT object
 		$auth = self::$PHPCAS_CLIENT->isAuthenticated();
 
 		// store where the authentication has been checked and the result
