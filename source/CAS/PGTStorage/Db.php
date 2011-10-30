@@ -274,6 +274,11 @@ class CAS_PGTStorage_Db extends CAS_PGTStorage_AbstractStorage
 	{
 		phpCAS::traceBegin();
 
+		// initialize this PGTStorage object if it hasn't been initialized yet
+		if ( !$this->isInitialized() ) {
+			$this->init();
+		}
+
 		// initialize the PDO object for this method
 		$pdo = $this->getPdo();
 		$this->setErrorMode();
