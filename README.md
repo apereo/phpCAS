@@ -11,7 +11,7 @@ https://wiki.jasig.org/display/CASC/phpCAS
 LICENSE
 -------
 
-Copyright © 2003-2010, The ESUP-Portail consortium & the JA-SIG Collaborative.
+Copyright © 2003-2011, The ESUP-Portail consortium & the JA-SIG Collaborative.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
