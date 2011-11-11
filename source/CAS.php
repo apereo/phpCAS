@@ -207,13 +207,13 @@ define("PHPCAS_PROXIED_SERVICE_IMAP", 'CAS_ProxiedService_Imap');
  * @{
  */
 
-define("PHPCAS_LANG_ENGLISH", 'english');
-define("PHPCAS_LANG_FRENCH", 'french');
-define("PHPCAS_LANG_GREEK", 'greek');
-define("PHPCAS_LANG_GERMAN", 'german');
-define("PHPCAS_LANG_JAPANESE", 'japanese');
-define("PHPCAS_LANG_SPANISH", 'spanish');
-define("PHPCAS_LANG_CATALAN", 'catalan');
+define("PHPCAS_LANG_ENGLISH", 'CAS_Languages_English');
+define("PHPCAS_LANG_FRENCH", 'CAS_Languages_French');
+define("PHPCAS_LANG_GREEK", 'CAS_Languages_Greek');
+define("PHPCAS_LANG_GERMAN", 'CAS_Languages_German');
+define("PHPCAS_LANG_JAPANESE", 'CAS_Languages_Japanese');
+define("PHPCAS_LANG_SPANISH", 'CAS_Languages_Spanish');
+define("PHPCAS_LANG_CATALAN", 'CAS_Languages_Catalan');
 
 /** @} */
 
@@ -247,8 +247,8 @@ define('DEFAULT_DEBUG_DIR', '/tmp/');
 //  CLIENT CLASS
 // ########################################################################
 
-// include client class
-include_once (dirname(__FILE__) . '/CAS/Client.php');
+// include the class autoloader
+include_once (dirname(__FILE__) . '/CAS/Autoload.php');
 
 // ########################################################################
 //  INTERFACE CLASS

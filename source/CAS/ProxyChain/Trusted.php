@@ -29,9 +29,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-include_once(dirname(__FILE__).'/../ProxyChain.php');
-include_once(dirname(__FILE__).'/Interface.php');
-
 /**
  * A proxy-chain definition that defines a chain up to a trusted proxy and delegates
  * the resposibility of validating the rest of the chain to that trusted proxy.

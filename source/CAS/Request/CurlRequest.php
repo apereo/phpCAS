@@ -28,15 +28,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once dirname(__FILE__).'/RequestInterface.php';
-require_once dirname(__FILE__).'/AbstractRequest.php';
-
 /**
  * Provides support for performing web-requests via curl
  */
-class CAS_CurlRequest
-	extends CAS_AbstractRequest
-	implements CAS_RequestInterface
+class CAS_Request_CurlRequest
+	extends CAS_Request_AbstractRequest
+	implements CAS_Request_RequestInterface
 {
 
 	/**

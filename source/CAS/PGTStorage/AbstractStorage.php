@@ -27,10 +27,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/**
- * @file CAS/PGTStorage/AbstractStorage.php
- * Basic class for PGT storage
- */
 
 /**
  * @class CAS_PGTStorage_AbstractStorage
@@ -38,7 +34,6 @@
  * not be instanciated itself but inherited by specific PGT storage classes.
  *
  * @author   Pascal Aubry <pascal.aubry at univ-rennes1.fr>
- *
  * @ingroup internalPGTStorage
  */
 
@@ -207,9 +202,5 @@ abstract class CAS_PGTStorage_AbstractStorage
 	/** @} */
 
 }
-
-// include specific PGT storage classes
-include_once(dirname(__FILE__).'/Db.php');
-include_once(dirname(__FILE__).'/File.php');
 
 ?>

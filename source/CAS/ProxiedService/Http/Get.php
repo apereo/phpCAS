@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright © 2003-2010, The ESUP-Portail consortium & the JA-SIG Collaborative.
+ * Copyright ï¿½ 2003-2010, The ESUP-Portail consortium & the JA-SIG Collaborative.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,8 +27,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-require_once(dirname(__FILE__).'/Abstract.php');
 
 /**
  * This class is used to make proxied service requests via the HTTP GET method.
@@ -68,10 +66,10 @@ class CAS_ProxiedService_Http_Get
 	/**
 	 * Add any other parts of the request needed by concrete classes
 	 * 
-	 * @param CAS_RequestInterface $request
+	 * @param CAS_Request_RequestInterface $request
 	 * @return void
 	 */
-	protected function populateRequest (CAS_RequestInterface $request) {
+	protected function populateRequest (CAS_Request_RequestInterface $request) {
 		// do nothing, since the URL has already been sent and that is our
 		// only data.
 	}

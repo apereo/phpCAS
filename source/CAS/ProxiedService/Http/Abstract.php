@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright © 2003-2010, The ESUP-Portail consortium & the JA-SIG Collaborative.
+ * Copyright ï¿½ 2003-2010, The ESUP-Portail consortium & the JA-SIG Collaborative.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,13 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once(dirname(__FILE__).'/../Abstract.php');
-require_once(dirname(__FILE__).'/../Http.php');
-include_once(dirname(__FILE__).'/../Exception.php');
-include_once(dirname(__FILE__).'/../../InvalidArgumentException.php');
-include_once(dirname(__FILE__).'/../../OutOfSequenceException.php');
-
-
 /**
  * This class implements common methods for ProxiedService implementations included
  * with phpCAS.
@@ -46,7 +39,7 @@ abstract class CAS_ProxiedService_Http_Abstract
 	/**
 	 * The HTTP request mechanism talking to the target service.
 	 *
-	 * @var CAS_RequestInterface $_requestHandler
+	 * @var CAS_Request_RequestInterface $_requestHandler
 	 */
 	protected $_requestHandler;
 	
@@ -60,11 +53,11 @@ abstract class CAS_ProxiedService_Http_Abstract
 	/**
 	 * Constructor.
 	 * 
-	 * @param CAS_RequestInterface $requestHandler
+	 * @param CAS_Request_RequestInterface $requestHandler
 	 * @param CAS_CookieJar $cookieJar
 	 * @return void
 	 */
-	public function __construct (CAS_RequestInterface $requestHandler, CAS_CookieJar $cookieJar) {
+	public function __construct (CAS_Request_RequestInterface $requestHandler, CAS_CookieJar $cookieJar) {
 		$this->_requestHandler = $requestHandler;
 		$this->_cookieJar = $cookieJar;
 	}
@@ -232,10 +225,10 @@ abstract class CAS_ProxiedService_Http_Abstract
 	/**
 	 * Add any other parts of the request needed by concrete classes
 	 * 
-	 * @param CAS_RequestInterface $request
+	 * @param CAS_Request_RequestInterface $request
 	 * @return void
 	 */
-	abstract protected function populateRequest (CAS_RequestInterface $request);
+	abstract protected function populateRequest (CAS_Request_RequestInterface $request);
 	
 	/**
 	 * Answer a redirect URL if a redirect header is found, otherwise null.

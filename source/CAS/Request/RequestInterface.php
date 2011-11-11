@@ -31,7 +31,7 @@
 /**
  * This interface defines a class library for performing web requests.
  */
-interface CAS_RequestInterface {
+interface CAS_Request_RequestInterface {
 
 	/*********************************************************
 	 * Configure the Request

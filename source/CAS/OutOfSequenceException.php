@@ -28,8 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once(dirname(__FILE__).'/Exception.php');
-
 /**
  * This class defines Exceptions that should be thrown when the sequence of operations
  * is invalid. Examples are:

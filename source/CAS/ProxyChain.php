@@ -29,8 +29,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-include_once(dirname(__FILE__).'/ProxyChain/Interface.php');
-
 /**
  * A normal proxy-chain definition that lists each level of the chain as either
  * a string or regular expression.

@@ -1,6 +1,8 @@
 <?php
 
 require_once dirname(__FILE__).'/../source/CAS.php';
+require_once dirname(__FILE__).'/../source/CAS/Autoload.php';
+
 
 class PhpcasTestSuite extends PHPUnit_Framework_TestSuite
 {
