@@ -28,16 +28,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once dirname(__FILE__).'/RequestInterface.php';
-include_once(dirname(__FILE__).'/Exception.php');
-include_once(dirname(__FILE__).'/../InvalidArgumentException.php');
-include_once(dirname(__FILE__).'/../OutOfSequenceException.php');
-
 /**
  * Provides support for performing web-requests via curl
  */
-abstract class CAS_AbstractRequest
-	implements CAS_RequestInterface
+abstract class CAS_Request_AbstractRequest
+	implements CAS_Request_RequestInterface
 {
 
 	protected $url = null;

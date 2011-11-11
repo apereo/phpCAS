@@ -42,12 +42,12 @@ interface CAS_Request_MultiRequestInterface {
 	 * Add a new Request to this batch.
 	 * Note, implementations will likely restrict requests to their own concrete class hierarchy.
 	 * 
-	 * @param CAS_RequestInterface $request
+	 * @param CAS_Request_RequestInterface $request
 	 * @return void
 	 * @throws CAS_OutOfSequenceException If called after the Request has been sent.
 	 * @throws CAS_InvalidArgumentException If passed a Request of the wrong implmentation.
 	 */
-	public function addRequest (CAS_RequestInterface $request);
+	public function addRequest (CAS_Request_RequestInterface $request);
 
 	/**
 	 * Retrieve the number of requests added to this batch.

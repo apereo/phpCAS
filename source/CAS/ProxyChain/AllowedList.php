@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright © 2003-2011, The ESUP-Portail consortium & the JA-SIG Collaborative.
+ * Copyright ï¿½ 2003-2011, The ESUP-Portail consortium & the JA-SIG Collaborative.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,10 +29,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-include_once(dirname(__FILE__).'/Interface.php');
-include_once(dirname(__FILE__).'/../ProxyChain.php');
-include_once(dirname(__FILE__).'/Any.php');
-include_once(dirname(__FILE__).'/Trusted.php');
 
 /**
  * ProxyChain is a container for storing chains of valid proxies that can

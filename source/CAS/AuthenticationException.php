@@ -21,8 +21,9 @@ class CAS_AuthenticationException
 	public function __construct($client,$failure,$cas_url,$no_response,$bad_response='',$cas_response='',$err_code='',$err_msg='')
 	{
 		phpCAS::traceBegin();
-		$client->printHTMLHeader($client->getString(CAS_STR_AUTHENTICATION_FAILED));
-		printf($client->getString(CAS_STR_YOU_WERE_NOT_AUTHENTICATED),htmlentities($client->getURL()),$_SERVER['SERVER_ADMIN']);
+		$lang = $client->getLangObj();
+		$client->printHTMLHeader($lang->getAuthenticationFailed());
+		printf($lang->getYouWereNotAuthenticated(),htmlentities($client->getURL()),$_SERVER['SERVER_ADMIN']);
 		phpCAS::trace('CAS URL: '.$cas_url);
 		phpCAS::trace('Authentication failure: '.$failure);
 		if ( $no_response ) {

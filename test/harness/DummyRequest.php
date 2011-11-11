@@ -35,8 +35,8 @@ require_once dirname(__FILE__).'/../../source/CAS/Request/AbstractRequest.php';
  * Provides support for performing dummy web-requests
  */
 class CAS_TestHarness_DummyRequest
-	extends CAS_AbstractRequest
-	implements CAS_RequestInterface
+	extends CAS_Request_AbstractRequest
+	implements CAS_Request_RequestInterface
 {
 	private static $responses = array();
 

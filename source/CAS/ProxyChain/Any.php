@@ -29,8 +29,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-include_once(dirname(__FILE__).'/Interface.php');
-
 /**
  * A proxy-chain definition that will match any list of proxies.
  *
