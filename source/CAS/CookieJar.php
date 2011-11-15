@@ -299,6 +299,12 @@ class CAS_CookieJar {
 				// verify that the cookie domain is the last part of the host.
 				if ($pos + strlen($cookie['domain']) != strlen($target['host']))
 					return false;
+				// verify that the host name does not contain interior dots as per
+				// RFC 2965 section 3.3.2  Rejecting Cookies 
+				// http://www.ietf.org/rfc/rfc2965.txt
+				$hostname = substr($target['host'], 0, $pos);
+				if (strpos($hostname, '.') !== FALSE)
+					return false;
 			}
 		}
 		// If the cookie host doesn't begin with '.', the host must case-insensitive

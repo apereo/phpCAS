@@ -197,6 +197,79 @@ class CookieJarTest extends PHPUnit_Framework_TestCase
         $cookies = $this->object->getCookies('http://service.example.org/make_changes.php');
         $this->assertEquals(0, count($cookies));
     }
+    
+    /**
+     * Verify that our set with the domain name will work
+     */
+    public function test_public_getCookies_domain()
+    {
+        $headers = array('Set-Cookie: SID="thisisthesid"; domain=".example.org"; path=/');
+        $url = 'http://host.example.org/path/to/somthing';
+        $this->object->storeCookies($url, $headers);
+		
+        // Ensure the SID cookie is available to the domain
+        $cookies = $this->object->getCookies('http://example.org/path/');
+        $this->assertArrayHasKey('SID', $cookies, "example.org should match .example.org cookies");
+		
+        // Ensure the SID cookie is available to the host
+        $cookies = $this->object->getCookies('http://host.example.org/path/');
+        $this->assertArrayHasKey('SID', $cookies, "host.example.org should match .example.org cookies");
+        $this->assertEquals('thisisthesid', $cookies['SID'], "host.example.org should match .example.org cookies");
+        
+        // Ensure the SID cookie is NOT available to a subdomain of the host
+        // See RFC 2965 section 3.3.2  Rejecting Cookies for more details:
+        // http://www.ietf.org/rfc/rfc2965.txt
+        $cookies = $this->object->getCookies('http://sub.host.example.org/path/');
+        $this->assertArrayNotHasKey('SID', $cookies, "sub.host.example.org shouldn't match .example.org cookies");
+    }
+    
+    /**
+     * Verify that our set with the host name explicitly will work
+     */
+    public function test_public_getCookies_domain_host()
+    {
+        $headers = array('Set-Cookie: SID="thisisthesid"; domain="host.example.org"; path=/');
+        $url = 'http://host.example.org/path/to/somthing';
+        $this->object->storeCookies($url, $headers);
+		
+        // Ensure the SID cookie is NOT available to the domain
+        $cookies = $this->object->getCookies('http://example.org/path/');
+        $this->assertArrayNotHasKey('SID', $cookies, "example.org shouldn't match host.example.org cookies");
+		
+        // Ensure the SID cookie is available to the host
+        $cookies = $this->object->getCookies('http://host.example.org/path/');
+        $this->assertArrayHasKey('SID', $cookies, "host.example.org should match host.example.org cookies");
+        $this->assertEquals('thisisthesid', $cookies['SID'], "host.example.org should match host.example.org cookies");
+        
+        // Ensure the SID cookie is NOT available to a subdomain of the host
+        // See RFC 2965 section 3.3.2  Rejecting Cookies for more details:
+        // http://www.ietf.org/rfc/rfc2965.txt
+        $cookies = $this->object->getCookies('http://sub.host.example.org/path/');
+        $this->assertArrayNotHasKey('SID', $cookies, "sub.host.example.org shouldn't match host.example.org cookies");
+    }
+    
+    /**
+     * Verify that our set with the host name explicitly will work
+     */
+    public function test_public_getCookies_domain_host_dotted()
+    {
+        $headers = array('Set-Cookie: SID="thisisthesid"; domain=".host.example.org"; path=/');
+        $url = 'http://host.example.org/path/to/somthing';
+        $this->object->storeCookies($url, $headers);
+		
+		// Ensure the SID cookie is NOT available to the domain
+        $cookies = $this->object->getCookies('http://example.org/path/');
+        $this->assertArrayNotHasKey('SID', $cookies, "example.org shouldn't match .host.example.org cookies");
+        
+        // Ensure the SID cookie is available to the host
+        $cookies = $this->object->getCookies('http://host.example.org/path/');
+        $this->assertArrayHasKey('SID', $cookies, "host.example.org should match .host.example.org cookies");
+        $this->assertEquals('thisisthesid', $cookies['SID'], "host.example.org should match host.example.org cookies");
+        
+        // Ensure the SID cookie IS available to a subdomain of the host
+        $cookies = $this->object->getCookies('http://sub.host.example.org/path/');
+        $this->assertArrayHasKey('SID', $cookies, "sub.host.example.org should match .host.example.org cookies");
+    }
 
     /**
      * Verify that cookies are getting stored in our storage array.
