@@ -286,13 +286,20 @@ class CAS_CookieJar {
 		// Verify that the host matches
 		// Match domain and mulit-host cookies
 		if (strpos($cookie['domain'], '.') === 0) {
-			// check that the target host a.b.c.edu is within .b.c.edu
-			$pos = strripos($target['host'], $cookie['domain']);
-			if (!$pos)
-			return false;
-			// verify that the cookie domain is the last part of the host.
-			if ($pos + strlen($cookie['domain']) != strlen($target['host']))
-			return false;
+			// .host.domain.edu cookies are valid for host.domain.edu
+			if (substr($cookie['domain'], 1) == $target['host']) {
+				// continue with other checks
+			} 
+			// non-exact host-name matches.
+			else {				
+				// check that the target host a.b.c.edu is within .b.c.edu
+				$pos = strripos($target['host'], $cookie['domain']);
+				if (!$pos)
+					return false;
+				// verify that the cookie domain is the last part of the host.
+				if ($pos + strlen($cookie['domain']) != strlen($target['host']))
+					return false;
+			}
 		}
 		// If the cookie host doesn't begin with '.', the host must case-insensitive
 		// match exactly
