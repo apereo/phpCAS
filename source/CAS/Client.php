@@ -2439,6 +2439,15 @@ class CAS_Client
 	 */
 	private function setProxies ($proxies) {
 		$this->_proxies = $proxies;
+		if (!empty($proxies)) {
+			// For proxy-authenticated requests people are not viewing the URL directly
+			// since the client is another application making a web-service call.
+			// Because of this, stripping the ticket from the URL is unnecessary
+			// and causes another web-service request to be performed. Additionally,
+			// if session handling on either the client or the server malfunctions
+			// then the subsequent request will not complete successfully.
+			$this->setNoClearTicketsFromUrl();
+		}
 	}
 	
 	/**
