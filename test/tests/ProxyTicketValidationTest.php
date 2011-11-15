@@ -158,6 +158,24 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
     	, $text_response);
     	$this->assertInstanceOf('DOMElement', $tree_response);
     }
+    
+    /**
+     * Test that our list of proxies is available
+     */
+    public function test_validation_success_proxy_list() {
+    	$this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
+    	$this->object->getAllowedProxyChains()->allowProxyChain(new CAS_ProxyChain_Any());
+    	$result = $this->object->validateCAS20($url, $text_response, $tree_response);
+    	$this->assertTrue($result);
+    	$this->assertEquals(
+    		array(
+	    		'http://firstproxy.com/mysite/test',
+	    		'https://anotherdomain.org/mysite/test2'
+	    	),
+	    	$this->object->getProxies(),
+	    	"The list of proxies in front of the client."
+	    );
+    }
 
 	/**
      * Test that a service ticket can be successfully fails.
@@ -179,6 +197,24 @@ class ProxyTicketValidationTest extends PHPUnit_Framework_TestCase
 
 ", $text_response);
 		$this->assertInstanceOf('DOMElement', $tree_response);
+    }
+    
+    /**
+     * Test that our list of proxies is not availible on ticket failure.
+     */
+    public function test_invalid_ticket_proxy_list() {
+		$this->object->setTicket('ST-1856339-aA5Yuvrxzpv8Tau1cYQ7');
+		ob_start();
+		try {
+			$result = $this->object->validateCAS20($url, $text_response, $tree_response);
+		} catch (CAS_AuthenticationException $e) {
+		}
+		ob_end_clean();
+		$this->assertEquals(
+    		array(),
+	    	$this->object->getProxies(),
+	    	"The list of proxies in front of the client."
+	    );
     }
     
     

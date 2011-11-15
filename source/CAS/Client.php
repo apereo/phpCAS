@@ -2555,9 +2555,11 @@ class CAS_Client
 				$proxyList = array();
 				if ( sizeof($arr = $success_elements->item(0)->getElementsByTagName("proxy")) > 0) {
 					foreach ($arr as $proxyElem) {
-						phpCAS::trace("Storing Proxy: ".$proxyElem->nodeValue);
+						phpCAS::trace("Found Proxy: ".$proxyElem->nodeValue);
 						$proxyList[] = trim($proxyElem->nodeValue);
 					}
+					$this->setProxies($proxyList);
+					phpCAS::trace("Storing Proxy List");
 				}
 				// Check if the proxies in front of us are allowed
 				if(!$this->getAllowedProxyChains()->isProxyListAllowed($proxyList)){
