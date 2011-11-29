@@ -28,8 +28,12 @@
         <expandproperties/>
       </filterchain>
     </copy>
-  	<mkdir dir="tmp/CAS-${phpcas.version}/docs"/>
+    <!-- copy README tmp directory -->
+    <copy todir="tmp/CAS-${phpcas.version}" file="../README.md" />
+    <copy todir="tmp/CAS-${phpcas.version}" file="../LICENSE" />
+    <copy todir="tmp/CAS-${phpcas.version}" file="../NOTICE" />
     <!-- copy docs files to tmp directory -->
+    <mkdir dir="tmp/CAS-${phpcas.version}/docs"/>
     <copy todir="tmp/CAS-${phpcas.version}/docs">
       <fileset dir="../docs" excludes="images/*" />
       <filterchain>
