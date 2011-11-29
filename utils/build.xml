@@ -20,24 +20,24 @@
   <target name="dist" description="Create pear installable and docs packages">
     <mkdir dir="dist"/>
     <delete dir="tmp" />
-    <mkdir dir="tmp/cas-${phpcas.version}"/>
+    <mkdir dir="tmp/CAS-${phpcas.version}"/>
     <!-- copy source files to tmp directory -->
-    <copy todir="tmp/cas-${phpcas.version}">
+    <copy todir="tmp/CAS-${phpcas.version}">
       <fileset dir="../source" includes="**/*.php" />
       <filterchain>
         <expandproperties/>
       </filterchain>
     </copy>
-  	<mkdir dir="tmp/cas-${phpcas.version}/docs"/>
+  	<mkdir dir="tmp/CAS-${phpcas.version}/docs"/>
     <!-- copy docs files to tmp directory -->
-    <copy todir="tmp/cas-${phpcas.version}/docs">
+    <copy todir="tmp/CAS-${phpcas.version}/docs">
       <fileset dir="../docs" excludes="images/*" />
       <filterchain>
         <expandproperties/>
       </filterchain>
     </copy>
   	<!-- copy images to tmp directory -->
-    <copy todir="tmp/cas-${phpcas.version}/docs">
+    <copy todir="tmp/CAS-${phpcas.version}/docs">
       <fileset dir="../docs" includes="images/*" />
     </copy>
     <!-- check for the doxygen program, and fail is not found -->
@@ -59,43 +59,18 @@
     <!-- call Doxygen -->
     <echo message="writing API documentation..."/>
     <doxygen doxygenPath="${doxygen.path}" configFilename="${basedir}/tmp/Doxyfile"/>
-    <!-- write makepackage.php file from template -->
-    <echo message="write makepackage.php file..."/>
-    <copy file="makepackage.php" 
-          tofile="tmp/makepackage.php">
-      <filterchain>
-        <expandproperties/>
-      </filterchain>
-    </copy>
-    <!-- generate package.xml -->
-    <echo message="checking for php..."/>
-    <fail message="please set ${php.path} in build.properties" unless="php.path"/>
-    <available file="${php.path}" type="file" property="php.present"/>
-    <fail message="php program not found (${php.path})" unless="php.present"/>
-    <echo message="building the PEAR package.xml file..."/>
-    <exec dir="${basedir}" executable="${php.path}" >
-      <arg line="-f tmp/makepackage.php"/>
-    </exec>
     
-    <copy file="tmp/package.xml" 
-          tofile="tmp/cas-${phpcas.version}/package.xml">
-    </copy>
-    
-    <!-- generate PEAR package .tgz -->
-    <echo message="building the PEAR package..."/>
-        <exec dir="${basedir}/tmp/cas-${phpcas.version}" executable="${pear.path}" >
-          <arg line="package package.xml"/>
-    </exec>
-    
-    <copy file="tmp/cas-${phpcas.version}/CAS-${phpcas.version}.tgz" 
-          tofile="dist/CAS-${phpcas.version}.tgz">
-    </copy>
+    <tar 
+  		destfile="dist/CAS-${phpcas.version}.tgz"
+  		compression="gzip" 
+  		basedir="tmp/"
+  		includes="CAS-${phpcas.version}/**" />
   	
   	<tar 
   		destfile="dist/docs-${phpcas.version}.tgz"
   		compression="gzip" 
-  		basedir="tmp/cas-${phpcas.version}"
-  		includes="../docs/**/*" />
+  		basedir="tmp/CAS-${phpcas.version}"
+  		includes="docs/**/*" />
 
     <!--delete dir="tmp" /-->
   </target>
