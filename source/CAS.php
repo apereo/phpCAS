@@ -50,7 +50,7 @@ if (!defined('E_USER_DEPRECATED')){
 /**
  * phpCAS version. accessible for the user by phpCAS::getVersion().
  */
-define('PHPCAS_VERSION', '${phpcas.version}');
+define('PHPCAS_VERSION', '1.2.2+');
 
 // ------------------------------------------------------------------------
 //  CAS VERSIONS
