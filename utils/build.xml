@@ -7,7 +7,7 @@
 
   <taskdef name="doxygen" 
            classname="org.doxygen.tools.DoxygenTask"
-           classpath="utils/ant_doxygen.jar"/>
+           classpath="ant_doxygen.jar"/>
 
   <!-- compute current date -->
   <tstamp>
@@ -23,7 +23,7 @@
     <mkdir dir="tmp/cas-${phpcas.version}"/>
     <!-- copy source files to tmp directory -->
     <copy todir="tmp/cas-${phpcas.version}">
-      <fileset dir="source" includes="**/*.php" />
+      <fileset dir="../source" includes="**/*.php" />
       <filterchain>
         <expandproperties/>
       </filterchain>
@@ -31,14 +31,14 @@
   	<mkdir dir="tmp/cas-${phpcas.version}/docs"/>
     <!-- copy docs files to tmp directory -->
     <copy todir="tmp/cas-${phpcas.version}/docs">
-      <fileset dir="docs" excludes="images/*" />
+      <fileset dir="../docs" excludes="images/*" />
       <filterchain>
         <expandproperties/>
       </filterchain>
     </copy>
   	<!-- copy images to tmp directory -->
     <copy todir="tmp/cas-${phpcas.version}/docs">
-      <fileset dir="docs" includes="images/*" />
+      <fileset dir="../docs" includes="images/*" />
     </copy>
     <!-- check for the doxygen program, and fail is not found -->
     <echo message="checking for doxygen..."/>
@@ -47,7 +47,7 @@
     <fail message="doxygen program not found (${doxygen.path})" unless="doxygen.present"/>
     <!-- write Doxygen configuration file from template -->
     <echo message="write Doxygen configuration file..."/>
-    <copy file="utils/Doxyfile" 
+    <copy file="Doxyfile" 
           tofile="tmp/Doxyfile">
       <filterchain>
         <expandproperties/>
@@ -61,7 +61,7 @@
     <doxygen doxygenPath="${doxygen.path}" configFilename="${basedir}/tmp/Doxyfile"/>
     <!-- write makepackage.php file from template -->
     <echo message="write makepackage.php file..."/>
-    <copy file="utils/makepackage.php" 
+    <copy file="makepackage.php" 
           tofile="tmp/makepackage.php">
       <filterchain>
         <expandproperties/>
@@ -95,7 +95,7 @@
   		destfile="dist/docs-${phpcas.version}.tgz"
   		compression="gzip" 
   		basedir="tmp/cas-${phpcas.version}"
-  		includes="docs/**/*" />
+  		includes="../docs/**/*" />
 
     <!--delete dir="tmp" /-->
   </target>
