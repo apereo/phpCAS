@@ -406,7 +406,7 @@ class phpCAS
      *
      * @param string $filename the name of the file used for logging, or false
      * to stop debugging.
-     * 
+     *
      * @return void
      */
     public static function setDebug($filename = '')
@@ -473,7 +473,7 @@ class phpCAS
      * function was originally called from.
      *
      * @param string $msg the message to print
-     * 
+     *
      * @return void
      * @private
      */
@@ -503,9 +503,9 @@ class phpCAS
 
     /**
      * This method is used to log something in debug mode.
-     * 
+     *
      * @param string $str string to log
-     * 
+     *
      * @return void
      */
     public static function trace($str)
@@ -516,7 +516,7 @@ class phpCAS
 
     /**
      * This method is used to indicate the start of the execution of a function in debug mode.
-     * 
+     *
      * @return void
      */
     public static function traceBegin()
@@ -549,7 +549,7 @@ class phpCAS
         $line = 'unknown_line';
         $str .= ') [' . $file . ':' . $line . ']';
         phpCAS :: log($str);
-        if (empty(self::$_PHPCAS_DEBUG['indent']))
+        if (!isset(self::$_PHPCAS_DEBUG['indent']))
         self::$_PHPCAS_DEBUG['indent'] = 0;
         else
         self::$_PHPCAS_DEBUG['indent']++;
@@ -559,7 +559,7 @@ class phpCAS
      * This method is used to indicate the end of the execution of a function in debug mode.
      *
      * @param string $res the result of the function
-     * 
+     *
      * @return void
      */
     public static function traceEnd($res = '')
@@ -582,7 +582,7 @@ class phpCAS
 
     /**
      * This method is used to indicate the end of the execution of the program
-     * 
+     *
      * @return void
      */
     public static function traceExit()
@@ -656,7 +656,7 @@ class phpCAS
      * This method sets the HTML header used for all outputs.
      *
      * @param string $header the HTML header.
-     * 
+     *
      * @return void
      */
     public static function setHTMLHeader($header)
@@ -674,7 +674,7 @@ class phpCAS
      * This method sets the HTML footer used for all outputs.
      *
      * @param string $footer the HTML footer.
-     * 
+     *
      * @return void
      */
     public static function setHTMLFooter($footer)
@@ -700,9 +700,9 @@ class phpCAS
     /**
      * This method can be used to set a custom PGT storage object.
      *
-     * @param CAS_PGTStorage $storage a PGT storage object that inherits from the 
+     * @param CAS_PGTStorage $storage a PGT storage object that inherits from the
      * CAS_PGTStorage class
-     * 
+     *
      * @return void
      */
     public static function setPGTStorage($storage)
@@ -728,7 +728,7 @@ class phpCAS
      * This method is used to tell phpCAS to store the response of the
      * CAS server to PGT requests in a database.
      *
-     * @param string $dsn_or_pdo     a dsn string to use for creating a PDO 
+     * @param string $dsn_or_pdo     a dsn string to use for creating a PDO
      * object or a PDO object
      * @param string $username       the username to use when connecting to the
      * database
@@ -738,7 +738,7 @@ class phpCAS
      * PGT's
      * @param string $driver_options any driver options to use when connecting
      * to the database
-     * 
+     *
      * @return void
      */
     public static function setPGTStorageDb($dsn_or_pdo, $username='',
@@ -770,11 +770,11 @@ class phpCAS
     /**
      * This method is used to tell phpCAS to store the response of the
      * CAS server to PGT requests onto the filesystem.
-     * 
+     *
      * @param string $format the format used to store the PGT's. This parameter
      * has no effect and is only for backwards compatibility
      * @param string $path   the path where the PGT's should be stored
-     * 
+     *
      * @return void
      */
     public static function setPGTStorageFile($format = '', $path = '')
@@ -811,8 +811,8 @@ class phpCAS
     /**
      * Answer a proxy-authenticated service handler.
      *
-     * @param string $type The service type. One of 
-     * PHPCAS_PROXIED_SERVICE_HTTP_GET; PHPCAS_PROXIED_SERVICE_HTTP_POST; 
+     * @param string $type The service type. One of
+     * PHPCAS_PROXIED_SERVICE_HTTP_GET; PHPCAS_PROXIED_SERVICE_HTTP_POST;
      * PHPCAS_PROXIED_SERVICE_IMAP
      *
      * @return CAS_ProxiedService
@@ -847,7 +847,7 @@ class phpCAS
      * Initialize a proxied-service handler with the proxy-ticket it should use.
      *
      * @param CAS_ProxiedService $proxiedService Proxied Service Handler
-     * 
+     *
      * @return void
      * @throws CAS_ProxyTicketException If there is a proxy-ticket failure.
      *		The code of the Exception will be one of:
@@ -877,15 +877,15 @@ class phpCAS
      * This method is used to access an HTTP[S] service.
      *
      * @param string $url       the service to access.
-     * @param string &$err_code an error code Possible values are 
-     * PHPCAS_SERVICE_OK (on success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, 
-     * PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE, PHPCAS_SERVICE_PT_FAILURE, 
+     * @param string &$err_code an error code Possible values are
+     * PHPCAS_SERVICE_OK (on success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE,
+     * PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE, PHPCAS_SERVICE_PT_FAILURE,
      * PHPCAS_SERVICE_NOT_AVAILABLE.
-     * @param string &$output   the output of the service (also used to give an 
+     * @param string &$output   the output of the service (also used to give an
      * error message on failure).
      *
      * @return boolean true on success, false otherwise (in this later case,
-     * $err_code gives the reason why it failed and $output contains an error 
+     * $err_code gives the reason why it failed and $output contains an error
      * message).
      */
     public static function serviceWeb($url, & $err_code, & $output)
@@ -920,15 +920,15 @@ class phpCAS
      * including the mailing box for IMAP URLs, as accepted by imap_open().
      * @param string $service   a string giving for CAS retrieve Proxy ticket
      * @param string $flags     options given to imap_open().
-     * @param string &$err_code an error code Possible values are 
-     * PHPCAS_SERVICE_OK (on success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, 
-     * PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE, PHPCAS_SERVICE_PT_FAILURE, 
+     * @param string &$err_code an error code Possible values are
+     * PHPCAS_SERVICE_OK (on success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE,
+     * PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE, PHPCAS_SERVICE_PT_FAILURE,
      * PHPCAS_SERVICE_NOT_AVAILABLE.
      * @param string &$err_msg  an error message on failure
      * @param string &$pt       the Proxy Ticket (PT) retrieved from the CAS
      * server to access the URL on success, false on error).
      *
-     * @return object IMAP stream on success, false otherwise (in this later 
+     * @return object IMAP stream on success, false otherwise (in this later
      * case, $err_code gives the reason why it failed and $err_msg contains an
      * error message).
      */
@@ -978,7 +978,7 @@ class phpCAS
      * - n: check every "n" time
      *
      * @param integer $n an integer.
-     * 
+     *
      * @return void
      */
     public static function setCacheTimesForAuthRecheck($n)
@@ -996,8 +996,8 @@ class phpCAS
      * Set a callback function to be run when a user authenticates.
      *
      * The callback function will be passed a $logoutTicket as its first
-     * parameter, followed by any $additionalArgs you pass. The $logoutTicket 
-     * parameter is an opaque string that can be used to map the session-id to 
+     * parameter, followed by any $additionalArgs you pass. The $logoutTicket
+     * parameter is an opaque string that can be used to map the session-id to
      * logout request in order to support single-signout in applications that
      * manage their own sessions (rather than letting phpCAS start the session).
      *
@@ -1008,7 +1008,7 @@ class phpCAS
      *
      * @param string $function       Callback function
      * @param array  $additionalArgs optional array of arguments
-     * 
+     *
      * @return void
      */
     public static function setPostAuthenticateCallback ($function, array $additionalArgs = array())
@@ -1023,15 +1023,15 @@ class phpCAS
     /**
      * Set a callback function to be run when a single-signout request is
      * received. The callback function will be passed a $logoutTicket as its
-     * first parameter, followed by any $additionalArgs you pass. The 
-     * $logoutTicket parameter is an opaque string that can be used to map a 
-     * session-id to the logout request in order to support single-signout in 
+     * first parameter, followed by any $additionalArgs you pass. The
+     * $logoutTicket parameter is an opaque string that can be used to map a
+     * session-id to the logout request in order to support single-signout in
      * applications that manage their own sessions (rather than letting phpCAS
      * start and destroy the session).
      *
      * @param string $function       Callback function
      * @param array  $additionalArgs optional array of arguments
-     * 
+     *
      * @return void
      */
     public static function setSingleSignoutCallback ($function, array $additionalArgs = array())
@@ -1044,13 +1044,13 @@ class phpCAS
     }
 
     /**
-     * This method is called to check if the user is already authenticated 
-     * locally or has a global cas session. A already existing cas session is 
-     * determined by a cas gateway call.(cas login call without any interactive 
+     * This method is called to check if the user is already authenticated
+     * locally or has a global cas session. A already existing cas session is
+     * determined by a cas gateway call.(cas login call without any interactive
      * prompt)
-     * 
-     * @return true when the user is authenticated, false when a previous 
-     * gateway login failed or the function will not return if the user is 
+     *
+     * @return true when the user is authenticated, false when a previous
+     * gateway login failed or the function will not return if the user is
      * redirected to the cas server for a gateway login attempt
      */
     public static function checkAuthentication()
@@ -1073,7 +1073,7 @@ class phpCAS
      * This method is called to force authentication if the user was not already
      * authenticated. If the user is not authenticated, halt by redirecting to
      * the CAS server.
-     * 
+     *
      * @return boolean Authentication
      */
     public static function forceAuthentication()
@@ -1101,7 +1101,7 @@ class phpCAS
 
     /**
      * This method is called to renew the authentication.
-     * 
+     *
      * @return void
      **/
     public static function renewAuthentication()
@@ -1145,7 +1145,7 @@ class phpCAS
     /**
      * Checks whether authenticated based on $_SESSION. Useful to avoid
      * server calls.
-     * 
+     *
      * @return boolean true if authenticated, false otherwise.
      * @since 0.4.22 by Brendan Arnold
      */
@@ -1226,7 +1226,7 @@ class phpCAS
      * Answer true if an attribute exists for the authenticated user.
      *
      * @param string $key attribute name
-     * 
+     *
      * @return boolean
      * @warning should not be called only after phpCAS::forceAuthentication()
      * or phpCAS::checkAuthentication().
@@ -1249,7 +1249,7 @@ class phpCAS
      * Answer an attribute for the authenticated user.
      *
      * @param string $key attribute name
-     * 
+     *
      * @return mixed string for a single value or an array if multiple values exist.
      * @warning should not be called only after phpCAS::forceAuthentication()
      * or phpCAS::checkAuthentication().
@@ -1270,10 +1270,10 @@ class phpCAS
 
     /**
      * Handle logout requests.
-     * 
+     *
      * @param boolean $check_client    additional safety check
      * @param array   $allowed_clients array of allowed clients
-     * 
+     *
      * @return void
      */
     public static function handleLogoutRequests($check_client = true, $allowed_clients = false)
@@ -1300,9 +1300,9 @@ class phpCAS
 
     /**
      * Set the login URL of the CAS server.
-     * 
+     *
      * @param string $url the login URL
-     * 
+     *
      * @return void
      * @since 0.4.21 by Wyman Chan
      */
@@ -1322,9 +1322,9 @@ class phpCAS
     /**
      * Set the serviceValidate URL of the CAS server.
      * Used only in CAS 1.0 validations
-     * 
+     *
      * @param string $url the serviceValidate URL
-     * 
+     *
      * @return void
      */
     public static function setServerServiceValidateURL($url = '')
@@ -1343,9 +1343,9 @@ class phpCAS
     /**
      * Set the proxyValidate URL of the CAS server.
      * Used for all CAS 2.0 validations
-     * 
+     *
      * @param string $url the proxyValidate URL
-     * 
+     *
      * @return void
      */
     public static function setServerProxyValidateURL($url = '')
@@ -1363,9 +1363,9 @@ class phpCAS
 
     /**
      * Set the samlValidate URL of the CAS server.
-     * 
+     *
      * @param string $url the samlValidate URL
-     * 
+     *
      * @return void
      */
     public static function setServerSamlValidateURL($url = '')
@@ -1397,9 +1397,9 @@ class phpCAS
 
     /**
      * Set the logout URL of the CAS server.
-     * 
+     *
      * @param string $url the logout URL
-     * 
+     *
      * @return void
      * @since 0.4.21 by Wyman Chan
      */
@@ -1422,10 +1422,10 @@ class phpCAS
 
     /**
      * This method is used to logout from CAS.
-     * 
-     * @param string $params an array that contains the optional url and 
+     *
+     * @param string $params an array that contains the optional url and
      * service parameters that will be passed to the CAS server
-     * 
+     *
      * @return void
      */
     public static function logout($params = "")
@@ -1457,9 +1457,9 @@ class phpCAS
     /**
      * This method is used to logout from CAS. Halts by redirecting to the CAS
      * server.
-     * 
+     *
      * @param service $service a URL that will be transmitted to the CAS server
-     * 
+     *
      * @return void
      */
     public static function logoutWithRedirectService($service)
@@ -1477,11 +1477,11 @@ class phpCAS
     }
 
     /**
-     * This method is used to logout from CAS. Halts by redirecting to the CAS 
+     * This method is used to logout from CAS. Halts by redirecting to the CAS
      * server.
-     * 
+     *
      * @param string $url a URL that will be transmitted to the CAS server
-     * 
+     *
      * @return void
      * @deprecated The url parameter has been removed from the CAS server as of
      * version 3.3.5.1
@@ -1502,15 +1502,15 @@ class phpCAS
     }
 
     /**
-     * This method is used to logout from CAS. Halts by redirecting to the CAS 
+     * This method is used to logout from CAS. Halts by redirecting to the CAS
      * server.
-     * 
+     *
      * @param string $service a URL that will be transmitted to the CAS server
      * @param string $url     a URL that will be transmitted to the CAS server
-     * 
+     *
      * @return void
-     * 
-     * @deprecated The url parameter has been removed from the CAS server as of 
+     *
+     * @deprecated The url parameter has been removed from the CAS server as of
      * version 3.3.5.1
      */
     public static function logoutWithRedirectServiceAndUrl($service, $url)
@@ -1538,11 +1538,11 @@ class phpCAS
 
     /**
      * Set the fixed URL that will be used by the CAS server to transmit the
-     * PGT. When this method is not called, a phpCAS script uses its own URL 
+     * PGT. When this method is not called, a phpCAS script uses its own URL
      * for the callback.
      *
      * @param string $url the URL
-     * 
+     *
      * @return void
      */
     public static function setFixedCallbackURL($url = '')
@@ -1566,7 +1566,7 @@ class phpCAS
      * method is not called, a phpCAS script uses its own URL.
      *
      * @param string $url the URL
-     * 
+     *
      * @return void
      */
     public static function setFixedServiceURL($url)
@@ -1584,7 +1584,7 @@ class phpCAS
 
     /**
      * Get the URL that is set as the CAS service parameter.
-     * 
+     *
      * @return string Service Url
      */
     public static function getServiceURL()
@@ -1597,11 +1597,11 @@ class phpCAS
 
     /**
      * Retrieve a Proxy Ticket from the CAS server.
-     * 
+     *
      * @param string $target_service Url string of service to proxy
      * @param string &$err_code      error code
      * @param string &$err_msg       error message
-     * 
+     *
      * @return string Proxy Ticket
      */
     public static function retrievePT($target_service, & $err_code, & $err_msg)
@@ -1619,7 +1619,7 @@ class phpCAS
      * Set the certificate of the CAS server CA.
      *
      * @param string $cert CA certificate file name
-     * 
+     *
      * @return void
      */
     public static function setCasServerCACert($cert)
@@ -1637,7 +1637,7 @@ class phpCAS
 
     /**
      * Set no SSL validation for the CAS server.
-     * 
+     *
      * @return void
      */
     public static function setNoCasServerValidation()
@@ -1655,10 +1655,10 @@ class phpCAS
     /**
      * Disable the removal of a CAS-Ticket from the URL when authenticating
      * DISABLING POSES A SECURITY RISK:
-     * We normally remove the ticket by an additional redirect as a security 
+     * We normally remove the ticket by an additional redirect as a security
      * precaution to prevent a ticket in the HTTP_REFERRER or be carried over in
      * the URL parameter
-     * 
+     *
      * @return void
      */
     public static function setNoClearTicketsFromUrl()
@@ -1676,10 +1676,10 @@ class phpCAS
     /**
      * Change CURL options.
      * CURL is used to connect through HTTPS to CAS server
-     * 
+     *
      * @param string $key   the option key
      * @param string $value the value to set
-     * 
+     *
      * @return void
      */
     public static function setExtraCurlOption($key, $value)
@@ -1723,9 +1723,9 @@ class phpCAS
      * IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER
      * ON THIS SERVICE.
      *
-     * @param CAS_ProxyChain_Interface $proxy_chain A proxy-chain that will be 
+     * @param CAS_ProxyChain_Interface $proxy_chain A proxy-chain that will be
      * matched against the proxies requesting access
-     * 
+     *
      * @return void
      */
     public static function allowProxyChain(CAS_ProxyChain_Interface $proxy_chain)
@@ -1743,7 +1743,7 @@ class phpCAS
 
     /**
      * Answer an array of proxies that are sitting in front of this application.
-     * This method will only return a non-empty array if we have received and 
+     * This method will only return a non-empty array if we have received and
      * validated a Proxy Ticket.
      *
      * @return array
@@ -1768,7 +1768,7 @@ class phpCAS
      *
      * @param string $rebroadcastNodeUrl The rebroadcast node URL. Can be
      * hostname or IP.
-     * 
+     *
      * @return void
      */
     public static function addRebroadcastNode($rebroadcastNodeUrl)
