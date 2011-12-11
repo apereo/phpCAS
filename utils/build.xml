@@ -141,7 +141,7 @@
     <!-- Update the doc url -->
     <replaceregexp file="tmp/CAS-${phpcas.version}/docs/index.html"
       match="http://downloads\.jasig\.org/cas-clients/php/[^/]+/docs/api/"
-      replace="api/index.html"
+      replace="http://downloads.jasig.org/cas-clients/php/${phpcas.version}/docs/api/"
       byline="true"
     />
     <!-- check for the doxygen program, and fail is not found -->
