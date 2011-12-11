@@ -2,9 +2,10 @@
 
 /**
  * Autoloader Class
- * 
+ *
  *  PHP Version 5
- *  
+ *
+ * @file      CAS/Autoload.php
  * @category  Authentication
  * @package   SimpleCAS
  * @author    Brett Bieber <brett.bieber@gmail.com>
@@ -15,9 +16,9 @@
 
 /**
  * Autoload a class
- * 
+ *
  * @param string $class Classname to load
- * 
+ *
  * @return boolean
  */
 function CAS_autoload($class)
@@ -71,12 +72,12 @@ if (function_exists('spl_autoload_register')) {
     }
     unset($_____t);
 } elseif (!function_exists('__autoload')) {
-    
+
     /**
      * Autoload a class
-     * 
+     *
      * @param string $class Class name
-     * 
+     *
      * @return boolean
      */
     function __autoload($class)
