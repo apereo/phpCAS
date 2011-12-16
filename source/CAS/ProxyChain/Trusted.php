@@ -16,25 +16,44 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP Version 5
+ *
+ * @file     CAS/ProxyChain/Trusted.php
+ * @category Authentication
+ * @package  PhpCAS
+ * @author   Adam Franco <afranco@middlebury.edu>
+ * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
 /**
- * A proxy-chain definition that defines a chain up to a trusted proxy and delegates
- * the resposibility of validating the rest of the chain to that trusted proxy.
+ * A proxy-chain definition that defines a chain up to a trusted proxy and
+ * delegates the resposibility of validating the rest of the chain to that
+ * trusted proxy.
+ *
+ * @class    CAS_ProxyChain_Trusted
+ * @category Authentication
+ * @package  PhpCAS
+ * @author   Adam Franco <afranco@middlebury.edu>
+ * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 class CAS_ProxyChain_Trusted
-	extends CAS_ProxyChain
-	implements CAS_ProxyChain_Interface
+extends CAS_ProxyChain
+implements CAS_ProxyChain_Interface
 {
 
-	/**
-	 * Validate the size of the the list as compared to our chain.
-	 *
-	 * @param array $list
-	 * @return boolean
-	 */
-	protected function isSizeValid (array $list) {
-		return (sizeof($this->chain) <= sizeof($list));
-	}
+    /**
+     * Validate the size of the the list as compared to our chain.
+     *
+     * @param array $list list of proxies
+     *
+     * @return boolean
+     */
+    protected function isSizeValid (array $list)
+    {
+        return (sizeof($this->chain) <= sizeof($list));
+    }
 
 }
