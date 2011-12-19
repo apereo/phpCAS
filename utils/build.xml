@@ -165,17 +165,23 @@
     <doxygen doxygenPath="${doxygen.path}" configFilename="${basedir}/tmp/Doxyfile"/>
     
     <!-- Build our tarballs -->
+    <!-- Docs -->
+    <tar 
+  		destfile="dist/docs-${phpcas.version}.tgz"
+  		compression="gzip" 
+  		basedir="tmp/CAS-${phpcas.version}"
+  		includes="docs/**/*" />
+  		
+  	<!-- Remove the api docs from the dist package -->
+  	<delete dir="tmp/CAS-${phpcas.version}/docs/api"/>
+  	
+  	<!-- Dist package -->
     <tar 
   		destfile="dist/CAS-${phpcas.version}.tgz"
   		compression="gzip" 
   		basedir="tmp/"
   		includes="CAS-${phpcas.version}/**" />
   	
-  	<tar 
-  		destfile="dist/docs-${phpcas.version}.tgz"
-  		compression="gzip" 
-  		basedir="tmp/CAS-${phpcas.version}"
-  		includes="docs/**/*" />
 
     <!--delete dir="tmp" /-->
   </target>
