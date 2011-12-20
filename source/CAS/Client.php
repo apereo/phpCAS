@@ -2482,24 +2482,6 @@ class CAS_Client
         return ($body);
     }
 
-
-    // TODO: remove
-    private  $_curl_headers = array();
-
-    /**
-     * This method is the callback used by readURL method to request HTTP headers.
-     *
-     * @param object $ch     curl object
-     * @param string $header header
-     *
-     * @return int length of headers read
-     */
-    private function _curl_read_headers($ch, $header)
-    {
-        $this->_curl_headers[] = $header;
-        return strlen($header);
-    }
-
     /** @} **/
 
     // ########################################################################
