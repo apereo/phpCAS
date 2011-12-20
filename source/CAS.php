@@ -26,6 +26,10 @@
  * @category Authentication
  * @package  PhpCAS
  * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
+ * @author   Olivier Berger <olivier.berger@it-sudparis.eu>
+ * @author   Brett Bieber <brett.bieber@gmail.com>
+ * @author   Joachim Fritschi <jfritschi@freenet.de>
+ * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  * @ingroup public
@@ -248,6 +252,10 @@ require_once dirname(__FILE__) . '/CAS/Autoload.php';
  * @category Authentication
  * @package  PhpCAS
  * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
+ * @author   Olivier Berger <olivier.berger@it-sudparis.eu>
+ * @author   Brett Bieber <brett.bieber@gmail.com>
+ * @author   Joachim Fritschi <jfritschi@freenet.de>
+ * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */

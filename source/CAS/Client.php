@@ -16,19 +16,36 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP Version 5
+ *
+ * @file     CAS/Client.php
+ * @category Authentication
+ * @package  PhpCAS
+ * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
+ * @author   Olivier Berger <olivier.berger@it-sudparis.eu>
+ * @author   Brett Bieber <brett.bieber@gmail.com>
+ * @author   Joachim Fritschi <jfritschi@freenet.de>
+ * @author   Adam Franco <afranco@middlebury.edu>
+ * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
 /**
- * @file CAS/Client.php
- * Main class of the phpCAS library
- */
-
-/**
- * @class CAS_Client
  * The CAS_Client class is a client interface that provides CAS authentication
  * to PHP applications.
  *
- * @author Pascal Aubry <pascal.aubry at univ-rennes1.fr>
+ * @class    CAS_Client
+ * @category Authentication
+ * @package  PhpCAS
+ * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
+ * @author   Olivier Berger <olivier.berger@it-sudparis.eu>
+ * @author   Brett Bieber <brett.bieber@gmail.com>
+ * @author   Joachim Fritschi <jfritschi@freenet.de>
+ * @author   Adam Franco <afranco@middlebury.edu>
+ * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link     https://wiki.jasig.org/display/CASC/phpCAS
+ *
  */
 
 class CAS_Client
@@ -57,7 +74,9 @@ class CAS_Client
 	 *
 	 * Used by CAS_Client::PrintHTMLHeader() and CAS_Client::printHTMLFooter().
 	 *
-	 * @param $str the string to filter and output
+	 * @param string $str the string to filter and output
+	 *
+	 * @return void
 	 */
 	private function HTMLFilterOutput($str)
 	{
@@ -68,8 +87,8 @@ class CAS_Client
 	}
 
 	/**
-	 * A string used to print the header of HTML pages. Written by CAS_Client::setHTMLHeader(),
-	 * read by CAS_Client::printHTMLHeader().
+	 * A string used to print the header of HTML pages. Written by
+	 * CAS_Client::setHTMLHeader(), read by CAS_Client::printHTMLHeader().
 	 *
 	 * @hideinitializer
 	 * @see CAS_Client::setHTMLHeader, CAS_Client::printHTMLHeader()

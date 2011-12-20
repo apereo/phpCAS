@@ -22,7 +22,7 @@
  * @file     CAS/PGTStorage/Db.php
  * @category Authentication
  * @package  PhpCAS
- * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
+ * @author   Daniel Frett <daniel.frett@gmail.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
