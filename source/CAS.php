@@ -75,7 +75,7 @@ define('PHPCAS_VERSION', '1.2.2+');
 define("CAS_VERSION_1_0", '1.0');
 /*!
  * CAS version 2.0
- */
+*/
 define("CAS_VERSION_2_0", '2.0');
 
 // ------------------------------------------------------------------------
@@ -298,11 +298,11 @@ class phpCAS
     /**
      * phpCAS client initializer.
      *
-     * @param string  $server_version  the version of the CAS server
-     * @param string  $server_hostname the hostname of the CAS server
-     * @param string  $server_port     the port the CAS server is running on
-     * @param string  $server_uri      the URI the CAS server is responding on
-     * @param bool $start_session   have phpCAS start PHP sessions (default
+     * @param string $server_version  the version of the CAS server
+     * @param string $server_hostname the hostname of the CAS server
+     * @param string $server_port     the port the CAS server is running on
+     * @param string $server_uri      the URI the CAS server is responding on
+     * @param bool   $start_session   have phpCAS start PHP sessions (default
      * true)
      *
      * @return a newly created CAS_Client object
@@ -607,9 +607,9 @@ class phpCAS
     //  INTERNATIONALIZATION
     // ########################################################################
     /**
-     * @addtogroup publicLang
-     * @{
-     */
+    * @addtogroup publicLang
+    * @{
+    */
 
     /**
      * This method is used to set the language used by phpCAS.
@@ -637,9 +637,9 @@ class phpCAS
     //  VERSION
     // ########################################################################
     /**
-     * @addtogroup public
-     * @{
-     */
+    * @addtogroup public
+    * @{
+    */
 
     /**
      * This method returns the phpCAS version.
@@ -656,9 +656,9 @@ class phpCAS
     //  HTML OUTPUT
     // ########################################################################
     /**
-     * @addtogroup publicOutput
-     * @{
-     */
+    * @addtogroup publicOutput
+    * @{
+    */
 
     /**
      * This method sets the HTML header used for all outputs.
@@ -701,9 +701,9 @@ class phpCAS
     //  PGT STORAGE
     // ########################################################################
     /**
-     * @addtogroup publicPGTStorage
-     * @{
-     */
+    * @addtogroup publicPGTStorage
+    * @{
+    */
 
     /**
      * This method can be used to set a custom PGT storage object.
@@ -779,13 +779,30 @@ class phpCAS
      * This method is used to tell phpCAS to store the response of the
      * CAS server to PGT requests onto the filesystem.
      *
-     * @param string $format the format used to store the PGT's. This parameter
-     * has no effect and is only for backwards compatibility
+     * @param string $format the format used to store the PGT's.
      * @param string $path   the path where the PGT's should be stored
      *
      * @return void
+     *
+     * @deprecated This format parameter has no effect. All storage is done in
+     * plain format. Use the setPGTStorageFile($file) function.
      */
     public static function setPGTStorageFile($format = '', $path = '')
+    {
+        phpCAS :: traceBegin();
+        phpCAS :: setPGTStorageFile($path);
+        phpCAS :: traceEnd();
+    }
+
+    /**
+     * This method is used to tell phpCAS to store the response of the
+     * CAS server to PGT requests onto the filesystem.
+     *
+     * @param string $path the path where the PGT's should be stored
+     *
+     * @return void
+     */
+    public static function setPGTStorageFile($path = '')
     {
         phpCAS :: traceBegin();
         if (!is_object(self::$_PHPCAS_CLIENT)) {
@@ -806,15 +823,14 @@ class phpCAS
         self::$_PHPCAS_CLIENT->setPGTStorageFile($path);
         phpCAS :: traceEnd();
     }
-
     /** @} */
     // ########################################################################
     // ACCESS TO EXTERNAL SERVICES
     // ########################################################################
     /**
-     * @addtogroup publicServices
-     * @{
-     */
+    * @addtogroup publicServices
+    * @{
+    */
 
     /**
      * Answer a proxy-authenticated service handler.
@@ -974,9 +990,9 @@ class phpCAS
     //  AUTHENTICATION
     // ########################################################################
     /**
-     * @addtogroup publicAuth
-     * @{
-     */
+    * @addtogroup publicAuth
+    * @{
+    */
 
     /**
      * Set the times authentication will be cached before really accessing the
@@ -1098,10 +1114,10 @@ class phpCAS
 
         /*		if (!$auth) {
          phpCAS :: trace('user is not authenticated, redirecting to the CAS server');
-         self::$_PHPCAS_CLIENT->forceAuthentication();
-         } else {
-         phpCAS :: trace('no need to authenticate (user `' . phpCAS :: getUser() . '\' is already authenticated)');
-         }*/
+        self::$_PHPCAS_CLIENT->forceAuthentication();
+        } else {
+        phpCAS :: trace('no need to authenticate (user `' . phpCAS :: getUser() . '\' is already authenticated)');
+        }*/
 
         phpCAS :: traceEnd();
         return $auth;
@@ -1279,8 +1295,8 @@ class phpCAS
     /**
      * Handle logout requests.
      *
-     * @param bool $check_client    additional safety check
-     * @param array   $allowed_clients array of allowed clients
+     * @param bool  $check_client    additional safety check
+     * @param array $allowed_clients array of allowed clients
      *
      * @return void
      */
