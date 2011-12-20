@@ -58,7 +58,7 @@ implements CAS_Request_RequestInterface
     /**
      * Send the request and store the results.
      *
-     * @return boolean true on success, false on failure.
+     * @return bool true on success, false on failure.
      */
     protected function sendRequest ()
     {

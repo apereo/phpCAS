@@ -135,7 +135,7 @@ interface CAS_Request_RequestInterface
     /**
      * Perform the request.
      *
-     * @return boolean TRUE on success, FALSE on failure.
+     * @return bool TRUE on success, FALSE on failure.
      * @throws CAS_OutOfSequenceException If called multiple times.
      */
     public function send ();
@@ -155,7 +155,7 @@ interface CAS_Request_RequestInterface
     /**
      * Answer HTTP status code of the response
      *
-     * @return integer
+     * @return int
      * @throws CAS_OutOfSequenceException If called before the Request has been sent.
      */
     public function getResponseStatusCode ();

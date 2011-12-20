@@ -211,7 +211,7 @@ extends CAS_ProxiedService_Abstract
     /**
      * Answer true if our request has been sent yet.
      *
-     * @return boolean
+     * @return bool
      */
     protected function hasBeenOpened ()
     {

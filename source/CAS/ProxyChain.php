@@ -67,7 +67,7 @@ class CAS_ProxyChain
 	 *
 	 * @param array $list The list of proxies in front of this service.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function matches(array $list)
 	{
@@ -109,7 +109,7 @@ class CAS_ProxyChain
 	 *
 	 * @param array $list List of proxies
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function isSizeValid (array $list)
 	{

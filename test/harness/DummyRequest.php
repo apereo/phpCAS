@@ -52,7 +52,7 @@ class CAS_TestHarness_DummyRequest
 	/**
 	 * Send the request and store the results.
 	 *
-	 * @return boolean TRUE on success, FALSE on failure.
+	 * @return bool TRUE on success, FALSE on failure.
 	 */
 	protected function sendRequest () {
 		foreach (self::$responses as $response) {

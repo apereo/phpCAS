@@ -59,7 +59,7 @@ class CAS_TestHarness_DummyMultiRequest
 	/**
 	 * Perform the request. After sending, all requests will have their responses poulated.
 	 *
-	 * @return boolean TRUE on success, FALSE on failure.
+	 * @return bool TRUE on success, FALSE on failure.
 	 * @throws CAS_OutOfSequenceException If called multiple times.
 	 */
 	public function send () {

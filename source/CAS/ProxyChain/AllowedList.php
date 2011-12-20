@@ -48,7 +48,7 @@ class CAS_ProxyChain_AllowedList
     /**
      * Check whether proxies are allowed by configuration
      *
-     * @return boolean
+     * @return bool
      */
     public function isProxyingAllowed()
     {
@@ -72,7 +72,7 @@ class CAS_ProxyChain_AllowedList
      *
      * @param array $proxies list of proxies to check
      *
-     * @return boolean whether the proxies match the allowed proxies
+     * @return bool whether the proxies match the allowed proxies
      */
     public function isProxyListAllowed(array $proxies)
     {

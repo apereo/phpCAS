@@ -42,8 +42,8 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 class CAS_OutOfSequenceException
-	extends BadMethodCallException
-	implements CAS_Exception
+extends BadMethodCallException
+implements CAS_Exception
 {
 
 }

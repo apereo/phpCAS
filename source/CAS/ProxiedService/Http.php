@@ -62,7 +62,7 @@ interface CAS_ProxiedService_Http
 	/**
 	 * Perform the request.
 	 *
-	 * @return boolean TRUE on success, FALSE on failure.
+	 * @return bool TRUE on success, FALSE on failure.
 	 * @throws CAS_OutOfSequenceException If called multiple times.
 	 */
 	public function send ();

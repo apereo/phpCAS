@@ -302,7 +302,7 @@ class phpCAS
      * @param string  $server_hostname the hostname of the CAS server
      * @param string  $server_port     the port the CAS server is running on
      * @param string  $server_uri      the URI the CAS server is responding on
-     * @param boolean $start_session   have phpCAS start PHP sessions (default
+     * @param bool $start_session   have phpCAS start PHP sessions (default
      * true)
      *
      * @return a newly created CAS_Client object
@@ -892,7 +892,7 @@ class phpCAS
      * @param string &$output   the output of the service (also used to give an
      * error message on failure).
      *
-     * @return boolean true on success, false otherwise (in this later case,
+     * @return bool true on success, false otherwise (in this later case,
      * $err_code gives the reason why it failed and $output contains an error
      * message).
      */
@@ -985,7 +985,7 @@ class phpCAS
      * - 0: always check
      * - n: check every "n" time
      *
-     * @param integer $n an integer.
+     * @param int $n an integer.
      *
      * @return void
      */
@@ -1082,7 +1082,7 @@ class phpCAS
      * authenticated. If the user is not authenticated, halt by redirecting to
      * the CAS server.
      *
-     * @return boolean Authentication
+     * @return bool Authentication
      */
     public static function forceAuthentication()
     {
@@ -1154,7 +1154,7 @@ class phpCAS
      * Checks whether authenticated based on $_SESSION. Useful to avoid
      * server calls.
      *
-     * @return boolean true if authenticated, false otherwise.
+     * @return bool true if authenticated, false otherwise.
      * @since 0.4.22 by Brendan Arnold
      */
     public static function isSessionAuthenticated()
@@ -1214,7 +1214,7 @@ class phpCAS
      * @warning should not be called only after phpCAS::forceAuthentication()
      * or phpCAS::checkAuthentication().
      *
-     * @return boolean
+     * @return bool
      */
     public static function hasAttributes()
     {
@@ -1235,7 +1235,7 @@ class phpCAS
      *
      * @param string $key attribute name
      *
-     * @return boolean
+     * @return bool
      * @warning should not be called only after phpCAS::forceAuthentication()
      * or phpCAS::checkAuthentication().
      */
@@ -1279,7 +1279,7 @@ class phpCAS
     /**
      * Handle logout requests.
      *
-     * @param boolean $check_client    additional safety check
+     * @param bool $check_client    additional safety check
      * @param array   $allowed_clients array of allowed clients
      *
      * @return void

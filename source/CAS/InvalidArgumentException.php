@@ -38,8 +38,8 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 class CAS_InvalidArgumentException
-	extends InvalidArgumentException
-	implements CAS_Exception
+extends InvalidArgumentException
+implements CAS_Exception
 {
 
 }

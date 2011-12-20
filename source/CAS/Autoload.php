@@ -19,7 +19,7 @@
  *
  * @param string $class Classname to load
  *
- * @return boolean
+ * @return bool
  */
 function CAS_autoload($class)
 {
@@ -78,7 +78,7 @@ if (function_exists('spl_autoload_register')) {
      *
      * @param string $class Class name
      *
-     * @return boolean
+     * @return bool
      */
     function __autoload($class)
     {

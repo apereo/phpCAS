@@ -195,7 +195,7 @@ class CAS_TestHarness_BasicResponse
 	 * Test if this response should be supplied for the URL passed.
 	 *
 	 * @param string $url
-	 * @return boolean
+	 * @return bool
 	 */
 	public function matchesUrl ($url) {
 		$parts = parse_url($url);
@@ -252,7 +252,7 @@ class CAS_TestHarness_BasicResponse
 	/**
 	 * Answer HTTP status code of the response
 	 *
-	 * @return integer
+	 * @return int
 	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
 	 */
 	public function getResponseStatusCode () {
@@ -282,7 +282,7 @@ class CAS_TestHarness_BasicResponse
 	 * Validate that the URL or its components (port, query parameters, etc) pass muster.
 	 *
 	 * @param string $url
-	 * @return boolean TRUE if the URL is valid.
+	 * @return bool TRUE if the URL is valid.
 	 */
 	public function validateUrl ($url) {
 		return $this->matchesUrl($url);
@@ -292,7 +292,7 @@ class CAS_TestHarness_BasicResponse
 	 * Validate an array of request headers.
 	 *
 	 * @param array $headers
-	 * @return boolean TRUE if the headers are valid.
+	 * @return bool TRUE if the headers are valid.
 	 */
 	public function validateRequestHeaders (array $headers) {
 		foreach ($this->headersToHave as $headerToCheck) {
@@ -310,7 +310,7 @@ class CAS_TestHarness_BasicResponse
 	 * Validate an array of request cookies.
 	 *
 	 * @param array $cookies
-	 * @return boolean TRUE if the cookies are valid.
+	 * @return bool TRUE if the cookies are valid.
 	 */
 	public function validateRequestCookies (array $cookies) {
 		foreach ($this->cookiesToHave as $name => $value) {
@@ -329,8 +329,8 @@ class CAS_TestHarness_BasicResponse
 	/**
 	 * Validate the type of request.
 	 *
-	 * @param boolean $isPost
-	 * @return boolean TRUE if the type is valid.
+	 * @param bool $isPost
+	 * @return bool TRUE if the type is valid.
 	 */
 	public function validateRequestIsPost ($isPost) {
 		if ($this->verifyIsPost === true && !$isPost) {
@@ -345,7 +345,7 @@ class CAS_TestHarness_BasicResponse
 	 * Validate the body of the post request.
 	 *
 	 * @param string $postBody
-	 * @return boolean TRUE if the post body is valid.
+	 * @return bool TRUE if the post body is valid.
 	 */
 	public function validatePostBody ($postBody) {
 		if (!is_null($this->postBodyToMatch) && $this->postBodyToMatch != $postBody) {
@@ -358,7 +358,7 @@ class CAS_TestHarness_BasicResponse
 	 * Validate an SSL certificate path.
 	 *
 	 * @param string $certPath
-	 * @return boolean TRUE if the cert path is correct.
+	 * @return bool TRUE if the cert path is correct.
 	 */
 	public function validateCert ($certPath) {
 		if (!is_null($this->certPathToMatch) && $this->certPathToMatch != $certPath)
@@ -370,7 +370,7 @@ class CAS_TestHarness_BasicResponse
 	 * Validate an SSL CA certificate path.
 	 *
 	 * @param string $caCertPath
-	 * @return boolean TRUE if the cert path is correct.
+	 * @return bool TRUE if the cert path is correct.
 	 */
 	public function validateCaCert ($caCertPath) {
 		if (!is_null($this->caCertPathToMatch) && $this->caCertPathToMatch != $caCertPath)

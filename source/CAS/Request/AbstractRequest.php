@@ -203,7 +203,7 @@ implements CAS_Request_RequestInterface
     /**
      * Perform the request.
      *
-     * @return boolean TRUE on success, FALSE on failure.
+     * @return bool TRUE on success, FALSE on failure.
      * @throws CAS_OutOfSequenceException If called multiple times.
      */
     public function send ()
@@ -221,7 +221,7 @@ implements CAS_Request_RequestInterface
     /**
      * Send the request and store the results.
      *
-     * @return boolean TRUE on success, FALSE on failure.
+     * @return bool TRUE on success, FALSE on failure.
      */
     abstract protected function sendRequest ();
 
@@ -294,7 +294,7 @@ implements CAS_Request_RequestInterface
     /**
      * Answer HTTP status code of the response
      *
-     * @return integer
+     * @return int
      * @throws CAS_OutOfSequenceException If called before the Request has been sent.
      */
     public function getResponseStatusCode ()

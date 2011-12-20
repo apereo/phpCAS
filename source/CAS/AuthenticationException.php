@@ -57,12 +57,12 @@ implements CAS_Exception
      * @param CAS_Client $client       phpcas client
      * @param string     $failure      the failure that occured
      * @param string     $cas_url      the URL the CAS server was asked for
-     * @param boolean    $no_response  the response from the CAS server (other
+     * @param bool       $no_response  the response from the CAS server (other
      * parameters are ignored if TRUE)
-     * @param boolean    $bad_response bad response from the CAS server ($err_code
+     * @param bool       $bad_response bad response from the CAS server ($err_code
      * and $err_msg ignored if TRUE)
      * @param string     $cas_response the response of the CAS server
-     * @param integer    $err_code     the error code given by the CAS server
+     * @param int        $err_code     the error code given by the CAS server
      * @param string     $err_msg      the error message given by the CAS server
      */
     public function __construct($client,$failure,$cas_url,$no_response,

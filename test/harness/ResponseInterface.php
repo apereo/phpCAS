@@ -29,7 +29,7 @@ interface CAS_TestHarness_ResponseInterface {
 	 * Test if this response should be supplied for the URL passed.
 	 *
 	 * @param string $url
-	 * @return boolean
+	 * @return bool
 	 */
 	public function matchesUrl ($url);
 
@@ -55,7 +55,7 @@ interface CAS_TestHarness_ResponseInterface {
 	 * Validate that the URL or its components (port, query parameters, etc) pass muster.
 	 *
 	 * @param string $url
-	 * @return boolean TRUE if the URL is valid.
+	 * @return bool TRUE if the URL is valid.
 	 */
 	public function validateUrl ($url);
 
@@ -63,7 +63,7 @@ interface CAS_TestHarness_ResponseInterface {
 	 * Validate an array of request headers.
 	 *
 	 * @param array $headers
-	 * @return boolean TRUE if the headers are valid.
+	 * @return bool TRUE if the headers are valid.
 	 */
 	public function validateRequestHeaders (array $headers);
 
@@ -71,15 +71,15 @@ interface CAS_TestHarness_ResponseInterface {
 	 * Validate an array of request cookies.
 	 *
 	 * @param array $cookies
-	 * @return boolean TRUE if the cookies are valid.
+	 * @return bool TRUE if the cookies are valid.
 	 */
 	public function validateRequestCookies (array $cookies);
 
 	/**
 	 * Validate the type of request.
 	 *
-	 * @param boolean $isPost
-	 * @return boolean TRUE if the type is valid.
+	 * @param bool $isPost
+	 * @return bool TRUE if the type is valid.
 	 */
 	public function validateRequestIsPost ($isPost);
 
@@ -87,7 +87,7 @@ interface CAS_TestHarness_ResponseInterface {
 	 * Validate the body of the post request.
 	 *
 	 * @param string $postBody
-	 * @return boolean TRUE if the post body is valid.
+	 * @return bool TRUE if the post body is valid.
 	 */
 	public function validatePostBody ($postBody);
 
@@ -95,7 +95,7 @@ interface CAS_TestHarness_ResponseInterface {
 	 * Validate an SSL certificate path.
 	 *
 	 * @param string $certPath
-	 * @return boolean TRUE if the cert path is correct.
+	 * @return bool TRUE if the cert path is correct.
 	 */
 	public function validateCert ($certPath);
 
@@ -103,7 +103,7 @@ interface CAS_TestHarness_ResponseInterface {
 	 * Validate an SSL CA certificate path.
 	 *
 	 * @param string $caCertPath
-	 * @return boolean TRUE if the cert path is correct.
+	 * @return bool TRUE if the cert path is correct.
 	 */
 	public function validateCaCert ($caCertPath);
 

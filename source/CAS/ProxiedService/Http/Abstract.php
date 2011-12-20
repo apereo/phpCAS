@@ -276,7 +276,7 @@ implements CAS_ProxiedService_Http
     /**
      * Answer true if our request has been sent yet.
      *
-     * @return boolean
+     * @return bool
      */
     protected function hasBeenSent ()
     {
@@ -301,7 +301,7 @@ implements CAS_ProxiedService_Http
     /**
      * Answer HTTP status code of the response
      *
-     * @return integer
+     * @return int
      * @throws CAS_OutOfSequenceException If called before the Request has been sent.
      */
     public function getResponseStatusCode ()

@@ -49,7 +49,7 @@ implements CAS_ProxyChain_Interface
      *
      * @param array $list list of proxies
      *
-     * @return boolean
+     * @return bool
      */
     protected function isSizeValid (array $list)
     {
