@@ -41,51 +41,51 @@
 interface CAS_ProxiedService_Http
 {
 
-	/*********************************************************
-	 * Configure the Request
-	 *********************************************************/
+    /*********************************************************
+     * Configure the Request
+    *********************************************************/
 
-	/**
-	 * Set the URL of the Request
-	 *
-	 * @param string $url Url to set
-	 *
-	 * @return void
-	 * @throws CAS_OutOfSequenceException If called after the Request has been sent.
-	 */
-	public function setUrl ($url);
+    /**
+     * Set the URL of the Request
+     *
+     * @param string $url Url to set
+     *
+     * @return void
+     * @throws CAS_OutOfSequenceException If called after the Request has been sent.
+     */
+    public function setUrl ($url);
 
-	/*********************************************************
-	 * 2. Send the Request
-	 *********************************************************/
+    /*********************************************************
+     * 2. Send the Request
+    *********************************************************/
 
-	/**
-	 * Perform the request.
-	 *
-	 * @return bool TRUE on success, FALSE on failure.
-	 * @throws CAS_OutOfSequenceException If called multiple times.
-	 */
-	public function send ();
+    /**
+     * Perform the request.
+     *
+     * @return bool TRUE on success, FALSE on failure.
+     * @throws CAS_OutOfSequenceException If called multiple times.
+     */
+    public function send ();
 
-	/*********************************************************
-	 * 3. Access the response
-	 *********************************************************/
+    /*********************************************************
+     * 3. Access the response
+    *********************************************************/
 
-	/**
-	 * Answer the headers of the response.
-	 *
-	 * @return array An array of header strings.
-	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
-	 */
-	public function getResponseHeaders ();
+    /**
+     * Answer the headers of the response.
+     *
+     * @return array An array of header strings.
+     * @throws CAS_OutOfSequenceException If called before the Request has been sent.
+     */
+    public function getResponseHeaders ();
 
-	/**
-	 * Answer the body of response.
-	 *
-	 * @return string
-	 * @throws CAS_OutOfSequenceException If called before the Request has been sent.
-	 */
-	public function getResponseBody ();
+    /**
+     * Answer the body of response.
+     *
+     * @return string
+     * @throws CAS_OutOfSequenceException If called before the Request has been sent.
+     */
+    public function getResponseBody ();
 
 }
 ?>

@@ -38,8 +38,8 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 class CAS_ProxiedService_Exception
-	extends Exception
-	implements CAS_Exception
+extends Exception
+implements CAS_Exception
 {
 
 }

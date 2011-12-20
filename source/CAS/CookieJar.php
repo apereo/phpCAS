@@ -206,12 +206,13 @@ class CAS_CookieJar
             case 'max-age':
                 $cookie['max-age'] = (int)$attributeValue;
                 // Set an expiry time based on the max-age
-                if ($cookie['max-age'])
-                $cookie['expires'] = time() + $cookie['max-age'];
-                // If max-age is zero, then the cookie should be removed imediately
-                // so set an expiry before now.
-                else
-                $cookie['expires'] = time() - 1;
+                if ($cookie['max-age']) {
+                    $cookie['expires'] = time() + $cookie['max-age'];
+                } else {
+                    // If max-age is zero, then the cookie should be removed
+                    // imediately so set an expiry before now.
+                    $cookie['expires'] = time() - 1;
+                }
                 break;
             case 'secure':
                 $cookie['secure'] = true;
@@ -263,8 +264,12 @@ class CAS_CookieJar
      */
     protected function discardCookie ($cookie)
     {
-        if (!isset($cookie['domain']) || !isset($cookie['path']) || !isset($cookie['path']))
-        throw new CAS_InvalidArgumentException('Invalid Cookie array passed.');
+        if (!isset($cookie['domain'])
+            || !isset($cookie['path'])
+            || !isset($cookie['path'])
+        ) {
+            throw new CAS_InvalidArgumentException('Invalid Cookie array passed.');
+        }
 
         foreach ($this->_cookies as $key => $old_cookie) {
             if ( $cookie['domain'] == $old_cookie['domain']
@@ -333,25 +338,25 @@ class CAS_CookieJar
                 // http://www.ietf.org/rfc/rfc2965.txt
                 $hostname = substr($target['host'], 0, $pos);
                 if (strpos($hostname, '.') !== false)
-                    return false;
+                return false;
             }
         } else {
             // If the cookie host doesn't begin with '.', the host must case-insensitive
             // match exactly
             if (strcasecmp($target['host'], $cookie['domain']) !== 0)
-                return false;
+            return false;
         }
 
         // Verify that the port matches
         if (isset($cookie['ports']) && !in_array($target['port'], $cookie['ports']))
-            return false;
+        return false;
 
         // Verify that the path matches
         if (strpos($target['path'], $cookie['path']) !== 0)
-            return false;
+        return false;
 
         return true;
-	}
+    }
 
 }
 
