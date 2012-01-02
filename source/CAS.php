@@ -779,25 +779,6 @@ class phpCAS
      * This method is used to tell phpCAS to store the response of the
      * CAS server to PGT requests onto the filesystem.
      *
-     * @param string $format the format used to store the PGT's.
-     * @param string $path   the path where the PGT's should be stored
-     *
-     * @return void
-     *
-     * @deprecated This format parameter has no effect. All storage is done in
-     * plain format. Use the setPGTStorageFile($file) function.
-     */
-    public static function setPGTStorageFile($format = '', $path = '')
-    {
-        phpCAS :: traceBegin();
-        phpCAS :: setPGTStorageFile($path);
-        phpCAS :: traceEnd();
-    }
-
-    /**
-     * This method is used to tell phpCAS to store the response of the
-     * CAS server to PGT requests onto the filesystem.
-     *
      * @param string $path the path where the PGT's should be stored
      *
      * @return void
