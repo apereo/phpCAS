@@ -12,17 +12,17 @@ phpCAS::setDebug();
 // Initialize phpCAS
 phpCAS::proxy(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 
-// For production use set the CA certificate that is the issuer of the cert 
+// For production use set the CA certificate that is the issuer of the cert
 // on the CAS server and uncomment the line below
 // phpCAS::setCasServerCACert($cas_server_ca_cert_path);
 
-// For quick testing you can disable SSL validation of the CAS server. 
-// THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION. 
-// VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL! 
+// For quick testing you can disable SSL validation of the CAS server.
+// THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION.
+// VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL!
 phpCAS::setNoCasServerValidation();
 
 // set PGT storage to file in plain format in the same directory as session files
-phpCAS::setPGTStorageFile('plain',session_save_path());
+phpCAS::setPGTStorageFile(session_save_path());
 
 // force CAS authentication
 phpCAS::forceAuthentication();
