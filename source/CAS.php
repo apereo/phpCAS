@@ -795,11 +795,8 @@ class phpCAS
         if (self::$_PHPCAS_CLIENT->wasAuthenticationCalled()) {
             phpCAS :: error('this method should only be called before ' . self::$_PHPCAS_CLIENT->getAuthenticationCallerMethod() . '() (called at ' . self::$_PHPCAS_CLIENT->getAuthenticationCallerFile() . ':' . self::$_PHPCAS_CLIENT->getAuthenticationCallerLine() . ')');
         }
-        if (gettype($format) != 'string') {
-            phpCAS :: error('type mismatched for parameter $format (should be `string\')');
-        }
         if (gettype($path) != 'string') {
-            phpCAS :: error('type mismatched for parameter $format (should be `string\')');
+            phpCAS :: error('type mismatched for parameter $path (should be `string\')');
         }
         self::$_PHPCAS_CLIENT->setPGTStorageFile($path);
         phpCAS :: traceEnd();
