@@ -4,24 +4,19 @@
  * Licensed to Jasig under one or more contributor license
  * agreements. See the NOTICE file distributed with this work for
  * additional information regarding copyright ownership.
- * 
+ *
  * Jasig licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at:
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-require_once dirname(__FILE__).'/ResponseInterface.php';
-require_once dirname(__FILE__).'/../../source/CAS/OutOfSequenceException.php';
-require_once dirname(__FILE__).'/../../source/CAS/Request/Exception.php';
-
 
 /**
  * The BasicResponse allows tests to dynamically create a response that can be used
@@ -248,7 +243,7 @@ class CAS_TestHarness_BasicResponse
 	public function getResponseHeaders () {
 		return $this->responseHeaders;
 	}
-	
+
 	/**
 	 * Answer HTTP status code of the response
 	 *
@@ -258,10 +253,10 @@ class CAS_TestHarness_BasicResponse
 	public function getResponseStatusCode () {
 		if (!$this->sent)
 			throw new CAS_OutOfSequenceException('Request has not been sent yet. Cannot '.__METHOD__);
-		
+
 		if (!preg_match('/HTTP\/[0-9.]+\s+([0-9]+)\s*(.*)/', $this->responseHeaders[0], $matches))
 			throw new CAS_Request_Exception("Bad response, no status code was found in the first line.");
-		
+
 		return intval($matches[1]);
 	}
 

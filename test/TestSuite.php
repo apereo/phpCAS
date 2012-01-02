@@ -52,8 +52,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite
     {
         $suite = new TestSuite('phpCAS Test Suite');
 
-        self::recursiveAddTests($suite, dirname(__FILE__) . '/tests');
-
+        self::recursiveAddTests($suite, dirname(__FILE__) . '/CAS/Tests');
         return $suite;
     }
 

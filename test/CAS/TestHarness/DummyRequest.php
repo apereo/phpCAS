@@ -18,9 +18,6 @@
  * limitations under the License.
  */
 
-require_once dirname(__FILE__).'/../../source/CAS/Request/RequestInterface.php';
-require_once dirname(__FILE__).'/../../source/CAS/Request/AbstractRequest.php';
-
 /**
  * Provides support for performing dummy web-requests
  */
