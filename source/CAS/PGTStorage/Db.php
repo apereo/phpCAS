@@ -381,7 +381,7 @@ class CAS_PGTStorage_Db extends CAS_PGTStorage_AbstractStorage
 
         // initialize the PDO object for this method
         $pdo = $this->_getPdo();
-        $this->setErrorMode();
+        $this->_setErrorMode();
 
         try {
             $pdo->beginTransaction();
