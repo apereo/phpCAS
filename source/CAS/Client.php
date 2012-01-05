@@ -1521,7 +1521,7 @@ class CAS_Client
 
             // If phpCAS is managing the session, destroy it.
             if ($this->_start_session) {
-                $session_id = preg_replace('/[^\w]/', '', $ticket2logout);
+                $session_id = preg_replace('/[^a-zA-Z0-9\-]/', '', $ticket2logout);
                 phpCAS::trace("Session id: ".$session_id);
 
                 // destroy a possible application session created before phpcas
@@ -3160,7 +3160,7 @@ class CAS_Client
                 $old_session = $_SESSION;
                 session_destroy();
                 // set up a new session, of name based on the ticket
-                $session_id = preg_replace('/[^\w]/', '', $ticket);
+                $session_id = preg_replace('/[^a-zA-Z0-9\-]/', '', $ticket);
                 phpCAS :: trace("Session ID: ".$session_id);
                 session_id($session_id);
                 session_start();
