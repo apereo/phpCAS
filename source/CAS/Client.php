@@ -1202,6 +1202,9 @@ class CAS_Client
                     flush();
                     phpCAS::traceExit();
                     throw new CAS_GracefullTerminationException();
+                } else {
+                	phpCAS::trace('Already authenticated, but skipping ticket clearing since setNoClearTicketsFromUrl() was used.');
+                	$res = true;
                 }
             } else {
                 // the user has already (previously during the session) been
