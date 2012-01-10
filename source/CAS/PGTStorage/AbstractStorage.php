@@ -175,7 +175,7 @@ abstract class CAS_PGTStorage_AbstractStorage
      */
     function init()
     {
-        $this->_initialized = false;
+        $this->_initialized = true;
     }
 
     // ########################################################################
