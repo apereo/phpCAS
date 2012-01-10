@@ -30,6 +30,8 @@
 require_once dirname(__FILE__) . '/../source/CAS.php';
 require_once dirname(__FILE__) . '/../source/CAS/Autoload.php';
 
+set_include_path(dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
+
 /**
  * Suite of all tests
  *
