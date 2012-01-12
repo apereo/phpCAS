@@ -1358,7 +1358,7 @@ class CAS_Client
                 unset($_SESSION['phpCAS']);
                 $this->setTicket('');
             } else {
-                phpCAS::trace('neither user not PGT found');
+                phpCAS::trace('neither user nor PGT found');
             }
         } else {
             // `simple' CAS client (not a proxy): username must be present
