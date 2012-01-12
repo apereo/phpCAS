@@ -2410,6 +2410,7 @@ class CAS_Client
      */
     private function _readURL($url, &$headers, &$body, &$err_msg)
     {
+        phpCAS::traceBegin();
         $className = $this->_requestImplementation;
         $request = new $className();
 
@@ -2442,11 +2443,13 @@ class CAS_Client
             $headers = $request->getResponseHeaders();
             $body = $request->getResponseBody();
             $err_msg = '';
+            phpCAS::traceEnd(true);
             return true;
         } else {
             $headers = '';
             $body = '';
             $err_msg = $request->getErrorMessage();
+            phpCAS::traceEnd(false);
             return false;
         }
     }
