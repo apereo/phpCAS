@@ -16,72 +16,113 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP Version 5
+ *
+ * @file     CAS/TestHarness/DummyMultiRequest.php
+ * @category Authentication
+ * @package  PhpCAS
+ * @author   Adam Franco <afranco@middlebury.edu>
+ * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
 /**
- * This interface defines a class library for performing multiple web requests in batches.
- * Implementations of this interface may perform requests serially or in parallel.
+ * This interface defines a class library for performing multiple web requests
+ * in batches. Implementations of this interface may perform requests serially
+ * or in parallel.
+ *
+ * @class    CAS_TestHarness_DummyMultiRequest
+ * @category Authentication
+ * @package  PhpCAS
+ * @author   Adam Franco <afranco@middlebury.edu>
+ * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_TestHarness_DummyMultiRequest
-	implements CAS_Request_MultiRequestInterface
+
+class CAS_TestHarness_DummyMultiRequest implements
+CAS_Request_MultiRequestInterface
 {
-	private $requests = array();
-	private $sent = false;
+    private $_requests = array();
+    private $_sent = false;
 
-	/*********************************************************
-	 * Add Requests
-	 *********************************************************/
+    /*********************************************************
+     * Add Requests
+     *********************************************************/
 
-	/**
-	 * Add a new Request to this batch.
-	 * Note, implementations will likely restrict requests to their own concrete class hierarchy.
-	 *
-	 * @param CAS_Request_RequestInterface $request
-	 * @return void
-	 * @throws CAS_OutOfSequenceException If called after the Request has been sent.
-	 * @throws CAS_InvalidArgumentException If passed a Request of the wrong implmentation.
-	 */
-	public function addRequest (CAS_Request_RequestInterface $request) {
-		if ($this->sent)
-			throw new CAS_OutOfSequenceException('Request has already been sent cannot '.__METHOD__);
-		if (!$request instanceof CAS_TestHarness_DummyRequest)
-			throw new CAS_InvalidArgumentException('As a CAS_TestHarness_DummyMultiRequest, I can only work with CAS_TestHarness_DummyRequest objects.');
+    /**
+     * Add a new Request to this batch.
+     * Note, implementations will likely restrict requests to their own concrete
+     * class hierarchy.
+     *
+     * @param CAS_Request_RequestInterface $request request interface
+     *
+     * @return void
+     *
+     * @throws CAS_OutOfSequenceException If called after the Request has been sent.
+     * @throws CAS_InvalidArgumentException If passed a Request of the wrong
+     * implmentation.
+     */
+    public function addRequest(CAS_Request_RequestInterface $request)
+    {
+        if ($this->_sent) {
+            throw new CAS_OutOfSequenceException(
+                'Request has already been sent cannot ' . __METHOD__
+            );
+        }
+        if (!$request instanceof CAS_TestHarness_DummyRequest) {
+            throw new CAS_InvalidArgumentException(
+                'As a CAS_TestHarness_DummyMultiRequest, I can only work with CAS_TestHarness_DummyRequest objects.'
+            );
+        }
 
-		$this->requests[] = $request;
-	}
+        $this->_requests[] = $request;
+    }
 
-	/*********************************************************
-	 * 2. Send the Request
-	 *********************************************************/
+    /*********************************************************
+     * 2. Send the Request
+     *********************************************************/
 
-	/**
-	 * Perform the request. After sending, all requests will have their responses poulated.
-	 *
-	 * @return bool TRUE on success, FALSE on failure.
-	 * @throws CAS_OutOfSequenceException If called multiple times.
-	 */
-	public function send () {
-		if ($this->sent)
-			throw new CAS_OutOfSequenceException('Request has already been sent cannot send again.');
-		if (!count($this->requests))
-			throw new CAS_OutOfSequenceException('At least one request must be added via addRequest() before the multi-request can be sent.');
+    /**
+     * Perform the request. After sending, all requests will have their
+     * responses poulated.
+     *
+     * @return bool TRUE on success, FALSE on failure.
+     *
+     * @throws CAS_OutOfSequenceException If called multiple times.
+     */
+    public function send()
+    {
+        if ($this->_sent) {
+            throw new CAS_OutOfSequenceException(
+                'Request has already been sent cannot send again.'
+            );
+        }
+        if (!count($this->_requests)) {
+            throw new CAS_OutOfSequenceException(
+                'At least one request must be added via addRequest() before the multi-request can be sent.'
+            );
+        }
+        $this->_sent = true;
 
-		$this->sent = true;
+        // Run all of our requests.
+        foreach ($this->_requests as $request) {
+            $request->send();
+        }
+    }
 
-		// Run all of our requests.
-		foreach ($this->requests as $request) {
-			$request->send();
-		}
-	}
-
-	/**
-	 * Retrieve the number of requests added to this batch.
-	 *
-	 * @return number of request elements
-	 */
-	public function getNumRequests() {
-		if ($this->sent)
-			throw new CAS_OutOfSequenceException('Request has already been sent cannot '.__METHOD__);
-		return count($this->requests);
-	}
+    /**
+     * Retrieve the number of requests added to this batch.
+     *
+     * @return number of request elements
+     */
+    public function getNumRequests()
+    {
+        if ($this->_sent) {
+            throw new CAS_OutOfSequenceException(
+                'Request has already been sent cannot ' . __METHOD__
+            );
+        }
+        return count($this->_requests);
+    }
 }
