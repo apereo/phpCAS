@@ -1189,9 +1189,6 @@ class CAS_Client
         phpCAS::traceBegin();
         $res = false;
         $validate_url = '';
-        if ( $this->_isCallbackMode()) {
-            $this->_callback();
-        }
         if ( $this->_wasPreviouslyAuthenticated() ) {
             if ($this->hasTicket()) {
                 // User has a additional ticket but was already authenticated
