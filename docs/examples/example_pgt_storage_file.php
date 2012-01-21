@@ -1,10 +1,23 @@
 <?php
-// Example that changes the storage of the pgt tickets
+
+/**
+*  Example that changes the storage of the pgt tickets to file
+*
+* PHP Version 5
+*
+* @file     example_pgt_storage_db.php
+* @category Authentication
+* @package  PhpCAS
+* @author   Joachim Fritschi <jfritschi@freenet.de>
+* @author   Adam Franco <afranco@middlebury.edu>
+* @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+* @link     https://wiki.jasig.org/display/CASC/phpCAS
+*/
 
 // Load the settings from the central config file
-include_once('config.php');
+require_once 'config.php';
 // Load the CAS lib
-include_once($phpcas_path.'/CAS.php');
+require_once $phpcas_path . '/CAS.php';
 
 // Uncomment to enable debugging
 phpCAS::setDebug();
@@ -41,17 +54,17 @@ phpCAS::forceAuthentication();
   </head>
   <body>
     <h1>phpCAS proxy example with PGT storage to file</h1>
-    <?php include 'script_info.php' ?>
+    <?php require 'script_info.php' ?>
     <p>the user's login is <b><?php echo phpCAS::getUser(); ?></b>.</p>
     <h2>Response from service <?php echo $serviceUrl; ?></h2>
 <?php
   flush();
   // call a service and change the color depending on the result
-  if ( phpCAS::serviceWeb($serviceUrl,$err_code,$output) ) {
+if ( phpCAS::serviceWeb($serviceUrl, $err_code, $output) ) {
     echo '<div class="success">';
-  } else {
+} else {
     echo '<div class="error">';
-  }
+}
   echo $output;
   echo '</div>';
 ?>
