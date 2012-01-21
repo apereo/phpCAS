@@ -58,9 +58,8 @@ phpCAS::setNoCasServerValidation();
 phpCAS::allowProxyChain(new CAS_ProxyChain(array($pgtUrlRegexp)));
 phpCAS::allowProxyChain(
     new CAS_ProxyChain(
-        array(
-            '/^'.$pgtBase.'example_service_that_proxies.php$/',
-            '/^'.$pgtBase.'example_proxy_serviceWeb_chaining.php$/'
+        array('/^' . $pgtBase . 'example_service_that_proxies.php$/',
+            '/^' . $pgtBase . 'example_proxy_serviceWeb_chaining.php$/'
         )
     )
 );
@@ -84,11 +83,12 @@ print '<h1>I am a service that can be proxied.</h1>';
 require 'script_info.php';
 
 // for this test, simply print that the authentication was successfull
-echo '<p>The user\'s login is <b>'.phpCAS::getUser().'</b>.</p>';
+echo '<p>The user\'s login is <b>' . phpCAS::getUser() . '</b>.</p>';
 
 // increment the number of requests of the session and print it
-if (!isset($_SESSION['n']))
-	$_SESSION['n'] = 0;
-echo '<p>request #'.(++$_SESSION['n']).'</p>';
+if (!isset($_SESSION['n'])) {
+    $_SESSION['n'] = 0;
+}
+echo '<p>request #' . (++$_SESSION['n']) . '</p>';
 
 ?>

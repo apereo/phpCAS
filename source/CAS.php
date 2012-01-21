@@ -37,7 +37,8 @@
 
 
 //
-// hack by Vangelis Haniotakis to handle the absence of $_SERVER['REQUEST_URI'] in IIS
+// hack by Vangelis Haniotakis to handle the absence of $_SERVER['REQUEST_URI']
+// in IIS
 //
 if (php_sapi_name() != 'cli') {
     if (!isset($_SERVER['REQUEST_URI'])) {
@@ -547,24 +548,28 @@ class phpCAS
                 }
             }
         }
-        if (isset($dbg[1]['file']))
-        $file = basename($dbg[1]['file']);
-        else
-        $file = 'unknown_file';
-        if (isset($dbg[1]['line']))
-        $line = $dbg[1]['line'];
-        else
-        $line = 'unknown_line';
+        if (isset($dbg[1]['file'])) {
+            $file = basename($dbg[1]['file']);
+        } else {
+            $file = 'unknown_file';
+        }
+        if (isset($dbg[1]['line'])) {
+            $line = $dbg[1]['line'];
+        } else {
+            $line = 'unknown_line';
+        }
         $str .= ') [' . $file . ':' . $line . ']';
         phpCAS :: log($str);
-        if (!isset(self::$_PHPCAS_DEBUG['indent']))
-        self::$_PHPCAS_DEBUG['indent'] = 0;
-        else
-        self::$_PHPCAS_DEBUG['indent']++;
+        if (!isset(self::$_PHPCAS_DEBUG['indent'])) {
+            self::$_PHPCAS_DEBUG['indent'] = 0;
+        } else {
+            self::$_PHPCAS_DEBUG['indent']++;
+        }
     }
 
     /**
-     * This method is used to indicate the end of the execution of a function in debug mode.
+     * This method is used to indicate the end of the execution of a function in
+     * debug mode.
      *
      * @param string $res the result of the function
      *
@@ -572,11 +577,11 @@ class phpCAS
      */
     public static function traceEnd($res = '')
     {
-        if (empty(self::$_PHPCAS_DEBUG['indent']))
-        self::$_PHPCAS_DEBUG['indent'] = 0;
-        else
-        self::$_PHPCAS_DEBUG['indent']--;
-
+        if (empty(self::$_PHPCAS_DEBUG['indent'])) {
+            self::$_PHPCAS_DEBUG['indent'] = 0;
+        } else {
+            self::$_PHPCAS_DEBUG['indent']--;
+        }
         $dbg = debug_backtrace();
         $str = '';
         if (is_object($res)) {

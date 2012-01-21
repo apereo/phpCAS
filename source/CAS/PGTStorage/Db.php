@@ -142,8 +142,12 @@ class CAS_PGTStorage_Db extends CAS_PGTStorage_AbstractStorage
         parent::__construct($cas_parent);
 
         // set default values
-        if ( empty($table) ) $table = CAS_PGT_STORAGE_DB_DEFAULT_TABLE;
-        if ( !is_array($driver_options) ) $driver_options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+        if ( empty($table) ) {
+            $table = CAS_PGT_STORAGE_DB_DEFAULT_TABLE;
+        }
+        if ( !is_array($driver_options) ) {
+            $driver_options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+        }
 
         // store the specified parameters
         if ($dsn_or_pdo instanceof PDO) {

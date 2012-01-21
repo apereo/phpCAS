@@ -83,10 +83,11 @@ try {
         echo '<div class="error">';
         echo "Your login has timed out. You need to log in again.";
         echo '</div>';
-    } else
+    } else {
         // Other proxy ticket errors are from bad request format (shouldn't happen)
         // or CAS server failure (unlikely) so lets just stop if we hit those.
         throw $e;
+    }
 } catch (CAS_ProxiedService_Exception $e) {
     // Something prevented the service request from being sent or received.
     // We didn't even get a valid error response (404, 500, etc), so this

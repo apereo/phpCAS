@@ -299,11 +299,13 @@ implements CAS_Request_RequestInterface
      */
     public function getResponseStatusCode ()
     {
-        if (!$this->_sent)
-        throw new CAS_OutOfSequenceException('Request has not been sent yet. Cannot '.__METHOD__);
+        if (!$this->_sent) {
+            throw new CAS_OutOfSequenceException('Request has not been sent yet. Cannot '.__METHOD__);
+        }
 
-        if (!preg_match('/HTTP\/[0-9.]+\s+([0-9]+)\s*(.*)/', $this->_responseHeaders[0], $matches))
-        throw new CAS_Request_Exception("Bad response, no status code was found in the first line.");
+        if (!preg_match('/HTTP\/[0-9.]+\s+([0-9]+)\s*(.*)/', $this->_responseHeaders[0], $matches)) {
+            throw new CAS_Request_Exception("Bad response, no status code was found in the first line.");
+        }
 
         return intval($matches[1]);
     }

@@ -242,10 +242,10 @@ class CAS_Client
      * @hideinitializer
      */
     private $_server = array(
-		'version' => -1,
-		'hostname' => 'none',
-		'port' => -1,
-		'uri' => 'none');
+        'version' => -1,
+        'hostname' => 'none',
+        'port' => -1,
+        'uri' => 'none');
 
     /**
      * This method is used to retrieve the version of the CAS server.
@@ -668,10 +668,10 @@ class CAS_Client
         // store where the authentication has been checked and the result
         $dbg = debug_backtrace();
         $this->_authentication_caller = array (
-			'file' => $dbg[1]['file'],
-			'line' => $dbg[1]['line'],
-			'method' => $dbg[1]['class'] . '::' . $dbg[1]['function'],
-			'result' => (boolean)$auth
+            'file' => $dbg[1]['file'],
+            'line' => $dbg[1]['line'],
+            'method' => $dbg[1]['class'] . '::' . $dbg[1]['function'],
+            'result' => (boolean)$auth
         );
     }
     private $_authentication_caller;
@@ -1203,8 +1203,8 @@ class CAS_Client
                     phpCAS::traceExit();
                     throw new CAS_GracefullTerminationException();
                 } else {
-                	phpCAS::trace('Already authenticated, but skipping ticket clearing since setNoClearTicketsFromUrl() was used.');
-                	$res = true;
+                    phpCAS::trace('Already authenticated, but skipping ticket clearing since setNoClearTicketsFromUrl() was used.');
+                    $res = true;
                 }
             } else {
                 // the user has already (previously during the session) been
