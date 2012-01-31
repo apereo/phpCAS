@@ -305,7 +305,7 @@ class CAS_PGTStorage_Db extends CAS_PGTStorage_AbstractStorage
         try {
             $pdo->beginTransaction();
 
-            $query = $pdo->query($this->_createTableSQL());
+            $query = $pdo->query($this->createTableSQL());
             $query->closeCursor();
 
             $pdo->commit();

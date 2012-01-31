@@ -49,6 +49,7 @@ $db = 'pgsql:host=localhost;dbname=phpcas';
 $db_user = 'phpcasuser';
 $db_password = 'mysupersecretpass';
 $db_table = 'phpcastabel';
+$driver_options = '';
 
 ///////////////////////////////////////////
 // End Configuration -- Don't edit below //
