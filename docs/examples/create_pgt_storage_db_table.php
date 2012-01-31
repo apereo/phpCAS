@@ -13,7 +13,7 @@
  *
  * PHP Version 5
  *
- * @file     create_pgt_storage_tabel.php
+ * @file     create_pgt_storage_table.php
  * @category Authentication
  * @package  PhpCAS
  * @author   Joachim Fritschi <jfritschi@freenet.de>
@@ -37,7 +37,7 @@ $cas_obj->createTable();
 ?>
 <html>
   <head>
-    <title>phpCAS PGT storage table creation</title>
+    <title>phpCAS PGT db storage table creation</title>
     <link rel="stylesheet" type='text/css' href='example.css'/>
   </head>
 <body>
