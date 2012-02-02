@@ -1477,7 +1477,8 @@ class CAS_Client
             phpCAS::trace("phpCAS can't handle logout requests if it does not manage the session.");
         }
         phpCAS::trace("Logout requested");
-        phpCAS::trace("SAML REQUEST: ".$_POST['logoutRequest']);
+        $decoded_logout_rq = urldecode($_POST['logoutRequest']);
+        phpCAS::trace("SAML REQUEST: ".$decoded_logout_rq);
         $allowed = false;
         if ($check_client) {
             if (!$allowed_clients) {
@@ -1507,7 +1508,7 @@ class CAS_Client
                 $this->_rebroadcast(self::LOGOUT);
             }
             // Extract the ticket from the SAML Request
-            preg_match("|<samlp:SessionIndex>(.*)</samlp:SessionIndex>|", $_POST['logoutRequest'], $tick, PREG_OFFSET_CAPTURE, 3);
+            preg_match("|<samlp:SessionIndex>(.*)</samlp:SessionIndex>|", $decoded_logout_rq, $tick, PREG_OFFSET_CAPTURE, 3);
             $wrappedSamlSessionIndex = preg_replace('|<samlp:SessionIndex>|', '', $tick[0][0]);
             $ticket2logout = preg_replace('|</samlp:SessionIndex>|', '', $wrappedSamlSessionIndex);
             phpCAS::trace("Ticket to logout: ".$ticket2logout);
