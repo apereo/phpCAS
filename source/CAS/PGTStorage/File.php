@@ -201,6 +201,9 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
         phpCAS::traceBegin();
         $fname = $this->getPGTIouFilename($pgt_iou);
         if (!file_exists($fname)) {
+            touch($fname);
+            // Chmod will fail on windows
+            @chmod($fname, 0600);
             if ($f=fopen($fname, "w")) {
                 if (fputs($f, $pgt) === false) {
                     phpCAS::error('could not write PGT to `'.$fname.'\'');

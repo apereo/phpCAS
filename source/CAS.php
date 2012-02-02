@@ -145,7 +145,7 @@ define("SAML_ATTRIBUTES", 'SAMLATTRIBS');
 /**
  * Default path used when storing PGT's to file
  */
-define("CAS_PGT_STORAGE_FILE_DEFAULT_PATH", '/tmp');
+define("CAS_PGT_STORAGE_FILE_DEFAULT_PATH", session_save_path());
 /** @} */
 // ------------------------------------------------------------------------
 // SERVICE ACCESS ERRORS
