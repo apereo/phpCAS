@@ -1,3 +1,33 @@
+Changes in version 1.3.0RC1
+
+Bug Fixes:
+   * the saml logout url should be parsed urlencoded [#24] (dlineate)
+   * change the default PGT save path to the session storage path and set proper permissions [#22] (Joachim Fritschi)
+   * fix a proxy mode bug introduced in a previous comitt [#16] (Adam Franco)
+   * Fix include_path order so that the phpCAS path takes precedence [#13] (Adam Franco)
+   * fix invalid characters in the php session naming [#17] (Joachim Fritschi)
+   * fix an initialisation problem introduced in the PGT storage [18] (Daniel Frett)
+   * make sure the PGTStorage object is initialized if a user is utilizing the createTable method [#4] (Daniel Frett)
+   * Fix error message in phpCAS::setCacheTimesForAuthRecheck() [PHPCAS-132/#1] (Bradley Froehle)
+   * Always return attributes in utf8 [PHPCAS-102]
+   * Fix warning during debugging if debug is set to false [PHPCAS-123] (Sean Watkins)
+
+New Features:
+    * Add a script to create the PGT db table in proxy mode [#11] (Joachim Fritschi)
+    * Switch to the Apache License [#5] (Adam Franco, Joachim Fritschi)
+    * Move to github and add all necessary file to package [#12] (Adam Franco)
+    * New build process for github [#12] (Adam Franco)
+    * Update unit tests to work with the lastest phpunit version [PHPCAS-128] (Adam Franco)
+    * Refacatoring of the protocol decision making to allow validation of proxied usage [PHPCAS-69] (Joachim Fritschi, Adam Franco)
+    * Rebroadcast of logout and pgtiou to support clustered phpcas [PHPCAS-100] (Matthew Selwood, Adam Franco)
+
+Improvements:
+    * Improved cookie handling [] (Adam Franco
+    * Indent, format and user name guidelines of PEAR [#14] (Joachim Fritschi)
+    * Add a class autoloading feature [PHPCAS-125/#8] (Joachim Fritschi)
+    * Remove global variables [PHPCAS-126] (Adam Franco)
+    * Implementation of an exception framework to allow gracefull termination [PHPCAS-109] (Joachim Fritschi)
+
 Changes in version 1.2.2
 
 Bug Fixes:
