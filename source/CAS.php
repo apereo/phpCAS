@@ -466,6 +466,13 @@ class phpCAS
 
 
         if (!empty(self::$_PHPCAS_DEBUG['filename'])) {
+            // Check if file exists and modifiy file permissions to be only
+            // readable by the webserver
+            if (!file_exists(self::$_PHPCAS_DEBUG['filename'])) {
+                touch(self::$_PHPCAS_DEBUG['filename']);
+                // Chmod will fail on windows
+                @chmod(self::$_PHPCAS_DEBUG['filename'], 0600);
+            }
             for ($i = 0; $i < self::$_PHPCAS_DEBUG['indent']; $i++) {
 
                 $indent_str .= '|    ';
