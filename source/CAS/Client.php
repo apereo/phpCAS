@@ -786,7 +786,7 @@ class CAS_Client
         $this->_change_session_id = $changeSessionID; // true : allow to change the session_id(), false session_id won't be change and logout won't be handle because of that
 
         // skip Session Handling for logout requests and if don't want it'
-        if (empty(session_id()) && !$this->_isLogoutRequest()) {
+        if (session_id()=="" && !$this->_isLogoutRequest()) {
             phpCAS :: trace("Starting a new session");
             session_start();
         }
