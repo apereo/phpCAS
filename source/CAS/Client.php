@@ -768,7 +768,7 @@ class CAS_Client
      * @param string $server_hostname the hostname of the CAS server
      * @param int    $server_port     the port the CAS server is running on
      * @param string $server_uri      the URI the CAS server is responding on
-     * @param bool   $start_session   Have phpCAS start PHP sessions (default true)
+     * @param bool   $changeSessionID Allow phpCAS to change the session_id (Single Sign Out/handleLogoutRequests is based on that change)
      *
      * @return a newly created CAS_Client object
      */
@@ -778,22 +778,15 @@ class CAS_Client
         $server_hostname,
         $server_port,
         $server_uri,
-        $start_session = true
+        $changeSessionID = true
     ) {
 
         phpCAS::traceBegin();
 
-        $this->_start_session = $start_session;
+        $this->_change_session_id = $changeSessionID; // true : allow to change the session_id(), false session_id won't be change and logout won't be handle because of that
 
-        if ($this->_start_session && session_id() !== "") {
-            phpCAS :: error(
-                "Another session was started before phpcas. Either disable the session" .
-                " handling for phpcas in the client() call or modify your application to leave" .
-                " session handling to phpcas"
-            );
-        }
         // skip Session Handling for logout requests and if don't want it'
-        if ($start_session && !$this->_isLogoutRequest()) {
+        if (session_id()=="" && !$this->_isLogoutRequest()) {
             phpCAS :: trace("Starting a new session");
             session_start();
         }
@@ -902,28 +895,28 @@ class CAS_Client
      * A variable to whether phpcas will use its own session handling. Default = true
      * @hideinitializer
      */
-    private $_start_session = true;
+    private $_change_session_id = true;
 
     /**
-     * Set a parameter whether to start a session
+     * Set a parameter whether to allow phpCas to change session_id
      *
-     * @param bool $session start a session
+     * @param bool $_change_session_id allow phpCas to change session_id
      *
      * @return void
      */
-    private function _setStartSession($session)
+    private function setChangeSessionID($allowed)
     {
-        $this->_start_session = $session;
+        $this->_change_session_id = $allowed;
     }
 
     /**
-     * Get whether the client is set to start a session
+     * Get whether phpCas is allowed to change session_id
      *
      * @return bool
      */
-    public function getStartSession()
+    public function getChangeSessionID()
     {
-        return $this->_start_session;
+        return $this->_change_session_id;
     }
 
     /** @} */
@@ -1473,8 +1466,8 @@ class CAS_Client
             phpCAS::traceEnd();
             return;
         }
-        if (!$this->_start_session && is_null($this->_signoutCallbackFunction)) {
-            phpCAS::trace("phpCAS can't handle logout requests if it does not manage the session.");
+        if (!$this->_change_session_id && is_null($this->_signoutCallbackFunction)) {
+            phpCAS::trace("phpCAS can't handle logout requests if it is not allowed to change session_id.");
         }
         phpCAS::trace("Logout requested");
         $decoded_logout_rq = urldecode($_POST['logoutRequest']);
@@ -1520,8 +1513,8 @@ class CAS_Client
                 call_user_func_array($this->_signoutCallbackFunction, $args);
             }
 
-            // If phpCAS is managing the session, destroy it.
-            if ($this->_start_session) {
+            // If phpCAS is managing the session_id, destroy session thanks to session_id.
+            if ($this->_change_session_id) {
                 $session_id = preg_replace('/[^a-zA-Z0-9\-]/', '', $ticket2logout);
                 phpCAS::trace("Session id: ".$session_id);
 
@@ -3159,7 +3152,7 @@ class CAS_Client
     private function _renameSession($ticket)
     {
         phpCAS::traceBegin();
-        if ($this->_start_session) {
+        if ($this->_change_session_id) {
             if (!empty($this->_user)) {
                 $old_session = $_SESSION;
                 session_destroy();
