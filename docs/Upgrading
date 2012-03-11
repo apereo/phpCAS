@@ -72,3 +72,18 @@ to 0600 to be only readable by the webserver.
 The setPGTStorageFile() function no longer needs an storage "format" argument.
 Since the format functionality was never implemented it has now been dropped 
 and only the path argument is necessary.
+
+------------------------------------------------------------------
+5. The startSession boolean in the constructor has been changed to
+changeSessionID
+------------------------------------------------------------------
+
+The last parameter of the constructor for has been changed from "start session"
+to "change session ID". This has no negative effects on existion integrations
+but will allow integration with other frameworks to take advantage of single 
+sign-out if they switch to "true". phpCAS will then rename the session id 
+(keeping all vars) and be able to single sign-out users.
+
+
+
+

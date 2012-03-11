@@ -1,0 +1,13 @@
+Extract of: https://github.com/Jasig/phpCAS/pull/12
+
+ant prepare   # The default action, tags, packages, and commits to the local repository
+ant push      # Push the new commits and tags to the origin repository (github)
+ant upload    # Upload to jasig
+ant makeCurrentSymlink # Set the symbolic link on the jasig site.
+The ant prepare target is equivalent to ant tag && ant dist && ant markdev.
+
+To revert the commits and tag additions added in the ant tag and ant markdev
+targets, use the new ant revert target. This should not be done after pushing.
+
+Running ant prepare is safe and can be followed by ant revert to get rid of the
+added commits and tag in your local repository.
