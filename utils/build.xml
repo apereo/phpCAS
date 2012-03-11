@@ -163,6 +163,9 @@
     <!-- call Doxygen -->
     <echo message="writing API documentation..."/>
     <doxygen doxygenPath="${doxygen.path}" configFilename="${basedir}/tmp/Doxyfile"/>
+  	
+    <!-- Remove the api docs from the dist package -->
+    <delete file="tmp/CAS-${phpcas.version}/docs/examples/config.php"/>
     
     <!-- Build our tarballs -->
     <!-- Docs -->
