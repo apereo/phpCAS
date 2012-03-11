@@ -27,6 +27,8 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+ob_start();
+
 require_once dirname(__FILE__) . '/../source/CAS.php';
 require_once dirname(__FILE__) . '/../source/CAS/Autoload.php';
 
