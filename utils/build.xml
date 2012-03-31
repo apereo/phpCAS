@@ -164,7 +164,7 @@
     <echo message="writing API documentation..."/>
     <doxygen doxygenPath="${doxygen.path}" configFilename="${basedir}/tmp/Doxyfile"/>
   	
-    <!-- Remove the api docs from the dist package -->
+    <!-- Remove any real config from the examples -->
     <delete file="tmp/CAS-${phpcas.version}/docs/examples/config.php"/>
     
     <!-- Build our tarballs -->
@@ -177,15 +177,32 @@
         
     <!-- Remove the api docs from the dist package -->
     <delete dir="tmp/CAS-${phpcas.version}/docs/api"/>
-    
+        
+    <!-- write makepackage.php file from template -->
+    <echo message="write makepackage.php file..."/>
+    <copy file="makepackage.php" 
+          tofile="tmp/makepackage.php">
+      <filterchain>
+        <expandproperties/>
+      </filterchain>
+    </copy>
+    <!-- generate package.xml -->
+    <echo message="checking for php..."/>
+    <fail message="please set ${php.path} in build.properties" unless="php.path"/>
+    <available file="${php.path}" type="file" property="php.present"/>
+    <fail message="php program not found (${php.path})" unless="php.present"/>
+    <echo message="building the PEAR package.xml file..."/>
+    <exec dir="${basedir}" executable="${php.path}" >
+      <arg line="-f tmp/makepackage.php"/>
+    </exec>
+
     <!-- Dist package -->
     <tar 
         destfile="dist/CAS-${phpcas.version}.tgz"
         compression="gzip" 
         basedir="tmp/"
-        includes="CAS-${phpcas.version}/**" />
-    
-
+        includes="CAS-${phpcas.version}/**,package.xml"/>
+  	
     <!--delete dir="tmp" /-->
   </target>
   
