@@ -1128,6 +1128,8 @@ class CAS_Client
         $res = false;
         if ( $this->isAuthenticated() ) {
             phpCAS::trace('user is authenticated');
+            /* The 'auth_checked' variable is removed just in case it's set. */
+            unset($_SESSION['phpCAS']['auth_checked']);
             $res = true;
         } else if (isset($_SESSION['phpCAS']['auth_checked'])) {
             // the previous request has redirected the client to the CAS server
