@@ -32,7 +32,9 @@ $pfm->setOptions(array(
     'filelistgenerator' => 'file',
     'simpleoutput' => true,
     'roles'=>array('php'=>'php'),
-    'exceptions'=>array()
+    'exceptions'=>array('README.md' => 'doc',
+                        'LICENSE' => 'doc',
+                        'NOTICE' => 'doc')
 ));
 $pfm->setPackage('CAS');
 $pfm->setPackageType('php'); // this is a PEAR-style php script package
@@ -46,7 +48,7 @@ $pfm->setReleaseVersion('${phpcas.version}');
 $pfm->setNotes('see https://github.com/Jasig/phpCAS/blob/master/docs/ChangeLog');
 
 $pfm->addMaintainer('lead','fritschi','Joachim Fritschi','jfritschi@freenet.de');
-$pfm->addMaintainer('helper','adamfranco','Adam Franco','afranco@middlebury.edu');
+$pfm->addMaintainer('contributor','adamfranco','Adam Franco','afranco@middlebury.edu');
 
 $pfm->setLicense('Apache 2.0 License', 'https://github.com/Jasig/phpCAS/blob/master/LICENSE');
 $pfm->clearDeps();
