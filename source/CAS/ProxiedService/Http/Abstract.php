@@ -231,7 +231,7 @@ implements CAS_ProxiedService_Http
         $this->_cookieJar->storeCookies($url, $request->getResponseHeaders());
 
         // Follow any redirects
-        if ($redirectUrl = $this->_getRedirectUrl($request->getResponseHeaders())) {
+        if ($redirectUrl = $this->getRedirectUrl($request->getResponseHeaders())) {
             phpCAS :: trace('Found redirect:'.$redirectUrl);
             $this->makeRequest($redirectUrl);
         } else {
@@ -258,7 +258,7 @@ implements CAS_ProxiedService_Http
      *
      * @return string or null
      */
-    private function _getRedirectUrl (array $responseHeaders)
+    protected function getRedirectUrl (array $responseHeaders)
     {
         // Check for the redirect after authentication
         foreach ($responseHeaders as $header) {
