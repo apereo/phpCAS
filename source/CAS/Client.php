@@ -783,7 +783,7 @@ class CAS_Client
 
         phpCAS::traceBegin();
 
-        $this->_change_session_id = $changeSessionID; // true : allow to change the session_id(), false session_id won't be change and logout won't be handle because of that
+        $this->_setChangeSessionID($changeSessionID); // true : allow to change the session_id(), false session_id won't be change and logout won't be handle because of that
 
         // skip Session Handling for logout requests and if don't want it'
         if (session_id()=="" && !$this->_isLogoutRequest()) {
@@ -900,11 +900,11 @@ class CAS_Client
     /**
      * Set a parameter whether to allow phpCas to change session_id
      *
-     * @param bool $_change_session_id allow phpCas to change session_id
+     * @param bool $allowed allow phpCas to change session_id
      *
      * @return void
      */
-    private function setChangeSessionID($allowed)
+    private function _setChangeSessionID($allowed)
     {
         $this->_change_session_id = $allowed;
     }
@@ -1468,7 +1468,7 @@ class CAS_Client
             phpCAS::traceEnd();
             return;
         }
-        if (!$this->_change_session_id && is_null($this->_signoutCallbackFunction)) {
+        if (!$this->getChangeSessionID() && is_null($this->_signoutCallbackFunction)) {
             phpCAS::trace("phpCAS can't handle logout requests if it is not allowed to change session_id.");
         }
         phpCAS::trace("Logout requested");
@@ -1516,7 +1516,7 @@ class CAS_Client
             }
 
             // If phpCAS is managing the session_id, destroy session thanks to session_id.
-            if ($this->_change_session_id) {
+            if ($this->getChangeSessionID()) {
                 $session_id = preg_replace('/[^a-zA-Z0-9\-]/', '', $ticket2logout);
                 phpCAS::trace("Session id: ".$session_id);
 
@@ -3154,7 +3154,7 @@ class CAS_Client
     private function _renameSession($ticket)
     {
         phpCAS::traceBegin();
-        if ($this->_change_session_id) {
+        if ($this->getChangeSessionID()) {
             if (!empty($this->_user)) {
                 $old_session = $_SESSION;
                 session_destroy();

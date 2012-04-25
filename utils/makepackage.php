@@ -2,12 +2,17 @@
 /**
  * Packaging File to create a pear package.xml
  *
- * @package CAS
- * @author  Brett Bieber
- * @author  Joachim Fritschi
+ * @category Authentication
+ * @package  PhpCAS
+ * @author   Brett Bieber <brett.bieber@gmail.com>
+ * @author   Joachim Fritschi <jfritschi@freenet.de>
+ * @license  http://www1.unl.edu/wdn/wiki/Software_License New BSD License
+ * @link     https://wiki.jasig.org/display/CASC/phpCAS
+ *
+ * PHP Version 5
  */
 error_reporting(E_ALL ^ E_DEPRECATED);
-ini_set('display_errors',true);
+ini_set('display_errors', true);
 
 /**
  * Require the PEAR_PackageFileManager2 classes, and other
@@ -25,7 +30,8 @@ require_once 'PEAR/Frontend.php';
 PEAR::setErrorHandling(PEAR_ERROR_DIE);
 chdir(dirname(__FILE__));
 $pfm = new PEAR_PackageFileManager2();
-$pfm->setOptions(array(
+$pfm->setOptions(
+    array(
     'packagedirectory'  => '${basedir}/tmp/CAS-${phpcas.version}',
     'outputdirectory'  => '${basedir}/tmp',
     'baseinstalldir'    => '/',
@@ -35,7 +41,8 @@ $pfm->setOptions(array(
     'exceptions'=>array('README.md' => 'doc',
                         'LICENSE' => 'doc',
                         'NOTICE' => 'doc')
-));
+    )
+);
 $pfm->setPackage('CAS');
 $pfm->setPackageType('php'); // this is a PEAR-style php script package
 $pfm->setSummary('Central Authentication Service client library in php');
@@ -47,8 +54,8 @@ $pfm->setAPIVersion('${phpcas.version}');
 $pfm->setReleaseVersion('${phpcas.version}');
 $pfm->setNotes('see https://github.com/Jasig/phpCAS/blob/master/docs/ChangeLog');
 
-$pfm->addMaintainer('lead','fritschi','Joachim Fritschi','jfritschi@freenet.de');
-$pfm->addMaintainer('contributor','adamfranco','Adam Franco','afranco@middlebury.edu');
+$pfm->addMaintainer('lead', 'jfritschi', 'Joachim Fritschi', 'jfritschi@freenet.de');
+$pfm->addMaintainer('contributor', 'adamfranco', 'Adam Franco', 'afranco@middlebury.edu');
 
 $pfm->setLicense('Apache 2.0 License', 'https://github.com/Jasig/phpCAS/blob/master/LICENSE');
 $pfm->clearDeps();

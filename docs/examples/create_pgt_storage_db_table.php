@@ -10,7 +10,6 @@
  *  have to filled out directly. Option examples can be found in the
  *  config.example.php
  *
- *
  * PHP Version 5
  *
  * @file     create_pgt_storage_table.php
