@@ -62,15 +62,14 @@ function CAS_autoload($class)
 
 // set up __autoload
 if (function_exists('spl_autoload_register')) {
-    if (!($_____t = spl_autoload_functions()) || !in_array('CAS_autoload', spl_autoload_functions())) {
+    if (!(spl_autoload_functions()) || !in_array('CAS_autoload', spl_autoload_functions())) {
         spl_autoload_register('CAS_autoload');
-        if (function_exists('__autoload') && ($_____t === false)) {
+        if (function_exists('__autoload') && !in_array('__autoload', spl_autoload_functions())) {
             // __autoload() was being used, but now would be ignored, add
             // it to the autoload stack
             spl_autoload_register('__autoload');
         }
     }
-    unset($_____t);
 } elseif (!function_exists('__autoload')) {
 
     /**
