@@ -63,7 +63,7 @@ if (!defined('E_USER_DEPRECATED')) {
 /**
  * phpCAS version. accessible for the user by phpCAS::getVersion().
  */
-define('PHPCAS_VERSION', '1.3.1');
+define('PHPCAS_VERSION', '1.3.1+');
 
 /**
  * @addtogroup public
