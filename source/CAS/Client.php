@@ -190,11 +190,13 @@ class CAS_Client
      */
     public function setLang($lang)
     {
+        phpCAS::traceBegin();
         $obj = new $lang();
         if (!($obj instanceof CAS_Languages_LanguageInterface)) {
             throw new CAS_InvalidArgumentException('$className must implement the CAS_Languages_LanguageInterface');
         }
         $this->_lang = $lang;
+        phpCAS::traceEnd();
     }
     /**
      * Create the language
