@@ -42,6 +42,11 @@ phpCAS::handleLogoutRequests(true, $cas_real_hosts);
 
 // Force CAS authentication on any page that includes this file
 phpCAS::forceAuthentication();
+
+// Some small code triggered by the logout button
+if (isset($_REQUEST['logout'])) {
+    phpCAS::logout();
+}
 ?>
 <html>
   <head>
