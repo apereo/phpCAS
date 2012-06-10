@@ -42,9 +42,13 @@ phpCAS::handleLogoutRequests(true, $cas_real_hosts);
 
 // Force CAS authentication on any page that includes this file
 phpCAS::forceAuthentication();
-
 ?>
-<h2>Secure Page</h2>
+<html>
+  <head>
+    <title>Advanced SAML 1.1 example</title>
+  </head>
+  <body>
+<h2>Advanced SAML 1.1 example</h2>
 <?php require 'script_info.php' ?>
 
 Authentication succeeded for user
@@ -61,8 +65,11 @@ foreach (phpCAS::getAttributes() as $key => $value) {
         }
         echo '</ol></li>';
     } else {
-        echo '<li>', $key, ': <strong>', $value, '</strong></li>';
+        echo '<li>', $key, ': <strong>', $value, '</strong></li>' . PHP_EOL;
     }
 }
     ?>
 </ul>
+<p><a href="?logout=">Logout</a></p>
+</body>
+</html>
