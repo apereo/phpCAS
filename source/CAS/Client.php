@@ -1703,7 +1703,6 @@ class CAS_Client
         $arr = preg_split('/\n/', $text_response);
         $this->_setUser(trim($arr[1]));
         $result = true;
-        break;
 
         if ($result) {
             $this->_renameSession($this->getTicket());
