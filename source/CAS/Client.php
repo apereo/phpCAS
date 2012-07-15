@@ -3089,11 +3089,17 @@ class CAS_Client
             }
         }
         if (!strpos($server_url, ':')) {
-            if ( ($this->_isHttps() && $_SERVER['SERVER_PORT']!=443)
-                || (!$this->_isHttps() && $_SERVER['SERVER_PORT']!=80)
+            if (empty($_SERVER['HTTP_X_FORWARDED_PORT'])) {
+                $server_port = $_SERVER['SERVER_PORT'];
+            } else {
+                $server_port = $_SERVER['HTTP_X_FORWARDED_PORT'];
+            }
+
+            if ( ($this->_isHttps() && $server_port!=443)
+                || (!$this->_isHttps() && $server_port!=80)
             ) {
                 $server_url .= ':';
-                $server_url .= $_SERVER['SERVER_PORT'];
+                $server_url .= $server_port;
             }
         }
         return $server_url;
