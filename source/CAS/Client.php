@@ -1313,7 +1313,7 @@ class CAS_Client
 
         if ( $this->_isCallbackMode() ) {
             // Rebroadcast the pgtIou and pgtId to all nodes
-            if ($this->rebroadcast&&!isset($_POST['rebroadcast'])) {
+            if ($this->_rebroadcast&&!isset($_POST['rebroadcast'])) {
                 $this->_rebroadcast(self::PGTIOU);
             }
             $this->_callback();
