@@ -1622,6 +1622,14 @@ class CAS_Client
      */
     private $_cas_server_ca_cert = '';
 
+
+    /**
+     * validate CN of the CAS server certificate
+     *
+     * @hideinitializer
+     */
+    private $_cas_server_cn_validate = '';
+
     /**
      * Set to true not to validate the CAS server.
      *
@@ -1633,14 +1641,16 @@ class CAS_Client
     /**
      * Set the CA certificate of the CAS server.
      *
-     * @param string $cert the PEM certificate file name of the CA that emited
+     * @param string $cert        the PEM certificate file name of the CA that emited
      * the cert of the server
+     * @param bool   $validate_cn valiate CN of the CAS server certificate
      *
      * @return void
      */
-    public function setCasServerCACert($cert)
+    public function setCasServerCACert($cert, $validate_cn)
     {
         $this->_cas_server_ca_cert = $cert;
+        $this->_cas_server_cn_validate = $validate_cn;
     }
 
     /**
@@ -2419,6 +2429,7 @@ class CAS_Client
         }
         if ($this->_cas_server_ca_cert != '') {
             $request->setSslCaCert($this->_cas_server_ca_cert);
+            $request->setSslCaCert($this->_cas_server_cn_validate);
         }
 
         // add extra stuff if SAML

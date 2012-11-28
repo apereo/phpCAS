@@ -303,7 +303,7 @@ class phpCAS
      * @param string $server_hostname the hostname of the CAS server
      * @param string $server_port     the port the CAS server is running on
      * @param string $server_uri      the URI the CAS server is responding on
-     * @param bool   $changeSessionID Allow phpCAS to change the session_id (Single 
+     * @param bool   $changeSessionID Allow phpCAS to change the session_id (Single
      * Sign Out/handleLogoutRequests is based on that change)
      *
      * @return a newly created CAS_Client object
@@ -355,7 +355,7 @@ class phpCAS
      * @param string $server_hostname the hostname of the CAS server
      * @param string $server_port     the port the CAS server is running on
      * @param string $server_uri      the URI the CAS server is responding on
-     * @param bool   $changeSessionID Allow phpCAS to change the session_id (Single 
+     * @param bool   $changeSessionID Allow phpCAS to change the session_id (Single
      * Sign Out/handleLogoutRequests is based on that change)
      *
      * @return a newly created CAS_Client object
@@ -1630,13 +1630,15 @@ class phpCAS
     }
 
     /**
-     * Set the certificate of the CAS server CA.
+     * Set the certificate of the CAS server CA and if the CN should be properly
+     * verified.
      *
-     * @param string $cert CA certificate file name
+     * @param string $cert               CA certificate file name
+     * @param bool   $validate_host_name Validate CN in certificate (default true)
      *
      * @return void
      */
-    public static function setCasServerCACert($cert)
+    public static function setCasServerCACert($cert, $validate_cn = true)
     {
         phpCAS :: traceBegin();
         if (!is_object(self::$_PHPCAS_CLIENT)) {
@@ -1645,7 +1647,10 @@ class phpCAS
         if (gettype($cert) != 'string') {
             phpCAS :: error('type mismatched for parameter $cert (should be `string\')');
         }
-        self::$_PHPCAS_CLIENT->setCasServerCACert($cert);
+        if (gettype($validate_cn) != 'boolean') {
+            phpCAS :: error('type mismatched for parameter $validate_cn (should be `boolean\')');
+        }
+        self::$_PHPCAS_CLIENT->setCasServerCACert($cert, $validate_cn);
         phpCAS :: traceEnd();
     }
 

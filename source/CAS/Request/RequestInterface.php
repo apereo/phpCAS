@@ -124,7 +124,7 @@ interface CAS_Request_RequestInterface
      * @return void
      * @throws CAS_OutOfSequenceException If called after the Request has been sent.
      */
-    public function setSslCaCert ($caCertPath);
+    public function setSslCaCert ($caCertPath,$validate_cn);
 
 
 
