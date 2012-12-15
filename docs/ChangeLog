@@ -1,3 +1,18 @@
+Changes in version 1.3.2
+Security Fixes:
+   * CVE-2012-5583 Missing CN validation of CAS server certificate [#58] (Joachim Fritschi)
+
+Bug Fixes:
+   * Fix broken character encoding in Greek and French [#40] (Joachim Fritschi)
+   * Minor error corrections in a few example files [] (Joachim Fritschi)
+   * Remove erroneous break statement [#44] (jbittel)
+   * Use X-Forwarded-Port [#45] (Andrew Kirkpatrick)
+   * Stop autoloader using set_include_path [#51/#52] (drysdaleb)
+   * Fix undefined property in the rebroadcast code [#47] (Joachim Fritschi)
+
+Improvement:
+   * Enable getCookies on a proxied sevices [#56] (Adam Franco)
+ 
 Changes in version 1.3.1
 Bug Fixes:
    * Readd PEAR support to the package [#30]  (Joachim Fritschi)

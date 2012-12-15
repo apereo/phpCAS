@@ -1,4 +1,15 @@
 ################################
+### Upgrading 1.3.1 -> 1.3.2 ###
+################################
+
+Due to the missing validation of the CN of the SSL certifcate it may be that
+phpcas fails validation of CAS server certicates that do not match the IP/DNS 
+name you use in the phpcas client() or proxy() setup.
+If this happens a quick workaround to change the setup to the old but unsecure
+behaviour. This can be seen in the no_ssl_cn_validation example.
+This is not a recommended setting and is no a secure setup!
+
+################################
 ### Upgrading 1.2.x -> 1.3.0 ###
 ################################
 
