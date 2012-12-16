@@ -194,7 +194,6 @@ implements CAS_Request_RequestInterface
         if ($this->_sent) {
             throw new CAS_OutOfSequenceException('Request has already been sent cannot '.__METHOD__);
         }
-
         $this->caCertPath = $caCertPath;
         $this->validateCN = $validate_cn;
     }

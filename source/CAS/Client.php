@@ -1620,7 +1620,7 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_cas_server_ca_cert = '';
+    private $_cas_server_ca_cert = null;
 
 
     /**
@@ -1628,7 +1628,7 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_cas_server_cn_validate = '';
+    private $_cas_server_cn_validate = true;
 
     /**
      * Set to true not to validate the CAS server.
@@ -2428,8 +2428,7 @@ class CAS_Client
             phpCAS::error('one of the methods phpCAS::setCasServerCACert() or phpCAS::setNoCasServerValidation() must be called.');
         }
         if ($this->_cas_server_ca_cert != '') {
-            $request->setSslCaCert($this->_cas_server_ca_cert);
-            $request->setSslCaCert($this->_cas_server_cn_validate);
+            $request->setSslCaCert($this->_cas_server_ca_cert, $this->_cas_server_cn_validate);
         }
 
         // add extra stuff if SAML

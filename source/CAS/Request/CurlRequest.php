@@ -124,7 +124,7 @@ implements CAS_Request_RequestInterface
             }
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
             curl_setopt($ch, CURLOPT_CAINFO, $this->caCertPath);
-            phpCAS::trace('CURL: Set CURLOPT_CAINFO');
+            phpCAS::trace('CURL: Set CURLOPT_CAINFO ' . $this->caCertPath);
         } else {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         }
