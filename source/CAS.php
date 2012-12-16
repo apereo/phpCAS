@@ -477,7 +477,8 @@ class phpCAS
 
                 $indent_str .= '|    ';
             }
-            // allow for multiline output with proper identing. Usefull for dumping cas answers etc.
+            // allow for multiline output with proper identing. Usefull for
+            // dumping cas answers etc.
             $str2 = str_replace("\n", "\n" . self::$_PHPCAS_DEBUG['unique_id'] . ' ' . $indent_str, $str);
             error_log(self::$_PHPCAS_DEBUG['unique_id'] . ' ' . $indent_str . $str2 . "\n", 3, self::$_PHPCAS_DEBUG['filename']);
         }
@@ -1633,8 +1634,8 @@ class phpCAS
      * Set the certificate of the CAS server CA and if the CN should be properly
      * verified.
      *
-     * @param string $cert               CA certificate file name
-     * @param bool   $validate_host_name Validate CN in certificate (default true)
+     * @param string $cert        CA certificate file name
+     * @param bool   $validate_cn Validate CN in certificate (default true)
      *
      * @return void
      */

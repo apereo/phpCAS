@@ -44,5 +44,6 @@ $cas_obj->createTable();
 <?php
 echo 'Table <b>' . $db_table . '</b> successfully created in database <b>' . $db . '</b>';
 ?>
+</div>
 </body>
 </html>

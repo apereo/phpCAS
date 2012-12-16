@@ -119,7 +119,7 @@ interface CAS_Request_RequestInterface
     /**
      * Specify the path to an SSL CA certificate to validate the server with.
      *
-     * @param string  $caCertPath path to cert file
+     * @param string  $caCertPath  path to cert file
      * @param boolean $validate_cn validate CN of SSL certificate
      *
      * @return void

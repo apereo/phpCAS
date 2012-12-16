@@ -327,9 +327,10 @@ implements CAS_ProxiedService_Http
 
         return $this->_responseBody;
     }
-    
+
     /**
-     * Answer the cookies from the response. This may include cookies set during redirect responses.
+     * Answer the cookies from the response. This may include cookies set during
+     * redirect responses.
      *
      * @return array An array containing cookies. E.g. array('name' => 'val');
      */

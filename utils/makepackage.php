@@ -2,6 +2,8 @@
 /**
  * Packaging File to create a pear package.xml
  *
+ * PHP Version 5
+ *
  * @category Authentication
  * @package  PhpCAS
  * @author   Brett Bieber <brett.bieber@gmail.com>
@@ -9,7 +11,6 @@
  * @license  http://www1.unl.edu/wdn/wiki/Software_License New BSD License
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  *
- * PHP Version 5
  */
 error_reporting(E_ALL ^ E_DEPRECATED);
 ini_set('display_errors', true);

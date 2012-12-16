@@ -23,10 +23,12 @@
  */
 function CAS_autoload($class)
 {
-	// Static to hold the Include Path to CAS
-	static $include_path;
-	// Setup the include path if it's not already set from a previous call
-	if (!$include_path) $include_path = dirname(dirname(__FILE__));
+    // Static to hold the Include Path to CAS
+    static $include_path;
+    // Setup the include path if it's not already set from a previous call
+    if (!$include_path) {
+        $include_path = dirname(dirname(__FILE__));
+    }
     if (substr($class, 0, 4) !== 'CAS_') {
         return false;
     }

@@ -117,9 +117,9 @@ implements CAS_Request_RequestInterface
          * Set SSL configuration
         *********************************************************/
         if ($this->caCertPath) {
-            if($this->validateCN){
+            if ($this->validateCN) {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            }else{
+            } else {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
             }
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
