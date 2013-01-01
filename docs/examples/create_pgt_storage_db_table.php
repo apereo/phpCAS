@@ -27,10 +27,14 @@ require_once $phpcas_path . '/CAS.php';
 
 
 // Dummy client because we need a 'client' object
-$client = new CAS_Client(CAS_VERSION_2_0, true, $cas_host, $cas_port, $cas_context, false);
+$client = new CAS_Client(
+    CAS_VERSION_2_0, true, $cas_host, $cas_port, $cas_context, false
+);
 
 // Set the torage object
-$cas_obj = new CAS_PGTStorage_Db($client, $db, $db_user, $db_password, $db_table, $driver_options);
+$cas_obj = new CAS_PGTStorage_Db(
+    $client, $db, $db_user, $db_password, $db_table, $driver_options
+);
 $cas_obj->init();
 $cas_obj->createTable();
 ?>

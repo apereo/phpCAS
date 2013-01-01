@@ -172,7 +172,9 @@ class CAS_Tests_ServiceMailTest extends PHPUnit_Framework_TestCase
          *********************************************************/
         if (!defined('OP_READONLY')) {
             // Not sure what this should actually  be. It is defined as:
-            //    REGISTER_LONG_CONSTANT("OP_READONLY", OP_READONLY, CONST_PERSISTENT | CONST_CS);
+            //  REGISTER_LONG_CONSTANT(
+            //      "OP_READONLY", OP_READONLY, CONST_PERSISTENT | CONST_CS
+            //  );
             // in http://php-imap.sourcearchive.com/lines/5.1.2-1/php__imap_8c-source.html
             // For now, just ensure that it is an integer.
             define('OP_READONLY', 1);
@@ -214,11 +216,15 @@ class CAS_Tests_ServiceMailTest extends PHPUnit_Framework_TestCase
         // Stop here and mark this test as incomplete.
         $this->markTestIncomplete('This test has not been implemented yet.');
 
-        // 		$stream = $this->object->serviceMail('mailbox_name', 'imap://mail.example.edu/path/to/something', OP_READONLY, $err_code, $err_msg, $pt);
-        // 		$this->assertInternalType('resource', $stream);
-        // 		$this->assertEquals(PHPCAS_SERVICE_OK, $err_code);
-        // 		$this->assertEquals('', $err_msg);
-        // 		$this->assertEquals('PT-asdfas-dfasgww2323radf3', $pt);
+        //      $stream = $this->object->serviceMail(
+        //          'mailbox_name',
+        //          'imap://mail.example.edu/path/to/something',
+        //          OP_READONLY, $err_code, $err_msg, $pt
+        //      );
+        //      $this->assertInternalType('resource', $stream);
+        //      $this->assertEquals(PHPCAS_SERVICE_OK, $err_code);
+        //      $this->assertEquals('', $err_msg);
+        //      $this->assertEquals('PT-asdfas-dfasgww2323radf3', $pt);
     }
 
     /**
@@ -252,11 +258,17 @@ class CAS_Tests_ServiceMailTest extends PHPUnit_Framework_TestCase
         // Stop here and mark this test as incomplete.
         $this->markTestIncomplete('This test has not been implemented yet.');
 
-        // 		$stream = $this->object->serviceMail('mailbox_name', 'ssh://me.example.net', OP_READONLY, $err_code, $err_msg, $pt);
-        // 		$this->assertFalse($stream, "serviceMail() should have returned false on a service error.");
-        // 		$this->assertEquals(PHPCAS_SERVICE_NOT_AVAILABLE, $err_code);
-        // 		$this->assertStringStartsWith("The service", $err_msg);
-        // 		$this->assertFalse($pt, '$pt should be false.');
+        //      $stream = $this->object->serviceMail(
+        //          'mailbox_name', 'ssh://me.example.net', OP_READONLY,
+        //          $err_code, $err_msg, $pt
+        //      );
+        //      $this->assertFalse(
+        //          $stream,
+        //          "serviceMail() should have returned false on a service error."
+        //      );
+        //      $this->assertEquals(PHPCAS_SERVICE_NOT_AVAILABLE, $err_code);
+        //      $this->assertStringStartsWith("The service", $err_msg);
+        //      $this->assertFalse($pt, '$pt should be false.');
     }
 
     /**
@@ -269,14 +281,18 @@ class CAS_Tests_ServiceMailTest extends PHPUnit_Framework_TestCase
         // Stop here and mark this test as incomplete.
         $this->markTestIncomplete('This test has not been implemented yet.');
 
-        //     	$service = $this->object->getProxiedService(PHPCAS_PROXIED_SERVICE_IMAP);
+        //     	$service = $this->object->getProxiedService(
+        //          PHPCAS_PROXIED_SERVICE_IMAP
+        //      );
         //     	$service->setServiceUrl('imap://mail.example.edu/path/to/something');
         //     	$service->setMailbox('mailbox_name');
         //     	$service->setOptions(OP_READONLY);
         //     	$stream = $service->open();
         //     	$this->assertInternalType('resource', $stream);
         //     	$this->assertInternalType('resource', $service->getStream());
-        //     	$this->assertEquals('PT-asdfas-dfasgww2323radf3', $service->getImapProxyTicket());
+        //     	$this->assertEquals(
+        //          'PT-asdfas-dfasgww2323radf3', $service->getImapProxyTicket()
+        //      );
 
     }
 
@@ -312,7 +328,9 @@ class CAS_Tests_ServiceMailTest extends PHPUnit_Framework_TestCase
         // Stop here and mark this test as incomplete.
         $this->markTestIncomplete('This test has not been implemented yet.');
 
-        //     	$service = $this->object->getProxiedService(PHPCAS_PROXIED_SERVICE_IMAP);
+        //     	$service = $this->object->getProxiedService(
+        //          PHPCAS_PROXIED_SERVICE_IMAP
+        //      );
         //     	$service->setServiceUrl('ssh://me.example.net');
         //     	$service->setMailbox('mailbox_name');
         //     	$service->setOptions(OP_READONLY);

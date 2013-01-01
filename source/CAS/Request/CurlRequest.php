@@ -75,7 +75,9 @@ implements CAS_Request_RequestInterface
         $buf = curl_exec($ch);
         if ( $buf === false ) {
             phpCAS::trace('curl_exec() failed');
-            $this->storeErrorMessage('CURL error #'.curl_errno($ch).': '.curl_error($ch));
+            $this->storeErrorMessage(
+                'CURL error #'.curl_errno($ch).': '.curl_error($ch)
+            );
             $res = false;
         } else {
             $this->storeResponseBody($buf);

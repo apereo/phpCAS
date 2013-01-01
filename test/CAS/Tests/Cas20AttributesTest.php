@@ -358,7 +358,10 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
             in_array('CN=Staff,OU=Groups,DC=example,DC=edu', $memberOf)
         );
         $this->assertTrue(
-            in_array('CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu', $memberOf)
+            in_array(
+                'CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu',
+                $memberOf
+            )
         );
         // array access
         $this->assertArrayHasKey('memberOf', $attras);
@@ -368,7 +371,10 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
             in_array('CN=Staff,OU=Groups,DC=example,DC=edu', $attras['memberOf'])
         );
         $this->assertTrue(
-            in_array('CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu', $attras['memberOf'])
+            in_array(
+                'CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu',
+                $attras['memberOf']
+            )
         );
     }
 
