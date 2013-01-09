@@ -1176,7 +1176,7 @@ class phpCAS
      * This method returns the CAS user's login name.
      *
      * @return string the login name of the authenticated user
-     * @warning should not be called only after phpCAS::forceAuthentication()
+     * @warning should only be called after phpCAS::forceAuthentication()
      * or phpCAS::checkAuthentication().
      * */
     public static function getUser()
@@ -1196,7 +1196,7 @@ class phpCAS
     /**
      * Answer attributes about the authenticated user.
      *
-     * @warning should not be called only after phpCAS::forceAuthentication()
+     * @warning should only be called after phpCAS::forceAuthentication()
      * or phpCAS::checkAuthentication().
      *
      * @return array
@@ -1218,7 +1218,7 @@ class phpCAS
     /**
      * Answer true if there are attributes for the authenticated user.
      *
-     * @warning should not be called only after phpCAS::forceAuthentication()
+     * @warning should only be called after phpCAS::forceAuthentication()
      * or phpCAS::checkAuthentication().
      *
      * @return bool
@@ -1243,7 +1243,7 @@ class phpCAS
      * @param string $key attribute name
      *
      * @return bool
-     * @warning should not be called only after phpCAS::forceAuthentication()
+     * @warning should only be called after phpCAS::forceAuthentication()
      * or phpCAS::checkAuthentication().
      */
     public static function hasAttribute($key)
@@ -1266,7 +1266,7 @@ class phpCAS
      * @param string $key attribute name
      *
      * @return mixed string for a single value or an array if multiple values exist.
-     * @warning should not be called only after phpCAS::forceAuthentication()
+     * @warning should only be called after phpCAS::forceAuthentication()
      * or phpCAS::checkAuthentication().
      */
     public static function getAttribute($key)
