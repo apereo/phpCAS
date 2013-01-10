@@ -2413,8 +2413,8 @@ class CAS_Client
         }
 
         // check to make sure a valid storage object was specified
-        if ( !($storage instanceof CAS_PGTStorage) )
-            throw new CAS_TypeMismatchException($storage, '$storage', 'CAS_PGTStorage object');
+        if ( !($storage instanceof CAS_PGTStorage_AbstractStorage) )
+            throw new CAS_TypeMismatchException($storage, '$storage', 'CAS_PGTStorage_AbstractStorage object');
 
         // store the PGTStorage object
         $this->_pgt_storage = $storage;
