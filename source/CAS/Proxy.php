@@ -117,6 +117,25 @@ class CAS_Proxy extends CAS_Client
         }
     }
     
+    /**
+     * This method is used to retrieve the service validating URL of the CAS server.
+     *
+     * @return string serviceValidate URL.
+     */
+    public function getServerServiceValidateURL()
+    {
+        return parent::getServerServiceValidateURL().'&pgtUrl='.urlencode($this->_getCallbackURL());
+    }
+    
+    /**
+     * This method is used to retrieve the proxy validating URL of the CAS server.
+     *
+     * @return string proxyValidate URL.
+     */
+    public function getServerProxyValidateURL()
+    {
+        return parent::getServerProxyValidateURL().'&pgtUrl='.urlencode($this->_getCallbackURL());    
+    }
     
     /**
      * Tells if a CAS client is a CAS proxy or not

@@ -1895,7 +1895,6 @@ class CAS_Client
     }
 
     /** @} */
-
     
 
     /**
@@ -2118,11 +2117,6 @@ class CAS_Client
         } else {
             $validate_url = $this->getServerServiceValidateURL().'&ticket='
                 .$this->getTicket();
-        }
-
-        if ( $this->isProxy() ) {
-            // pass the callback url for CAS proxies
-            $validate_url .= '&pgtUrl='.urlencode($this->_getCallbackURL());
         }
 
         // open and read the URL
