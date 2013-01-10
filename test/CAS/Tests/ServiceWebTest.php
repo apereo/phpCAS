@@ -40,7 +40,7 @@
 class CAS_Tests_ServiceWebTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var CAS_Client
+     * @var CAS_Proxy
      */
     protected $object;
 
@@ -64,7 +64,7 @@ class CAS_Tests_ServiceWebTest extends PHPUnit_Framework_TestCase
         $_SERVER['PHP_SELF'] = '/index.php';
         $_SESSION = array();
 
-        $this->object = new CAS_Client(
+        $this->object = new CAS_Proxy(
             CAS_VERSION_2_0, // Server Version
             true, // Proxy
             'cas.example.edu', // Server Hostname
@@ -76,7 +76,7 @@ class CAS_Tests_ServiceWebTest extends PHPUnit_Framework_TestCase
         $this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
         $this->object->setCasServerCACert('/path/to/ca_cert.crt', true);
 
-        // Bypass PGT storage since CAS_Client->callback() will exit. Just build
+        // Bypass PGT storage since CAS_Proxy->callback() will exit. Just build
         // up the session manually so that we are in a state from which we can
         // attempt to fetch proxy tickets and make proxied requests.
         $_SESSION['phpCAS']['user'] = 'jdoe';

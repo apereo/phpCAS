@@ -393,7 +393,7 @@ class phpCAS
         );
 
         // initialize the object $_PHPCAS_CLIENT
-        self::$_PHPCAS_CLIENT = new CAS_Client(
+        self::$_PHPCAS_CLIENT = new CAS_Proxy(
             $server_version, true, $server_hostname, $server_port, $server_uri,
             $changeSessionID
         );

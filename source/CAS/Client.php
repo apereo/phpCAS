@@ -808,10 +808,7 @@ class CAS_Client
             phpCAS :: trace("Starting a new session");
             session_start();
         }
-
-        // are we in proxy mode ?
-        $this->_proxy = $proxy;
-
+		
         // Make cookie handling available.
         if ($this->isProxy()) {
             if (!isset($_SESSION['phpCAS'])) {
@@ -2003,12 +2000,6 @@ class CAS_Client
     */
 
     /**
-     * A boolean telling if the client is a CAS proxy or not. Written by
-     * CAS_Client::CAS_Client(), read by CAS_Client::isProxy().
-     */
-    private $_proxy;
-
-    /**
      * Handler for managing service cookies.
      */
     private $_serviceCookieJar;
@@ -2020,7 +2011,7 @@ class CAS_Client
      */
     public function isProxy()
     {
-        return $this->_proxy;
+        return false;
     }
 
     /** @} */
