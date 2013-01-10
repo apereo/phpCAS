@@ -50,6 +50,66 @@
 
 class CAS_Proxy extends CAS_Client
 {
+
+    // ########################################################################
+    //  CAS SERVER CONFIG
+    // ########################################################################
+    /**
+    * @addtogroup internalConfig
+    * @{
+    */
+    
+    /**
+     * This method is used to retrieve the service validating URL of the CAS server.
+     *
+     * @return string serviceValidate URL.
+     */
+    public function getServerServiceValidateURL()
+    {
+        return parent::getServerServiceValidateURL().'&pgtUrl='.urlencode($this->_getCallbackURL());
+    }
+    
+    /**
+     * This method is used to retrieve the proxy validating URL of the CAS server.
+     *
+     * @return string proxyValidate URL.
+     */
+    public function getServerProxyValidateURL()
+    {
+        return parent::getServerProxyValidateURL().'&pgtUrl='.urlencode($this->_getCallbackURL());    
+    }
+    
+    /**
+     * This method is used to retrieve the proxy URL of the CAS server.
+     *
+     * @return  string proxy URL.
+     */
+    public function getServerProxyURL()
+    {
+        // the URL is build only when needed
+        if ( empty($this->_server['proxy_url']) ) {
+            switch ($this->getServerVersion()) {
+            case CAS_VERSION_1_0:
+                $this->_server['proxy_url'] = '';
+                break;
+            case CAS_VERSION_2_0:
+                $this->_server['proxy_url'] = $this->_getServerBaseURL().'proxy';
+                break;
+            }
+        }
+        return $this->_server['proxy_url'];
+    }
+    
+    /** @} */
+
+    // ########################################################################
+    //  CONSTRUCTOR
+    // ########################################################################
+    /**
+    * @addtogroup internalConfig
+    * @{
+    */
+    
     /**
      * CAS_Client constructor.
      *
@@ -118,26 +178,6 @@ class CAS_Proxy extends CAS_Client
     }
     
     /**
-     * This method is used to retrieve the service validating URL of the CAS server.
-     *
-     * @return string serviceValidate URL.
-     */
-    public function getServerServiceValidateURL()
-    {
-        return parent::getServerServiceValidateURL().'&pgtUrl='.urlencode($this->_getCallbackURL());
-    }
-    
-    /**
-     * This method is used to retrieve the proxy validating URL of the CAS server.
-     *
-     * @return string proxyValidate URL.
-     */
-    public function getServerProxyValidateURL()
-    {
-        return parent::getServerProxyValidateURL().'&pgtUrl='.urlencode($this->_getCallbackURL());    
-    }
-    
-    /**
      * Tells if a CAS client is a CAS proxy or not
      *
      * @return true when the CAS client is a CAs proxy, false otherwise
@@ -146,6 +186,19 @@ class CAS_Proxy extends CAS_Client
     {
         return true;
     }
+    
+    /** @} */
+
+    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    // XX                                                                    XX
+    // XX                           AUTHENTICATION                           XX
+    // XX                                                                    XX
+    // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+    /**
+     * @addtogroup internalAuthentication
+     * @{
+     */
     
     /**
      * This method tells if the user has already been (previously) authenticated
@@ -284,7 +337,7 @@ class CAS_Proxy extends CAS_Client
      *
      * @return void
      */
-    private function _setCallbackMode($callback_mode)
+    protected function _setCallbackMode($callback_mode)
     {
         $this->_callback_mode = $callback_mode;
     }
@@ -295,7 +348,7 @@ class CAS_Proxy extends CAS_Client
      *
      * @return A boolean.
      */
-    private function _isCallbackMode()
+    protected function _isCallbackMode()
     {
         return $this->_callback_mode;
     }
@@ -316,7 +369,7 @@ class CAS_Proxy extends CAS_Client
      *
      * @return The callback URL
      */
-    private function _getCallbackURL()
+    protected function _getCallbackURL()
     {
         // the URL is built when needed only
         if ( empty($this->_callback_url) ) {
@@ -350,7 +403,7 @@ class CAS_Proxy extends CAS_Client
      *
      * @return void
      */
-    private function _callback()
+    protected function _callback()
     {
         phpCAS::traceBegin();
         if (preg_match('/PGTIOU-[\.\-\w]/', $_GET['pgtIou'])) {
@@ -404,7 +457,7 @@ class CAS_Proxy extends CAS_Client
      *
      * @return string the Proxy Granting Ticket.
      */
-    private function _getPGT()
+    protected function _getPGT()
     {
         return $this->_pgt;
     }
@@ -416,7 +469,7 @@ class CAS_Proxy extends CAS_Client
      *
      * @return void
      */
-    private function _setPGT($pgt)
+    protected function _setPGT($pgt)
     {
         $this->_pgt = $pgt;
     }
@@ -426,7 +479,7 @@ class CAS_Proxy extends CAS_Client
      *
      * @return true if a Proxy Granting Ticket has been stored.
      */
-    private function _hasPGT()
+    protected function _hasPGT()
     {
         return !empty($this->_pgt);
     }
@@ -458,7 +511,7 @@ class CAS_Proxy extends CAS_Client
      *
      * @return void
      */
-    private function _initPGTStorage()
+    protected function _initPGTStorage()
     {
         // if no SetPGTStorageXxx() has been used, default to file
         if ( !is_object($this->_pgt_storage) ) {
@@ -477,7 +530,7 @@ class CAS_Proxy extends CAS_Client
      *
      * @return void
      */
-    private function _storePGT($pgt,$pgt_iou)
+    protected function _storePGT($pgt,$pgt_iou)
     {
         // ensure that storage is initialized
         $this->_initPGTStorage();
@@ -493,7 +546,7 @@ class CAS_Proxy extends CAS_Client
      *
      * @return mul The PGT corresponding to the Iou, false when not found.
      */
-    private function _loadPGT($pgt_iou)
+    protected function _loadPGT($pgt_iou)
     {
         // ensure that storage is initialized
         $this->_initPGTStorage();
@@ -606,7 +659,7 @@ class CAS_Proxy extends CAS_Client
     * @return bool true when successfull and issue a CAS_AuthenticationException
     * and false on an error
     */
-    private function _validatePGT(&$validate_url,$text_response,$tree_response)
+    protected function _validatePGT(&$validate_url,$text_response,$tree_response)
     {
         phpCAS::traceBegin();
         if ( $tree_response->getElementsByTagName("proxyGrantingTicket")->length == 0) {

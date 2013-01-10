@@ -72,7 +72,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _htmlFilterOutput($str)
+    protected function _htmlFilterOutput($str)
     {
         $str = str_replace('__CAS_VERSION__', $this->getServerVersion(), $str);
         $str = str_replace('__PHPCAS_VERSION__', phpCAS::getVersion(), $str);
@@ -266,7 +266,7 @@ class CAS_Client
      *
      * @return string the hostname of the CAS server.
      */
-    private function _getServerHostname()
+    protected function _getServerHostname()
     {
         return $this->_server['hostname'];
     }
@@ -276,7 +276,7 @@ class CAS_Client
      *
      * @return string the port of the CAS server.
      */
-    private function _getServerPort()
+    protected function _getServerPort()
     {
         return $this->_server['port'];
     }
@@ -286,7 +286,7 @@ class CAS_Client
      *
      * @return string a URI.
      */
-    private function _getServerURI()
+    protected function _getServerURI()
     {
         return $this->_server['uri'];
     }
@@ -296,7 +296,7 @@ class CAS_Client
      *
      * @return string a URL.
      */
-    private function _getServerBaseURL()
+    protected function _getServerBaseURL()
     {
         // the URL is build only when needed
         if ( empty($this->_server['base_url']) ) {
@@ -473,28 +473,6 @@ class CAS_Client
         );
         phpCAS::traceEnd($url);
         return $url;
-    }
-
-
-    /**
-     * This method is used to retrieve the proxy URL of the CAS server.
-     *
-     * @return  string proxy URL.
-     */
-    public function getServerProxyURL()
-    {
-        // the URL is build only when needed
-        if ( empty($this->_server['proxy_url']) ) {
-            switch ($this->getServerVersion()) {
-            case CAS_VERSION_1_0:
-                $this->_server['proxy_url'] = '';
-                break;
-            case CAS_VERSION_2_0:
-                $this->_server['proxy_url'] = $this->_getServerBaseURL().'proxy';
-                break;
-            }
-        }
-        return $this->_server['proxy_url'];
     }
 
     /**
@@ -901,7 +879,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _setChangeSessionID($allowed)
+    protected function _setChangeSessionID($allowed)
     {
         $this->_change_session_id = $allowed;
     }
@@ -1426,7 +1404,7 @@ class CAS_Client
      *
      * @return bool is logout request.
      */
-    private function _isLogoutRequest()
+    protected function _isLogoutRequest()
     {
         return !empty($_POST['logoutRequest']);
     }
@@ -1846,7 +1824,7 @@ class CAS_Client
      *
      * @return bool true when successfull and false if no attributes a found
      */
-    private function _setSessionAttributes($text_response)
+    protected function _setSessionAttributes($text_response)
     {
         phpCAS::traceBegin();
 
@@ -1985,7 +1963,7 @@ class CAS_Client
      *
      * @return the SOAP-encased SAMLP artifact (the ticket).
      */
-    private function _buildSAMLPayload()
+    protected function _buildSAMLPayload()
     {
         phpCAS::traceBegin();
 
@@ -2240,7 +2218,7 @@ class CAS_Client
      * @return bool true when successfull, halt otherwise by calling
      * CAS_Client::_authError().
      */
-    private function _readExtraAttributesCas20($success_elements)
+    protected function _readExtraAttributesCas20($success_elements)
     {
         phpCAS::traceBegin();
 
@@ -2381,7 +2359,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _addAttributeToArray(array &$attributeArray, $name, $value)
+    protected function _addAttributeToArray(array &$attributeArray, $name, $value)
     {
         // If multiple attributes exist, add as an array value
         if (isset($attributeArray[$name])) {
@@ -2477,7 +2455,7 @@ class CAS_Client
      *
      * @return string Server URL with domain:port
      */
-    private function _getServerUrl()
+    protected function _getServerUrl()
     {
         $server_url = '';
         if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
@@ -2515,7 +2493,7 @@ class CAS_Client
      *
      * @return bool true if https, false otherwise
      */
-    private function _isHttps()
+    protected function _isHttps()
     {
         if ( isset($_SERVER['HTTPS'])
             && !empty($_SERVER['HTTPS'])
@@ -2537,7 +2515,7 @@ class CAS_Client
      *
      * @link http://stackoverflow.com/questions/1842681/regular-expression-to-remove-one-parameter-from-query-string
      */
-    private function _removeParameterFromQueryString($parameterName, $queryString)
+    protected function _removeParameterFromQueryString($parameterName, $queryString)
     {
         $parameterName	= preg_quote($parameterName);
         return preg_replace(
@@ -2556,7 +2534,7 @@ class CAS_Client
      *
      * @return url with query params
      */
-    private function _buildQueryUrl($url, $query)
+    protected function _buildQueryUrl($url, $query)
     {
         $url .= (strstr($url, '?') === false) ? '?' : '&';
         $url .= $query;
@@ -2570,7 +2548,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _renameSession($ticket)
+    protected function _renameSession($ticket)
     {
         phpCAS::traceBegin();
         if ($this->getChangeSessionID()) {
@@ -2617,7 +2595,7 @@ class CAS_Client
     *
     * @return void
     */
-    private function _authError(
+    protected function _authError(
         $failure,
         $cas_url,
         $no_response,
@@ -2688,7 +2666,7 @@ class CAS_Client
      * @return string hostname
      *
      */
-    private function _getNodeType($nodeURL)
+    protected function _getNodeType($nodeURL)
     {
         phpCAS::traceBegin();
         if (preg_match("/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/", $nodeURL)) {
@@ -2745,7 +2723,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _rebroadcast($type)
+    protected function _rebroadcast($type)
     {
         phpCAS::traceBegin();
 
