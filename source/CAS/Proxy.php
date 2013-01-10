@@ -66,7 +66,7 @@ class CAS_Proxy extends CAS_Client
      */
     public function getServerServiceValidateURL()
     {
-        return parent::getServerServiceValidateURL().'&pgtUrl='.urlencode($this->_getCallbackURL());
+        return $this->_buildQueryUrl(parent::getServerServiceValidateURL(), 'pgtUrl='.urlencode($this->_getCallbackURL()));
     }
     
     /**
@@ -76,7 +76,7 @@ class CAS_Proxy extends CAS_Client
      */
     public function getServerProxyValidateURL()
     {
-        return parent::getServerProxyValidateURL().'&pgtUrl='.urlencode($this->_getCallbackURL());    
+        return $this->_buildQueryUrl(parent::getServerProxyValidateURL(), 'pgtUrl='.urlencode($this->_getCallbackURL()));
     }
     
     /**
