@@ -342,7 +342,7 @@ class phpCAS
 
         // initialize the object $_PHPCAS_CLIENT
         self::$_PHPCAS_CLIENT = new CAS_Client(
-            $server_version, false, $server_hostname, $server_port, $server_uri,
+            $server_version, $server_hostname, $server_port, $server_uri,
             $changeSessionID
         );
         phpCAS :: traceEnd();
@@ -394,7 +394,7 @@ class phpCAS
 
         // initialize the object $_PHPCAS_CLIENT
         self::$_PHPCAS_CLIENT = new CAS_Proxy(
-            $server_version, true, $server_hostname, $server_port, $server_uri,
+            $server_version, $server_hostname, $server_port, $server_uri,
             $changeSessionID
         );
         phpCAS :: traceEnd();
@@ -1649,7 +1649,9 @@ class phpCAS
             phpCAS :: error('type mismatched for parameter $cert (should be `string\')');
         }
         if (gettype($validate_cn) != 'boolean') {
+
             phpCAS :: error('type mismatched for parameter $validate_cn (should be `boolean\')');
+
         }
         self::$_PHPCAS_CLIENT->setCasServerCACert($cert, $validate_cn);
         phpCAS :: traceEnd();

@@ -114,7 +114,6 @@ class CAS_Proxy extends CAS_Client
      * CAS_Client constructor.
      *
      * @param string $server_version  the version of the CAS server
-     * @param bool   $proxy           true if the CAS client is a CAS proxy
      * @param string $server_hostname the hostname of the CAS server
      * @param int    $server_port     the port the CAS server is running on
      * @param string $server_uri      the URI the CAS server is responding on
@@ -126,7 +125,6 @@ class CAS_Proxy extends CAS_Client
      */
     public function __construct(
         $server_version,
-        $proxy,
         $server_hostname,
         $server_port,
         $server_uri,

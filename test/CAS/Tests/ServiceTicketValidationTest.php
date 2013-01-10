@@ -65,7 +65,6 @@ class CAS_Tests_ServiceTicketValidationTest extends PHPUnit_Framework_TestCase
 
         $this->object = new CAS_Client(
             CAS_VERSION_2_0, // Server Version
-            false, // Proxy
             'cas.example.edu', // Server Hostname
             443, // Server port
             '/cas/', // Server URI
