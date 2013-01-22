@@ -38,7 +38,7 @@ function CAS_autoload($class)
 
     foreach ($include_path as $path) {
         $file_path = $path . '/' . str_replace('_', '/', $class) . '.php';
-        $fp = @fopen($file_path, 'r', true);
+        $fp = @fopen($file_path, 'r');
         if ($fp) {
             fclose($fp);
             include $file_path;
