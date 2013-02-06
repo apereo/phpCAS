@@ -122,7 +122,7 @@ implements CAS_Request_RequestInterface
             if ($this->validateCN) {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             } else {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             }
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
             curl_setopt($ch, CURLOPT_CAINFO, $this->caCertPath);
