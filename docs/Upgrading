@@ -3,7 +3,7 @@
 ################################
 
 Due to the missing validation of the CN of the SSL certifcate it may be that
-phpcas fails validation of CAS server certicates that do not match the IP/DNS 
+phpcas fails validation of CAS server certicates that do not match the IP/DNS
 name you use in the phpcas client() or proxy() setup.
 If this happens a quick workaround to change the setup to the old but unsecure
 behaviour. This can be seen in the no_ssl_cn_validation example.
@@ -30,7 +30,7 @@ proxy tickets to access your service you need to change your configuration. The
 new default configuration is now to deny any proxied use of your service unless
 it is exlicitly allowed:
 
-If you want your service to be proxied you have to enable it (default disabled) 
+If you want your service to be proxied you have to enable it (default disabled)
 and define an accepable list of proxies that are allowed to proxy your service.
 
 Add each allowed proxy definition object. For the normal CAS_ProxyChain
@@ -68,7 +68,7 @@ THIS SETTING IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY
 3. Changing of the default PGT file storage location in proxy mode:
 ----------------------------------------------------------------
 
-The default storage of the sensitive PGT session files is the 
+The default storage of the sensitive PGT session files is the
 session_save_path() now. This is a php environment dependent dir which is also
 used for storing your php session data. The default permissions are also changed
 to 0600 to be only readable by the webserver.
@@ -81,7 +81,7 @@ to 0600 to be only readable by the webserver.
 ------------------------------------------------------------------
 
 The setPGTStorageFile() function no longer needs an storage "format" argument.
-Since the format functionality was never implemented it has now been dropped 
+Since the format functionality was never implemented it has now been dropped
 and only the path argument is necessary.
 
 ------------------------------------------------------------------
@@ -91,8 +91,8 @@ changeSessionID
 
 The last parameter of the constructor for has been changed from "start session"
 to "change session ID". This has no negative effects on existion integrations
-but will allow integration with other frameworks to take advantage of single 
-sign-out if they switch to "true". phpCAS will then rename the session id 
+but will allow integration with other frameworks to take advantage of single
+sign-out if they switch to "true". phpCAS will then rename the session id
 (keeping all vars) and be able to single sign-out users.
 
 

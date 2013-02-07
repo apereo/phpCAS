@@ -5,7 +5,7 @@
   <property name="upload.host" value="jasig01.managed.contegix.com" />
   <property name="upload.remotedir" value="/var/www/domains/jasig.org/downloads/htdocs/cas-clients/php" />
 
-  <taskdef name="doxygen" 
+  <taskdef name="doxygen"
            classname="org.doxygen.tools.DoxygenTask"
            classpath="ant_doxygen.jar"/>
 
@@ -13,14 +13,14 @@
   <tstamp>
     <format property="date" pattern="d-MMMM-yyyy HH:mma" locale="en"/>
   </tstamp>
-  
+
   <!-- ==========================================================
     Meta targets
   -->
-  <target name="prepare" 
-    description="Prepare the release: tag, dist, markdev" 
+  <target name="prepare"
+    description="Prepare the release: tag, dist, markdev"
     depends="tag,dist,markdev" />
-  
+
   <!-- ==========================================================
     Create release tags.
   -->
@@ -37,7 +37,7 @@
         </not>
       </condition>
     </fail>
-    
+
     <!-- Check the status of source/CAS.php -->
     <echo message="Checking for existing modifications to source/CAS.php..."/>
     <exec dir="${basedir}/.." executable="${git.path}" outputproperty="linesChanged.CASphp">
@@ -51,7 +51,7 @@
         </not>
       </condition>
     </fail>
-    
+
     <!-- Check the status of docs/index.html -->
     <echo message="Checking for existing modifications to docs/index.html..."/>
     <exec dir="${basedir}/.." executable="${git.path}" outputproperty="linesChanged.indexhtml">
@@ -65,27 +65,27 @@
         </not>
       </condition>
     </fail>
-    
+
     <!-- Record the current HEAD to allow us to revert our tagging later -->
     <exec dir="${basedir}" executable="${git.path}" output="starting_HEAD">
       <arg value="rev-parse" />
       <arg value="HEAD"/>
     </exec>
-    
+
     <!-- Update the PHPCAS_VERSION -->
     <replaceregexp file="../source/CAS.php"
       match="define\('PHPCAS_VERSION', '[^']*'\);"
       replace="define('PHPCAS_VERSION', '${phpcas.version}');"
       byline="true"
     />
-    
+
     <!-- Update the doc url -->
     <replaceregexp file="../docs/index.html"
       match="http://downloads\.jasig\.org/cas-clients/php/[^/]+/docs/api/"
       replace="http://downloads.jasig.org/cas-clients/php/${phpcas.version}/docs/api/"
       byline="true"
     />
-    
+
     <!-- Commit the version changes -->
     <exec dir="${basedir}/.." executable="${git.path}" failonerror="true">
       <arg value="add" />
@@ -97,7 +97,7 @@
       <arg value="-m" />
       <arg value="Updated versions for the ${phpcas.version} release." />
     </exec>
-    
+
     <!-- Tag the release -->
     <exec dir="${basedir}/.." executable="${git.path}" failonerror="true">
       <arg value="tag" />
@@ -105,12 +105,12 @@
       <arg value="Tag for the ${phpcas.version} release." />
       <arg value="${phpcas.version}" />
     </exec>
-   
+
   </target>
 
   <!-- ==========================================================
        Create tarball package
-  -->  
+  -->
   <target name="dist" description="Create dist and docs tarball packages">
     <mkdir dir="dist"/>
     <delete dir="tmp" />
@@ -151,36 +151,36 @@
     <fail message="doxygen program not found (${doxygen.path})" unless="doxygen.present"/>
     <!-- write Doxygen configuration file from template -->
     <echo message="write Doxygen configuration file..."/>
-    <copy file="Doxyfile" 
+    <copy file="Doxyfile"
           tofile="tmp/Doxyfile">
       <filterchain>
         <expandproperties/>
         <tokenfilter>
-          <replaceregex pattern="\\" replace="/" flags="g"/> 
+          <replaceregex pattern="\\" replace="/" flags="g"/>
         </tokenfilter>
       </filterchain>
     </copy>
     <!-- call Doxygen -->
     <echo message="writing API documentation..."/>
     <doxygen doxygenPath="${doxygen.path}" configFilename="${basedir}/tmp/Doxyfile"/>
-  	
+
     <!-- Remove any real config from the examples -->
     <delete file="tmp/CAS-${phpcas.version}/docs/examples/config.php"/>
-    
+
     <!-- Build our tarballs -->
     <!-- Docs -->
-    <tar 
+    <tar
         destfile="dist/docs-${phpcas.version}.tgz"
-        compression="gzip" 
+        compression="gzip"
         basedir="tmp/CAS-${phpcas.version}"
         includes="docs/**/*" />
-        
+
     <!-- Remove the api docs from the dist package -->
     <delete dir="tmp/CAS-${phpcas.version}/docs/api"/>
-        
+
     <!-- write makepackage.php file from template -->
     <echo message="write makepackage.php file..."/>
-    <copy file="makepackage.php" 
+    <copy file="makepackage.php"
           tofile="tmp/makepackage.php">
       <filterchain>
         <expandproperties/>
@@ -197,15 +197,15 @@
     </exec>
 
     <!-- Dist package -->
-    <tar 
+    <tar
         destfile="dist/CAS-${phpcas.version}.tgz"
-        compression="gzip" 
+        compression="gzip"
         basedir="tmp/"
         includes="CAS-${phpcas.version}/**,package.xml"/>
-  	
+
     <!--delete dir="tmp" /-->
   </target>
-  
+
   <!-- ==========================================================
     Mark the version as development.
   -->
@@ -220,7 +220,7 @@
         <equals arg1="${tag_exists_m}" arg2="" trim="true"/>
       </condition>
     </fail>
-    
+
     <!-- Check the status of source/CAS.php -->
     <echo message="Checking for existing modifications to source/CAS.php..."/>
     <exec dir="${basedir}/.." executable="${git.path}" outputproperty="linesChanged.CASphp2">
@@ -234,14 +234,14 @@
         </not>
       </condition>
     </fail>
-    
+
     <!-- Update the PHPCAS_VERSION -->
     <replaceregexp file="../source/CAS.php"
       match="define\('PHPCAS_VERSION', '[^']*'\);"
       replace="define('PHPCAS_VERSION', '${phpcas.version}+');"
       byline="true"
     />
-    
+
     <!-- Commit the tag changes -->
     <exec dir="${basedir}/.." executable="${git.path}" failonerror="true">
       <arg value="add" />
@@ -252,51 +252,51 @@
       <arg value="-m" />
       <arg value="Updated version for development after the ${phpcas.version} release." />
     </exec>
-   
+
   </target>
 
-      <!-- ========================================================== 
+      <!-- ==========================================================
            Upload the distribution files to the download area
-      -->  
-      <target name="upload" 
+      -->
+      <target name="upload"
               description="Upload the distribution files to JA-SIG">
         <!-- Check that all the properties used for archives upload are set -->
         <fail message="please set ${upload.username} in build.properties" unless="upload.username"/>
         <fail message="please set ${upload.password} in build.properties" unless="upload.password"/>
-        <scp 
+        <scp
             trust="true"
-            localFile="${basedir}/dist/CAS-${phpcas.version}.tgz" 
+            localFile="${basedir}/dist/CAS-${phpcas.version}.tgz"
             remoteTodir="${upload.username}:${upload.password}@${upload.host}:${upload.remotedir}" />
-        <scp 
+        <scp
             trust="true"
-            localFile="${basedir}/dist/docs-${phpcas.version}.tgz" 
+            localFile="${basedir}/dist/docs-${phpcas.version}.tgz"
             remoteTodir="${upload.username}:${upload.password}@${upload.host}:${upload.remotedir}" />
-        <sshexec 
-            host="${upload.host}" 
-            username="${upload.username}" 
-            command="cd ${upload.remotedir} &amp;&amp; rm -rf ${phpcas.version} docs &amp;&amp; mkdir ${phpcas.version} &amp;&amp; mv CAS-${phpcas.version}.tgz ${phpcas.version} &amp;&amp; gunzip docs-${phpcas.version}.tgz &amp;&amp; tar xf docs-${phpcas.version}.tar &amp;&amp; mv docs ${phpcas.version} &amp;&amp; rm docs-${phpcas.version}.tar &amp;&amp; echo 'done (you can kill the ant task)'" 
+        <sshexec
+            host="${upload.host}"
+            username="${upload.username}"
+            command="cd ${upload.remotedir} &amp;&amp; rm -rf ${phpcas.version} docs &amp;&amp; mkdir ${phpcas.version} &amp;&amp; mv CAS-${phpcas.version}.tgz ${phpcas.version} &amp;&amp; gunzip docs-${phpcas.version}.tgz &amp;&amp; tar xf docs-${phpcas.version}.tar &amp;&amp; mv docs ${phpcas.version} &amp;&amp; rm docs-${phpcas.version}.tar &amp;&amp; echo 'done (you can kill the ant task)'"
             password="${upload.password}"
             trust="true" />
       </target>
 
-      <!-- ========================================================== 
-           Make a 'current' symlink to the current version 
-      -->  
-      <target name="makeCurrentSymlink" 
+      <!-- ==========================================================
+           Make a 'current' symlink to the current version
+      -->
+      <target name="makeCurrentSymlink"
               description="Make a 'stable' symlink to the current version">
         <!-- Check that all the properties used for archives upload are set -->
         <fail message="please set ${upload.username} in build.properties" unless="upload.username"/>
         <fail message="please set ${upload.password} in build.properties" unless="upload.password"/>
-        <sshexec 
-            host="${upload.host}" 
-            username="${upload.username}" 
-            command="cd ${upload.remotedir} &amp;&amp; rm -f current &amp;&amp; ln -s ${phpcas.version} current &amp;&amp; echo 'done (you can kill the ant task)'" 
+        <sshexec
+            host="${upload.host}"
+            username="${upload.username}"
+            command="cd ${upload.remotedir} &amp;&amp; rm -f current &amp;&amp; ln -s ${phpcas.version} current &amp;&amp; echo 'done (you can kill the ant task)'"
             password="${upload.password}"
             trust="true" />
-        <sshexec 
-            host="${upload.host}" 
-            username="${upload.username}" 
-            command="cd ${upload.remotedir} &amp;&amp; rm -f current.tgz &amp;&amp; ln -s ${phpcas.version}/CAS-${phpcas.version}.tgz current.tgz &amp;&amp; echo 'done (you can kill the ant task)'" 
+        <sshexec
+            host="${upload.host}"
+            username="${upload.username}"
+            command="cd ${upload.remotedir} &amp;&amp; rm -f current.tgz &amp;&amp; ln -s ${phpcas.version}/CAS-${phpcas.version}.tgz current.tgz &amp;&amp; echo 'done (you can kill the ant task)'"
             password="${upload.password}"
             trust="true" />
       </target>
@@ -315,14 +315,14 @@
         <equals arg1="${tag_exists}" arg2="" trim="true"/>
       </condition>
     </fail>
-    
+
     <!-- Get the name of the current branch -->
     <exec dir="${basedir}" executable="${git.path}" outputproperty="branch">
       <arg value="name-rev" />
       <arg value="--name-only"/>
       <arg value="HEAD"/>
     </exec>
-    
+
     <!-- Push the current branch to the same name in the origin repository. -->
     <exec dir="${basedir}/.." executable="${git.path}" failonerror="true">
       <arg value="push" />
@@ -330,23 +330,23 @@
       <arg value="origin" />
       <arg value="${branch}:${branch}" />
     </exec>
-    
+
   </target>
-  
+
   <!-- ==========================================================
        Clean up everything but distribution file
-  -->  
+  -->
   <target name="clean" description="Clean up everything but distribution files">
     <delete dir="tmp"/>
   </target>
-  
+
   <target name="cleanall" description="Clean up everything including distribution files" depends="clean">
     <delete dir="dist"/>
-    
+
     <!-- Delete our starting_HEAD file -->
     <delete file="starting_HEAD"/>
   </target>
-  
+
   <target name="revert" description="Reset the current branch to the starting commit and delete the release tag." depends="check_git">
     <!-- Load the starting commit id -->
     <loadfile property="starting_HEAD"
@@ -355,14 +355,14 @@
         <striplinebreaks/>
       </filterchain>
     </loadfile>
-    
+
     <!-- Reset the index to the starting commit, but leave the working directory untouched. -->
     <exec dir="${basedir}/.." executable="${git.path}" failonerror="true">
       <arg value="reset" />
       <arg value="--mixed" />
       <arg value="${starting_HEAD}" />
     </exec>
-    
+
     <!-- Revert just source/CAS.php and docs/index.html since we should have already checked
          them for uncommited changes in the tag target. -->
     <exec dir="${basedir}/.." executable="${git.path}" failonerror="true">
@@ -371,18 +371,18 @@
       <arg value="source/CAS.php" />
       <arg value="docs/index.html" />
     </exec>
-    
+
     <!-- Delete our release tag. -->
     <exec dir="${basedir}/.." executable="${git.path}" failonerror="true">
       <arg value="tag" />
       <arg value="-d" />
       <arg value="${phpcas.version}" />
     </exec>
-    
+
     <!-- Delete our starting_HEAD file -->
     <delete file="starting_HEAD"/>
   </target>
-  
+
   <target name="check_git">
     <!-- check for Git -->
     <echo message="checking for git..."/>
@@ -390,6 +390,6 @@
     <available file="${git.path}" type="file" property="git.present"/>
     <fail message="git program not found (${git.path})" unless="git.present"/>
   </target>
-  
+
 </project>
 
