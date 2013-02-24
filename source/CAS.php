@@ -620,10 +620,8 @@ class phpCAS
      */
     public static function setLang($lang)
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->setLang($lang);
         } catch (Exception $e) {
@@ -668,10 +666,8 @@ class phpCAS
      */
     public static function setHTMLHeader($header)
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->setHTMLHeader($header);
         } catch (Exception $e) {
@@ -688,10 +684,8 @@ class phpCAS
      */
     public static function setHTMLFooter($footer)
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->setHTMLFooter($footer);
         } catch (Exception $e) {
@@ -719,10 +713,8 @@ class phpCAS
     public static function setPGTStorage($storage)
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateProxyExists();
+
         try {
             self::$_PHPCAS_CLIENT->setPGTStorage($storage);
         } catch (Exception $e) {
@@ -752,10 +744,8 @@ class phpCAS
         $password='', $table='', $driver_options=null
     ) {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateProxyExists();
+
         try {
             self::$_PHPCAS_CLIENT->setPGTStorageDb($dsn_or_pdo, $username, $password, $table, $driver_options);
         } catch (Exception $e) {
@@ -775,10 +765,8 @@ class phpCAS
     public static function setPGTStorageFile($path = '')
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateProxyExists();
+
         try {
             self::$_PHPCAS_CLIENT->setPGTStorageFile($path);
         } catch (Exception $e) {
@@ -808,16 +796,14 @@ class phpCAS
     public static function getProxiedService ($type)
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateProxyExists();
+
         try {
             $res = self::$_PHPCAS_CLIENT->getProxiedService($type);
         } catch (Exception $e) {
             phpCAS :: error(get_class($e) . ': ' . $e->getMessage());
         }
-        
+
         phpCAS :: traceEnd();
         return $res;
     }
@@ -836,10 +822,8 @@ class phpCAS
      */
     public static function initializeProxiedService (CAS_ProxiedService $proxiedService)
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateProxyExists();
+
         try {
             self::$_PHPCAS_CLIENT->initializeProxiedService($proxiedService);
         } catch (Exception $e) {
@@ -865,10 +849,8 @@ class phpCAS
     public static function serviceWeb($url, & $err_code, & $output)
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateProxyExists();
+
         try {
             $res = self::$_PHPCAS_CLIENT->serviceWeb($url, $err_code, $output);
         } catch (Exception $e) {
@@ -901,10 +883,8 @@ class phpCAS
     public static function serviceMail($url, $service, $flags, & $err_code, & $err_msg, & $pt)
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateProxyExists();
+
         try {
             $res = self::$_PHPCAS_CLIENT->serviceMail($url, $service, $flags, $err_code, $err_msg, $pt);
         } catch (Exception $e) {
@@ -937,10 +917,8 @@ class phpCAS
      */
     public static function setCacheTimesForAuthRecheck($n)
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->setCacheTimesForAuthRecheck($n);
         } catch (Exception $e) {
@@ -969,9 +947,7 @@ class phpCAS
      */
     public static function setPostAuthenticateCallback ($function, array $additionalArgs = array())
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
 
         self::$_PHPCAS_CLIENT->setPostAuthenticateCallback($function, $additionalArgs);
     }
@@ -992,9 +968,7 @@ class phpCAS
      */
     public static function setSingleSignoutCallback ($function, array $additionalArgs = array())
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
 
         self::$_PHPCAS_CLIENT->setSingleSignoutCallback($function, $additionalArgs);
     }
@@ -1012,9 +986,7 @@ class phpCAS
     public static function checkAuthentication()
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
 
         $auth = self::$_PHPCAS_CLIENT->checkAuthentication();
 
@@ -1035,10 +1007,7 @@ class phpCAS
     public static function forceAuthentication()
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
-
+        phpCAS::_validateClientExists();
         $auth = self::$_PHPCAS_CLIENT->forceAuthentication();
 
         // store where the authentication has been checked and the result
@@ -1063,9 +1032,8 @@ class phpCAS
     public static function renewAuthentication()
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
+
         $auth = self::$_PHPCAS_CLIENT->renewAuthentication();
 
         // store where the authentication has been checked and the result
@@ -1084,9 +1052,7 @@ class phpCAS
     public static function isAuthenticated()
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
 
         // call the isAuthenticated method of the $_PHPCAS_CLIENT object
         $auth = self::$_PHPCAS_CLIENT->isAuthenticated();
@@ -1107,9 +1073,8 @@ class phpCAS
      */
     public static function isSessionAuthenticated()
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
+
         return (self::$_PHPCAS_CLIENT->isSessionAuthenticated());
     }
 
@@ -1122,10 +1087,8 @@ class phpCAS
      * */
     public static function getUser()
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             return self::$_PHPCAS_CLIENT->getUser();
         } catch (Exception $e) {
@@ -1143,10 +1106,8 @@ class phpCAS
      */
     public static function getAttributes()
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             return self::$_PHPCAS_CLIENT->getAttributes();
         } catch (Exception $e) {
@@ -1164,9 +1125,7 @@ class phpCAS
      */
     public static function hasAttributes()
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
 
         try {
             return self::$_PHPCAS_CLIENT->hasAttributes();
@@ -1186,10 +1145,8 @@ class phpCAS
      */
     public static function hasAttribute($key)
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             return self::$_PHPCAS_CLIENT->hasAttribute($key);
         } catch (Exception $e) {
@@ -1208,10 +1165,8 @@ class phpCAS
      */
     public static function getAttribute($key)
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             return self::$_PHPCAS_CLIENT->getAttribute($key);
         } catch (Exception $e) {
@@ -1229,9 +1184,8 @@ class phpCAS
      */
     public static function handleLogoutRequests($check_client = true, $allowed_clients = false)
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
+
         return (self::$_PHPCAS_CLIENT->handleLogoutRequests($check_client, $allowed_clients));
     }
 
@@ -1243,9 +1197,8 @@ class phpCAS
      */
     public static function getServerLoginURL()
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
+
         return self::$_PHPCAS_CLIENT->getServerLoginURL();
     }
 
@@ -1260,16 +1213,14 @@ class phpCAS
     public static function setServerLoginURL($url = '')
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after' . __CLASS__ . '::client()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->setServerLoginURL($url);
         } catch (Exception $e) {
             phpCAS :: error(get_class($e) . ': ' . $e->getMessage());
         }
-        
+
         phpCAS :: traceEnd();
     }
 
@@ -1284,16 +1235,14 @@ class phpCAS
     public static function setServerServiceValidateURL($url = '')
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after' . __CLASS__ . '::client()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->setServerServiceValidateURL($url);
         } catch (Exception $e) {
             phpCAS :: error(get_class($e) . ': ' . $e->getMessage());
         }
-        
+
         phpCAS :: traceEnd();
     }
 
@@ -1308,16 +1257,14 @@ class phpCAS
     public static function setServerProxyValidateURL($url = '')
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after' . __CLASS__ . '::client()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->setServerProxyValidateURL($url);
         } catch (Exception $e) {
             phpCAS :: error(get_class($e) . ': ' . $e->getMessage());
         }
-        
+
         phpCAS :: traceEnd();
     }
 
@@ -1331,16 +1278,14 @@ class phpCAS
     public static function setServerSamlValidateURL($url = '')
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after' . __CLASS__ . '::client()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->setServerSamlValidateURL($url);
         } catch (Exception $e) {
             phpCAS :: error(get_class($e) . ': ' . $e->getMessage());
         }
-        
+
         phpCAS :: traceEnd();
     }
 
@@ -1353,7 +1298,7 @@ class phpCAS
     public static function getServerLogoutURL()
     {
         if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should not be called before ' . __CLASS__ . '::client() or ' . __CLASS__ . '::proxy()');
+            throw new CAS_OutOfSequenceBeforeClientException();
         }
         return self::$_PHPCAS_CLIENT->getServerLogoutURL();
     }
@@ -1369,18 +1314,14 @@ class phpCAS
     public static function setServerLogoutURL($url = '')
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error(
-                'this method should only be called after' . __CLASS__ . '::client()'
-            );
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->setServerLogoutURL($url);
         } catch (Exception $e) {
             phpCAS :: error(get_class($e) . ': ' . $e->getMessage());
         }
-        
+
         phpCAS :: traceEnd();
     }
 
@@ -1395,9 +1336,8 @@ class phpCAS
     public static function logout($params = "")
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
+
         $parsedParams = array ();
         if ($params != "") {
             if (is_string($params)) {
@@ -1429,9 +1369,8 @@ class phpCAS
     public static function logoutWithRedirectService($service)
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
+
         if (!is_string($service)) {
             phpCAS :: error('type mismatched for parameter $service (should be `string\')');
         }
@@ -1481,9 +1420,8 @@ class phpCAS
     {
         trigger_error('Function deprecated for cas servers >= 3.3.5.1', E_USER_DEPRECATED);
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
+
         if (!is_string($service)) {
             phpCAS :: error('type mismatched for parameter $service (should be `string\')');
         }
@@ -1512,16 +1450,14 @@ class phpCAS
     public static function setFixedCallbackURL($url = '')
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateProxyExists();
+
         try {
             self::$_PHPCAS_CLIENT->setCallbackURL($url);
         } catch (Exception $e) {
             phpCAS :: error(get_class($e) . ': ' . $e->getMessage());
         }
-        
+
         phpCAS :: traceEnd();
     }
 
@@ -1536,16 +1472,14 @@ class phpCAS
     public static function setFixedServiceURL($url)
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateProxyExists();
+
         try {
             self::$_PHPCAS_CLIENT->setURL($url);
         } catch (Exception $e) {
             phpCAS :: error(get_class($e) . ': ' . $e->getMessage());
         }
-        
+
         phpCAS :: traceEnd();
     }
 
@@ -1556,9 +1490,7 @@ class phpCAS
      */
     public static function getServiceURL()
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateProxyExists();
         return (self::$_PHPCAS_CLIENT->getURL());
     }
 
@@ -1573,10 +1505,8 @@ class phpCAS
      */
     public static function retrievePT($target_service, & $err_code, & $err_msg)
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateProxyExists();
+
         try {
             return (self::$_PHPCAS_CLIENT->retrievePT($target_service, $err_code, $err_msg));
         } catch (Exception $e) {
@@ -1596,16 +1526,14 @@ class phpCAS
     public static function setCasServerCACert($cert, $validate_cn = true)
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->setCasServerCACert($cert, $validate_cn);
         } catch (Exception $e) {
             phpCAS :: error(get_class($e) . ': ' . $e->getMessage());
         }
-        
+
         phpCAS :: traceEnd();
     }
 
@@ -1617,9 +1545,8 @@ class phpCAS
     public static function setNoCasServerValidation()
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
+
         phpCAS :: trace('You have configured no validation of the legitimacy of the cas server. This is not recommended for production use.');
         self::$_PHPCAS_CLIENT->setNoCasServerValidation();
         phpCAS :: traceEnd();
@@ -1638,9 +1565,8 @@ class phpCAS
     public static function setNoClearTicketsFromUrl()
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
+
         self::$_PHPCAS_CLIENT->setNoClearTicketsFromUrl();
         phpCAS :: traceEnd();
     }
@@ -1659,9 +1585,8 @@ class phpCAS
     public static function setExtraCurlOption($key, $value)
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
+
         self::$_PHPCAS_CLIENT->setExtraCurlOption($key, $value);
         phpCAS :: traceEnd();
     }
@@ -1705,9 +1630,8 @@ class phpCAS
     public static function allowProxyChain(CAS_ProxyChain_Interface $proxy_chain)
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-        }
+        phpCAS::_validateClientExists();
+
         if (self::$_PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_2_0) {
             phpCAS :: error('this method can only be used with the cas 2.0 protool');
         }
@@ -1726,9 +1650,7 @@ class phpCAS
      */
     public static function getProxies ()
     {
-        if ( !is_object(self::$_PHPCAS_CLIENT) ) {
-            phpCAS::error('this method should only be called after '.__CLASS__.'::client()');
-        }
+        phpCAS::_validateProxyExists();
 
         return(self::$_PHPCAS_CLIENT->getProxies());
     }
@@ -1749,16 +1671,14 @@ class phpCAS
     {
         phpCAS::traceBegin();
         phpCAS::log('rebroadcastNodeUrl:'.$rebroadcastNodeUrl);
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->addRebroadcastNode($rebroadcastNodeUrl);
         } catch (Exception $e) {
             phpCAS :: error(get_class($e) . ': ' . $e->getMessage());
         }
-        
+
         phpCAS::traceEnd();
     }
 
@@ -1773,20 +1693,45 @@ class phpCAS
     public static function addRebroadcastHeader($header)
     {
         phpCAS :: traceBegin();
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            phpCAS :: error('this method should only be called after ' . __CLASS__ . '::client() or' . __CLASS__ . '::proxy()');
-        }
-        
+        phpCAS::_validateClientExists();
+
         try {
             self::$_PHPCAS_CLIENT->addRebroadcastHeader($header);
         } catch (Exception $e) {
             phpCAS :: error(get_class($e) . ': ' . $e->getMessage());
         }
-        
+
         phpCAS :: traceEnd();
     }
-}
 
+    /**
+     * Checks if a client already exists
+     *
+     * @throws CAS_OutOfSequenceBeforeClientException
+     *
+     * @return void
+     */
+    private static function _validateClientExists()
+    {
+        if (!is_object(self::$_PHPCAS_CLIENT)) {
+            throw new CAS_OutOfSequenceBeforeClientException();
+        }
+    }
+
+    /**
+     * Checks of a proxy client aready exists
+     *
+     * @throws CAS_OutOfSequenceBeforeProxyException
+     *
+     * @return void
+     */
+    private static function _validateProxyExists()
+    {
+        if (!is_object(self::$_PHPCAS_CLIENT)) {
+            throw new CAS_OutOfSequenceBeforeProxyException();
+        }
+    }
+}
 // ########################################################################
 // DOCUMENTATION
 // ########################################################################

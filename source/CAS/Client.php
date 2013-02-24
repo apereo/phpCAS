@@ -150,7 +150,7 @@ class CAS_Client
     	// Argument Validation
     	if (gettype($header) != 'string')
         	throw new CAS_TypeMismatchException($header, '$header', 'string');
-        
+
         $this->_output_header = $header;
     }
 
@@ -166,7 +166,7 @@ class CAS_Client
     	// Argument Validation
     	if (gettype($footer) != 'string')
         	throw new CAS_TypeMismatchException($footer, '$footer', 'string');
-        
+
         $this->_output_footer = $footer;
     }
 
@@ -201,7 +201,7 @@ class CAS_Client
     	// Argument Validation
     	if (gettype($lang) != 'string')
         	throw new CAS_TypeMismatchException($lang, '$lang', 'string');
-    	
+
         phpCAS::traceBegin();
         $obj = new $lang();
         if (!($obj instanceof CAS_Languages_LanguageInterface)) {
@@ -367,7 +367,7 @@ class CAS_Client
     	// Argument Validation
     	if (gettype($url) != 'string')
         	throw new CAS_TypeMismatchException($url, '$url', 'string');
-        
+
         return $this->_server['login_url'] = $url;
     }
 
@@ -384,7 +384,7 @@ class CAS_Client
     	// Argument Validation
     	if (gettype($url) != 'string')
         	throw new CAS_TypeMismatchException($url, '$url', 'string');
-        
+
         return $this->_server['service_validate_url'] = $url;
     }
 
@@ -401,7 +401,7 @@ class CAS_Client
     	// Argument Validation
     	if (gettype($url) != 'string')
         	throw new CAS_TypeMismatchException($url, '$url', 'string');
-        
+
         return $this->_server['proxy_validate_url'] = $url;
     }
 
@@ -418,7 +418,7 @@ class CAS_Client
     	// Argument Validation
     	if (gettype($url) != 'string')
         	throw new CAS_TypeMismatchException($url, '$url', 'string');
-        
+
         return $this->_server['saml_validate_url'] = $url;
     }
 
@@ -551,7 +551,7 @@ class CAS_Client
     	// Argument Validation
     	if (gettype($url) != 'string')
         	throw new CAS_TypeMismatchException($url, '$url', 'string');
-        
+
         return $this->_server['logout_url'] = $url;
     }
 
@@ -702,6 +702,20 @@ class CAS_Client
     // ########################################################################
 
     /**
+     * Ensure that this is actually a proxy object or fail with an exception
+     *
+     * @throws CAS_OutOfSequenceProxyException
+     *
+     * @return void
+     */
+    public function ensureIsProxy()
+    {
+        if (!$this->isProxy()) {
+            throw new CAS_OutOfSequenceProxyException();
+        }
+    }
+
+    /**
      * Mark the caller of authentication. This will help client integraters determine
      * problems with their code flow if they call a function such as getUser() before
      * authentication has occurred.
@@ -734,6 +748,21 @@ class CAS_Client
     }
 
     /**
+     * Ensure that authentication was checked. Terminate with exception if no
+     * authentication was performed
+     *
+     * @throws CAS_OutOfSequenceBeforeAuthenticationCallException
+     *
+     * @return void
+     */
+    public function ensureAuthenticationCalled()
+    {
+        if (!$this->wasAuthenticationCalled()) {
+            throw new CAS_OutOfSequenceBeforeAuthenticationCallException();
+        }
+    }
+
+    /**
      * Answer the result of the authentication call.
      *
      * Throws a CAS_OutOfSequenceException if wasAuthenticationCalled() is false
@@ -743,10 +772,31 @@ class CAS_Client
      */
     public function wasAuthenticationCallSuccessful ()
     {
-        if (empty($this->_authentication_caller)) {
-            throw new CAS_OutOfSequenceException('markAuthenticationCall() hasn\'t happened.');
-        }
+        $this->ensureAuthenticationCalled();
         return $this->_authentication_caller['result'];
+    }
+
+
+    /**
+     * Ensure that authentication was checked. Terminate with exception if no
+     * authentication was performed
+     *
+     * @throws CAS_OutOfSequenceBeforeAuthenticationCallException
+     *
+     * @return void
+     */
+    public function ensureAuthenticationCallSuccessful()
+    {
+        $this->ensureAuthenticationCalled();
+        if (!$this->_authentication_caller['result']) {
+            throw new CAS_OutOfSequenceException(
+                'authentication was checked (by '
+                . $this->getAuthenticationCallerMethod()
+                . '() at ' . $this->getAuthenticationCallerFile()
+                . ':' . $this->getAuthenticationCallerLine()
+                . ') but the method returned false'
+            );
+        }
     }
 
     /**
@@ -759,9 +809,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerFile ()
     {
-        if (empty($this->_authentication_caller)) {
-            throw new CAS_OutOfSequenceException('markAuthenticationCall() hasn\'t happened.');
-        }
+        $this->ensureAuthenticationCalled();
         return $this->_authentication_caller['file'];
     }
 
@@ -775,9 +823,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerLine ()
     {
-        if (empty($this->_authentication_caller)) {
-            throw new CAS_OutOfSequenceException('markAuthenticationCall() hasn\'t happened.');
-        }
+        $this->ensureAuthenticationCalled();
         return $this->_authentication_caller['line'];
     }
 
@@ -791,9 +837,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerMethod ()
     {
-        if (empty($this->_authentication_caller)) {
-            throw new CAS_OutOfSequenceException('markAuthenticationCall() hasn\'t happened.');
-        }
+        $this->ensureAuthenticationCalled();
         return $this->_authentication_caller['method'];
     }
 
@@ -842,7 +886,7 @@ class CAS_Client
         	throw new CAS_TypeMismatchException($server_uri, '$server_uri', 'string');
         if (gettype($changeSessionID) != 'boolean')
         	throw new CAS_TypeMismatchException($changeSessionID, '$changeSessionID', 'boolean');
-		
+
         phpCAS::traceBegin();
         // true : allow to change the session_id(), false session_id won't be
         // change and logout won't be handle because of that
@@ -1033,14 +1077,11 @@ class CAS_Client
     public function getUser()
     {
     	// Sequence validation
-    	if (!$this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::forceAuthentication() or phpCAS::isAuthenticated()');
-    	if (!$this->wasAuthenticationCallSuccessful())
-    		throw new CAS_OutOfSequenceException('authentication was checked (by ' . $this->getAuthenticationCallerMethod() . '() at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ') but the method returned false');
-    	
+    	$this->ensureAuthenticationCallSuccessful();
+
     	return $this->_getUser();
     }
-    
+
     /**
      * This method returns the CAS user's login name.
      *
@@ -1090,11 +1131,7 @@ class CAS_Client
     public function getAttributes()
     {
     	// Sequence validation
-    	if (!$this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::forceAuthentication() or phpCAS::isAuthenticated()');
-    	if (!$this->wasAuthenticationCallSuccessful())
-    		throw new CAS_OutOfSequenceException('authentication was checked (by ' . $this->getAuthenticationCallerMethod() . '() at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ') but the method returned false');
-    	
+    	$this->ensureAuthenticationCallSuccessful();
     	// This is likely a duplicate check that could be removed....
         if ( empty($this->_user) ) {
             // if no user is set, there shouldn't be any attributes also...
@@ -1114,11 +1151,8 @@ class CAS_Client
     public function hasAttributes()
     {
     	// Sequence validation
-    	if (!$this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::forceAuthentication() or phpCAS::isAuthenticated()');
-    	if (!$this->wasAuthenticationCallSuccessful())
-    		throw new CAS_OutOfSequenceException('authentication was checked (by ' . $this->getAuthenticationCallerMethod() . '() at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ') but the method returned false');
-    	
+    	$this->ensureAuthenticationCallSuccessful();
+
         return !empty($this->_attributes);
     }
     /**
@@ -1131,14 +1165,11 @@ class CAS_Client
     public function hasAttribute($key)
     {
     	// Sequence validation
-    	if (!$this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::forceAuthentication() or phpCAS::isAuthenticated()');
-    	if (!$this->wasAuthenticationCallSuccessful())
-    		throw new CAS_OutOfSequenceException('authentication was checked (by ' . $this->getAuthenticationCallerMethod() . '() at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ') but the method returned false');
-    	
+    	$this->ensureAuthenticationCallSuccessful();
+
         return $this->_hasAttribute($key);
     }
-    
+
     /**
      * Check whether a specific attribute with a name is available
      *
@@ -1162,11 +1193,8 @@ class CAS_Client
     public function getAttribute($key)
     {
     	// Sequence validation
-    	if (!$this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::forceAuthentication() or phpCAS::isAuthenticated()');
-    	if (!$this->wasAuthenticationCallSuccessful())
-    		throw new CAS_OutOfSequenceException('authentication was checked (by ' . $this->getAuthenticationCallerMethod() . '() at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ') but the method returned false');
-    	
+    	$this->ensureAuthenticationCallSuccessful();
+
         if ($this->_hasAttribute($key)) {
             return $this->_attributes[$key];
         }
@@ -1241,7 +1269,7 @@ class CAS_Client
     {
     	if (gettype($n) != 'integer')
         	throw new CAS_TypeMismatchException($n, '$n', 'string');
-        
+
         $this->_cache_times_for_auth_recheck = $n;
     }
 
@@ -1401,7 +1429,7 @@ class CAS_Client
                         'SAML 1.1 ticket `'.$this->getTicket().'\' was validated'
                     );
                     $_SESSION['phpCAS']['user'] = $this->_getUser();
-                    $_SESSION['phpCAS']['attributes'] = $this->_attributes();
+                    $_SESSION['phpCAS']['attributes'] = $this->_attributes;
                     $res = true;
                     $logoutTicket = $this->getTicket();
                     break;
@@ -1859,7 +1887,7 @@ class CAS_Client
         	throw new CAS_TypeMismatchException($cert, '$cert', 'string');
         if (gettype($validate_cn) != 'boolean')
         	throw new CAS_TypeMismatchException($validate_cn, '$validate_cn', 'boolean');
-        
+
         $this->_cas_server_ca_cert = $cert;
         $this->_cas_server_cn_validate = $validate_cn;
     }
@@ -2277,13 +2305,11 @@ class CAS_Client
     public function setCallbackURL($url)
     {
     	// Sequence validation
-    	if (!$this->isProxy())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::proxy()');
-    	
+        $this->ensureIsProxy();
     	// Argument Validation
     	if (gettype($url) != 'string')
         	throw new CAS_TypeMismatchException($url, '$url', 'string');
-        
+
         return $this->_callback_url = $url;
     }
 
@@ -2402,11 +2428,8 @@ class CAS_Client
     public function setPGTStorage($storage)
     {
     	// Sequence validation
-    	if (!$this->isProxy())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::proxy()');
-    	if ($this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called before ' . $this->getAuthenticationCallerMethod() . '() (called at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ')');
-    	
+        $this->ensureIsProxy();
+
         // check that the storage has not already been set
         if ( is_object($this->_pgt_storage) ) {
             phpCAS::error('PGT storage already defined');
@@ -2441,11 +2464,8 @@ class CAS_Client
         $dsn_or_pdo, $username='', $password='', $table='', $driver_options=null
     ) {
     	// Sequence validation
-    	if (!$this->isProxy())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::proxy()');
-    	if ($this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called before ' . $this->getAuthenticationCallerMethod() . '() (called at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ')');
-    	
+        $this->ensureIsProxy();
+
     	// Argument validation
     	if ((is_object($dsn_or_pdo) && !($dsn_or_pdo instanceof PDO)) || gettype($dsn_or_pdo) != 'string')
 			throw new CAS_TypeMismatchException($dsn_or_pdo, '$dsn_or_pdo', 'string or PDO object');
@@ -2455,7 +2475,7 @@ class CAS_Client
         	throw new CAS_TypeMismatchException($password, '$password', 'string');
         if (gettype($table) != 'string')
         	throw new CAS_TypeMismatchException($table, '$password', 'string');
-    	
+
         // create the storage object
         $this->setPGTStorage(
             new CAS_PGTStorage_Db(
@@ -2475,15 +2495,12 @@ class CAS_Client
     public function setPGTStorageFile($path='')
     {
     	// Sequence validation
-    	if (!$this->isProxy())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::proxy()');
-    	if ($this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called before ' . $this->getAuthenticationCallerMethod() . '() (called at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ')');
-    	
+        $this->ensureIsProxy();
+
     	// Argument validation
     	if (gettype($path) != 'string')
         	throw new CAS_TypeMismatchException($path, '$path', 'string');
-        
+
         // create the storage object
         $this->setPGTStorage(new CAS_PGTStorage_File($this, $path));
     }
@@ -2565,7 +2582,7 @@ class CAS_Client
     	// Argument validation
     	if (gettype($target_service) != 'string')
         	throw new CAS_TypeMismatchException($target_service, '$target_service', 'string');
-        
+
         phpCAS::traceBegin();
 
         // by default, $err_msg is set empty and $pt to true. On error, $pt is
@@ -2787,17 +2804,13 @@ class CAS_Client
     public function getProxiedService ($type)
     {
     	// Sequence validation
-    	if (!$this->isProxy())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::proxy()');
-    	if (!$this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called after the programmer is sure the user has been authenticated (by calling phpCAS::checkAuthentication() or phpCAS::forceAuthentication()');
-    	if (!$this->wasAuthenticationCallSuccessful())
-    		throw new CAS_OutOfSequenceException('authentication was checked (by ' . $this->getAuthenticationCallerMethod() . '() at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ') but the method returned false');
-    	
+        $this->ensureIsProxy();
+    	$this->ensureAuthenticationCallSuccessful();
+
     	// Argument validation
     	if (gettype($type) != 'string')
         	throw new CAS_TypeMismatchException($type, '$type', 'string');
-    	
+
         switch ($type) {
         case PHPCAS_PROXIED_SERVICE_HTTP_GET:
         case PHPCAS_PROXIED_SERVICE_HTTP_POST:
@@ -2842,13 +2855,9 @@ class CAS_Client
     public function initializeProxiedService (CAS_ProxiedService $proxiedService)
     {
     	// Sequence validation
-    	if (!$this->isProxy())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::proxy()');
-    	if (!$this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called after the programmer is sure the user has been authenticated (by calling phpCAS::checkAuthentication() or phpCAS::forceAuthentication()');
-    	if (!$this->wasAuthenticationCallSuccessful())
-    		throw new CAS_OutOfSequenceException('authentication was checked (by ' . $this->getAuthenticationCallerMethod() . '() at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ') but the method returned false');
-    	
+        $this->ensureIsProxy();
+    	$this->ensureAuthenticationCallSuccessful();
+
         $url = $proxiedService->getServiceUrl();
         if (!is_string($url)) {
             throw new CAS_ProxiedService_Exception(
@@ -2881,17 +2890,13 @@ class CAS_Client
     public function serviceWeb($url,&$err_code,&$output)
     {
     	// Sequence validation
-    	if (!$this->isProxy())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::proxy()');
-    	if (!$this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called after the programmer is sure the user has been authenticated (by calling phpCAS::checkAuthentication() or phpCAS::forceAuthentication()');
-    	if (!$this->wasAuthenticationCallSuccessful())
-    		throw new CAS_OutOfSequenceException('authentication was checked (by ' . $this->getAuthenticationCallerMethod() . '() at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ') but the method returned false');
-    	
+        $this->ensureIsProxy();
+    	$this->ensureAuthenticationCallSuccessful();
+
     	// Argument validation
     	if (gettype($url) != 'string')
         	throw new CAS_TypeMismatchException($url, '$url', 'string');
-        
+
         try {
             $service = $this->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
             $service->setUrl($url);
@@ -2935,13 +2940,9 @@ class CAS_Client
     public function serviceMail($url,$serviceUrl,$flags,&$err_code,&$err_msg,&$pt)
     {
     	// Sequence validation
-    	if (!$this->isProxy())
-    		throw new CAS_OutOfSequenceException('this method should only be called after phpCAS::proxy()');
-    	if (!$this->wasAuthenticationCalled())
-    		throw new CAS_OutOfSequenceException('this method should only be called after the programmer is sure the user has been authenticated (by calling phpCAS::checkAuthentication() or phpCAS::forceAuthentication()');
-    	if (!$this->wasAuthenticationCallSuccessful())
-    		throw new CAS_OutOfSequenceException('authentication was checked (by ' . $this->getAuthenticationCallerMethod() . '() at ' . $this->getAuthenticationCallerFile() . ':' . $this->getAuthenticationCallerLine() . ') but the method returned false');
-    	
+        $this->ensureIsProxy();
+    	$this->ensureAuthenticationCallSuccessful();
+
     	// Argument validation
     	if (gettype($url) != 'string')
         	throw new CAS_TypeMismatchException($url, '$url', 'string');
@@ -2949,7 +2950,7 @@ class CAS_Client
         	throw new CAS_TypeMismatchException($serviceUrl, '$serviceUrl', 'string');
         if (gettype($flags) != 'integer')
         	throw new CAS_TypeMismatchException($flags, '$flags', 'string');
-        
+
         try {
             $service = $this->getProxiedService(PHPCAS_PROXIED_SERVICE_IMAP);
             $service->setServiceUrl($serviceUrl);
@@ -3417,7 +3418,7 @@ class CAS_Client
     	// Argument Validation
     	if (gettype($url) != 'string')
         	throw new CAS_TypeMismatchException($url, '$url', 'string');
-        
+
         $this->_url = $url;
     }
 
@@ -3699,7 +3700,7 @@ class CAS_Client
     	// Argument validation
     	if ( !(bool)preg_match("/^(http|https):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i", $rebroadcastNodeUrl))
         	throw new CAS_TypeMismatchException($rebroadcastNodeUrl, '$rebroadcastNodeUrl', 'url');
-        
+
         // Store the rebroadcast node and set flag
         $this->_rebroadcast = true;
         $this->_rebroadcast_nodes[] = $rebroadcastNodeUrl;
@@ -3722,7 +3723,7 @@ class CAS_Client
     {
     	if (gettype($header) != 'string')
         	throw new CAS_TypeMismatchException($header, '$header', 'string');
-        
+
         $this->_rebroadcast_headers[] = $header;
     }
 

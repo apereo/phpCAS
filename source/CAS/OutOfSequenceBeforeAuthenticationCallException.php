@@ -17,54 +17,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ *
  * PHP Version 5
  *
- * @file     CAS/InvalidArgumentException.php
+ * @file     CAS/OutOfSequenceBeforeAuthenticationCallException.php
  * @category Authentication
  * @package  PhpCAS
- * @author   Adam Franco <afranco@middlebury.edu>
+ * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
 /**
- * Exception that denotes invalid arguments were passed.
+ * This class defines Exceptions that should be thrown when the sequence of
+ * operations is invalid. In this case it should be thrown when an
+ * authentication call has not yet happened.
  *
- * @class    CAS_InvalidArgumentException
+ * @class    CAS_OutOfSequenceBeforeAuthenticationCallException
  * @category Authentication
  * @package  PhpCAS
- * @author   Adam Franco <afranco@middlebury.edu>
+ * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_TypeMismatchException
-extends CAS_InvalidArgumentException
+class CAS_OutOfSequenceBeforeAuthenticationCallException
+extends CAS_OutOfSequenceException
+implements CAS_Exception
 {
     /**
-     * Constructor, provides a nice message.
-     *
-     * @param mixed   $argument     Argument
-     * @param string  $argumentName Argument Name
-     * @param string  $type         Type
-     * @param string  $message      Error Message
-     * @param integer $code         Code
+     * Return standard error meessage
      *
      * @return void
      */
-    public function __construct (
-        $argument, $argumentName, $type, $message = '', $code = 0
-    ) {
-        if (is_object($argument)) {
-            $foundType = get_class($argument).' object';
-        } else {
-            $foundType = gettype($lang);
-        }
-
-        parent::__construct(
-            'type mismatched for parameter '
-            . $argumentName . ' (should be \'' . $type .' \'), '
-            . $foundType . ' given. ' . $message, $code
-        );
+    public function __construct ()
+    {
+        parent::__construct('An authentication call hasn\'t happened yet.');
     }
 }
-?>
