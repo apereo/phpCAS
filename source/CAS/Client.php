@@ -755,7 +755,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _ensureAuthenticationCalled()
+    private function ensureAuthenticationCalled()
     {
         if (!$this->wasAuthenticationCalled()) {
             throw new CAS_OutOfSequenceBeforeAuthenticationCallException();
@@ -772,7 +772,7 @@ class CAS_Client
      */
     public function wasAuthenticationCallSuccessful ()
     {
-        $this->_ensureAuthenticationCalled();
+        $this->ensureAuthenticationCalled();
         return $this->_authentication_caller['result'];
     }
 
@@ -787,7 +787,7 @@ class CAS_Client
      */
     public function ensureAuthenticationCallSuccessful()
     {
-        $this->_ensureAuthenticationCalled();
+        $this->ensureAuthenticationCalled();
         if (!$this->_authentication_caller['result']) {
             throw new CAS_OutOfSequenceException(
                 'authentication was checked (by '
@@ -809,7 +809,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerFile ()
     {
-        $this->_ensureAuthenticationCalled();
+        $this->ensureAuthenticationCalled();
         return $this->_authentication_caller['file'];
     }
 
@@ -823,7 +823,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerLine ()
     {
-        $this->_ensureAuthenticationCalled();
+        $this->ensureAuthenticationCalled();
         return $this->_authentication_caller['line'];
     }
 
@@ -837,7 +837,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerMethod ()
     {
-        $this->_ensureAuthenticationCalled();
+        $this->ensureAuthenticationCalled();
         return $this->_authentication_caller['method'];
     }
 
