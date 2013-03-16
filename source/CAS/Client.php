@@ -894,8 +894,8 @@ class CAS_Client
 
         // skip Session Handling for logout requests and if don't want it'
         if (session_id()=="" && !$this->_isLogoutRequest()) {
-            phpCAS :: trace("Starting a new session");
             session_start();
+            phpCAS :: trace("Starting a new session " . session_id());
         }
 
         // are we in proxy mode ?
@@ -2284,7 +2284,7 @@ class CAS_Client
             $final_uri = '';
             // remove the ticket if present in the URL
             $final_uri = 'https://';
-            $final_uri .= $this->_getServerUrl();
+            $final_uri .= $this->_getClientUrl();
             $request_uri = $_SERVER['REQUEST_URI'];
             $request_uri = preg_replace('/\?.*$/', '', $request_uri);
             $final_uri .= $request_uri;
@@ -3436,7 +3436,7 @@ class CAS_Client
             $final_uri = ($this->_isHttps()) ? 'https' : 'http';
             $final_uri .= '://';
 
-            $final_uri .= $this->_getServerUrl();
+            $final_uri .= $this->_getClientUrl();
             $request_uri	= explode('?', $_SERVER['REQUEST_URI'], 2);
             $final_uri		.= $request_uri[0];
 
@@ -3459,11 +3459,11 @@ class CAS_Client
 
 
     /**
-     * Try to figure out the server URL with possible Proxys / Ports etc.
+     * Try to figure out the phpCas client URL with possible Proxys / Ports etc.
      *
      * @return string Server URL with domain:port
      */
-    private function _getServerUrl()
+    private function _getClientUrl()
     {
         $server_url = '';
         if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
@@ -3562,10 +3562,11 @@ class CAS_Client
         if ($this->getChangeSessionID()) {
             if (!empty($this->_user)) {
                 $old_session = $_SESSION;
+                phpCAS :: trace("Killing session: ". session_id());
                 session_destroy();
                 // set up a new session, of name based on the ticket
                 $session_id = preg_replace('/[^a-zA-Z0-9\-]/', '', $ticket);
-                phpCAS :: trace("Session ID: ".$session_id);
+                phpCAS :: trace("Starting session: ". $session_id);
                 session_id($session_id);
                 session_start();
                 phpCAS :: trace("Restoring old session vars");
