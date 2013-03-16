@@ -80,11 +80,11 @@ class CAS_Tests_ServiceMailTest extends PHPUnit_Framework_TestCase
         // up the session manually so that we are in a state from which we can
         // attempt to fetch proxy tickets and make proxied requests.
 
-        $_SESSION['phpCAS']['user'] = 'jdoe';
-        $_SESSION['phpCAS']['pgt'] = 'PGT-clientapp-abc123';
-        $_SESSION['phpCAS']['proxies'] = array();
-        $_SESSION['phpCAS']['service_cookies'] = array();
-        $_SESSION['phpCAS']['attributes'] = array();
+        $_SESSION['phpCAS'][$this->object->getServerBaseURL()]['user'] = 'jdoe';
+        $_SESSION['phpCAS'][$this->object->getServerBaseURL()]['pgt'] = 'PGT-clientapp-abc123';
+        $_SESSION['phpCAS'][$this->object->getServerBaseURL()]['proxies'] = array();
+        $_SESSION['phpCAS'][$this->object->getServerBaseURL()]['service_cookies'] = array();
+        $_SESSION['phpCAS'][$this->object->getServerBaseURL()]['attributes'] = array();
 
         // Force Authentication to initialize the client.
         $this->object->forceAuthentication();
