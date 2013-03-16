@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Advanced example for SAML with attributes and single logout
+ * Advanced example for hardening the phpcas client
  *
  * PHP Version 5
  *
- * @file     example_advanced_saml.php
+ * @file     example_hardening.php
  * @category Authentication
  * @package  PhpCAS
  * @author   Joachim Fritschi <jfritschi@freenet.de>
