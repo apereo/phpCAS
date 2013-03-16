@@ -1297,9 +1297,8 @@ class phpCAS
      */
     public static function getServerLogoutURL()
     {
-        if (!is_object(self::$_PHPCAS_CLIENT)) {
-            throw new CAS_OutOfSequenceBeforeClientException();
-        }
+        phpCAS::_validateClientExists();
+
         return self::$_PHPCAS_CLIENT->getServerLogoutURL();
     }
 

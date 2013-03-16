@@ -755,7 +755,7 @@ class CAS_Client
      *
      * @return void
      */
-    public function ensureAuthenticationCalled()
+    private function _ensureAuthenticationCalled()
     {
         if (!$this->wasAuthenticationCalled()) {
             throw new CAS_OutOfSequenceBeforeAuthenticationCallException();
@@ -772,7 +772,7 @@ class CAS_Client
      */
     public function wasAuthenticationCallSuccessful ()
     {
-        $this->ensureAuthenticationCalled();
+        $this->_ensureAuthenticationCalled();
         return $this->_authentication_caller['result'];
     }
 
@@ -787,7 +787,7 @@ class CAS_Client
      */
     public function ensureAuthenticationCallSuccessful()
     {
-        $this->ensureAuthenticationCalled();
+        $this->_ensureAuthenticationCalled();
         if (!$this->_authentication_caller['result']) {
             throw new CAS_OutOfSequenceException(
                 'authentication was checked (by '
@@ -809,7 +809,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerFile ()
     {
-        $this->ensureAuthenticationCalled();
+        $this->_ensureAuthenticationCalled();
         return $this->_authentication_caller['file'];
     }
 
@@ -823,7 +823,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerLine ()
     {
-        $this->ensureAuthenticationCalled();
+        $this->_ensureAuthenticationCalled();
         return $this->_authentication_caller['line'];
     }
 
@@ -837,7 +837,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerMethod ()
     {
-        $this->ensureAuthenticationCalled();
+        $this->_ensureAuthenticationCalled();
         return $this->_authentication_caller['method'];
     }
 
@@ -1090,7 +1090,7 @@ class CAS_Client
      * @warning should be called only after CAS_Client::forceAuthentication() or
      * CAS_Client::isAuthenticated(), otherwise halt with an error.
      */
-    protected function _getUser()
+    private function _getUser()
     {
     	// This is likely a duplicate check that could be removed....
         if ( empty($this->_user) ) {
@@ -1177,7 +1177,7 @@ class CAS_Client
      *
      * @return bool is attribute available
      */
-    protected function _hasAttribute($key)
+    private function _hasAttribute($key)
     {
         return (is_array($this->_attributes)
             && array_key_exists($key, $this->_attributes));
