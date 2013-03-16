@@ -43,6 +43,13 @@ $cas_server_ca_cert_path = '/path/to/cachain.pem';
 // Assumes the cas server is load balanced across multiple hosts
 $cas_real_hosts = array('cas-real-1.example.com', 'cas-real-2.example.com');
 
+// Client config for cookie hardening
+$client_domain = '127.0.0.1';
+$client_path = 'phpcas';
+$client_secure = true;
+$client_httpOnly = true;
+$client_lifetime = 0;
+
 // Database config for PGT Storage
 $db = 'pgsql:host=localhost;dbname=phpcas';
 //$db = 'mysql:host=localhost;dbname=phpcas';
