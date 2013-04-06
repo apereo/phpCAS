@@ -1638,21 +1638,9 @@ class CAS_Client
         }
         header('Location: '.$cas_url);
         phpCAS::trace("Prepare redirect to : ".$cas_url);
-        // delete the session data of this CAS server
-        unset($_SESSION['phpCAS'][$this->getServerBaseURL()]);
-        // Delete full session only if no other CAS data is in the session
-        if (sizeof($_SESSION['phpCAS']) === 0) {
-            phpCAS::trace(
-                " Session " . session_id() . "is empty. Deleting session."
-            );
-            session_unset();
-            session_destroy();
-        } else {
-            phpCAS::trace(
-                " Session " . session_id()
-                . "is not empty. Skipping session deletion."
-            );
-        }
+
+        session_unset();
+        session_destroy();
         $lang = $this->getLangObj();
         $this->printHTMLHeader($lang->getLogout());
         printf('<p>'.$lang->getShouldHaveBeenRedirected(). '</p>', $cas_url);
