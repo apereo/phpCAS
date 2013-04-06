@@ -76,7 +76,7 @@ class CAS_Client
     {
         $str = str_replace('__CAS_VERSION__', $this->getServerVersion(), $str);
         $str = str_replace('__PHPCAS_VERSION__', phpCAS::getVersion(), $str);
-        $str = str_replace('__SERVER_BASE_URL__', $this->getServerBaseURL(), $str);
+        $str = str_replace('__SERVER_BASE_URL__', $this->_getServerBaseURL(), $str);
         echo $str;
     }
 
@@ -251,7 +251,7 @@ class CAS_Client
      * CAS_Client::getServerVersion(), CAS_Client::_getServerHostname(),
      * CAS_Client::_getServerPort() and CAS_Client::_getServerURI().
      *
-     * The other fields are written and read by CAS_Client::getServerBaseURL(),
+     * The other fields are written and read by CAS_Client::_getServerBaseURL(),
      * CAS_Client::getServerLoginURL(), CAS_Client::getServerServiceValidateURL(),
      * CAS_Client::getServerProxyValidateURL() and CAS_Client::getServerLogoutURL().
      *
@@ -308,7 +308,7 @@ class CAS_Client
      *
      * @return string a URL.
      */
-    public function getServerBaseURL()
+    private function _getServerBaseURL()
     {
         // the URL is build only when needed
         if ( empty($this->_server['base_url']) ) {
@@ -337,7 +337,7 @@ class CAS_Client
         phpCAS::traceBegin();
         // the URL is build only when needed
         if ( empty($this->_server['login_url']) ) {
-            $this->_server['login_url'] = $this->getServerBaseURL();
+            $this->_server['login_url'] = $this->_getServerBaseURL();
             $this->_server['login_url'] .= 'login?service=';
             $this->_server['login_url'] .= urlencode($this->getURL());
         }
@@ -435,11 +435,11 @@ class CAS_Client
         if ( empty($this->_server['service_validate_url']) ) {
             switch ($this->getServerVersion()) {
             case CAS_VERSION_1_0:
-                $this->_server['service_validate_url'] = $this->getServerBaseURL()
+                $this->_server['service_validate_url'] = $this->_getServerBaseURL()
                 .'validate';
                 break;
             case CAS_VERSION_2_0:
-                $this->_server['service_validate_url'] = $this->getServerBaseURL()
+                $this->_server['service_validate_url'] = $this->_getServerBaseURL()
                 .'serviceValidate';
                 break;
             }
@@ -463,7 +463,7 @@ class CAS_Client
         if ( empty($this->_server['saml_validate_url']) ) {
             switch ($this->getServerVersion()) {
             case SAML_VERSION_1_1:
-                $this->_server['saml_validate_url'] = $this->getServerBaseURL().'samlValidate';
+                $this->_server['saml_validate_url'] = $this->_getServerBaseURL().'samlValidate';
                 break;
             }
         }
@@ -491,7 +491,7 @@ class CAS_Client
                 $this->_server['proxy_validate_url'] = '';
                 break;
             case CAS_VERSION_2_0:
-                $this->_server['proxy_validate_url'] = $this->getServerBaseURL().'proxyValidate';
+                $this->_server['proxy_validate_url'] = $this->_getServerBaseURL().'proxyValidate';
                 break;
             }
         }
@@ -518,7 +518,7 @@ class CAS_Client
                 $this->_server['proxy_url'] = '';
                 break;
             case CAS_VERSION_2_0:
-                $this->_server['proxy_url'] = $this->getServerBaseURL().'proxy';
+                $this->_server['proxy_url'] = $this->_getServerBaseURL().'proxy';
                 break;
             }
         }
@@ -534,7 +534,7 @@ class CAS_Client
     {
         // the URL is build only when needed
         if ( empty($this->_server['logout_url']) ) {
-            $this->_server['logout_url'] = $this->getServerBaseURL().'logout';
+            $this->_server['logout_url'] = $this->_getServerBaseURL().'logout';
         }
         return $this->_server['logout_url'];
     }
@@ -755,7 +755,7 @@ class CAS_Client
      *
      * @return void
      */
-    public function ensureAuthenticationCalled()
+    private function ensureAuthenticationCalled()
     {
         if (!$this->wasAuthenticationCalled()) {
             throw new CAS_OutOfSequenceBeforeAuthenticationCallException();
@@ -901,6 +901,19 @@ class CAS_Client
         // are we in proxy mode ?
         $this->_proxy = $proxy;
 
+        // Make cookie handling available.
+        if ($this->isProxy()) {
+            if (!isset($_SESSION['phpCAS'])) {
+                $_SESSION['phpCAS'] = array();
+            }
+            if (!isset($_SESSION['phpCAS']['service_cookies'])) {
+                $_SESSION['phpCAS']['service_cookies'] = array();
+            }
+            $this->_serviceCookieJar = new CAS_CookieJar(
+                $_SESSION['phpCAS']['service_cookies']
+            );
+        }
+
         //check version
         switch ($server_version) {
         case CAS_VERSION_1_0:
@@ -945,21 +958,6 @@ class CAS_Client
         // add leading and trailing `/' and remove doubles
         $server_uri = preg_replace('/\/\//', '/', '/'.$server_uri.'/');
         $this->_server['uri'] = $server_uri;
-
-
-        // Make cookie handling available.
-        if ($this->isProxy()) {
-            if (!isset($_SESSION['phpCAS'])) {
-                $_SESSION['phpCAS'] = array();
-            }
-            if (!isset($_SESSION['phpCAS'][$this->getServerBaseURL()])) {
-                $_SESSION['phpCAS'][$this->getServerBaseURL()] = array();
-            }
-            if (!isset($_SESSION['phpCAS'][$this->getServerBaseURL()]['service_cookies'])) {
-                $_SESSION['phpCAS'][$this->getServerBaseURL()]['service_cookies'] = array();
-            }
-            $this->_serviceCookieJar = new CAS_CookieJar($_SESSION['phpCAS'][$this->getServerBaseURL()]['service_cookies']);
-        }
 
         // set to callback mode if PgtIou and PgtId CGI GET parameters are provided
         if ( $this->isProxy() ) {
@@ -1213,8 +1211,8 @@ class CAS_Client
     {
         phpCAS::traceBegin();
         // Either way, the user is authenticated by CAS
-        if (isset( $_SESSION['phpCAS'][$this->getServerBaseURL()]['auth_checked'])) {
-            unset($_SESSION['phpCAS'][$this->getServerBaseURL()]['auth_checked']);
+        if (isset( $_SESSION['phpCAS']['auth_checked'])) {
+            unset($_SESSION['phpCAS']['auth_checked']);
         }
         if ( $this->isAuthenticated() ) {
             phpCAS::trace('user already authenticated; renew');
@@ -1241,8 +1239,8 @@ class CAS_Client
             $res = true;
         } else {
             // the user is not authenticated, redirect to the CAS server
-            if (isset($_SESSION['phpCAS'][$this->getServerBaseURL()]['auth_checked'])) {
-                unset($_SESSION['phpCAS'][$this->getServerBaseURL()]['auth_checked']);
+            if (isset($_SESSION['phpCAS']['auth_checked'])) {
+                unset($_SESSION['phpCAS']['auth_checked']);
             }
             $this->redirectToCas(false/* no gateway */);
             // never reached
@@ -1289,31 +1287,31 @@ class CAS_Client
         if ( $this->isAuthenticated() ) {
             phpCAS::trace('user is authenticated');
             /* The 'auth_checked' variable is removed just in case it's set. */
-            unset($_SESSION['phpCAS'][$this->getServerBaseURL()]['auth_checked']);
+            unset($_SESSION['phpCAS']['auth_checked']);
             $res = true;
-        } else if (isset($_SESSION['phpCAS'][$this->getServerBaseURL()]['auth_checked'])) {
+        } else if (isset($_SESSION['phpCAS']['auth_checked'])) {
             // the previous request has redirected the client to the CAS server
             // with gateway=true
-            unset($_SESSION['phpCAS'][$this->getServerBaseURL()]['auth_checked']);
+            unset($_SESSION['phpCAS']['auth_checked']);
             $res = false;
         } else {
             // avoid a check against CAS on every request
-            if (!isset($_SESSION['phpCAS'][$this->getServerBaseURL()]['unauth_count'])) {
-                $_SESSION['phpCAS'][$this->getServerBaseURL()]['unauth_count'] = -2; // uninitialized
+            if (!isset($_SESSION['phpCAS']['unauth_count'])) {
+                $_SESSION['phpCAS']['unauth_count'] = -2; // uninitialized
             }
 
-            if (($_SESSION['phpCAS'][$this->getServerBaseURL()]['unauth_count'] != -2
+            if (($_SESSION['phpCAS']['unauth_count'] != -2
                 && $this->_cache_times_for_auth_recheck == -1)
-                || ($_SESSION['phpCAS'][$this->getServerBaseURL()]['unauth_count'] >= 0
-                && $_SESSION['phpCAS'][$this->getServerBaseURL()]['unauth_count'] < $this->_cache_times_for_auth_recheck)
+                || ($_SESSION['phpCAS']['unauth_count'] >= 0
+                && $_SESSION['phpCAS']['unauth_count'] < $this->_cache_times_for_auth_recheck)
             ) {
                 $res = false;
 
                 if ($this->_cache_times_for_auth_recheck != -1) {
-                    $_SESSION['phpCAS'][$this->getServerBaseURL()]['unauth_count']++;
+                    $_SESSION['phpCAS']['unauth_count']++;
                     phpCAS::trace(
                         'user is not authenticated (cached for '
-                        .$_SESSION['phpCAS'][$this->getServerBaseURL()]['unauth_count'].' times of '
+                        .$_SESSION['phpCAS']['unauth_count'].' times of '
                         .$this->_cache_times_for_auth_recheck.')'
                     );
                 } else {
@@ -1322,8 +1320,8 @@ class CAS_Client
                     );
                 }
             } else {
-                $_SESSION['phpCAS'][$this->getServerBaseURL()]['unauth_count'] = 0;
-                $_SESSION['phpCAS'][$this->getServerBaseURL()]['auth_checked'] = true;
+                $_SESSION['phpCAS']['unauth_count'] = 0;
+                $_SESSION['phpCAS']['auth_checked'] = true;
                 phpCAS::trace('user is not authenticated (cache reset)');
                 $this->redirectToCas(true/* gateway */);
                 // never reached
@@ -1386,7 +1384,7 @@ class CAS_Client
                     phpCAS::trace(
                         'CAS 1.0 ticket `'.$this->getTicket().'\' was validated'
                     );
-                    $_SESSION['phpCAS'][$this->getServerBaseURL()]['user'] = $this->_getUser();
+                    $_SESSION['phpCAS']['user'] = $this->_getUser();
                     $res = true;
                     $logoutTicket = $this->getTicket();
                     break;
@@ -1406,15 +1404,15 @@ class CAS_Client
                             $validate_url, $text_response, $tree_response
                         ); // idem
                         phpCAS::trace('PGT `'.$this->_getPGT().'\' was validated');
-                        $_SESSION['phpCAS'][$this->getServerBaseURL()]['pgt'] = $this->_getPGT();
+                        $_SESSION['phpCAS']['pgt'] = $this->_getPGT();
                     }
-                    $_SESSION['phpCAS'][$this->getServerBaseURL()]['user'] = $this->_getUser();
+                    $_SESSION['phpCAS']['user'] = $this->_getUser();
                     if (!empty($this->_attributes)) {
-                        $_SESSION['phpCAS'][$this->getServerBaseURL()]['attributes'] = $this->_attributes;
+                        $_SESSION['phpCAS']['attributes'] = $this->_attributes;
                     }
                     $proxies = $this->getProxies();
                     if (!empty($proxies)) {
-                        $_SESSION['phpCAS'][$this->getServerBaseURL()]['proxies'] = $this->getProxies();
+                        $_SESSION['phpCAS']['proxies'] = $this->getProxies();
                     }
                     $res = true;
                     $logoutTicket = $this->getTicket();
@@ -1430,8 +1428,8 @@ class CAS_Client
                     phpCAS::trace(
                         'SAML 1.1 ticket `'.$this->getTicket().'\' was validated'
                     );
-                    $_SESSION['phpCAS'][$this->getServerBaseURL()]['user'] = $this->_getUser();
-                    $_SESSION['phpCAS'][$this->getServerBaseURL()]['attributes'] = $this->_attributes;
+                    $_SESSION['phpCAS']['user'] = $this->_getUser();
+                    $_SESSION['phpCAS']['attributes'] = $this->_attributes;
                     $res = true;
                     $logoutTicket = $this->getTicket();
                     break;
@@ -1482,7 +1480,7 @@ class CAS_Client
      */
     public function isSessionAuthenticated ()
     {
-        return !empty($_SESSION['phpCAS'][$this->getServerBaseURL()]['user']);
+        return !empty($_SESSION['phpCAS']['user']);
     }
 
     /**
@@ -1510,50 +1508,50 @@ class CAS_Client
         if ( $this->isProxy() ) {
             // CAS proxy: username and PGT must be present
             if ( $this->isSessionAuthenticated()
-                && !empty($_SESSION['phpCAS'][$this->getServerBaseURL()]['pgt'])
+                && !empty($_SESSION['phpCAS']['pgt'])
             ) {
                 // authentication already done
-                $this->_setUser($_SESSION['phpCAS'][$this->getServerBaseURL()]['user']);
-                if (isset($_SESSION['phpCAS'][$this->getServerBaseURL()]['attributes'])) {
-                    $this->setAttributes($_SESSION['phpCAS'][$this->getServerBaseURL()]['attributes']);
+                $this->_setUser($_SESSION['phpCAS']['user']);
+                if (isset($_SESSION['phpCAS']['attributes'])) {
+                    $this->setAttributes($_SESSION['phpCAS']['attributes']);
                 }
-                $this->_setPGT($_SESSION['phpCAS'][$this->getServerBaseURL()]['pgt']);
+                $this->_setPGT($_SESSION['phpCAS']['pgt']);
                 phpCAS::trace(
-                    'user = `'.$_SESSION['phpCAS'][$this->getServerBaseURL()]['user'].'\', PGT = `'
-                    .$_SESSION['phpCAS'][$this->getServerBaseURL()]['pgt'].'\''
+                    'user = `'.$_SESSION['phpCAS']['user'].'\', PGT = `'
+                    .$_SESSION['phpCAS']['pgt'].'\''
                 );
 
                 // Include the list of proxies
-                if (isset($_SESSION['phpCAS'][$this->getServerBaseURL()]['proxies'])) {
-                    $this->_setProxies($_SESSION['phpCAS'][$this->getServerBaseURL()]['proxies']);
+                if (isset($_SESSION['phpCAS']['proxies'])) {
+                    $this->_setProxies($_SESSION['phpCAS']['proxies']);
                     phpCAS::trace(
                         'proxies = "'
-                        .implode('", "', $_SESSION['phpCAS'][$this->getServerBaseURL()]['proxies']).'"'
+                        .implode('", "', $_SESSION['phpCAS']['proxies']).'"'
                     );
                 }
 
                 $auth = true;
             } elseif ( $this->isSessionAuthenticated()
-                && empty($_SESSION['phpCAS'][$this->getServerBaseURL()]['pgt'])
+                && empty($_SESSION['phpCAS']['pgt'])
             ) {
                 // these two variables should be empty or not empty at the same time
                 phpCAS::trace(
-                    'username found (`'.$_SESSION['phpCAS'][$this->getServerBaseURL()]['user']
+                    'username found (`'.$_SESSION['phpCAS']['user']
                     .'\') but PGT is empty'
                 );
                 // unset all tickets to enforce authentication
-                unset($_SESSION['phpCAS'][$this->getServerBaseURL()]);
+                unset($_SESSION['phpCAS']);
                 $this->setTicket('');
             } elseif ( !$this->isSessionAuthenticated()
-                && !empty($_SESSION['phpCAS'][$this->getServerBaseURL()]['pgt'])
+                && !empty($_SESSION['phpCAS']['pgt'])
             ) {
                 // these two variables should be empty or not empty at the same time
                 phpCAS::trace(
-                    'PGT found (`'.$_SESSION['phpCAS'][$this->getServerBaseURL()]['pgt']
+                    'PGT found (`'.$_SESSION['phpCAS']['pgt']
                     .'\') but username is empty'
                 );
                 // unset all tickets to enforce authentication
-                unset($_SESSION['phpCAS'][$this->getServerBaseURL()]);
+                unset($_SESSION['phpCAS']);
                 $this->setTicket('');
             } else {
                 phpCAS::trace('neither user nor PGT found');
@@ -1562,18 +1560,18 @@ class CAS_Client
             // `simple' CAS client (not a proxy): username must be present
             if ( $this->isSessionAuthenticated() ) {
                 // authentication already done
-                $this->_setUser($_SESSION['phpCAS'][$this->getServerBaseURL()]['user']);
-                if (isset($_SESSION['phpCAS'][$this->getServerBaseURL()]['attributes'])) {
-                    $this->setAttributes($_SESSION['phpCAS'][$this->getServerBaseURL()]['attributes']);
+                $this->_setUser($_SESSION['phpCAS']['user']);
+                if (isset($_SESSION['phpCAS']['attributes'])) {
+                    $this->setAttributes($_SESSION['phpCAS']['attributes']);
                 }
-                phpCAS::trace('user = `'.$_SESSION['phpCAS'][$this->getServerBaseURL()]['user'].'\'');
+                phpCAS::trace('user = `'.$_SESSION['phpCAS']['user'].'\'');
 
                 // Include the list of proxies
-                if (isset($_SESSION['phpCAS'][$this->getServerBaseURL()]['proxies'])) {
-                    $this->_setProxies($_SESSION['phpCAS'][$this->getServerBaseURL()]['proxies']);
+                if (isset($_SESSION['phpCAS']['proxies'])) {
+                    $this->_setProxies($_SESSION['phpCAS']['proxies']);
                     phpCAS::trace(
                         'proxies = "'
-                        .implode('", "', $_SESSION['phpCAS'][$this->getServerBaseURL()]['proxies']).'"'
+                        .implode('", "', $_SESSION['phpCAS']['proxies']).'"'
                     );
                 }
 
