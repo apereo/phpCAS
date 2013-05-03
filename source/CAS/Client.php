@@ -1353,6 +1353,7 @@ class CAS_Client
                 if ($this->_clearTicketsFromUrl) {
                     phpCAS::trace("Prepare redirect to : ".$this->getURL());
                     header('Location: '.$this->getURL());
+                    session_write_close();
                     flush();
                     phpCAS::traceExit();
                     throw new CAS_GracefullTerminationException();
@@ -1460,6 +1461,7 @@ class CAS_Client
                 if ($this->_clearTicketsFromUrl) {
                     phpCAS::trace("Prepare redirect to : ".$this->getURL());
                     header('Location: '.$this->getURL());
+                    session_write_close();
                     flush();
                     phpCAS::traceExit();
                     throw new CAS_GracefullTerminationException();
