@@ -1353,6 +1353,7 @@ class CAS_Client
                 if ($this->_clearTicketsFromUrl) {
                     phpCAS::trace("Prepare redirect to : ".$this->getURL());
                     header('Location: '.$this->getURL());
+                    session_write_close();
                     flush();
                     phpCAS::traceExit();
                     throw new CAS_GracefullTerminationException();
@@ -1460,6 +1461,7 @@ class CAS_Client
                 if ($this->_clearTicketsFromUrl) {
                     phpCAS::trace("Prepare redirect to : ".$this->getURL());
                     header('Location: '.$this->getURL());
+                    session_write_close();
                     flush();
                     phpCAS::traceExit();
                     throw new CAS_GracefullTerminationException();
@@ -1599,6 +1601,7 @@ class CAS_Client
     {
         phpCAS::traceBegin();
         $cas_url = $this->getServerLoginURL($gateway, $renew);
+        session_write_close();
         if (php_sapi_name() === 'cli') {
             @header('Location: '.$cas_url);
         } else {
