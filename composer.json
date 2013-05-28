@@ -4,11 +4,10 @@
     "keywords": ["cas", "jasig"],
     "homepage": "https://wiki.jasig.org/display/CASC/phpCAS",
     "type": "library",
-    "license": "ASL 2.0",
+    "license": "Apache-2.0",
     "authors": [
         {"name": "Joachim Fritschi", "homepage": "https://wiki.jasig.org/display/~fritschi"},
-        {"name": "Adam Franco", "homepage": "https://wiki.jasig.org/display/~adamfranco"},
-        {"name": "Matthew Selwood", "homepage": "https://wiki.jasig.org/display/~selwood"}
+        {"name": "Adam Franco", "homepage": "https://wiki.jasig.org/display/~adamfranco"}
     ],
     "require": {
         "php": ">=5.0.0"
