@@ -1352,6 +1352,7 @@ class CAS_Client
                 );
                 if ($this->_clearTicketsFromUrl) {
                     phpCAS::trace("Prepare redirect to : ".$this->getURL());
+                    session_write_close();
                     header('Location: '.$this->getURL());
                     flush();
                     phpCAS::traceExit();
@@ -1459,6 +1460,7 @@ class CAS_Client
                 // security precaution to prevent a ticket in the HTTP_REFERRER
                 if ($this->_clearTicketsFromUrl) {
                     phpCAS::trace("Prepare redirect to : ".$this->getURL());
+                    session_write_close();
                     header('Location: '.$this->getURL());
                     flush();
                     phpCAS::traceExit();
@@ -1599,6 +1601,7 @@ class CAS_Client
     {
         phpCAS::traceBegin();
         $cas_url = $this->getServerLoginURL($gateway, $renew);
+        session_write_close();
         if (php_sapi_name() === 'cli') {
             @header('Location: '.$cas_url);
         } else {
@@ -1636,6 +1639,7 @@ class CAS_Client
             $cas_url = $cas_url . $paramSeparator . "service="
                 . urlencode($params['service']);
         }
+        session_write_close();
         header('Location: '.$cas_url);
         phpCAS::trace("Prepare redirect to : ".$cas_url);
 
