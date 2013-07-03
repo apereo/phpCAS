@@ -269,7 +269,7 @@ class phpCAS
      *
      * @hideinitializer
      */
-    private static $_PHPCAS_CLIENT;
+    protected static $_PHPCAS_CLIENT;
 
     /**
      * This variable is used to store where the initializer is called from
@@ -277,14 +277,14 @@ class phpCAS
      *
      * @hideinitializer
      */
-    private static $_PHPCAS_INIT_CALL;
+    protected static $_PHPCAS_INIT_CALL;
 
     /**
      * This variable is used to store phpCAS debug mode.
      *
      * @hideinitializer
      */
-    private static $_PHPCAS_DEBUG;
+    protected static $_PHPCAS_DEBUG;
 
 
     // ########################################################################
@@ -1710,7 +1710,7 @@ class phpCAS
      *
      * @return void
      */
-    private static function _validateClientExists()
+    protected static function _validateClientExists()
     {
         if (!is_object(self::$_PHPCAS_CLIENT)) {
             throw new CAS_OutOfSequenceBeforeClientException();
@@ -1724,7 +1724,7 @@ class phpCAS
      *
      * @return void
      */
-    private static function _validateProxyExists()
+    protected static function _validateProxyExists()
     {
         if (!is_object(self::$_PHPCAS_CLIENT)) {
             throw new CAS_OutOfSequenceBeforeProxyException();
