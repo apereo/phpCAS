@@ -17,7 +17,7 @@
     },
     "autoload": {
         "classmap": [
-            "source/",
+            "source/"
         ]
     }
 
