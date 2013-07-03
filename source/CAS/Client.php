@@ -72,7 +72,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _htmlFilterOutput($str)
+    protected function _htmlFilterOutput($str)
     {
         $str = str_replace('__CAS_VERSION__', $this->getServerVersion(), $str);
         $str = str_replace('__PHPCAS_VERSION__', phpCAS::getVersion(), $str);
@@ -87,7 +87,7 @@ class CAS_Client
      * @hideinitializer
      * @see CAS_Client::setHTMLHeader, CAS_Client::printHTMLHeader()
      */
-    private $_output_header = '';
+    protected $_output_header = '';
 
     /**
      * This method prints the header of the HTML output (after filtering). If
@@ -117,7 +117,7 @@ class CAS_Client
      * @hideinitializer
      * @see CAS_Client::setHTMLFooter, CAS_Client::printHTMLFooter()
      */
-    private $_output_footer = '';
+    protected $_output_footer = '';
 
     /**
      * This method prints the footer of the HTML output (after filtering). If
@@ -187,7 +187,7 @@ class CAS_Client
 
      * @note debugging information is always in english (debug purposes only).
      */
-    private $_lang = PHPCAS_LANG_DEFAULT;
+    protected $_lang = PHPCAS_LANG_DEFAULT;
 
     /**
      * This method is used to set the language used by phpCAS.
@@ -257,7 +257,7 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_server = array(
+    protected $_server = array(
         'version' => -1,
         'hostname' => 'none',
         'port' => -1,
@@ -278,7 +278,7 @@ class CAS_Client
      *
      * @return string the hostname of the CAS server.
      */
-    private function _getServerHostname()
+    protected function _getServerHostname()
     {
         return $this->_server['hostname'];
     }
@@ -288,7 +288,7 @@ class CAS_Client
      *
      * @return string the port of the CAS server.
      */
-    private function _getServerPort()
+    protected function _getServerPort()
     {
         return $this->_server['port'];
     }
@@ -298,7 +298,7 @@ class CAS_Client
      *
      * @return string a URI.
      */
-    private function _getServerURI()
+    protected function _getServerURI()
     {
         return $this->_server['uri'];
     }
@@ -308,7 +308,7 @@ class CAS_Client
      *
      * @return string a URL.
      */
-    private function _getServerBaseURL()
+    protected function _getServerBaseURL()
     {
         // the URL is build only when needed
         if ( empty($this->_server['base_url']) ) {
@@ -558,7 +558,7 @@ class CAS_Client
     /**
      * An array to store extra curl options.
      */
-    private $_curl_options = array();
+    protected $_curl_options = array();
 
     /**
      * This method is used to set additional user curl options.
@@ -590,7 +590,7 @@ class CAS_Client
      * By default CAS_Request_CurlRequest is used, but this may be overridden to
      * supply alternate request mechanisms for testing.
      */
-    private $_requestImplementation = 'CAS_Request_CurlRequest';
+    protected $_requestImplementation = 'CAS_Request_CurlRequest';
 
     /**
      * Override the default implementation used to make web requests in readUrl().
@@ -615,7 +615,7 @@ class CAS_Client
      * @var boolean $_clearTicketsFromUrl; If true, phpCAS will clear session
      * tickets from the URL after a successful authentication.
      */
-    private $_clearTicketsFromUrl = true;
+    protected $_clearTicketsFromUrl = true;
 
     /**
      * Configure the client to not send redirect headers and call exit() on
@@ -635,12 +635,12 @@ class CAS_Client
     /**
      * @var callback $_postAuthenticateCallbackFunction;
      */
-    private $_postAuthenticateCallbackFunction = null;
+    protected $_postAuthenticateCallbackFunction = null;
 
     /**
      * @var array $_postAuthenticateCallbackArgs;
      */
-    private $_postAuthenticateCallbackArgs = array();
+    protected $_postAuthenticateCallbackArgs = array();
 
     /**
      * Set a callback function to be run when a user authenticates.
@@ -670,12 +670,12 @@ class CAS_Client
     /**
      * @var callback $_signoutCallbackFunction;
      */
-    private $_signoutCallbackFunction = null;
+    protected $_signoutCallbackFunction = null;
 
     /**
      * @var array $_signoutCallbackArgs;
      */
-    private $_signoutCallbackArgs = array();
+    protected $_signoutCallbackArgs = array();
 
     /**
      * Set a callback function to be run when a single-signout request is received.
@@ -735,7 +735,7 @@ class CAS_Client
             'result' => (boolean)$auth
         );
     }
-    private $_authentication_caller;
+    protected $_authentication_caller;
 
     /**
      * Answer true if authentication has been checked.
@@ -755,7 +755,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function ensureAuthenticationCalled()
+    protected function ensureAuthenticationCalled()
     {
         if (!$this->wasAuthenticationCalled()) {
             throw new CAS_OutOfSequenceBeforeAuthenticationCallException();
@@ -1009,7 +1009,7 @@ class CAS_Client
      * A variable to whether phpcas will use its own session handling. Default = true
      * @hideinitializer
      */
-    private $_change_session_id = true;
+    protected $_change_session_id = true;
 
     /**
      * Set a parameter whether to allow phpCas to change session_id
@@ -1018,7 +1018,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _setChangeSessionID($allowed)
+    protected function _setChangeSessionID($allowed)
     {
         $this->_change_session_id = $allowed;
     }
@@ -1052,7 +1052,7 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_user = '';
+    protected $_user = '';
 
     /**
      * This method sets the CAS user's login name.
@@ -1061,7 +1061,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _setUser($user)
+    protected function _setUser($user)
     {
         $this->_user = $user;
     }
@@ -1090,7 +1090,7 @@ class CAS_Client
      * @warning should be called only after CAS_Client::forceAuthentication() or
      * CAS_Client::isAuthenticated(), otherwise halt with an error.
      */
-    private function _getUser()
+    protected function _getUser()
     {
     	// This is likely a duplicate check that could be removed....
         if ( empty($this->_user) ) {
@@ -1109,7 +1109,7 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_attributes = array();
+    protected $_attributes = array();
 
     /**
      * Set an array of attributes
@@ -1177,7 +1177,7 @@ class CAS_Client
      *
      * @return bool is attribute available
      */
-    private function _hasAttribute($key)
+    protected function _hasAttribute($key)
     {
         return (is_array($this->_attributes)
             && array_key_exists($key, $this->_attributes));
@@ -1256,7 +1256,7 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_cache_times_for_auth_recheck = 0;
+    protected $_cache_times_for_auth_recheck = 0;
 
     /**
      * Set the number of times authentication will be cached before rechecked.
@@ -1493,7 +1493,7 @@ class CAS_Client
      *
      * @return true when the user has already been authenticated; false otherwise.
      */
-    private function _wasPreviouslyAuthenticated()
+    protected function _wasPreviouslyAuthenticated()
     {
         phpCAS::traceBegin();
 
@@ -1658,7 +1658,7 @@ class CAS_Client
      *
      * @return bool is logout request.
      */
-    private function _isLogoutRequest()
+    protected function _isLogoutRequest()
     {
         return !empty($_POST['logoutRequest']);
     }
@@ -1801,7 +1801,7 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_ticket = '';
+    protected $_ticket = '';
 
     /**
      * This method returns the Service Ticket provided in the URL of the request.
@@ -1850,7 +1850,7 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_cas_server_ca_cert = null;
+    protected $_cas_server_ca_cert = null;
 
 
     /**
@@ -1863,14 +1863,14 @@ class CAS_Client
 
      */
 
-    private $_cas_server_cn_validate = true;
+    protected $_cas_server_cn_validate = true;
 
     /**
      * Set to true not to validate the CAS server.
      *
      * @hideinitializer
      */
-    private $_no_cas_server_validation = false;
+    protected $_no_cas_server_validation = false;
 
 
     /**
@@ -2084,7 +2084,7 @@ class CAS_Client
      *
      * @return bool true when successfull and false if no attributes a found
      */
-    private function _setSessionAttributes($text_response)
+    protected function _setSessionAttributes($text_response)
     {
         phpCAS::traceBegin();
 
@@ -2152,12 +2152,12 @@ class CAS_Client
      * A boolean telling if the client is a CAS proxy or not. Written by
      * CAS_Client::CAS_Client(), read by CAS_Client::isProxy().
      */
-    private $_proxy;
+    protected $_proxy;
 
     /**
      * Handler for managing service cookies.
      */
-    private $_serviceCookieJar;
+    protected $_serviceCookieJar;
 
     /**
      * Tells if a CAS client is a CAS proxy or not
@@ -2185,14 +2185,14 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_pgt = '';
+    protected $_pgt = '';
 
     /**
      * This method returns the Proxy Granting Ticket given by the CAS server.
      *
      * @return string the Proxy Granting Ticket.
      */
-    private function _getPGT()
+    protected function _getPGT()
     {
         return $this->_pgt;
     }
@@ -2204,7 +2204,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _setPGT($pgt)
+    protected function _setPGT($pgt)
     {
         $this->_pgt = $pgt;
     }
@@ -2214,7 +2214,7 @@ class CAS_Client
      *
      * @return true if a Proxy Granting Ticket has been stored.
      */
-    private function _hasPGT()
+    protected function _hasPGT()
     {
         return !empty($this->_pgt);
     }
@@ -2240,7 +2240,7 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_callback_mode = false;
+    protected $_callback_mode = false;
 
     /**
      * This method sets/unsets callback mode.
@@ -2249,7 +2249,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _setCallbackMode($callback_mode)
+    protected function _setCallbackMode($callback_mode)
     {
         $this->_callback_mode = $callback_mode;
     }
@@ -2260,7 +2260,7 @@ class CAS_Client
      *
      * @return A boolean.
      */
-    private function _isCallbackMode()
+    protected function _isCallbackMode()
     {
         return $this->_callback_mode;
     }
@@ -2272,7 +2272,7 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_callback_url = '';
+    protected $_callback_url = '';
 
     /**
      * This method returns the URL that should be used for the PGT callback (in
@@ -2281,7 +2281,7 @@ class CAS_Client
      *
      * @return The callback URL
      */
-    private function _getCallbackURL()
+    protected function _getCallbackURL()
     {
         // the URL is built when needed only
         if ( empty($this->_callback_url) ) {
@@ -2321,7 +2321,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _callback()
+    protected function _callback()
     {
         phpCAS::traceBegin();
         if (preg_match('/PGTIOU-[\.\-\w]/', $_GET['pgtIou'])) {
@@ -2368,7 +2368,7 @@ class CAS_Client
      *
      * @hideinitializer
      */
-    private $_pgt_storage = null;
+    protected $_pgt_storage = null;
 
     /**
      * This method is used to initialize the storage of PGT's.
@@ -2376,7 +2376,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _initPGTStorage()
+    protected function _initPGTStorage()
     {
         // if no SetPGTStorageXxx() has been used, default to file
         if ( !is_object($this->_pgt_storage) ) {
@@ -2395,7 +2395,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _storePGT($pgt,$pgt_iou)
+    protected function _storePGT($pgt,$pgt_iou)
     {
         // ensure that storage is initialized
         $this->_initPGTStorage();
@@ -2411,7 +2411,7 @@ class CAS_Client
      *
      * @return mul The PGT corresponding to the Iou, false when not found.
      */
-    private function _loadPGT($pgt_iou)
+    protected function _loadPGT($pgt_iou)
     {
         // ensure that storage is initialized
         $this->_initPGTStorage();
@@ -2525,7 +2525,7 @@ class CAS_Client
     * @return bool true when successfull and issue a CAS_AuthenticationException
     * and false on an error
     */
-    private function _validatePGT(&$validate_url,$text_response,$tree_response)
+    protected function _validatePGT(&$validate_url,$text_response,$tree_response)
     {
         phpCAS::traceBegin();
         if ( $tree_response->getElementsByTagName("proxyGrantingTicket")->length == 0) {
@@ -2711,7 +2711,7 @@ class CAS_Client
      * @return true on success, false otherwise (in this later case, $err_msg
      * contains an error message).
      */
-    private function _readURL($url, &$headers, &$body, &$err_msg)
+    protected function _readURL($url, &$headers, &$body, &$err_msg)
     {
         phpCAS::traceBegin();
         $className = $this->_requestImplementation;
@@ -2766,7 +2766,7 @@ class CAS_Client
      *
      * @return the SOAP-encased SAMLP artifact (the ticket).
      */
-    private function _buildSAMLPayload()
+    protected function _buildSAMLPayload()
     {
         phpCAS::traceBegin();
 
@@ -3007,7 +3007,7 @@ class CAS_Client
      *
      * @access private
      */
-    private $_proxies = array();
+    protected $_proxies = array();
 
     /**
      * Answer an array of proxies that are sitting in front of this application.
@@ -3031,7 +3031,7 @@ class CAS_Client
      * @return void
      * @access private
      */
-    private function _setProxies($proxies)
+    protected function _setProxies($proxies)
     {
         $this->_proxies = $proxies;
         if (!empty($proxies)) {
@@ -3051,7 +3051,7 @@ class CAS_Client
      *
      * @var CAS_ProxyChain_AllowedList
      */
-    private $_allowed_proxy_chains;
+    protected $_allowed_proxy_chains;
 
     /**
      * Answer the CAS_ProxyChain_AllowedList object for this client.
@@ -3226,7 +3226,7 @@ class CAS_Client
      * @return bool true when successfull, halt otherwise by calling
      * CAS_Client::_authError().
      */
-    private function _readExtraAttributesCas20($success_elements)
+    protected function _readExtraAttributesCas20($success_elements)
     {
         phpCAS::traceBegin();
 
@@ -3367,7 +3367,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _addAttributeToArray(array &$attributeArray, $name, $value)
+    protected function _addAttributeToArray(array &$attributeArray, $name, $value)
     {
         // If multiple attributes exist, add as an array value
         if (isset($attributeArray[$name])) {
@@ -3405,7 +3405,7 @@ class CAS_Client
     *
     * @hideinitializer
     */
-    private $_url = '';
+    protected $_url = '';
 
 
     /**
@@ -3467,7 +3467,7 @@ class CAS_Client
      *
      * @return string Server URL with domain:port
      */
-    private function _getClientUrl()
+    protected function _getClientUrl()
     {
         $server_url = '';
         if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
@@ -3505,7 +3505,7 @@ class CAS_Client
      *
      * @return bool true if https, false otherwise
      */
-    private function _isHttps()
+    protected function _isHttps()
     {
         if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             return ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
@@ -3530,7 +3530,7 @@ class CAS_Client
      *
      * @link http://stackoverflow.com/questions/1842681/regular-expression-to-remove-one-parameter-from-query-string
      */
-    private function _removeParameterFromQueryString($parameterName, $queryString)
+    protected function _removeParameterFromQueryString($parameterName, $queryString)
     {
         $parameterName	= preg_quote($parameterName);
         return preg_replace(
@@ -3549,7 +3549,7 @@ class CAS_Client
      *
      * @return url with query params
      */
-    private function _buildQueryUrl($url, $query)
+    protected function _buildQueryUrl($url, $query)
     {
         $url .= (strstr($url, '?') === false) ? '?' : '&';
         $url .= $query;
@@ -3563,7 +3563,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _renameSession($ticket)
+    protected function _renameSession($ticket)
     {
         phpCAS::traceBegin();
         if ($this->getChangeSessionID()) {
@@ -3611,7 +3611,7 @@ class CAS_Client
     *
     * @return void
     */
-    private function _authError(
+    protected function _authError(
         $failure,
         $cas_url,
         $no_response,
@@ -3665,8 +3665,8 @@ class CAS_Client
      * Boolean of whether to rebroadcast pgtIou/pgtId and logoutRequest, and
      * array of the nodes.
      */
-    private $_rebroadcast = false;
-    private $_rebroadcast_nodes = array();
+    protected $_rebroadcast = false;
+    protected $_rebroadcast_nodes = array();
 
     /**
      * Constants used for determining rebroadcast node type.
@@ -3682,7 +3682,7 @@ class CAS_Client
      * @return string hostname
      *
      */
-    private function _getNodeType($nodeURL)
+    protected function _getNodeType($nodeURL)
     {
         phpCAS::traceBegin();
         if (preg_match("/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/", $nodeURL)) {
@@ -3715,7 +3715,7 @@ class CAS_Client
     /**
      * An array to store extra rebroadcast curl options.
      */
-    private $_rebroadcast_headers = array();
+    protected $_rebroadcast_headers = array();
 
     /**
      * This method is used to add header parameters when rebroadcasting
@@ -3746,7 +3746,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _rebroadcast($type)
+    protected function _rebroadcast($type)
     {
         phpCAS::traceBegin();
 
