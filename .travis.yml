@@ -4,6 +4,6 @@ php:
   - "5.4"
   - "5.5"
 script:
-  - cd tests
+  - cd test
   - phpunit TestSuite.php
   
