@@ -2116,7 +2116,7 @@ class CAS_Client
                 foreach ($attr_array as $attr_key => $attr_value) {
                     if (count($attr_value) > 1) {
                         $this->_attributes[$attr_key] = $attr_value;
-                        phpCAS::trace("* " . $attr_key . "=" . $attr_value);
+                        phpCAS::trace("* " . $attr_key . "=" . print_r($attr_value, true));
                     } else {
                         $this->_attributes[$attr_key] = $attr_value[0];
                         phpCAS::trace("* " . $attr_key . "=" . $attr_value[0]);
