@@ -19,7 +19,7 @@ require_once 'config.php';
 // Load the CAS lib
 require_once $phpcas_path . '/CAS.php';
 
-// Uncomment to enable debugging
+// Enable debugging
 phpCAS::setDebug();
 
 // Initialize phpCAS

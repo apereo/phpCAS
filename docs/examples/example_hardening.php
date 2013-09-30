@@ -19,7 +19,7 @@ require_once 'config.php';
 // Load the CAS lib
 require_once $phpcas_path . '/CAS.php';
 
-// Uncomment to enable debugging
+// Enable debugging
 phpCAS::setDebug();
 
 // Harden session cookie to prevent some attacks on the cookie (e.g. XSS)
