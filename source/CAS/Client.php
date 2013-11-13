@@ -3472,8 +3472,7 @@ class CAS_Client
         $server_url = '';
         if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             // explode the host list separated by comma and use the first host
-            $hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
-            $server_url = $hosts[0];
+            $server_url = reset(explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']));
         } else if (!empty($_SERVER['HTTP_X_FORWARDED_SERVER'])) {
             $server_url = $_SERVER['HTTP_X_FORWARDED_SERVER'];
         } else {
@@ -3487,7 +3486,7 @@ class CAS_Client
             if (empty($_SERVER['HTTP_X_FORWARDED_PORT'])) {
                 $server_port = $_SERVER['SERVER_PORT'];
             } else {
-                $server_port = $_SERVER['HTTP_X_FORWARDED_PORT'];
+                $server_port = reset(explode(',', $_SERVER['HTTP_X_FORWARDED_PORT']));
             }
 
             if ( ($this->_isHttps() && $server_port!=443)
