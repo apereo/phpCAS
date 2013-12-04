@@ -3227,7 +3227,7 @@ class CAS_Client
             $final_uri .= '://';
 
             $final_uri .= $this->_getServerUrl();
-            $request_uri	= explode('?', $_SERVER['REQUEST_URI'], 2);
+            $request_uri	= explode('?', html_entity_decode($_SERVER['REQUEST_URI']), 2);
             $final_uri		.= $request_uri[0];
 
             if (isset($request_uri[1]) && $request_uri[1]) {
