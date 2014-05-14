@@ -53,7 +53,7 @@ implements CAS_Exception
     public function __construct ()
     {
         parent::__construct(
-            'this method cannot be called before phpCAS::proxy()''
+            'this method cannot be called before phpCAS::proxy()'
         );
     }
 }
