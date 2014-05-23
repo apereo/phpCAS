@@ -131,6 +131,14 @@ implements CAS_Request_RequestInterface
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         }
 
+        /********************************************************
+         * hack code for fixing SSL handshake with PHP5 and
+         * Curl on Ubuntu 12.04
+         ********************************************************/
+        if(strstr(php_uname(), "precise")) {
+            curl_setopt($ch, CURLOPT_SSLVERSION, 1);
+        }
+        
         /*********************************************************
          * Configure curl to capture our output.
         *********************************************************/
