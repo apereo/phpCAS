@@ -74,7 +74,7 @@ implements CAS_Exception
         printf(
             $lang->getYouWereNotAuthenticated(),
             htmlentities($client->getURL()),
-            $_SERVER['SERVER_ADMIN']
+            isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN']:''
         );
         phpCAS::trace('CAS URL: '.$cas_url);
         phpCAS::trace('Authentication failure: '.$failure);
