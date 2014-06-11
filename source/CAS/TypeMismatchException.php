@@ -57,7 +57,7 @@ extends CAS_InvalidArgumentException
         if (is_object($argument)) {
             $foundType = get_class($argument).' object';
         } else {
-            $foundType = gettype($lang);
+            $foundType = gettype($argument);
         }
 
         parent::__construct(
