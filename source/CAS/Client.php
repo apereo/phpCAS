@@ -1924,7 +1924,7 @@ class CAS_Client
         $result = false;
         // build the URL to validate the ticket
         $validate_url = $this->getServerServiceValidateURL()
-            .'&ticket='.$this->getTicket();
+            .'&ticket='.urlencode($this->getTicket());
 
         // open and read the URL
         if ( !$this->_readURL($validate_url, $headers, $text_response, $err_msg) ) {
@@ -2771,7 +2771,7 @@ class CAS_Client
         phpCAS::traceBegin();
 
         //get the ticket
-        $sa = $this->getTicket();
+        $sa = urlencode($this->getTicket());
 
         $body = SAML_SOAP_ENV.SAML_SOAP_BODY.SAMLP_REQUEST
             .SAML_ASSERTION_ARTIFACT.$sa.SAML_ASSERTION_ARTIFACT_CLOSE
@@ -3094,10 +3094,10 @@ class CAS_Client
         // build the URL to validate the ticket
         if ($this->getAllowedProxyChains()->isProxyingAllowed()) {
             $validate_url = $this->getServerProxyValidateURL().'&ticket='
-                .$this->getTicket();
+                .urlencode($this->getTicket());
         } else {
             $validate_url = $this->getServerServiceValidateURL().'&ticket='
-                .$this->getTicket();
+                .urlencode($this->getTicket());
         }
 
         if ( $this->isProxy() ) {
