@@ -1639,12 +1639,12 @@ class CAS_Client
             $cas_url = $cas_url . $paramSeparator . "service="
                 . urlencode($params['service']);
         }
+        session_unset();
+        session_destroy();
         session_write_close();
         header('Location: '.$cas_url);
         phpCAS::trace("Prepare redirect to : ".$cas_url);
 
-        session_unset();
-        session_destroy();
         $lang = $this->getLangObj();
         $this->printHTMLHeader($lang->getLogout());
         printf('<p>'.$lang->getShouldHaveBeenRedirected(). '</p>', $cas_url);
