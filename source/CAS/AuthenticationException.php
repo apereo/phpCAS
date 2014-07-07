@@ -89,6 +89,7 @@ implements CAS_Exception
                     phpCAS::trace('Reason: CAS error');
                     break;
                 case CAS_VERSION_2_0:
+                case CAS_VERSION_3_0:
                     if ( empty($err_code) ) {
                         phpCAS::trace('Reason: no CAS error');
                     } else {

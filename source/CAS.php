@@ -78,6 +78,10 @@ define("CAS_VERSION_1_0", '1.0');
  * CAS version 2.0
 */
 define("CAS_VERSION_2_0", '2.0');
+/**
+ * CAS version 3.0
+ */
+define("CAS_VERSION_3_0", '3.0');
 
 // ------------------------------------------------------------------------
 //  SAML defines
@@ -1631,8 +1635,9 @@ class phpCAS
         phpCAS :: traceBegin();
         phpCAS::_validateClientExists();
 
-        if (self::$_PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_2_0) {
-            phpCAS :: error('this method can only be used with the cas 2.0 protool');
+        if (self::$_PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_2_0
+            && self::$_PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_3_0) {
+            phpCAS :: error('this method can only be used with the cas 2.0/3.0 protocols');
         }
         self::$_PHPCAS_CLIENT->getAllowedProxyChains()->allowProxyChain($proxy_chain);
         phpCAS :: traceEnd();

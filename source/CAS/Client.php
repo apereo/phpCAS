@@ -442,6 +442,10 @@ class CAS_Client
                 $this->_server['service_validate_url'] = $this->_getServerBaseURL()
                 .'serviceValidate';
                 break;
+            case CAS_VERSION_3_0:
+                $this->_server['service_validate_url'] = $this->_getServerBaseURL()
+                .'p3/serviceValidate';
+                break;
             }
         }
         $url = $this->_buildQueryUrl(
@@ -493,6 +497,9 @@ class CAS_Client
             case CAS_VERSION_2_0:
                 $this->_server['proxy_validate_url'] = $this->_getServerBaseURL().'proxyValidate';
                 break;
+            case CAS_VERSION_3_0:
+                $this->_server['proxy_validate_url'] = $this->_getServerBaseURL().'p3/proxyValidate';
+                break;
             }
         }
         $url = $this->_buildQueryUrl(
@@ -518,6 +525,7 @@ class CAS_Client
                 $this->_server['proxy_url'] = '';
                 break;
             case CAS_VERSION_2_0:
+            case CAS_VERSION_3_0:
                 $this->_server['proxy_url'] = $this->_getServerBaseURL().'proxy';
                 break;
             }
@@ -924,6 +932,7 @@ class CAS_Client
             }
             break;
         case CAS_VERSION_2_0:
+        case CAS_VERSION_3_0:
             break;
         case SAML_VERSION_1_1:
             break;
@@ -1392,13 +1401,13 @@ class CAS_Client
                 case CAS_VERSION_2_0:
                     // if a Proxy Ticket was given, validate it
                     phpCAS::trace(
-                        'CAS 2.0 ticket `'.$this->getTicket().'\' is present'
+                        'CAS '.$this->getServerVersion().' ticket `'.$this->getTicket().'\' is present'
                     );
                     $this->validateCAS20(
                         $validate_url, $text_response, $tree_response
                     ); // note: if it fails, it halts
                     phpCAS::trace(
-                        'CAS 2.0 ticket `'.$this->getTicket().'\' was validated'
+                        'CAS '.$this->getServerVersion().' ticket `'.$this->getTicket().'\' was validated'
                     );
                     if ( $this->isProxy() ) {
                         $this->_validatePGT(
@@ -3640,6 +3649,7 @@ class CAS_Client
                     phpCAS::trace('Reason: CAS error');
                     break;
                 case CAS_VERSION_2_0:
+                case CAS_VERSION_3_0:
                     if ( empty($err_code) ) {
                         phpCAS::trace('Reason: no CAS error');
                     } else {
