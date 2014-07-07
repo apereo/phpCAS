@@ -1639,7 +1639,6 @@ class CAS_Client
             $cas_url = $cas_url . $paramSeparator . "service="
                 . urlencode($params['service']);
         }
-        session_write_close();
         header('Location: '.$cas_url);
         phpCAS::trace("Prepare redirect to : ".$cas_url);
 
