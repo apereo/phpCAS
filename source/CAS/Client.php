@@ -1399,6 +1399,7 @@ class CAS_Client
                     $logoutTicket = $this->getTicket();
                     break;
                 case CAS_VERSION_2_0:
+                case CAS_VERSION_3_0:
                     // if a Proxy Ticket was given, validate it
                     phpCAS::trace(
                         'CAS '.$this->getServerVersion().' ticket `'.$this->getTicket().'\' is present'
