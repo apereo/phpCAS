@@ -984,7 +984,7 @@ class CAS_Client
             //normal mode: get ticket and remove it from CGI parameters for
             // developers
             $ticket = (isset($_GET['ticket']) ? $_GET['ticket'] : null);
-            if (preg_match('/^[SP]T-[a-zA-Z0-9%-_\.]*$/', $ticket) ) {
+            if (preg_match('/^[SP]T-/', $ticket) ) {
                 phpCAS::trace('Ticket \''.$ticket.'\' found');
                 $this->setTicket($ticket);
                 unset($_GET['ticket']);
@@ -2333,8 +2333,8 @@ class CAS_Client
     private function _callback()
     {
         phpCAS::traceBegin();
-        if (preg_match('/^PGTIOU-[a-zA-Z0-9%-_\.]*$/', $_GET['pgtIou'])) {
-            if (preg_match('/^[PT]GT-[a-zA-Z0-9%-_\.]*$/', $_GET['pgtId'])) {
+        if (preg_match('/PGTIOU-[\.\-\w]/', $_GET['pgtIou'])) {
+            if (preg_match('/[PT]GT-[\.\-\w]/', $_GET['pgtId'])) {
                 $this->printHTMLHeader('phpCAS callback');
                 $pgt_iou = $_GET['pgtIou'];
                 $pgt = $_GET['pgtId'];
