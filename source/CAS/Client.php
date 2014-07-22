@@ -763,7 +763,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function ensureAuthenticationCalled()
+    private function _ensureAuthenticationCalled()
     {
         if (!$this->wasAuthenticationCalled()) {
             throw new CAS_OutOfSequenceBeforeAuthenticationCallException();
@@ -780,7 +780,7 @@ class CAS_Client
      */
     public function wasAuthenticationCallSuccessful ()
     {
-        $this->ensureAuthenticationCalled();
+        $this->_ensureAuthenticationCalled();
         return $this->_authentication_caller['result'];
     }
 
@@ -795,7 +795,7 @@ class CAS_Client
      */
     public function ensureAuthenticationCallSuccessful()
     {
-        $this->ensureAuthenticationCalled();
+        $this->_ensureAuthenticationCalled();
         if (!$this->_authentication_caller['result']) {
             throw new CAS_OutOfSequenceException(
                 'authentication was checked (by '
@@ -817,7 +817,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerFile ()
     {
-        $this->ensureAuthenticationCalled();
+        $this->_ensureAuthenticationCalled();
         return $this->_authentication_caller['file'];
     }
 
@@ -831,7 +831,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerLine ()
     {
-        $this->ensureAuthenticationCalled();
+        $this->_ensureAuthenticationCalled();
         return $this->_authentication_caller['line'];
     }
 
@@ -845,7 +845,7 @@ class CAS_Client
      */
     public function getAuthenticationCallerMethod ()
     {
-        $this->ensureAuthenticationCalled();
+        $this->_ensureAuthenticationCalled();
         return $this->_authentication_caller['method'];
     }
 
@@ -889,7 +889,7 @@ class CAS_Client
         if (gettype($server_hostname) != 'string')
         	throw new CAS_TypeMismatchException($server_hostname, '$server_hostname', 'string');
         if (gettype($server_port) != 'integer')
-        	throw new CAS_TypeMismatchException($server_port, '$server_port', 'integer');
+        	throw new CAS_raTypeMismatchException($server_port, '$server_port', 'integer');
         if (gettype($server_uri) != 'string')
         	throw new CAS_TypeMismatchException($server_uri, '$server_uri', 'string');
         if (gettype($changeSessionID) != 'boolean')
