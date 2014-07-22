@@ -1,3 +1,30 @@
+Changes in version 1.3.3
+Security Fixes:
+
+Bug Fixes:
+   * Fix CURL compatibility CURL >= 7.28.0 [#66] (adoy)
+   * Commit session before redirect [#79] (kakawait)
+   * Fix warnings for php => 5.5 [87] (fh)
+   * Update wrong wording in examples [#90] (misilot)
+   * Fixed bug in imap.php [#105] (echampet)
+   * Fix missing Server_Admin variable for nginex [#121](arianf)
+   * Fix error in TypeMismatchException [#123 ](Develle)
+   * Urlencode all tickets [#125] (Marvin Addison)
+   * Fix bug in https test [#126] (Florent Baldino)
+   
+
+Improvement:
+   * Fix grammar of documentation [#61] (frett)
+   * Improved testability of the phpCAS client [#7] (Adam Franco)
+   * Fixed typo [#70] (fh)
+   * Example for improved cookie hardening [#67] (Joachim Fritschi)
+   * Added support for X-Forwarded-Proto Header [#77] (Paul Donohue)
+   * Added composer support [#73] (dhyde)
+   * Travis for continuous integration [#82] (fh)
+   * Support for X-Forwared-Port [#100] (neopeak)
+   * Support for CAS 3.0 protocol [#116] (fredrik-w)
+
+
 Changes in version 1.3.2
 Security Fixes:
    * CVE-2012-5583 Missing CN validation of CAS server certificate [#58] (Joachim Fritschi)
