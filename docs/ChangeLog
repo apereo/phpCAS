@@ -1,5 +1,6 @@
 Changes in version 1.3.3
 Security Fixes:
+   * Urlencode all tickets [#125] (Marvin Addison)
 
 Bug Fixes:
    * Fix CURL compatibility CURL >= 7.28.0 [#66] (adoy)
@@ -9,7 +10,6 @@ Bug Fixes:
    * Fixed bug in imap.php [#105] (echampet)
    * Fix missing Server_Admin variable for nginex [#121](arianf)
    * Fix error in TypeMismatchException [#123 ](Develle)
-   * Urlencode all tickets [#125] (Marvin Addison)
    * Fix bug in https test [#126] (Florent Baldino)
    
 
