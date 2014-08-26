@@ -889,7 +889,7 @@ class CAS_Client
         if (gettype($server_hostname) != 'string')
         	throw new CAS_TypeMismatchException($server_hostname, '$server_hostname', 'string');
         if (gettype($server_port) != 'integer')
-        	throw new CAS_raTypeMismatchException($server_port, '$server_port', 'integer');
+        	throw new CAS_TypeMismatchException($server_port, '$server_port', 'integer');
         if (gettype($server_uri) != 'string')
         	throw new CAS_TypeMismatchException($server_uri, '$server_uri', 'string');
         if (gettype($changeSessionID) != 'boolean')
