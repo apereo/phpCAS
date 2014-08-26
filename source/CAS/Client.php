@@ -1380,6 +1380,10 @@ class CAS_Client
                 );
                 $res = true;
             }
+
+            // Mark the auth-check as complete to allow post-authentication
+            // callbacks to make use of phpCAS::getUser() and similar methods
+            $this->markAuthenticationCall($res);
         } else {
             if ($this->hasTicket()) {
                 switch ($this->getServerVersion()) {
@@ -1452,11 +1456,12 @@ class CAS_Client
                 // no ticket given, not authenticated
                 phpCAS::trace('no ticket found');
             }
-            if ($res) {
-                // Mark the auth-check as complete to allow post-authentication
-                // callbacks to make use of phpCAS::getUser() and similar methods
-                $this->markAuthenticationCall($res);
 
+            // Mark the auth-check as complete to allow post-authentication
+            // callbacks to make use of phpCAS::getUser() and similar methods
+            $this->markAuthenticationCall($res);
+
+            if ($res) {
                 // call the post-authenticate callback if registered.
                 if ($this->_postAuthenticateCallbackFunction) {
                     $args = $this->_postAuthenticateCallbackArgs;
@@ -1482,9 +1487,6 @@ class CAS_Client
                 }
             }
         }
-        // Mark the auth-check as complete to allow post-authentication
-        // callbacks to make use of phpCAS::getUser() and similar methods
-        $this->markAuthenticationCall($res);
         phpCAS::traceEnd($res);
         return $res;
     }
