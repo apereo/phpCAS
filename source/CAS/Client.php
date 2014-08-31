@@ -3641,7 +3641,7 @@ class CAS_Client
         $this->printHTMLHeader($lang->getAuthenticationFailed());
         printf(
             $lang->getYouWereNotAuthenticated(), htmlentities($this->getURL()),
-            $_SERVER['SERVER_ADMIN']
+            isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN']:''
         );
         phpCAS::trace('CAS URL: '.$cas_url);
         phpCAS::trace('Authentication failure: '.$failure);
