@@ -241,7 +241,13 @@ define("PHPCAS_LANG_DEFAULT", PHPCAS_LANG_ENGLISH);
 /**
  * The default directory for the debug file under Unix.
  */
-define('DEFAULT_DEBUG_DIR', '/tmp/');
+function gettmpdir() {
+if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
+if (!empty($_ENV['TMPDIR'])) { return realpath( $_ENV['TMPDIR']); }
+if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); } 
+return "/tmp";
+}
+define('DEFAULT_DEBUG_DIR', gettmpdir()."/");
 
 /** @} */
 
