@@ -963,7 +963,8 @@ class CAS_Client
             phpCAS::error('bad CAS server URI (`'.$server_uri.'\')');
         }
         // add leading and trailing `/' and remove doubles
-        $server_uri = preg_replace('/\/\//', '/', '/'.$server_uri.'/');
+        $server_uri = preg_replace('/\/\//', '/', '/'.$server_uri);
+        if(strstr($server_uri, '?') === false) $server_uri .= '/';
         $this->_server['uri'] = $server_uri;
 
         // set to callback mode if PgtIou and PgtId CGI GET parameters are provided
