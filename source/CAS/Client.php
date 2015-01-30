@@ -337,9 +337,7 @@ class CAS_Client
         phpCAS::traceBegin();
         // the URL is build only when needed
         if ( empty($this->_server['login_url']) ) {
-            $this->_server['login_url'] = $this->_getServerBaseURL();
-            $this->_server['login_url'] .= 'login?service=';
-            $this->_server['login_url'] .= urlencode($this->getURL());
+            $this->_server['login_url'] = $this->_buildQueryUrl($this->_getServerBaseURL().'login','service='.urlencode($this->getURL()));
         }
         $url = $this->_server['login_url'];
         if ($renew) {
