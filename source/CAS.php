@@ -271,6 +271,7 @@ class phpCAS
     /**
      * This variable is used by the interface class phpCAS.
      *
+     * @var CAS_Client
      * @hideinitializer
      */
     private static $_PHPCAS_CLIENT;
