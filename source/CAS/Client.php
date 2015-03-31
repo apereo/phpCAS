@@ -3528,7 +3528,7 @@ class CAS_Client
         }
         if ( isset($_SERVER['HTTPS'])
             && !empty($_SERVER['HTTPS'])
-            && $_SERVER['HTTPS'] !== 'off'
+            && strcasecmp($_SERVER['HTTPS'], 'off') !== 0
         ) {
             return true;
         } else {
