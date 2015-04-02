@@ -1214,7 +1214,7 @@ class CAS_Client
      * If the user is authenticated, renew the connection
      * If not, redirect to CAS
      *
-     * @return  void
+     * @return  true when the user is authenticated; otherwise halt.
      */
     public function renewAuthentication()
     {
@@ -1223,13 +1223,16 @@ class CAS_Client
         if (isset( $_SESSION['phpCAS']['auth_checked'])) {
             unset($_SESSION['phpCAS']['auth_checked']);
         }
-        if ( $this->isAuthenticated() ) {
-            phpCAS::trace('user already authenticated; renew');
-            $this->redirectToCas(false, true);
+        if ( $this->isAuthenticated(true) ) {
+            phpCAS::trace('user already authenticated');
+            $res = true;
         } else {
-            $this->redirectToCas();
+            $this->redirectToCas(false, true);
+            // never reached
+            $res = false;
         }
         phpCAS::traceEnd();
+        return $res;
     }
 
     /**
@@ -1348,7 +1351,7 @@ class CAS_Client
      * @return true when the user is authenticated. Also may redirect to the
      * same URL without the ticket.
      */
-    public function isAuthenticated()
+    public function isAuthenticated($renew=false)
     {
         phpCAS::traceBegin();
         $res = false;
@@ -1393,7 +1396,7 @@ class CAS_Client
                         'CAS 1.0 ticket `'.$this->getTicket().'\' is present'
                     );
                     $this->validateCAS10(
-                        $validate_url, $text_response, $tree_response
+                        $validate_url, $text_response, $tree_response, $renew
                     ); // if it fails, it halts
                     phpCAS::trace(
                         'CAS 1.0 ticket `'.$this->getTicket().'\' was validated'
@@ -1409,7 +1412,7 @@ class CAS_Client
                         'CAS '.$this->getServerVersion().' ticket `'.$this->getTicket().'\' is present'
                     );
                     $this->validateCAS20(
-                        $validate_url, $text_response, $tree_response
+                        $validate_url, $text_response, $tree_response, $renew
                     ); // note: if it fails, it halts
                     phpCAS::trace(
                         'CAS '.$this->getServerVersion().' ticket `'.$this->getTicket().'\' was validated'
@@ -1438,7 +1441,7 @@ class CAS_Client
                         'SAML 1.1 ticket `'.$this->getTicket().'\' is present'
                     );
                     $this->validateSA(
-                        $validate_url, $text_response, $tree_response
+                        $validate_url, $text_response, $tree_response, $renew
                     ); // if it fails, it halts
                     phpCAS::trace(
                         'SAML 1.1 ticket `'.$this->getTicket().'\' was validated'
@@ -1933,13 +1936,18 @@ class CAS_Client
      * @return bool true when successfull and issue a CAS_AuthenticationException
      * and false on an error
      */
-    public function validateCAS10(&$validate_url,&$text_response,&$tree_response)
+    public function validateCAS10(&$validate_url,&$text_response,&$tree_response,$renew=false)
     {
         phpCAS::traceBegin();
         $result = false;
         // build the URL to validate the ticket
         $validate_url = $this->getServerServiceValidateURL()
             .'&ticket='.urlencode($this->getTicket());
+
+        if ( $renew ) {
+            // pass the renew
+            $validate_url .= '&renew=true';
+        }
 
         // open and read the URL
         if ( !$this->_readURL($validate_url, $headers, $text_response, $err_msg) ) {
@@ -2007,12 +2015,17 @@ class CAS_Client
      * @return bool true when successfull and issue a CAS_AuthenticationException
      * and false on an error
      */
-    public function validateSA(&$validate_url,&$text_response,&$tree_response)
+    public function validateSA(&$validate_url,&$text_response,&$tree_response,$renew=false)
     {
         phpCAS::traceBegin();
         $result = false;
         // build the URL to validate the ticket
         $validate_url = $this->getServerSamlValidateURL();
+
+        if ( $renew ) {
+            // pass the renew
+            $validate_url .= '&renew=true';
+        }
 
         // open and read the URL
         if ( !$this->_readURL($validate_url, $headers, $text_response, $err_msg) ) {
@@ -2183,6 +2196,7 @@ class CAS_Client
     {
         return $this->_proxy;
     }
+
 
     /** @} */
     // ########################################################################
@@ -3101,7 +3115,7 @@ class CAS_Client
      * @return bool true when successfull and issue a CAS_AuthenticationException
      * and false on an error
      */
-    public function validateCAS20(&$validate_url,&$text_response,&$tree_response)
+    public function validateCAS20(&$validate_url,&$text_response,&$tree_response, $renew=false)
     {
         phpCAS::traceBegin();
         phpCAS::trace($text_response);
@@ -3118,6 +3132,11 @@ class CAS_Client
         if ( $this->isProxy() ) {
             // pass the callback url for CAS proxies
             $validate_url .= '&pgtUrl='.urlencode($this->_getCallbackURL());
+        }
+
+        if ( $renew ) {
+            // pass the renew
+            $validate_url .= '&renew=true';
         }
 
         // open and read the URL
