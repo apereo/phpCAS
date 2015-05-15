@@ -445,7 +445,7 @@ class phpCAS
             self::$_PHPCAS_DEBUG['filename'] = $filename;
             self::$_PHPCAS_DEBUG['indent'] = 0;
 
-            phpCAS :: trace('START phpCAS-' . PHPCAS_VERSION . ' ******************');
+            phpCAS :: trace('START ('.date("Y-m-d H:i:s").') phpCAS-' . PHPCAS_VERSION . ' ******************');
         }
     }
 
