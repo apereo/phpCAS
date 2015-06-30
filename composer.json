@@ -10,7 +10,8 @@
         {"name": "Adam Franco", "homepage": "https://wiki.jasig.org/display/~adamfranco"}
     ],
     "require": {
-        "php": ">=5.0.0"
+        "php": ">=5.0.0",
+        "ext-curl": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "~3.7.10"
