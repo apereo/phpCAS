@@ -1375,7 +1375,7 @@ class phpCAS
      * This method is used to logout from CAS. Halts by redirecting to the CAS
      * server.
      *
-     * @param service $service a URL that will be transmitted to the CAS server
+     * @param string $service a URL that will be transmitted to the CAS server
      *
      * @return void
      */
