@@ -712,14 +712,14 @@ class CAS_Client
     /**
      * Ensure that this is actually a proxy object or fail with an exception
      *
-     * @throws CAS_OutOfSequenceProxyException
+     * @throws CAS_OutOfSequenceBeforeProxyException
      *
      * @return void
      */
     public function ensureIsProxy()
     {
         if (!$this->isProxy()) {
-            throw new CAS_OutOfSequenceProxyException();
+            throw new CAS_OutOfSequenceBeforeProxyException();
         }
     }
 
