@@ -249,7 +249,7 @@ define("PHPCAS_LANG_DEFAULT", PHPCAS_LANG_ENGLISH);
 function gettmpdir() {
 if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
 if (!empty($_ENV['TMPDIR'])) { return realpath( $_ENV['TMPDIR']); }
-if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); } 
+if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); }
 return "/tmp";
 }
 define('DEFAULT_DEBUG_DIR', gettmpdir()."/");
@@ -303,7 +303,9 @@ class phpCAS
     private static $_PHPCAS_DEBUG;
 
     /**
-     * This variable is used to store phpCAS debug mode.
+     * This variable is used to enable verbose mode
+     * This pevents debug info to be show to the user. Since it's a security
+     * feature the default is false
      *
      * @hideinitializer
      */
@@ -471,7 +473,7 @@ class phpCAS
     /**
      * Enable verbose errors messages in the website output
      * This is a security relevant since internal status info may leak an may
-     * help an attacker
+     * help an attacker. Default is therefore false
      *
      * @param bool $verbose enable verbose output
      *
