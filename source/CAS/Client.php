@@ -337,9 +337,7 @@ class CAS_Client
         phpCAS::traceBegin();
         // the URL is build only when needed
         if ( empty($this->_server['login_url']) ) {
-            $this->_server['login_url'] = $this->_getServerBaseURL();
-            $this->_server['login_url'] .= 'login?service=';
-            $this->_server['login_url'] .= urlencode($this->getURL());
+            $this->_server['login_url'] = $this->_buildQueryUrl($this->_getServerBaseURL().'login','service='.urlencode($this->getURL()));
         }
         $url = $this->_server['login_url'];
         if ($renew) {
@@ -965,7 +963,8 @@ class CAS_Client
             phpCAS::error('bad CAS server URI (`'.$server_uri.'\')');
         }
         // add leading and trailing `/' and remove doubles
-        $server_uri = preg_replace('/\/\//', '/', '/'.$server_uri.'/');
+        if(strstr($server_uri, '?') === false) $server_uri .= '/';
+        $server_uri = preg_replace('/\/\//', '/', '/'.$server_uri);
         $this->_server['uri'] = $server_uri;
 
         // set to callback mode if PgtIou and PgtId CGI GET parameters are provided
