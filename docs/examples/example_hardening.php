@@ -21,6 +21,8 @@ require_once $phpcas_path . '/CAS.php';
 
 // Enable debugging
 phpCAS::setDebug();
+// Enable verbose error messages. Disable in production!
+phpCAS::setVerbose(false);
 
 // Harden session cookie to prevent some attacks on the cookie (e.g. XSS)
 session_set_cookie_params($client_lifetime, $client_path, $client_domain, $client_secure, $client_httpOnly);

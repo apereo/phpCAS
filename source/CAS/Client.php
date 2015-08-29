@@ -131,9 +131,11 @@ class CAS_Client
         $lang = $this->getLangObj();
         $this->_htmlFilterOutput(
             empty($this->_output_footer)?
-            ('<hr><address>phpCAS __PHPCAS_VERSION__ '
-            .$lang->getUsingServer()
-            .' <a href="__SERVER_BASE_URL__">__SERVER_BASE_URL__</a> (CAS __CAS_VERSION__)</a></address></body></html>')
+            (phpcas::getVerbose())?
+                '<hr><address>phpCAS __PHPCAS_VERSION__ '
+                .$lang->getUsingServer()
+                .' <a href="__SERVER_BASE_URL__">__SERVER_BASE_URL__</a> (CAS __CAS_VERSION__)</a></address></body></html>'
+                :'</body></html>'
             :$this->_output_footer
         );
     }
@@ -3619,7 +3621,7 @@ class CAS_Client
                 phpCAS :: trace("Restoring old session vars");
                 $_SESSION = $old_session;
             } else {
-                phpCAS :: error(
+                phpCAS :: trace (
                     'Session should only be renamed after successfull authentication'
                 );
             }

@@ -138,6 +138,11 @@ define("SAML_SOAP_ENV_CLOSE", '</SOAP-ENV:Envelope>');
  */
 define("SAML_ATTRIBUTES", 'SAMLATTRIBS');
 
+/**
+ * SAML Attributes
+ */
+define("DEFAULT_ERROR", 'Internal script failure');
+
 /** @} */
 /**
  * @addtogroup publicPGTStorage
@@ -296,6 +301,13 @@ class phpCAS
      * @hideinitializer
      */
     private static $_PHPCAS_DEBUG;
+
+    /**
+     * This variable is used to store phpCAS debug mode.
+     *
+     * @hideinitializer
+     */
+    private static $_PHPCAS_VERBOSE = false;
 
 
     // ########################################################################
@@ -456,6 +468,34 @@ class phpCAS
         }
     }
 
+    /**
+     * Enable verbose errors messages in the website output
+     * This is a security relevant since internal status info may leak an may
+     * help an attacker
+     *
+     * @param bool $verbose enable verbose output
+     *
+     * @return void
+     */
+    public static function setVerbose($verbose)
+    {
+        if ($verbose === true) {
+            self::$_PHPCAS_VERBOSE = true;
+        } else {
+            self::$_PHPCAS_VERBOSE = false;
+        }
+    }
+
+
+    /**
+     * Show is verbose mode is on
+     *
+     * @return boot verbose
+     */
+    public static function getVerbose()
+    {
+        return self::$_PHPCAS_VERBOSE;
+    }
 
     /**
      * Logs a string in debug mode.
@@ -501,6 +541,7 @@ class phpCAS
      */
     public static function error($msg)
     {
+        phpCAS :: traceBegin();
         $dbg = debug_backtrace();
         $function = '?';
         $file = '?';
@@ -516,8 +557,12 @@ class phpCAS
                 }
             }
         }
-        echo "<br />\n<b>phpCAS error</b>: <font color=\"FF0000\"><b>" . __CLASS__ . "::" . $function . '(): ' . htmlentities($msg) . "</b></font> in <b>" . $file . "</b> on line <b>" . $line . "</b><br />\n";
-        phpCAS :: trace($msg);
+        if (self::$_PHPCAS_VERBOSE) {
+            echo "<br />\n<b>phpCAS error</b>: <font color=\"FF0000\"><b>" . __CLASS__ . "::" . $function . '(): ' . htmlentities($msg) . "</b></font> in <b>" . $file . "</b> on line <b>" . $line . "</b><br />\n";
+        } else {
+            echo "<br />\n<b>Error</b>: <font color=\"FF0000\"><b>". DEFAULT_ERROR ."</b><br />\n";
+        }
+        phpCAS :: trace($msg . ' in ' . $file . 'on line ' . $line );
         phpCAS :: traceEnd();
 
         throw new CAS_GracefullTerminationException(__CLASS__ . "::" . $function . '(): ' . $msg);
@@ -537,7 +582,8 @@ class phpCAS
     }
 
     /**
-     * This method is used to indicate the start of the execution of a function in debug mode.
+     * This method is used to indicate the start of the execution of a function
+     * in debug mode.
      *
      * @return void
      */
