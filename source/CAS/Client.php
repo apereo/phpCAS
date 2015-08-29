@@ -1348,6 +1348,8 @@ class CAS_Client
      * This method is called to check if the user is authenticated (previously or by
      * tickets given in the URL).
      *
+     * @param bool $renew true to force the authentication with the CAS server
+     *
      * @return true when the user is authenticated. Also may redirect to the
      * same URL without the ticket.
      */
@@ -1932,6 +1934,7 @@ class CAS_Client
      * server, as is (XML text).
      * @param string &$tree_response reference to the response of the CAS
      * server, as a DOM XML tree.
+     * @param bool   $renew          true to force the authentication with the CAS server
      *
      * @return bool true when successfull and issue a CAS_AuthenticationException
      * and false on an error
@@ -2011,6 +2014,7 @@ class CAS_Client
      * server, as is (XML text).
      * @param string &$tree_response reference to the response of the CAS
      * server, as a DOM XML tree.
+     * @param bool   $renew          true to force the authentication with the CAS server
      *
      * @return bool true when successfull and issue a CAS_AuthenticationException
      * and false on an error
@@ -3111,6 +3115,7 @@ class CAS_Client
      * @param string &$validate_url  the url of the reponse
      * @param string &$text_response the text of the repsones
      * @param string &$tree_response the domxml tree of the respones
+     * @param bool   $renew          true to force the authentication with the CAS server
      *
      * @return bool true when successfull and issue a CAS_AuthenticationException
      * and false on an error

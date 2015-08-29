@@ -394,7 +394,8 @@ class phpCAS
      *
      * @return bool
      */
-    public static function isInitialized () {
+    public static function isInitialized ()
+    {
         return (is_object(self::$_PHPCAS_CLIENT));
     }
 
@@ -1646,7 +1647,8 @@ class phpCAS
         phpCAS::_validateClientExists();
 
         if (self::$_PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_2_0
-            && self::$_PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_3_0) {
+            && self::$_PHPCAS_CLIENT->getServerVersion() !== CAS_VERSION_3_0
+        ) {
             phpCAS :: error('this method can only be used with the cas 2.0/3.0 protocols');
         }
         self::$_PHPCAS_CLIENT->getAllowedProxyChains()->allowProxyChain($proxy_chain);
