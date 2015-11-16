@@ -1,4 +1,15 @@
 ################################
+### Upgrading 1.3.3 -> 1.3.4 ###
+################################
+
+For security hardening purposes the verbose error messages to the web browsers 
+are now masked. If you want to have the verbose messages you need to use: 
+phpCAS::setVerbose(true);
+This will set the configuration to the old verbose mode that helps during 
+development and debugging.
+
+
+################################
 ### Upgrading 1.3.1 -> 1.3.2 ###
 ################################
 
