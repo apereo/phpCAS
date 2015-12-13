@@ -1664,8 +1664,15 @@ class CAS_Client
         header('Location: '.$cas_url);
         phpCAS::trace("Prepare redirect to : ".$cas_url);
 
+        phpCAS::trace("Destroying session : ".session_id());
         session_unset();
         session_destroy();
+        if (session_status() === PHP_SESSION_NONE) {
+            phpCAS::trace("Session terminated");
+        } else {
+            phpCAS::error("Session was not terminated");
+            phpCAS::trace("Session was not terminated");
+        }
         $lang = $this->getLangObj();
         $this->printHTMLHeader($lang->getLogout());
         printf('<p>'.$lang->getShouldHaveBeenRedirected(). '</p>', $cas_url);
