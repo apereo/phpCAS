@@ -1912,12 +1912,16 @@ class CAS_Client
      */
     public function setCasServerCACert($cert, $validate_cn)
     {
-    	// Argument validation
-    	if (gettype($cert) != 'string')
-        	throw new CAS_TypeMismatchException($cert, '$cert', 'string');
-        if (gettype($validate_cn) != 'boolean')
-        	throw new CAS_TypeMismatchException($validate_cn, '$validate_cn', 'boolean');
-
+    // Argument validation
+        if (gettype($cert) != 'string') {
+            throw new CAS_TypeMismatchException($cert, '$cert', 'string');
+        }
+        if (gettype($validate_cn) != 'boolean') {
+            throw new CAS_TypeMismatchException($validate_cn, '$validate_cn', 'boolean');
+        }
+        if ( !file_exists($cert) ){
+            throw new CAS_InvalidArgumentException("Certificate file does not exist");
+        }
         $this->_cas_server_ca_cert = $cert;
         $this->_cas_server_cn_validate = $validate_cn;
     }
