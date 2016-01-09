@@ -905,7 +905,12 @@ class CAS_Client
             session_start();
             phpCAS :: trace("Starting a new session " . session_id());
         }
-
+        // Only for debug purposes
+        if ($this->isSessionAuthenticated()){
+            phpCAS :: trace("Session is authenticated as: " . $_SESSION['phpCAS']['user']);
+        } else {
+            phpCAS :: trace("Session is not authenticated");
+        }
         // are we in proxy mode ?
         $this->_proxy = $proxy;
 
