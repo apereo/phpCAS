@@ -228,17 +228,17 @@ class CAS
     /**
      * static::getProxiedService() type for HTTP GET.
      */
-    const PHPCAS_PROXIED_SERVICE_HTTP_GET = Get::class;
+    const PHPCAS_PROXIED_SERVICE_HTTP_GET = '\phpCAS\CAS\ProxiedService\Http\Get';
 
     /**
      * static::getProxiedService() type for HTTP POST.
      */
-    const PHPCAS_PROXIED_SERVICE_HTTP_POST = Post::class;
+    const PHPCAS_PROXIED_SERVICE_HTTP_POST = '\phpCAS\CAS\ProxiedService\Http\Post';
 
     /**
      * static::getProxiedService() type for IMAP.
      */
-    const PHPCAS_PROXIED_SERVICE_IMAP = Imap::class;
+    const PHPCAS_PROXIED_SERVICE_IMAP = '\phpCAS\CAS\ProxiedService\Imap';
 
     /** @} */
 
@@ -251,13 +251,13 @@ class CAS
      * @{
      */
 
-    const PHPCAS_LANG_ENGLISH = English::class;
-    const PHPCAS_LANG_FRENCH = French::class;
-    const PHPCAS_LANG_GREEK = Greek::class;
-    const PHPCAS_LANG_GERMAN = German::class;
-    const PHPCAS_LANG_JAPANESE = Japanese::class;
-    const PHPCAS_LANG_SPANISH = Spanish::class;
-    const PHPCAS_LANG_CATALAN = Catalan::class;
+    const PHPCAS_LANG_ENGLISH = '\phpCAS\CAS\Languages\English';
+    const PHPCAS_LANG_FRENCH = '\phpCAS\CAS\Languages\French';
+    const PHPCAS_LANG_GREEK = '\phpCAS\CAS\Languages\Greek';
+    const PHPCAS_LANG_GERMAN = '\phpCAS\CAS\Languages\German';
+    const PHPCAS_LANG_JAPANESE = '\phpCAS\CAS\Languages\Japanese';
+    const PHPCAS_LANG_SPANISH = '\phpCAS\CAS\Languages\Spanish';
+    const PHPCAS_LANG_CATALAN = '\phpCAS\CAS\Languages\Catalan';
 
     /** @} */
 

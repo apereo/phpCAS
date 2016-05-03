@@ -231,7 +231,7 @@ class Client
         $obj = new $lang();
         if (! ($obj instanceof LanguageInterface)) {
             throw new InvalidArgumentException(
-                '$className must implement the '.LanguageInterface::class
+                '$className must implement the \phpCAS\CAS\Languages\LanguageInterface'
             );
         }
         $this->_lang = $lang;
@@ -631,7 +631,7 @@ class Client
      * By default CurlRequest is used, but this may be overridden to
      * supply alternate request mechanisms for testing.
      */
-    private $_requestImplementation = CurlRequest::class;
+    private $_requestImplementation = '\phpCAS\CAS\Request\CurlRequest';
 
     /**
      * Override the default implementation used to make web requests in readUrl().
@@ -1975,7 +1975,7 @@ class Client
         if (gettype($validate_cn) != 'boolean') {
             throw new TypeMismatchException($validate_cn, '$validate_cn', 'boolean');
         }
-        if (! file_exists($cert) && $this->_requestImplementation !== DummyRequest::class) {
+        if (! file_exists($cert) && $this->_requestImplementation !== '\phpCAS\CAS\TestHarness\DummyRequest') {
             throw new InvalidArgumentException('Certificate file does not exist '.$this->_requestImplementation);
         }
         $this->_cas_server_ca_cert = $cert;
@@ -2581,7 +2581,7 @@ class Client
 
         // check to make sure a valid storage object was specified
         if (! ($storage instanceof AbstractStorage)) {
-            throw new TypeMismatchException($storage, '$storage', AbstractStorage::class.' object');
+            throw new TypeMismatchException($storage, '$storage', '\phpCAS\CAS\PGTStorage\AbstractStorage object');
         }
 
         // store the PGTStorage object
@@ -4005,7 +4005,7 @@ class Client
         if (! empty($ip)) {
             $dns = gethostbyaddr($ip);
         }
-        $multiClassName = CurlMultiRequest::class;
+        $multiClassName = '\phpCAS\CAS\Request\CurlMultiRequest';
         $multiRequest = new $multiClassName();
 
         for ($i = 0; $i < sizeof($this->_rebroadcast_nodes); $i++) {

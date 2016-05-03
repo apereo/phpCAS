@@ -83,7 +83,7 @@ class AuthenticationTest extends PHPUnit_Framework_TestCase
             false // Start Session
         );
 
-        $this->object->setRequestImplementation(DummyRequest::class);
+        $this->object->setRequestImplementation('\phpCAS\CAS\TestHarness\DummyRequest');
         $this->object->setCasServerCACert('/path/to/ca_cert.crt', true);
 
         /*********************************************************
