@@ -21,26 +21,24 @@
  *
  * @file     CAS/InvalidArgumentException.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS;
+
+use InvalidArgumentException as BaseInvalidArgumentException;
 
 /**
  * Exception that denotes invalid arguments were passed.
  *
- * @class    CAS_InvalidArgumentException
+ * @class    InvalidArgumentException
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_InvalidArgumentException
-extends InvalidArgumentException
-implements CAS_Exception
+class InvalidArgumentException extends BaseInvalidArgumentException implements CASExceptionInterface
 {
-
 }
-?>

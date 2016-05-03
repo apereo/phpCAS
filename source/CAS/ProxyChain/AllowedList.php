@@ -21,32 +21,34 @@
  *
  * @file     CAS/ProxyChain/AllowedList.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace phpCAS\CAS\ProxyChain;
+
+use phpCAS\CAS;
 
 /**
  * ProxyChain is a container for storing chains of valid proxies that can
- * be used to validate proxied requests to a service
+ * be used to validate proxied requests to a service.
  *
  * @class    CAS_ProxyChain_AllowedList
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-
-class CAS_ProxyChain_AllowedList
+class AllowedList
 {
-
-    private $_chains = array();
+    /**
+     * @var ProxyChainInterface[]
+     */
+    private $_chains = [];
 
     /**
-     * Check whether proxies are allowed by configuration
+     * Check whether proxies are allowed by configuration.
      *
      * @return bool
      */
@@ -56,19 +58,19 @@ class CAS_ProxyChain_AllowedList
     }
 
     /**
-     * Add a chain of proxies to the list of possible chains
+     * Add a chain of proxies to the list of possible chains.
      *
-     * @param CAS_ProxyChain_Interface $chain A chain of proxies
+     * @param ProxyChainInterface $chain A chain of proxies
      *
      * @return void
      */
-    public function allowProxyChain(CAS_ProxyChain_Interface $chain)
+    public function allowProxyChain(ProxyChainInterface $chain)
     {
         $this->_chains[] = $chain;
     }
 
     /**
-     * Check if the proxies found in the response match the allowed proxies
+     * Check if the proxies found in the response match the allowed proxies.
      *
      * @param array $proxies list of proxies to check
      *
@@ -76,44 +78,48 @@ class CAS_ProxyChain_AllowedList
      */
     public function isProxyListAllowed(array $proxies)
     {
-        phpCAS::traceBegin();
+        CAS::traceBegin();
         if (empty($proxies)) {
-            phpCAS::trace("No proxies were found in the response");
-            phpCAS::traceEnd(true);
+            CAS::trace('No proxies were found in the response');
+            CAS::traceEnd(true);
+
             return true;
-        } elseif (!$this->isProxyingAllowed()) {
-            phpCAS::trace("Proxies are not allowed");
-            phpCAS::traceEnd(false);
+        } elseif (! $this->isProxyingAllowed()) {
+            CAS::trace('Proxies are not allowed');
+            CAS::traceEnd(false);
+
             return false;
         } else {
             $res = $this->contains($proxies);
-            phpCAS::traceEnd($res);
+            CAS::traceEnd($res);
+
             return $res;
         }
     }
 
     /**
      * Validate the proxies from the proxy ticket validation against the
-     * chains that were definded.
+     * chains that were defined.
      *
      * @param array $list List of proxies from the proxy ticket validation.
      *
-     * @return if any chain fully matches the supplied list
+     * @return bool if any chain fully matches the supplied list
      */
     public function contains(array $list)
     {
-        phpCAS::traceBegin();
+        CAS::traceBegin();
         $count = 0;
         foreach ($this->_chains as $chain) {
-            phpCAS::trace("Checking chain ". $count++);
+            CAS::trace('Checking chain '.$count++);
             if ($chain->matches($list)) {
-                phpCAS::traceEnd(true);
+                CAS::traceEnd(true);
+
                 return true;
             }
         }
-        phpCAS::trace("No proxy chain matches.");
-        phpCAS::traceEnd(false);
+        CAS::trace('No proxy chain matches.');
+        CAS::traceEnd(false);
+
         return false;
     }
 }
-?>

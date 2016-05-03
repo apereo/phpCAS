@@ -21,39 +21,41 @@
  *
  * @file     CAS/TestHarness/BasicResponse
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS\TestHarness;
+use phpCAS\CAS\OutOfSequenceException;
+use phpCAS\CAS\Request\RequestException;
 
 /**
  * The BasicResponse allows tests to dynamically create a response that can be used
  * in unit tests.
  *
- * @class    CAS_TestHarness_BasicResponse
+ * @class    BasicResponse
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-
-class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
+class BasicResponse implements ResponseInterface
 {
     protected $scheme = 'http';
     protected $host = null;
     protected $port = null;
     protected $path = '/';
-    protected $queryParams = array();
-    protected $responseHeaders = array();
+    protected $sent = false;
+    protected $queryParams = [];
+    protected $responseHeaders = [];
     protected $responseBody = '';
     protected $verifyIsPost = null;
     protected $postBodyToMatch = null;
-    protected $headersToHave = array();
-    protected $headersToNotHave = array();
-    protected $cookiesToHave = array();
-    protected $cookiesToNotHave = array();
+    protected $headersToHave = [];
+    protected $headersToNotHave = [];
+    protected $cookiesToHave = [];
+    protected $cookiesToNotHave = [];
     protected $certPathToMatch = null;
     protected $caCertPathToMatch = null;
 
@@ -67,9 +69,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
      * @param string  $scheme 'http' or 'https'
      * @param string  $host   Hostname
      * @param string  $path   Path
-     * @param integer $port   Portnumber
-     *
-     * @return void
+     * @param int     $port   Port number
      */
     public function __construct($scheme, $host, $path, $port = null)
     {
@@ -82,7 +82,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
     /**
      * Add query parameters that must exist for the response to match a URL.
      *
-     * @param array $queryParams Query paremeters
+     * @param array $queryParams Query parameters
      *
      * @return void
      */
@@ -104,7 +104,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
     }
 
     /**
-     * Set the response body to return
+     * Set the response body to return.
      *
      * @param string $responseBody body to return
      *
@@ -148,7 +148,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
     }
 
     /**
-     * Ensure that the request has a given header string
+     * Ensure that the request has a given header string.
      *
      * @param string $header header that the request must match
      *
@@ -160,7 +160,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
     }
 
     /**
-     * Ensure that the request does not have a given header string
+     * Ensure that the request does not have a given header string.
      *
      * @param string $header header the must not match
      *
@@ -172,10 +172,10 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
     }
 
     /**
-     * Ensure that the request has a given cookie
+     * Ensure that the request has a given cookie.
      *
      * @param string $name  name of cookie
-     * @param string $value If null, the presense of the cookie will be checked,
+     * @param string $value If null, the presence of the cookie will be checked,
      *  but not its value.
      *
      * @return void
@@ -186,7 +186,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
     }
 
     /**
-     * Ensure that the request does not have a given cookie
+     * Ensure that the request does not have a given cookie.
      *
      * @param string $name name of cookie
      *
@@ -194,7 +194,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
      */
     public function ensureDoesNotHaveCookie($name)
     {
-        $this->cookiesNotToHave[] = $name;
+        $this->cookiesToNotHave[] = $name;
     }
 
     /**
@@ -267,13 +267,13 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
         }
 
         if (count($this->queryParams)) {
-            if (!isset($parts['query'])) {
+            if (! isset($parts['query'])) {
                 return false;
             }
 
             parse_str($parts['query'], $query);
             foreach ($this->queryParams as $name => $value) {
-                if (!isset($query[$name])) {
+                if (! isset($query[$name])) {
                     return false;
                 }
                 if ($query[$name] != $value) {
@@ -296,25 +296,26 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
     }
 
     /**
-     * Answer HTTP status code of the response
+     * Answer HTTP status code of the response.
      *
      * @return int
-     * @throws CAS_OutOfSequenceException If called before the Request has been sent.
+     * @throws OutOfSequenceException If called before the Request has been sent.
+     * @throws RequestException
      */
     public function getResponseStatusCode()
     {
-        if (!$this->sent) {
-            throw new CAS_OutOfSequenceException(
-                'Request has not been sent yet. Cannot ' . __METHOD__
+        if (! $this->sent) {
+            throw new OutOfSequenceException(
+                'Request has not been sent yet. Cannot '.__METHOD__
             );
         }
-        if (!preg_match(
+        if (! preg_match(
             '/HTTP\/[0-9.]+\s+([0-9]+)\s*(.*)/',
             $this->responseHeaders[0], $matches
         )
         ) {
-            throw new CAS_Request_Exception(
-                "Bad response, no status code was found in the first line."
+            throw new RequestException(
+                'Bad response, no status code was found in the first line.'
             );
         }
 
@@ -322,11 +323,10 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
     }
 
     /**
-     * Answer the response body
+     * Answer the response body.
      *
      * @return string
      */
-
     public function getResponseBody()
     {
         return $this->responseBody;
@@ -359,7 +359,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
     public function validateRequestHeaders(array $headers)
     {
         foreach ($this->headersToHave as $headerToCheck) {
-            if (!in_array($headerToCheck, $headers)) {
+            if (! in_array($headerToCheck, $headers)) {
                 return false;
             }
         }
@@ -368,6 +368,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
                 return false;
             }
         }
+
         return true;
     }
 
@@ -381,10 +382,10 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
     public function validateRequestCookies(array $cookies)
     {
         foreach ($this->cookiesToHave as $name => $value) {
-            if (!isset($cookies[$name])) {
+            if (! isset($cookies[$name])) {
                 return false;
             }
-            if (!is_null($value) && $cookies[$name] != $value) {
+            if (! is_null($value) && $cookies[$name] != $value) {
                 return false;
             }
         }
@@ -393,6 +394,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
                 return false;
             }
         }
+
         return true;
     }
 
@@ -405,11 +407,12 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
      */
     public function validateRequestIsPost($isPost)
     {
-        if ($this->verifyIsPost === true && !$isPost) {
+        if ($this->verifyIsPost === true && ! $isPost) {
             return false;
-        } else if ($this->verifyIsPost === false && $isPost) {
+        } elseif ($this->verifyIsPost === false && $isPost) {
             return false;
         }
+
         return true;
     }
 
@@ -422,11 +425,12 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
      */
     public function validatePostBody($postBody)
     {
-        if (!is_null($this->postBodyToMatch)
+        if (! is_null($this->postBodyToMatch)
             && $this->postBodyToMatch != $postBody
         ) {
             return false;
         }
+
         return true;
     }
 
@@ -439,11 +443,12 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
      */
     public function validateCert($certPath)
     {
-        if (!is_null($this->certPathToMatch)
+        if (! is_null($this->certPathToMatch)
             && $this->certPathToMatch != $certPath
         ) {
             return false;
         }
+
         return true;
     }
 
@@ -456,12 +461,12 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
      */
     public function validateCaCert($caCertPath)
     {
-        if (!is_null($this->caCertPathToMatch)
+        if (! is_null($this->caCertPathToMatch)
             && $this->caCertPathToMatch != $caCertPath
         ) {
             return false;
         }
+
         return true;
     }
-
 }

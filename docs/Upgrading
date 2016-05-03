@@ -4,7 +4,7 @@
 
 For security hardening purposes the verbose error messages to the web browsers 
 are now masked. If you want to have the verbose messages you need to use: 
-phpCAS::setVerbose(true);
+CAS::setVerbose(true);
 This will set the configuration to the old verbose mode that helps during 
 development and debugging.
 
@@ -55,11 +55,11 @@ when validating the proxy tickets. The strings are compared starting from
 the beginning and must fully match with the proxies in the list.
 
 Examples:
-      phpCAS::allowProxyChain(new CAS_ProxyChain(array(
+      CAS::allowProxyChain(new CAS_ProxyChain(array(
               'https://app.example.com/'
           )));
 or
-      phpCAS::allowProxyChain(new CAS_ProxyChain(array(
+      CAS::allowProxyChain(new CAS_ProxyChain(array(
               '/^https:\/\/app[0-9]\.example\.com\/rest\//',
               'http://client.example.com/'
           )));
@@ -68,7 +68,7 @@ For quick testing or in certain production screnarios you might want to
 allow allow any other valid service to proxy your service. To do so, add
 the "Any" chain:
 
-      phpcas::allowProxyChain(new CAS_ProxyChain_Any);
+      CAS::allowProxyChain(new CAS_ProxyChain_Any);
 
 THIS SETTING IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY
  IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER

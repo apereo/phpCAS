@@ -1,13 +1,12 @@
 <?php
 /**
  *  Small script to add some info about the example script that is running.
- *  Adds some info that makes it easier to distinguish different proxy sessions
+ *  Adds some info that makes it easier to distinguish different proxy sessions.
  *
  * PHP Version 5
  *
  * @file     script_info.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0

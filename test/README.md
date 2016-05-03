@@ -1,27 +1,23 @@
-**************************
-* Unit Tests for phpCAS
-**************************
+# Unit Tests for phpCAS
 
 These unit tests currently only cover a small portion of the operation of phpCAS.
 
-
-**************************
-* Running tests
-**************************
+# Running tests
 1. Install PHPUnit using instructions on this page:
-	http://pear.phpunit.de/
 
-2. cd to the phpcas/test/ directory.
+    http://pear.phpunit.de/
+
+2. cd to the ```phpCAS/test/``` directory.
 
 3. Run the following command:
-	phpunit TestSuite.php
 
+    ```bash
+    phpunit TestSuite.php
+    ```
 
+# Creating tests
 
-**************************
-* Creating tests
-**************************
-Any files you place in phpcas/test/tests/ whose name ends with 'Test.php' will
+Any files you place in CAS/test/tests/ whose name ends with 'Test.php' will
 be added as a test file.
 
 A template test file can be created via the following:
@@ -31,7 +27,7 @@ A template test file can be created via the following:
 2. Move the skeleton to our tests/ directory.
 	mv source/CAS/CAS_ClientTest.php test/tests/ClientTest.php
 
-Notes:
+## Notes:
 
 You may want to clear the session in the setUp() method of the test so that each
 test has a clean state to start from.

@@ -21,26 +21,33 @@
  *
  * @file     CAS/Tests/AuthenticationTest.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace phpCAS\CAS\Tests;
+
+use phpCAS\CAS;
+use phpCAS\CAS\Client;
+use phpCAS\CAS\GracefulTerminationException;
+use phpCAS\CAS\TestHarness\BasicResponse;
+use phpCAS\CAS\TestHarness\DummyRequest;
+use PHPUnit_Framework_TestCase;
+
 /**
  * Test class for verifying the operation of service tickets.
  *
- * @class    CAS_Tests_AuthenticationTest
+ * @class    AuthenticationTest
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_AuthenticationTest extends PHPUnit_Framework_TestCase
+class AuthenticationTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var CAS_Client
+     * @var Client
      */
     protected $object;
 
@@ -52,10 +59,11 @@ class CAS_Tests_AuthenticationTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        //     	phpCAS::setDebug(dirname(__FILE__).'/../test.log');
+        //     	CAS::setDebug(dirname(__FILE__).'/../test.log');
         // 		error_reporting(E_ALL);
+        @session_start();
 
-        CAS_GracefullTerminationException::throwInsteadOfExiting();
+        GracefulTerminationException::throwInsteadOfExiting();
 
         $_SERVER['SERVER_NAME'] = 'www.clientapp.com';
         $_SERVER['SERVER_PORT'] = '80';
@@ -64,10 +72,10 @@ class CAS_Tests_AuthenticationTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/';
         $_SERVER['SCRIPT_NAME'] = '/index.php';
         $_SERVER['PHP_SELF'] = '/index.php';
-        $_SESSION = array();
+        $_SESSION = [];
 
-        $this->object = new CAS_Client(
-            CAS_VERSION_2_0, // Server Version
+        $this->object = new Client(
+            CAS::CAS_VERSION_2_0, // Server Version
             true, // Proxy
             'cas.example.edu', // Server Hostname
             443, // Server port
@@ -75,7 +83,7 @@ class CAS_Tests_AuthenticationTest extends PHPUnit_Framework_TestCase
             false // Start Session
         );
 
-        $this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
+        $this->object->setRequestImplementation(DummyRequest::class);
         $this->object->setCasServerCACert('/path/to/ca_cert.crt', true);
 
         /*********************************************************
@@ -83,18 +91,18 @@ class CAS_Tests_AuthenticationTest extends PHPUnit_Framework_TestCase
          *********************************************************/
 
         // Set up our response.
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->setResponseHeaders(
-            array('HTTP/1.1 200 OK', 'Date: Wed, 29 Sep 2010 19:20:57 GMT',
+            ['HTTP/1.1 200 OK', 'Date: Wed, 29 Sep 2010 19:20:57 GMT',
                 'Server: Apache-Coyote/1.1', 'Pragma: no-cache',
                 'Expires: Thu, 01 Jan 1970 00:00:00 GMT',
                 'Cache-Control: no-cache, no-store',
                 'Content-Type: text/html;charset=UTF-8',
                 'Content-Language: en-US', 'Via: 1.1 cas.example.edu',
                 'Connection: close', 'Transfer-Encoding: chunked',
-            )
+            ]
         );
         $response
             ->setResponseBody(
@@ -105,8 +113,7 @@ class CAS_Tests_AuthenticationTest extends PHPUnit_Framework_TestCase
 </cas:serviceResponse>
 "
             );
-        CAS_TestHarness_DummyRequest::addResponse($response);
-
+        DummyRequest::addResponse($response);
     }
 
     /**
@@ -117,12 +124,12 @@ class CAS_Tests_AuthenticationTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        CAS_TestHarness_DummyRequest::clearResponses();
-        $_SESSION = array();
+        DummyRequest::clearResponses();
+        $_SESSION = [];
     }
 
     /**
-     * Test that the user is redirected to the CAS server
+     * Test that the user is redirected to the CAS server.
      *
      * @return void
      */
@@ -132,11 +139,11 @@ class CAS_Tests_AuthenticationTest extends PHPUnit_Framework_TestCase
             ob_start();
             $this->object->forceAuthentication();
             $this->assertTrue(
-                false, 'Should have thrown a CAS_GracefullTerminationException.'
+                false, 'Should have thrown a GracefulTerminationException.'
             );
-        } catch (CAS_GracefullTerminationException $e) {
+        } catch (GracefulTerminationException $e) {
             ob_end_clean();
-            // It would be great to test for the existance of headers here, but
+            // It would be great to test for the existence of headers here, but
             // the don't get set properly due to output before the test.
         }
     }

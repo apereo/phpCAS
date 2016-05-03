@@ -21,30 +21,33 @@
  *
  * @file     CAS/ProxiedService/Imap.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS\ProxiedService;
+
+use phpCAS\CAS;
+use phpCAS\CAS\InvalidArgumentException;
+use phpCAS\CAS\OutOfSequenceException;
+use phpCAS\CAS\ProxyTicketException;
 
 /**
- * Provides access to a proxy-authenticated IMAP stream
+ * Provides access to a proxy-authenticated IMAP stream.
  *
- * @class    CAS_ProxiedService_Imap
+ * @class    Imap
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_ProxiedService_Imap
-extends CAS_ProxiedService_Abstract
+class Imap extends AbstractProxiedService
 {
-
     /**
      * The username to send via imap_open.
      *
-     * @var string $_username;
+     * @var string;
      */
     private $_username;
 
@@ -52,13 +55,11 @@ extends CAS_ProxiedService_Abstract
      * Constructor.
      *
      * @param string $username Username
-     *
-     * @return void
      */
-    public function __construct ($username)
+    public function __construct($username)
     {
-        if (!is_string($username) || !strlen($username)) {
-            throw new CAS_InvalidArgumentException('Invalid username.');
+        if (! is_string($username) || ! strlen($username)) {
+            throw new InvalidArgumentException('Invalid username.');
         }
 
         $this->_username = $username;
@@ -66,7 +67,7 @@ extends CAS_ProxiedService_Abstract
 
     /**
      * The target service url.
-     * @var string $_url;
+     * @var string;
      */
     private $_url;
 
@@ -74,12 +75,12 @@ extends CAS_ProxiedService_Abstract
      * Answer a service identifier (URL) for whom we should fetch a proxy ticket.
      *
      * @return string
-     * @throws Exception If no service url is available.
+     * @throws ProxiedServiceException If no service url is available.
      */
-    public function getServiceUrl ()
+    public function getServiceUrl()
     {
         if (empty($this->_url)) {
-            throw new CAS_ProxiedService_Exception(
+            throw new ProxiedServiceException(
                 'No URL set via '.get_class($this).'->getServiceUrl($url).'
             );
         }
@@ -97,17 +98,18 @@ extends CAS_ProxiedService_Abstract
      * @param string $url Url to set
      *
      * @return void
-     * @throws CAS_OutOfSequenceException If called after the stream has been opened.
+     * @throws OutOfSequenceException If called after the stream has been opened.
+     * @throws InvalidArgumentException
      */
-    public function setServiceUrl ($url)
+    public function setServiceUrl($url)
     {
         if ($this->hasBeenOpened()) {
-            throw new CAS_OutOfSequenceException(
+            throw new OutOfSequenceException(
                 'Cannot set the URL, stream already opened.'
             );
         }
-        if (!is_string($url) || !strlen($url)) {
-            throw new CAS_InvalidArgumentException('Invalid url.');
+        if (! is_string($url) || ! strlen($url)) {
+            throw new InvalidArgumentException('Invalid url.');
         }
 
         $this->_url = $url;
@@ -116,7 +118,7 @@ extends CAS_ProxiedService_Abstract
     /**
      * The mailbox to open. See the $mailbox parameter of imap_open().
      *
-     * @var string $_mailbox
+     * @var string
      */
     private $_mailbox;
 
@@ -126,17 +128,18 @@ extends CAS_ProxiedService_Abstract
      * @param string $mailbox Mailbox to set
      *
      * @return void
-     * @throws CAS_OutOfSequenceException If called after the stream has been opened.
+     * @throws OutOfSequenceException If called after the stream has been opened.
+     * @throws InvalidArgumentException
      */
-    public function setMailbox ($mailbox)
+    public function setMailbox($mailbox)
     {
         if ($this->hasBeenOpened()) {
-            throw new CAS_OutOfSequenceException(
+            throw new OutOfSequenceException(
                 'Cannot set the mailbox, stream already opened.'
             );
         }
-        if (!is_string($mailbox) || !strlen($mailbox)) {
-            throw new CAS_InvalidArgumentException('Invalid mailbox.');
+        if (! is_string($mailbox) || ! strlen($mailbox)) {
+            throw new InvalidArgumentException('Invalid mailbox.');
         }
 
         $this->_mailbox = $mailbox;
@@ -145,7 +148,7 @@ extends CAS_ProxiedService_Abstract
     /**
      * A bit mask of options to pass to imap_open() as the $options parameter.
      *
-     * @var int $_options
+     * @var int
      */
     private $_options = null;
 
@@ -156,17 +159,18 @@ extends CAS_ProxiedService_Abstract
      * @param int $options Options for the stream
      *
      * @return void
-     * @throws CAS_OutOfSequenceException If called after the stream has been opened.
+     * @throws OutOfSequenceException If called after the stream has been opened.
+     * @throws InvalidArgumentException
      */
-    public function setOptions ($options)
+    public function setOptions($options)
     {
         if ($this->hasBeenOpened()) {
-            throw new CAS_OutOfSequenceException(
+            throw new OutOfSequenceException(
                 'Cannot set options, stream already opened.'
             );
         }
-        if (!is_int($options)) {
-            throw new CAS_InvalidArgumentException('Invalid options.');
+        if (! is_int($options)) {
+            throw new InvalidArgumentException('Invalid options.');
         }
 
         $this->_options = $options;
@@ -178,49 +182,49 @@ extends CAS_ProxiedService_Abstract
 
     /**
      * Open the IMAP stream (similar to imap_open()).
-     *
      * @return resource Returns an IMAP stream on success
-     * @throws CAS_OutOfSequenceException If called multiple times.
-     * @throws CAS_ProxyTicketException If there is a proxy-ticket failure.
+     * @throws OutOfSequenceException If called multiple times.
+     * @throws ProxyTicketException If there is a proxy-ticket failure.
      *		The code of the Exception will be one of:
-     *			PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE
-     *			PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE
-     *			PHPCAS_SERVICE_PT_FAILURE
-     * @throws CAS_ProxiedService_Exception If there is a failure sending the
+     *			CAS::PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE
+     *			CAS::PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE
+     *			CAS::PHPCAS_SERVICE_PT_FAILURE
+     * @throws ProxiedServiceException If there is a failure sending the
      *         request to the target service.
      */
-    public function open ()
+    public function open()
     {
         if ($this->hasBeenOpened()) {
-            throw new CAS_OutOfSequenceException('Stream already opened.');
+            throw new OutOfSequenceException('Stream already opened.');
         }
         if (empty($this->_mailbox)) {
-            throw new CAS_ProxiedService_Exception(
+            throw new ProxiedServiceException(
                 'You must specify a mailbox via '.get_class($this)
                 .'->setMailbox($mailbox)'
             );
         }
 
-        phpCAS::traceBegin();
+        CAS::traceBegin();
 
         // Get our proxy ticket and append it to our URL.
         $this->initializeProxyTicket();
-        phpCAS::trace('opening IMAP mailbox `'.$this->_mailbox.'\'...');
+        CAS::trace('opening IMAP mailbox `'.$this->_mailbox.'\'...');
         $this->_stream = @imap_open(
             $this->_mailbox, $this->_username, $this->getProxyTicket(),
             $this->_options
         );
         if ($this->_stream) {
-            phpCAS::trace('ok');
+            CAS::trace('ok');
         } else {
-            phpCAS::trace('could not open mailbox');
+            CAS::trace('could not open mailbox');
             // @todo add localization integration.
-            $message = 'IMAP Error: '.$this->_url.' '. var_export(imap_errors(), true);
-            phpCAS::trace($message);
-            throw new CAS_ProxiedService_Exception($message);
+            $message = 'IMAP Error: '.$this->_url.' '.var_export(imap_errors(), true);
+            CAS::trace($message);
+            throw new ProxiedServiceException($message);
         }
 
-        phpCAS::traceEnd();
+        CAS::traceEnd();
+
         return $this->_stream;
     }
 
@@ -229,52 +233,53 @@ extends CAS_ProxiedService_Abstract
      *
      * @return bool
      */
-    protected function hasBeenOpened ()
+    protected function hasBeenOpened()
     {
-        return !empty($this->_stream);
+        return ! empty($this->_stream);
     }
 
     /*********************************************************
      * 3. Access the result
     *********************************************************/
     /**
-     * The IMAP stream
+     * The IMAP stream.
      *
-     * @var resource $_stream
+     * @var resource
      */
     private $_stream;
 
     /**
-     * Answer the IMAP stream
+     * Answer the IMAP stream.
      *
      * @return resource
      */
-    public function getStream ()
+    public function getStream()
     {
-        if (!$this->hasBeenOpened()) {
-            throw new CAS_OutOfSequenceException(
+        if (! $this->hasBeenOpened()) {
+            throw new OutOfSequenceException(
                 'Cannot access stream, not opened yet.'
             );
         }
+
         return $this->_stream;
     }
 
     /**
-     * CAS_Client::serviceMail() needs to return the proxy ticket for some reason,
+     * Client::serviceMail() needs to return the proxy ticket for some reason,
      * so this method provides access to it.
      *
      * @return string
-     * @throws CAS_OutOfSequenceException If called before the stream has been
+     * @throws OutOfSequenceException If called before the stream has been
      * opened.
      */
-    public function getImapProxyTicket ()
+    public function getImapProxyTicket()
     {
-        if (!$this->hasBeenOpened()) {
-            throw new CAS_OutOfSequenceException(
+        if (! $this->hasBeenOpened()) {
+            throw new OutOfSequenceException(
                 'Cannot access errors, stream not opened yet.'
             );
         }
+
         return $this->getProxyTicket();
     }
 }
-?>

@@ -21,28 +21,39 @@
  *
  * @file     CAS/Tests/MultiRequestTest.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace phpCAS\CAS\Tests;
+
+use phpCAS\CAS\ProxyChain;
+use phpCAS\CAS\ProxyChain\AllowedList;
+use phpCAS\CAS\ProxyChain\Any;
+use phpCAS\CAS\ProxyChain\Trusted;
+use PHPUnit_Framework_TestCase;
+
 /**
- * Test class for verifying the operation of the proxy-chains validation system
+ * Test class for verifying the operation of the proxy-chains validation system.
  *
- * @class    CAS_Tests_ProxyChainsTests
+ * @class    ProxyChainsTests
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
+class ProxyChainsTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var CAS_Client
+     * @var AllowedList
      */
     protected $object;
+    protected $list_size_0;
+    protected $list_size_1;
+    protected $list_size_2;
+    protected $list_size_3;
+    protected $list_size_4;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -52,21 +63,21 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new CAS_ProxyChain_AllowedList;
-        $this->list_size_0 = array();
-        $this->list_size_1 = array('https://service1.example.com/rest',);
-        $this->list_size_2 = array('https://service1.example.com/rest',
+        $this->object = new AllowedList;
+        $this->list_size_0 = [];
+        $this->list_size_1 = ['https://service1.example.com/rest'];
+        $this->list_size_2 = ['https://service1.example.com/rest',
             'http://service2.example.com/my/path',
-        );
-        $this->list_size_3 = array('https://service1.example.com/rest',
+        ];
+        $this->list_size_3 = ['https://service1.example.com/rest',
             'http://service2.example.com/my/path',
             'http://service3.example.com/other/',
-        );
-        $this->list_size_4 = array('https://service1.example.com/rest',
+        ];
+        $this->list_size_4 = ['https://service1.example.com/rest',
             'http://service2.example.com/my/path',
             'http://service3.example.com/other/',
             'https://service4.example.com/',
-        );
+        ];
     }
 
     /**
@@ -77,7 +88,6 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-
     }
 
     /*********************************************************
@@ -85,7 +95,7 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
      *********************************************************/
 
     /**
-     * Verify that not configuring any proxies will prevent acccess.
+     * Verify that not configuring any proxies will prevent access.
      *
      * @return void
      */
@@ -114,13 +124,13 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that using the CAS_ProxyChain_Any will work with any URL.
+     * Verify that using the Any will work with any URL.
      *
      * @return void
      */
     public function testAny()
     {
-        $this->object->allowProxyChain(new CAS_ProxyChain_Any);
+        $this->object->allowProxyChain(new Any);
         $this->assertTrue(
             $this->object->isProxyListAllowed($this->list_size_0),
             'Should allow any proxies in front.'
@@ -144,7 +154,7 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that using the CAS_ProxyChain will only allow an exact match to
+     * Verify that using the ProxyChain will only allow an exact match to
      * the chain.
      *
      * @return void
@@ -152,10 +162,10 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     public function testExactMatch2()
     {
         $this->object->allowProxyChain(
-            new CAS_ProxyChain(
-                array('https://service1.example.com/rest',
+            new ProxyChain(
+                ['https://service1.example.com/rest',
                     'http://service2.example.com/my/path',
-                )
+                ]
             )
         );
         $this->assertTrue(
@@ -181,7 +191,7 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that using the CAS_ProxyChain will only allow an exact match to
+     * Verify that using the ProxyChain will only allow an exact match to
      * the chain.
      *
      * @return void
@@ -189,10 +199,10 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     public function testExactMatch2Failure()
     {
         $this->object->allowProxyChain(
-            new CAS_ProxyChain(
-                array('https://service1.example.com/rest',
+            new ProxyChain(
+                ['https://service1.example.com/rest',
                     'http://other.example.com/my/path',
-                )
+                ]
             )
         );
         $this->assertTrue(
@@ -218,7 +228,7 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that using the CAS_ProxyChain_Trusted will allow an exact match or
+     * Verify that using the Trusted will allow an exact match or
      * greater length of chain.
      *
      * @return void
@@ -226,10 +236,10 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     public function testTrustedMatch2()
     {
         $this->object->allowProxyChain(
-            new CAS_ProxyChain_Trusted(
-                array('https://service1.example.com/rest',
+            new Trusted(
+                ['https://service1.example.com/rest',
                     'http://service2.example.com/my/path',
-                )
+                ]
             )
         );
         $this->assertTrue(
@@ -255,18 +265,18 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that using the CAS_ProxyChain will match strings as prefixes
+     * Verify that using the ProxyChain will match strings as prefixes.
      *
      * @return void
      */
     public function testPrefixMatch3()
     {
         $this->object->allowProxyChain(
-            new CAS_ProxyChain(
-                array('https://service1.example.com/',
+            new ProxyChain(
+                ['https://service1.example.com/',
                     'http://service2.example.com/my',
                     'http://service3.example.com/',
-                )
+                ]
             )
         );
         $this->assertTrue(
@@ -292,17 +302,17 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that using the CAS_ProxyChain will match with Regular expressions
+     * Verify that using the ProxyChain will match with Regular expressions.
      *
      * @return void
      */
     public function testRegexMatch2()
     {
         $this->object->allowProxyChain(
-            new CAS_ProxyChain(
-                array('/^https?:\/\/service1\.example\.com\/.*/',
+            new ProxyChain(
+                ['/^https?:\/\/service1\.example\.com\/.*/',
                     '/^http:\/\/service[0-9]\.example\.com\/[^\/]+\/path/',
-                )
+                ]
             )
         );
         $this->assertTrue(
@@ -328,19 +338,19 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that using the CAS_ProxyChain will match a mixture of with Regular
-     * expressions and plain strings
+     * Verify that using the ProxyChain will match a mixture of with Regular
+     * expressions and plain strings.
      *
      * @return void
      */
     public function testMixedRegexMatch3()
     {
         $this->object->allowProxyChain(
-            new CAS_ProxyChain(
-                array('https://service1.example.com/',
+            new ProxyChain(
+                ['https://service1.example.com/',
                     '/^http:\/\/service[0-9]\.example\.com\/[^\/]+\/path/',
                     'http://service3.example.com/',
-                )
+                ]
             )
         );
         $this->assertTrue($this->object->isProxyListAllowed($this->list_size_0));
@@ -351,19 +361,19 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that using the CAS_ProxyChain_Trusted will match a mixture of with
-     * Regular expressions and plain strings
+     * Verify that using the Trusted will match a mixture of with
+     * Regular expressions and plain strings.
      *
      * @return void
      */
     public function testMixedRegexTrusted3()
     {
         $this->object->allowProxyChain(
-            new CAS_ProxyChain_Trusted(
-                array('https://service1.example.com/',
+            new Trusted(
+                ['https://service1.example.com/',
                     '/^http:\/\/service[0-9]\.example\.com\/[^\/]+\/path/',
                     'http://service3.example.com/',
-                )
+                ]
             )
         );
         $this->assertTrue($this->object->isProxyListAllowed($this->list_size_0));
@@ -374,17 +384,17 @@ class CAS_Tests_ProxyChainsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that using the CAS_ProxyChain will allow regex modifiers
+     * Verify that using the ProxyChain will allow regex modifiers.
      *
      * @return void
      */
     public function testRegexModifiers()
     {
         $this->object->allowProxyChain(
-            new CAS_ProxyChain(
-                array('/^https?:\/\/service1\.EXAMPLE\.com\/.*/i',
+            new ProxyChain(
+                ['/^https?:\/\/service1\.EXAMPLE\.com\/.*/i',
                     '/^http:\/\/serVice[0-9]\.example\.com\/[^\/]+\/path/ix',
-                )
+                ]
             )
         );
         $this->assertTrue(

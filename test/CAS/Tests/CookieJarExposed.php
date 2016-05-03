@@ -19,41 +19,45 @@
  *
  * PHP Version 5
  *
- * @file     CAS/Exception.php
+ * @file     CAS/Tests/CookieJarTest.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS\Tests;
+
+use BadMethodCallException;
+use phpCAS\CAS\CookieJar;
 
 /**
- * A root exception interface for all exceptions in phpCAS.
+ * Test harness for the cookie Jar to allow us to test protected methods.
  *
- * All exceptions thrown in phpCAS should implement this interface to allow them
- * to be caught as a category by clients. Each phpCAS exception should extend
- * an appropriate SPL exception class that best fits its type.
- *
- * For example, an InvalidArgumentException in phpCAS should be defined as
- *
- *		class CAS_InvalidArgumentException
- *			extends InvalidArgumentException
- *			implements CAS_Exception
- *		{ }
- *
- * This definition allows the CAS_InvalidArgumentException to be caught as either
- * an InvalidArgumentException or as a CAS_Exception.
- *
- * @class    CAS_Exception
+ * @class    CookieJarExposed
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
- *
  */
-interface CAS_Exception
+class CookieJarExposed extends CookieJar
 {
+    /**
+     * Wrapper to call protected methods.
+     *
+     * @param string $method function name
+     * @param array  $args   function args
+     *
+     * @throws BadMethodCallException
+     *
+     * @return mixed
+     */
+    public function __call($method, array $args = [])
+    {
+        if (! method_exists($this, $method)) {
+            throw new BadMethodCallException("method '$method' does not exist");
+        }
 
+        return call_user_func_array([$this, $method], $args);
+    }
 }
-?>
