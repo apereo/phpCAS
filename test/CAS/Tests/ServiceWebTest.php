@@ -85,11 +85,11 @@ class ServiceWebTest extends TestCase
         // Bypass PGT storage since CAS_Client->callback() will exit. Just build
         // up the session manually so that we are in a state from which we can
         // attempt to fetch proxy tickets and make proxied requests.
-        $_SESSION['phpCAS']['user'] = 'jdoe';
-        $_SESSION['phpCAS']['pgt'] = 'PGT-clientapp-abc123';
-        $_SESSION['phpCAS']['proxies'] = array();
-        $_SESSION['phpCAS']['service_cookies'] = array();
-        $_SESSION['phpCAS']['attributes'] = array();
+        $_SESSION[CAS_Client::PHPCAS_SESSION_PREFIX]['user'] = 'jdoe';
+        $_SESSION[CAS_Client::PHPCAS_SESSION_PREFIX]['pgt'] = 'PGT-clientapp-abc123';
+        $_SESSION[CAS_Client::PHPCAS_SESSION_PREFIX]['proxies'] = array();
+        $_SESSION[CAS_Client::PHPCAS_SESSION_PREFIX]['service_cookies'] = array();
+        $_SESSION[CAS_Client::PHPCAS_SESSION_PREFIX]['attributes'] = array();
 
         // Force Authentication to initialize the client.
         $this->object->forceAuthentication();
