@@ -19,27 +19,27 @@
  *
  * PHP Version 5
  *
- * @file     CAS/Request/Exception.php
+ * @file     CAS/ProxiedService/Exception.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS\ProxiedService;
+
+use Exception;
+use phpCAS\CAS\CASExceptionInterface;
 
 /**
- * An Exception for problems performing requests
+ * An Exception for problems communicating with a proxied service.
  *
- * @class    CAS_Request_Exception
+ * @class    ProxiedServiceException
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Request_Exception
-extends Exception
-implements CAS_Exception
+class ProxiedServiceException extends Exception implements CASExceptionInterface
 {
-
 }

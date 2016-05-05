@@ -21,88 +21,92 @@
  *
  * @file     CAS/AuthenticationException.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS;
+
+use phpCAS\CAS;
+use RuntimeException;
 
 /**
  * This interface defines methods that allow proxy-authenticated service handlers
- * to interact with phpCAS.
+ * to interact with CAS.
  *
  * Proxy service handlers must implement this interface as well as call
- * phpCAS::initializeProxiedService($this) at some point in their implementation.
+ * CAS::initializeProxiedService($this) at some point in their implementation.
  *
  * While not required, proxy-authenticated service handlers are encouraged to
- * implement the CAS_ProxiedService_Testable interface to facilitate unit testing.
+ * implement the Testable interface to facilitate unit testing.
  *
- * @class    CAS_AuthenticationException
+ * @class    AuthenticationException
  * @category Authentication
- * @package  PhpCAS
  * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-
-class CAS_AuthenticationException
-extends RuntimeException
-implements CAS_Exception
+class AuthenticationException extends RuntimeException implements CASExceptionInterface
 {
-
     /**
      * This method is used to print the HTML output when the user was not
      * authenticated.
      *
-     * @param CAS_Client $client       phpcas client
-     * @param string     $failure      the failure that occured
-     * @param string     $cas_url      the URL the CAS server was asked for
-     * @param bool       $no_response  the response from the CAS server (other
-     * parameters are ignored if TRUE)
-     * @param bool       $bad_response bad response from the CAS server ($err_code
-     * and $err_msg ignored if TRUE)
-     * @param string     $cas_response the response of the CAS server
-     * @param int        $err_code     the error code given by the CAS server
-     * @param string     $err_msg      the error message given by the CAS server
+     * @param Client $client CAS client
+     * @param string $failure the failure that occurred
+     * @param string $cas_url the URL the CAS server was asked for
+     * @param mixed $no_response the response from the CAS server (other
+     *                                 parameters are ignored if TRUE)
+     * @param mixed $bad_response bad response from the CAS server ($err_code
+     *                                 and $err_msg ignored if TRUE)
+     * @param string $cas_response the response of the CAS server
+     * @param int $err_code the error code given by the CAS server
+     * @param string $err_msg the error message given by the CAS server
      */
-    public function __construct($client,$failure,$cas_url,$no_response,
-        $bad_response='',$cas_response='',$err_code='',$err_msg=''
+    public function __construct(
+        Client $client,
+        $failure,
+        $cas_url,
+        $no_response,
+        $bad_response = '',
+        $cas_response = '',
+        $err_code = 0,
+        $err_msg = ''
     ) {
-        phpCAS::traceBegin();
+        CAS::traceBegin();
         $lang = $client->getLangObj();
         $client->printHTMLHeader($lang->getAuthenticationFailed());
         printf(
             $lang->getYouWereNotAuthenticated(),
             htmlentities($client->getURL()),
-            isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN']:''
+            isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : ''
         );
-        phpCAS::trace('CAS URL: '.$cas_url);
-        phpCAS::trace('Authentication failure: '.$failure);
-        if ( $no_response ) {
-            phpCAS::trace('Reason: no response from the CAS server');
+        CAS::trace('CAS URL: '.$cas_url);
+        CAS::trace('Authentication failure: '.$failure);
+        if ($no_response) {
+            CAS::trace('Reason: no response from the CAS server');
         } else {
-            if ( $bad_response ) {
-                phpCAS::trace('Reason: bad response from the CAS server');
+            if ($bad_response) {
+                CAS::trace('Reason: bad response from the CAS server');
             } else {
                 switch ($client->getServerVersion()) {
-                case CAS_VERSION_1_0:
-                    phpCAS::trace('Reason: CAS error');
-                    break;
-                case CAS_VERSION_2_0:
-                case CAS_VERSION_3_0:
-                    if ( empty($err_code) ) {
-                        phpCAS::trace('Reason: no CAS error');
-                    } else {
-                        phpCAS::trace('Reason: ['.$err_code.'] CAS error: '.$err_msg);
-                    }
-                    break;
+                    case CAS::CAS_VERSION_1_0:
+                        CAS::trace('Reason: CAS error');
+                        break;
+                    case CAS::CAS_VERSION_2_0:
+                    case CAS::CAS_VERSION_3_0:
+                        if (empty($err_code)) {
+                            CAS::trace('Reason: no CAS error');
+                        } else {
+                            CAS::trace('Reason: ['.$err_code.'] CAS error: '.$err_msg);
+                        }
+                        break;
                 }
             }
-            phpCAS::trace('CAS response: '.$cas_response);
+            CAS::trace('CAS response: '.$cas_response);
         }
         $client->printHTMLFooter();
-        phpCAS::traceExit();
+        CAS::traceExit();
     }
-
 }
-?>

@@ -21,27 +21,26 @@
  *
  * @file     CAS/TestHarness/ResponseInterface.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS\TestHarness;
 
 /**
  * Implementations of this interface can validate a request and provide response
  * headers and body, allowing the spoofing of responses to web requests for testing
  * purposes.
  *
- * @class    CAS_TestHarness_ResponseInterface
+ * @class    ResponseInterface
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-interface CAS_TestHarness_ResponseInterface
+interface ResponseInterface
 {
-
     /**
      * Test if this response should be supplied for the URL passed.
      *
@@ -59,7 +58,7 @@ interface CAS_TestHarness_ResponseInterface
     public function getResponseHeaders();
 
     /**
-     * Answer the response body
+     * Answer the response body.
      *
      * @return string
      */
@@ -132,5 +131,4 @@ interface CAS_TestHarness_ResponseInterface
      * @return bool TRUE if the cert path is correct.
      */
     public function validateCaCert($caCertPath);
-
 }

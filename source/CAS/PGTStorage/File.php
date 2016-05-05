@@ -21,11 +21,15 @@
  *
  * @file     CAS/PGTStorage/AbstractStorage.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS\PGTStorage;
+
+use phpCAS\CAS;
+use phpCAS\CAS\Client;
 
 /**
  * The CAS_PGTStorage_File class is a class for PGT file storage. An instance of
@@ -33,39 +37,36 @@
  *
  * @class    CAS_PGTStorage_File
  * @category Authentication
- * @package  PhpCAS
  * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  *
- *
  * @ingroup internalPGTStorageFile
  */
-
-class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
+class File extends AbstractStorage
 {
     /**
-     * @addtogroup internalPGTStorageFile
+     * @addtogroup internalPGTStorage
      * @{
      */
 
-    /**
+    /*
      * a string telling where PGT's should be stored on the filesystem. Written by
      * PGTStorageFile::PGTStorageFile(), read by getPath().
      *
      * @private
      */
-    var $_path;
+    public $_path;
 
     /**
      * This method returns the name of the directory where PGT's should be stored
      * on the filesystem.
      *
-     * @return the name of a directory (with leading and trailing '/')
+     * @return string the name of a directory (with leading and trailing '/')
      *
      * @private
      */
-    function getPath()
+    public function getPath()
     {
         return $this->_path;
     }
@@ -78,22 +79,24 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
      * This method returns an informational string giving the type of storage
      * used by the object (used for debugging purposes).
      *
-     * @return an informational string.
+     * @return string an informational string.
+     *
      * @public
      */
-    function getStorageType()
+    public function getStorageType()
     {
-        return "file";
+        return 'file';
     }
 
     /**
-     * This method returns an informational string giving informations on the
+     * This method returns an informational string giving information on the
      * parameters of the storage.(used for debugging purposes).
      *
-     * @return an informational string.
+     * @return string an informational string.
+     *
      * @public
      */
-    function getStorageInfo()
+    public function getStorageInfo()
     {
         return 'path=`'.$this->getPath().'\'';
     }
@@ -105,33 +108,28 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
     /**
      * The class constructor, called by CAS_Client::SetPGTStorageFile().
      *
-     * @param CAS_Client $cas_parent the CAS_Client instance that creates the object.
+     * @param Client $cas_parent the CAS_Client instance that creates the object.
      * @param string     $path       the path where the PGT's should be stored
-     *
-     * @return void
      *
      * @public
      */
-    function __construct($cas_parent,$path)
+    public function __construct(Client $cas_parent, $path)
     {
-        phpCAS::traceBegin();
+        CAS::traceBegin();
         // call the ancestor's constructor
         parent::__construct($cas_parent);
 
         if (empty($path)) {
-            $path = CAS_PGT_STORAGE_FILE_DEFAULT_PATH;
+            $path = session_save_path();
         }
         // check that the path is an absolute path
-        if (getenv("OS")=="Windows_NT") {
-
-            if (!preg_match('`^[a-zA-Z]:`', $path)) {
-                phpCAS::error('an absolute path is needed for PGT storage to file');
+        if (getenv('OS') == 'Windows_NT') {
+            if (! preg_match('`^[a-zA-Z]:`', $path)) {
+                CAS::error('an absolute path is needed for PGT storage to file');
             }
-
         } else {
-
-            if ( $path[0] != '/' ) {
-                phpCAS::error('an absolute path is needed for PGT storage to file');
+            if ($path[0] != '/') {
+                CAS::error('an absolute path is needed for PGT storage to file');
             }
 
             // store the path (with a leading and trailing '/')
@@ -140,7 +138,7 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
         }
 
         $this->_path = $path;
-        phpCAS::traceEnd();
+        CAS::traceEnd();
     }
 
     // ########################################################################
@@ -151,18 +149,19 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
      * This method is used to initialize the storage. Halts on error.
      *
      * @return void
+     *
      * @public
      */
-    function init()
+    public function init()
     {
-        phpCAS::traceBegin();
-        // if the storage has already been initialized, return immediatly
+        CAS::traceBegin();
+        // if the storage has already been initialized, return immediately
         if ($this->isInitialized()) {
             return;
         }
         // call the ancestor's method (mark as initialized)
         parent::init();
-        phpCAS::traceEnd();
+        CAS::traceEnd();
     }
 
     // ########################################################################
@@ -174,16 +173,18 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
      *
      * @param string $pgt_iou the PGT iou.
      *
-     * @return a filename
+     * @return string a filename
+     *
      * @private
      */
-    function getPGTIouFilename($pgt_iou)
+    public function getPGTIouFilename($pgt_iou)
     {
-        phpCAS::traceBegin();
-        $filename = $this->getPath()."phpcas-".hash("sha256", $pgt_iou);
-//        $filename = $this->getPath().$pgt_iou.'.plain';
-        phpCAS::trace("Sha256 filename:" . $filename);
-        phpCAS::traceEnd();
+        CAS::traceBegin();
+        $filename = $this->getPath().'CAS-'.hash('sha256', $pgt_iou);
+        // $filename = $this->getPath().$pgt_iou.'.plain';
+        CAS::trace('Sha256 filename:'.$filename);
+        CAS::traceEnd();
+
         return $filename;
     }
 
@@ -198,27 +199,27 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
      *
      * @public
      */
-    function write($pgt,$pgt_iou)
+    public function write($pgt, $pgt_iou)
     {
-        phpCAS::traceBegin();
+        CAS::traceBegin();
         $fname = $this->getPGTIouFilename($pgt_iou);
-        if (!file_exists($fname)) {
+        if (! file_exists($fname)) {
             touch($fname);
             // Chmod will fail on windows
             @chmod($fname, 0600);
-            if ($f=fopen($fname, "w")) {
+            if ($f = fopen($fname, 'w')) {
                 if (fputs($f, $pgt) === false) {
-                    phpCAS::error('could not write PGT to `'.$fname.'\'');
+                    CAS::error('could not write PGT to `'.$fname.'\'');
                 }
-                phpCAS::trace('Successful write of PGT to `'.$fname.'\'');
+                CAS::trace('Successful write of PGT to `'.$fname.'\'');
                 fclose($f);
             } else {
-                phpCAS::error('could not open `'.$fname.'\'');
+                CAS::error('could not open `'.$fname.'\'');
             }
         } else {
-            phpCAS::error('File exists: `'.$fname.'\'');
+            CAS::error('File exists: `'.$fname.'\'');
         }
-        phpCAS::traceEnd();
+        CAS::traceEnd();
     }
 
     /**
@@ -227,35 +228,32 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
      *
      * @param string $pgt_iou the PGT iou
      *
-     * @return the corresponding PGT, or FALSE on error
-     *
-     * @public
+     * @return mixed the corresponding PGT, or FALSE on error
      */
-    function read($pgt_iou)
+    public function read($pgt_iou)
     {
-        phpCAS::traceBegin();
+        CAS::traceBegin();
         $pgt = false;
         $fname = $this->getPGTIouFilename($pgt_iou);
         if (file_exists($fname)) {
-            if (!($f=fopen($fname, "r"))) {
-                phpCAS::error('could not open `'.$fname.'\'');
+            if (! ($f = fopen($fname, 'r'))) {
+                CAS::error('could not open `'.$fname.'\'');
             } else {
-                if (($pgt=fgets($f)) === false) {
-                    phpCAS::error('could not read PGT from `'.$fname.'\'');
+                if (($pgt = fgets($f)) === false) {
+                    CAS::error('could not read PGT from `'.$fname.'\'');
                 }
-                phpCAS::trace('Successful read of PGT to `'.$fname.'\'');
+                CAS::trace('Successful read of PGT to `'.$fname.'\'');
                 fclose($f);
             }
             // delete the PGT file
             @unlink($fname);
         } else {
-            phpCAS::error('No such file `'.$fname.'\'');
+            CAS::error('No such file `'.$fname.'\'');
         }
-        phpCAS::traceEnd($pgt);
+        CAS::traceEnd($pgt);
+
         return $pgt;
     }
 
     /** @} */
-
 }
-?>

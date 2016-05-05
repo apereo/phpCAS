@@ -17,14 +17,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *  PHP Version 5
+ * PHP Version 5
  *
- * @file     CAS.php
+ * @file     CAS/ProxyChain/Interface.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
-require_once dirname(__FILE__).'/source/CAS.php';
+namespace phpCAS\CAS\ProxyChain;
+
+/**
+ * An interface for classes that define a list of allowed proxies in front of
+ * the current application.
+ *
+ * @class    CAS_ProxyChain_Interface
+ * @category Authentication
+ * @author   Adam Franco <afranco@middlebury.edu>
+ * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link     https://wiki.jasig.org/display/CASC/phpCAS
+ */
+interface ProxyChainInterface
+{
+    /**
+     * Match a list of proxies.
+     *
+     * @param array $list The list of proxies in front of this service.
+     *
+     * @return bool
+     */
+    public function matches(array $list);
+}

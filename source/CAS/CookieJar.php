@@ -21,11 +21,14 @@
  *
  * @file     CAS/CookieJar.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS;
+
+use phpCAS\CAS;
 
 /**
  * This class provides access to service cookies and handles parsing of response
@@ -33,14 +36,12 @@
  *
  * @class    CAS_CookieJar
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_CookieJar
+class CookieJar
 {
-
     private $_cookies;
 
     /**
@@ -48,26 +49,22 @@ class CAS_CookieJar
      * should store cookies.
      *
      * @param array &$storageArray Array to store cookies
-     *
-     * @return void
      */
-    public function __construct (array &$storageArray)
+    public function __construct(array &$storageArray)
     {
-        $this->_cookies =& $storageArray;
+        $this->_cookies = &$storageArray;
     }
 
     /**
      * Store cookies for a web service request.
-     * Cookie storage is based on RFC 2965: http://www.ietf.org/rfc/rfc2965.txt
+     * Cookie storage is based on RFC 2965: http://www.ietf.org/rfc/rfc2965.txt.
      *
      * @param string $request_url      The URL that generated the response headers.
      * @param array  $response_headers An array of the HTTP response header strings.
      *
      * @return void
-     *
-     * @access private
      */
-    public function storeCookies ($request_url, $response_headers)
+    public function storeCookies($request_url, $response_headers)
     {
         $urlParts = parse_url($request_url);
         $defaultDomain = $urlParts['host'];
@@ -78,54 +75,52 @@ class CAS_CookieJar
         foreach ($cookies as $cookie) {
             // Enforce the same-origin policy by verifying that the cookie
             // would match the url that is setting it
-            if (!$this->cookieMatchesTarget($cookie, $urlParts)) {
+            if (! $this->cookieMatchesTarget($cookie, $urlParts)) {
                 continue;
             }
 
             // store the cookie
             $this->storeCookie($cookie);
 
-            phpCAS::trace($cookie['name'].' -> '.$cookie['value']);
+            CAS::trace($cookie['name'].' -> '.$cookie['value']);
         }
     }
 
     /**
      * Retrieve cookies applicable for a web service request.
-     * Cookie applicability is based on RFC 2965: http://www.ietf.org/rfc/rfc2965.txt
+     * Cookie applicability is based on RFC 2965: http://www.ietf.org/rfc/rfc2965.txt.
      *
      * @param string $request_url The url that the cookies will be for.
      *
      * @return array An array containing cookies. E.g. array('name' => 'val');
-     *
-     * @access private
      */
-    public function getCookies ($request_url)
+    public function getCookies($request_url)
     {
-        if (!count($this->_cookies)) {
-            return array();
+        if (! count($this->_cookies)) {
+            return [];
         }
 
         // If our request URL can't be parsed, no cookies apply.
         $target = parse_url($request_url);
         if ($target === false) {
-            return array();
+            return [];
         }
 
         $this->expireCookies();
 
-        $matching_cookies = array();
+        $matching_cookies = [];
         foreach ($this->_cookies as $key => $cookie) {
             if ($this->cookieMatchesTarget($cookie, $target)) {
                 $matching_cookies[$cookie['name']] = $cookie['value'];
             }
         }
+
         return $matching_cookies;
     }
 
-
     /**
      * Parse Cookies without PECL
-     * From the comments in http://php.net/manual/en/function.http-parse-cookie.php
+     * From the comments in http://php.net/manual/en/function.http-parse-cookie.php.
      *
      * @param array  $header        array of header lines.
      * @param string $defaultDomain The domain to use if none is specified in
@@ -133,17 +128,18 @@ class CAS_CookieJar
      *
      * @return array of cookies
      */
-    protected function parseCookieHeaders( $header, $defaultDomain )
+    protected function parseCookieHeaders($header, $defaultDomain)
     {
-        phpCAS::traceBegin();
-        $cookies = array();
-        foreach ( $header as $line ) {
-            if ( preg_match('/^Set-Cookie2?: /i', $line)) {
+        CAS::traceBegin();
+        $cookies = [];
+        foreach ($header as $line) {
+            if (preg_match('/^Set-Cookie2?: /i', $line)) {
                 $cookies[] = $this->parseCookieHeader($line, $defaultDomain);
             }
         }
 
-        phpCAS::traceEnd($cookies);
+        CAS::traceEnd($cookies);
+
         return $cookies;
     }
 
@@ -158,27 +154,27 @@ class CAS_CookieJar
      *
      * @return array
      */
-    protected function parseCookieHeader ($line, $defaultDomain)
+    protected function parseCookieHeader($line, $defaultDomain)
     {
-        if (!$defaultDomain) {
-            throw new CAS_InvalidArgumentException(
+        if (! $defaultDomain) {
+            throw new InvalidArgumentException(
                 '$defaultDomain was not provided.'
             );
         }
 
         // Set our default values
-        $cookie = array(
+        $cookie = [
             'domain' => $defaultDomain,
             'path' => '/',
             'secure' => false,
-        );
+        ];
 
         $line = preg_replace('/^Set-Cookie2?: /i', '', trim($line));
 
         // trim any trailing semicolons.
         $line = trim($line, ';');
 
-        phpCAS::trace("Cookie Line: $line");
+        CAS::trace("Cookie Line: $line");
 
         // This implementation makes the assumption that semicolons will not
         // be present in quoted attribute values. While attribute values that
@@ -187,7 +183,7 @@ class CAS_CookieJar
         // assumption.
         $attributeStrings = explode(';', $line);
 
-        foreach ( $attributeStrings as $attributeString ) {
+        foreach ($attributeStrings as $attributeString) {
             // split on the first equals sign and use the rest as value
             $attributeParts = explode('=', $attributeString, 2);
 
@@ -211,13 +207,13 @@ class CAS_CookieJar
                 $cookie['expires'] = strtotime($attributeValue);
                 break;
             case 'max-age':
-                $cookie['max-age'] = (int)$attributeValue;
+                $cookie['max-age'] = (int) $attributeValue;
                 // Set an expiry time based on the max-age
                 if ($cookie['max-age']) {
                     $cookie['expires'] = time() + $cookie['max-age'];
                 } else {
                     // If max-age is zero, then the cookie should be removed
-                    // imediately so set an expiry before now.
+                    // immediately so set an expiry before now.
                     $cookie['expires'] = time() - 1;
                 }
                 break;
@@ -249,37 +245,32 @@ class CAS_CookieJar
      * @param array $cookie A cookie array as created by parseCookieHeaders()
      *
      * @return void
-     *
-     * @access protected
      */
-    protected function storeCookie ($cookie)
+    protected function storeCookie($cookie)
     {
         // Discard any old versions of this cookie.
         $this->discardCookie($cookie);
         $this->_cookies[] = $cookie;
-
     }
 
     /**
-     * Discard an existing cookie
+     * Discard an existing cookie.
      *
      * @param array $cookie An cookie
      *
      * @return void
-     *
-     * @access protected
      */
-    protected function discardCookie ($cookie)
+    protected function discardCookie($cookie)
     {
-        if (!isset($cookie['domain'])
-            || !isset($cookie['path'])
-            || !isset($cookie['path'])
+        if (! isset($cookie['domain'])
+            || ! isset($cookie['path'])
+            || ! isset($cookie['path'])
         ) {
-            throw new CAS_InvalidArgumentException('Invalid Cookie array passed.');
+            throw new InvalidArgumentException('Invalid Cookie array passed.');
         }
 
         foreach ($this->_cookies as $key => $old_cookie) {
-            if ( $cookie['domain'] == $old_cookie['domain']
+            if ($cookie['domain'] == $old_cookie['domain']
                 && $cookie['path'] == $old_cookie['path']
                 && $cookie['name'] == $old_cookie['name']
             ) {
@@ -292,10 +283,8 @@ class CAS_CookieJar
      * Go through our stored cookies and remove any that are expired.
      *
      * @return void
-     *
-     * @access protected
      */
-    protected function expireCookies ()
+    protected function expireCookies()
     {
         foreach ($this->_cookies as $key => $cookie) {
             if (isset($cookie['expires']) && $cookie['expires'] < time()) {
@@ -311,18 +300,16 @@ class CAS_CookieJar
      * @param array $target An array of URL attributes as generated by parse_url().
      *
      * @return bool
-     *
-     * @access private
      */
-    protected function cookieMatchesTarget ($cookie, $target)
+    protected function cookieMatchesTarget($cookie, $target)
     {
-        if (!is_array($target)) {
-            throw new CAS_InvalidArgumentException(
+        if (! is_array($target)) {
+            throw new InvalidArgumentException(
                 '$target must be an array of URL attributes as generated by parse_url().'
             );
         }
-        if (!isset($target['host'])) {
-            throw new CAS_InvalidArgumentException(
+        if (! isset($target['host'])) {
+            throw new InvalidArgumentException(
                 '$target must be an array of URL attributes as generated by parse_url().'
             );
         }
@@ -333,7 +320,7 @@ class CAS_CookieJar
         }
 
         // Verify that the host matches
-        // Match domain and mulit-host cookies
+        // Match domain and multi-host cookies
         if (strpos($cookie['domain'], '.') === 0) {
             // .host.domain.edu cookies are valid for host.domain.edu
             if (substr($cookie['domain'], 1) == $target['host']) {
@@ -342,7 +329,7 @@ class CAS_CookieJar
                 // non-exact host-name matches.
                 // check that the target host a.b.c.edu is within .b.c.edu
                 $pos = strripos($target['host'], $cookie['domain']);
-                if (!$pos) {
+                if (! $pos) {
                     return false;
                 }
                 // verify that the cookie domain is the last part of the host.
@@ -367,7 +354,7 @@ class CAS_CookieJar
 
         // Verify that the port matches
         if (isset($cookie['ports'])
-            && !in_array($target['port'], $cookie['ports'])
+            && ! in_array($target['port'], $cookie['ports'])
         ) {
             return false;
         }
@@ -379,7 +366,4 @@ class CAS_CookieJar
 
         return true;
     }
-
 }
-
-?>

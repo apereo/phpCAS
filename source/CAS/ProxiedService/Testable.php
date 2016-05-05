@@ -21,55 +21,54 @@
  *
  * @file     CAS/ProxiedService/Testabel.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS\ProxiedService;
+
+use phpCAS\CAS\Client;
 
 /**
  * This interface defines methods that allow proxy-authenticated service handlers
  * to be tested in unit tests.
  *
  * Classes implementing this interface SHOULD store the CAS_Client passed and
- * initialize themselves with that client rather than via the static phpCAS
+ * initialize themselves with that client rather than via the static CAS
  * method. For example:
  *
  *		/ **
  *		 * Fetch our proxy ticket.
  *		 * /
  *		protected function initializeProxyTicket() {
- *			// Allow usage of a particular CAS_Client for unit testing.
+ *			// Allow usage of a particular Client for unit testing.
  *			if (is_null($this->casClient))
- *				phpCAS::initializeProxiedService($this);
+ *				CAS::initializeProxiedService($this);
  *			else
  *				$this->casClient->initializeProxiedService($this);
  *		}
  *
- * @class    CAS_ProxiedService_Testabel
+ * @class    Testable
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-interface CAS_ProxiedService_Testable
+interface Testable
 {
-
     /**
-     * Use a particular CAS_Client->initializeProxiedService() rather than the
-     * static phpCAS::initializeProxiedService().
+     * Use a particular Client->initializeProxiedService() rather than the
+     * static CAS::initializeProxiedService().
      *
      * This method should not be called in standard operation, but is needed for unit
      * testing.
      *
-     * @param CAS_Client $casClient Cas client object
+     * @param Client $casClient Cas client object
      *
      * @return void
-     * @throws CAS_OutOfSequenceException If called after a proxy ticket has
+     * @throws \phpCAS\CAS\OutOfSequenceException If called after a proxy ticket has
      *         already been initialized/set.
      */
-    public function setCasClient (CAS_Client $casClient);
-
+    public function setCasClient(Client $casClient);
 }
-?>

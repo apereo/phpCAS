@@ -1,43 +1,46 @@
 <?php
 
 /**
- * Example for proxied service with session support
+ * Example for proxied service with session support.
  *
  * PHP Version 5
  *
  * @file     example_service.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+// Load the autoloader
+require_once '../../vendor/autoload.php';
+
 // Load the settings from the central config file
 require_once 'config.php';
-// Load the CAS lib
-require_once $phpcas_path . '/CAS.php';
+
+use phpCAS\CAS;
+use phpCAS\CAS\ProxyChain;
 
 // Enable debugging
-phpCAS::setDebug();
+CAS::setDebug();
 // Enable verbose error messages. Disable in production!
-phpCAS::setVerbose(true);
+CAS::setVerbose(true);
 
 // Initialize phpCAS
-phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
+CAS::client(CAS::CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 
 // For production use set the CA certificate that is the issuer of the cert
 // on the CAS server and uncomment the line below
-// phpCAS::setCasServerCACert($cas_server_ca_cert_path);
+// CAS::setCasServerCACert($cas_server_ca_cert_path);
 
 // For quick testing you can disable SSL validation of the CAS server.
 // THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION.
 // VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL!
-phpCAS::setNoCasServerValidation();
+CAS::setNoCasServerValidation();
 
 // If you want your service to be proxied you have to enable it (default
-// disabled) and define an accepable list of proxies that are allowed to
+// disabled) and define an acceptable list of proxies that are allowed to
 // proxy your service.
 //
 // Add each allowed proxy definition object. For the normal CAS_ProxyChain
@@ -50,47 +53,45 @@ phpCAS::setNoCasServerValidation();
 // when validating the proxy tickets. The strings are compared starting from
 // the beginning and must fully match with the proxies in the list.
 // Example:
-// 		phpCAS::allowProxyChain(new CAS_ProxyChain(array(
+// 		CAS::allowProxyChain(new CAS_ProxyChain(array(
 // 				'https://app.example.com/'
 // 			)));
-// 		phpCAS::allowProxyChain(new CAS_ProxyChain(array(
+// 		CAS::allowProxyChain(new CAS_ProxyChain(array(
 // 				'/^https:\/\/app[0-9]\.example\.com\/rest\//',
 // 				'http://client.example.com/'
 // 			)));
-phpCAS::allowProxyChain(new CAS_ProxyChain(array($pgtUrlRegexp)));
-phpCAS::allowProxyChain(
-    new CAS_ProxyChain(
-        array('/^' . $pgtBase . 'example_service_that_proxies.php$/',
-            '/^' . $pgtBase . 'example_proxy_serviceWeb_chaining.php$/'
-        )
+CAS::allowProxyChain(new ProxyChain([$pgtUrlRegexp]));
+CAS::allowProxyChain(
+    new ProxyChain(
+        ['/^'.$pgtBase.'example_service_that_proxies.php$/',
+            '/^'.$pgtBase.'example_proxy_serviceWeb_chaining.php$/',
+        ]
     )
 );
 
-// For quick testing or in certain production screnarios you might want to
+// For quick testing or in certain production scenarios you might want to
 // allow allow any other valid service to proxy your service. To do so, add
 // the "Any" chain:
-// 		phpcas::allowProxyChain(new CAS_ProxyChain_Any);
+// 		CAS::allowProxyChain(new CAS_ProxyChain_Any);
 // THIS SETTING IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY
 // IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER
 // ON THIS SERVICE.
-//phpcas::allowProxyChain(new CAS_ProxyChain_Any);
+//CAS::allowProxyChain(new CAS_ProxyChain_Any);
 
 // force CAS authentication
-phpCAS::forceAuthentication();
+CAS::forceAuthentication();
 
 print '<h1>I am a service that can be proxied.</h1>';
 
 // at this step, the user has been authenticated by the CAS server
-// and the user's login name can be read with phpCAS::getUser().
+// and the user's login name can be read with CAS::getUser().
 require 'script_info.php';
 
-// for this test, simply print that the authentication was successfull
-echo '<p>The user\'s login is <b>' . phpCAS::getUser() . '</b>.</p>';
+// for this test, simply print that the authentication was successful
+echo '<p>The user\'s login is <b>'.CAS::getUser().'</b>.</p>';
 
 // increment the number of requests of the session and print it
-if (!isset($_SESSION['n'])) {
+if (! isset($_SESSION['n'])) {
     $_SESSION['n'] = 0;
 }
-echo '<p>request #' . (++$_SESSION['n']) . '</p>';
-
-?>
+echo '<p>request #'.(++$_SESSION['n']).'</p>';

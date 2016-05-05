@@ -21,81 +21,76 @@
  *
  * @file     TestSuite.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
-ob_start();
-require_once dirname(__FILE__) . '/../source/CAS.php';
+namespace phpCAS\CAS;
+
+use PHPUnit_Framework_TestSuite;
 
 /**
- * Suite of all tests
+ * Suite of all tests.
  *
  * @class    TestSuite
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-
 class TestSuite extends PHPUnit_Framework_TestSuite
 {
     /**
-     * Create a new testsuite
+     * Create a new test suite.
      *
-     * @return PhpcasTestSuite
+     * @return TestSuite
      */
     public static function suite()
     {
-        $suite = new TestSuite('phpCAS Test Suite');
+        $suite = new self('phpCAS Test Suite');
 
-        self::recursiveAddTests($suite, dirname(__FILE__) . '/CAS/Tests');
+        self::recursiveAddTests($suite, dirname(__FILE__).'/CAS/Tests');
+
         return $suite;
     }
 
     /**
-    * Empty function
-    *
-    * @return void
-    */
+     * Empty function.
+     *
+     * @return void
+     */
     protected function setUp()
     {
-
     }
 
     /**
-     * Empty function
+     * Empty function.
      *
      * @return void
      */
     protected function tearDown()
     {
-
     }
 
     /**
-     * Recursively add test files in subdirectories
+     * Recursively add test files in subdirectories.
      *
      * @param PHPUnit_Framework_TestSuite $suite a test suite class
      * @param string                      $dir   dir from which to add tests
      *
      * @return void
-     *
-     * @access protected
      */
     protected static function recursiveAddTests(
         PHPUnit_Framework_TestSuite $suite, $dir
     ) {
         foreach (scandir($dir) as $file) {
             if (preg_match('/Test\.php$/', $file)) {
-                $suite->addTestFile($dir . '/' . $file);
-            } else if (is_dir($dir . '/' . $file)
+                $suite->addTestFile($dir.'/'.$file);
+            } elseif (is_dir($dir.'/'.$file)
                 && preg_match('/^[a-z0-9]+/i', $file)
             ) {
-                self::recursiveAddTests($suite, $dir . '/' . $file);
+                self::recursiveAddTests($suite, $dir.'/'.$file);
             }
         }
     }

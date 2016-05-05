@@ -21,48 +21,45 @@
  *
  * @class    CAS/ProxyTicketException.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
- *
  */
+
+namespace phpCAS\CAS;
+
+use BadMethodCallException;
+use phpCAS\CAS;
 
 /**
  * An Exception for errors related to fetching or validating proxy tickets.
  *
- * @class    CAS_ProxyTicketException
+ * @class    ProxyTicketException
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_ProxyTicketException
-extends BadMethodCallException
-implements CAS_Exception
+class ProxyTicketException extends BadMethodCallException implements CASExceptionInterface
 {
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $message Message text
      * @param int    $code    Error code
-     *
-     * @return void
      */
-    public function __construct ($message, $code = PHPCAS_SERVICE_PT_FAILURE)
+    public function __construct($message, $code = CAS::PHPCAS_SERVICE_PT_FAILURE)
     {
         // Warn if the code is not in our allowed list
-        $ptCodes = array(
-        PHPCAS_SERVICE_PT_FAILURE,
-        PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE,
-        PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE,
-        );
-        if (!in_array($code, $ptCodes)) {
+        $ptCodes = [
+            CAS::PHPCAS_SERVICE_PT_FAILURE,
+            CAS::PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE,
+            CAS::PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE,
+        ];
+        if (! in_array($code, $ptCodes)) {
             trigger_error(
                 'Invalid code '.$code
-                .' passed. Must be one of PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, or PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE.'
+                .' passed. Must be one of CAS::PHPCAS_SERVICE_PT_FAILURE, CAS::PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, or CAS::PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE.'
             );
         }
 

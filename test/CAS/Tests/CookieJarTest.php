@@ -21,61 +21,38 @@
  *
  * @file     CAS/Tests/CookieJarTest.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
-/**
- * Test harness for the cookie Jar to allow us to test protected methods.
- *
- * @class    CAS_Tests_CookieJarExposed
- * @category Authentication
- * @package  PhpCAS
- * @author   Adam Franco <afranco@middlebury.edu>
- * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- * @link     https://wiki.jasig.org/display/CASC/phpCAS
- */
+namespace phpCAS\CAS\Tests;
 
-class CAS_Tests_CookieJarExposed extends CAS_CookieJar
-{
-    /**
-     * Wrapper to call protected methods
-     *
-     * @param string $method function name
-     * @param array  $args   function args
-     *
-     * @throws BadMethodCallException
-     *
-     * @return mixed
-     */
-    public function __call($method, array $args = array())
-    {
-        if (!method_exists($this, $method)) {
-            throw new BadMethodCallException("method '$method' does not exist");
-        }
-        return call_user_func_array(array($this, $method), $args);
-    }
-}
+use phpCAS\CAS\CookieJar;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Test class for verifying the operation of cookie handling methods used in
  * serviceWeb() proxy calls.
  *
- * @class    CAS_Tests_CookieJarTest
+ * @class    CookieJarTest
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
+class CookieJarTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var CAS_Client
+     * @var CookieJarExposed
      */
     protected $object;
+
+    protected $cookieArray;
+    protected $serviceUrl_1;
+    protected $responseHeaders_1;
+    protected $serviceUrl_1b;
+    protected $serviceUrl_1c;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -85,11 +62,11 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->cookieArray = array();
-        $this->object = new CAS_Tests_CookieJarExposed($this->cookieArray);
+        $this->cookieArray = [];
+        $this->object = new CookieJarExposed($this->cookieArray);
 
         $this->serviceUrl_1 = 'http://service.example.com/lookup/?action=search&query=username';
-        $this->responseHeaders_1 = array('HTTP/1.1 302 Found',
+        $this->responseHeaders_1 = ['HTTP/1.1 302 Found',
             'Date: Tue, 07 Sep 2010 17:51:54 GMT',
             'Server: Apache/2.2.3 (Red Hat)', 'X-Powered-By: PHP/5.1.6',
             'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/',
@@ -99,7 +76,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
             'Location: https://cas.example.edu:443/cas/login?service=http%3A%2F%2Fservice.example.edu%2Flookup%2F%3Faction%3Dsearch%26query%3Dusername',
             'Content-Length: 525', 'Connection: close',
             'Content-Type: text/html; charset=UTF-8',
-        );
+        ];
         $this->serviceUrl_1b = 'http://service.example.com/lookup/?action=search&query=another_username';
         $this->serviceUrl_1c = 'http://service.example.com/make_changes.php';
 
@@ -115,7 +92,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
         );
 
         // Add service cookies as if we just made are request to serviceUrl_1
-        // and recieved responseHeaders_1 as the header to the response.
+        // and received responseHeaders_1 as the header to the response.
         $this->object
             ->storeCookies($this->serviceUrl_1, $this->responseHeaders_1);
     }
@@ -128,7 +105,6 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-
     }
 
     /*********************************************************
@@ -185,7 +161,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     public function testPublicGetCookiesSecure()
     {
-        $headers = array('Set-Cookie: person="bob jones"; path=/; Secure');
+        $headers = ['Set-Cookie: person="bob jones"; path=/; Secure'];
         $url = 'https://service.example.com/lookup/?action=search&query=username';
         $this->object->storeCookies($url, $headers);
 
@@ -196,7 +172,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('k1jut1r1bqrumpei837kk4jks0', $cookies['SID']);
         $this->assertArrayNotHasKey('person', $cookies);
 
-        // Ensure that the SID cookie is avalailable to https urls.
+        // Ensure that the SID cookie is available to https urls.
         $cookies = $this->object
             ->getCookies('https://service.example.com/lookup/');
         $this->assertArrayHasKey('SID', $cookies);
@@ -213,7 +189,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     public function testPublicGetCookiesSecureLC()
     {
-        $headers = array('Set-Cookie: person="bob jones"; path=/; secure');
+        $headers = ['Set-Cookie: person="bob jones"; path=/; secure'];
         $url = 'https://service.example.com/lookup/?action=search&query=username';
         $this->object->storeCookies($url, $headers);
 
@@ -235,7 +211,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
 
     /**
      * Verify that when no domain is set for the cookie, it will be unavailable
-     * to other hosts
+     * to other hosts.
      *
      * @return void
      */
@@ -258,32 +234,32 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that our set with the domain name will work
+     * Verify that our set with the domain name will work.
      *
      * @return void
      */
     public function testPublicGetCookiesDomain()
     {
-        $headers = array(
-            'Set-Cookie: SID="thisisthesid"; domain=".example.org"; path=/'
-        );
+        $headers = [
+            'Set-Cookie: SID="thisisthesid"; domain=".example.org"; path=/',
+        ];
         $url = 'http://host.example.org/path/to/somthing';
         $this->object->storeCookies($url, $headers);
 
         // Ensure the SID cookie is available to the domain
         $cookies = $this->object->getCookies('http://example.org/path/');
         $this->assertArrayHasKey(
-            'SID', $cookies, "example.org should match .example.org cookies"
+            'SID', $cookies, 'example.org should match .example.org cookies'
         );
 
         // Ensure the SID cookie is available to the host
         $cookies = $this->object->getCookies('http://host.example.org/path/');
         $this->assertArrayHasKey(
-            'SID', $cookies, "host.example.org should match .example.org cookies"
+            'SID', $cookies, 'host.example.org should match .example.org cookies'
         );
         $this->assertEquals(
             'thisisthesid', $cookies['SID'],
-            "host.example.org should match .example.org cookies"
+            'host.example.org should match .example.org cookies'
         );
 
         // Ensure the SID cookie is NOT available to a subdomain of the host
@@ -298,15 +274,15 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that our set with the host name explicitly will work
+     * Verify that our set with the host name explicitly will work.
      *
      * @return void
      */
     public function testPublicGetCookiesDomainHost()
     {
-        $headers = array(
-            'Set-Cookie: SID="thisisthesid"; domain="host.example.org"; path=/'
-        );
+        $headers = [
+            'Set-Cookie: SID="thisisthesid"; domain="host.example.org"; path=/',
+        ];
         $url = 'http://host.example.org/path/to/somthing';
         $this->object->storeCookies($url, $headers);
 
@@ -321,11 +297,11 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
         $cookies = $this->object->getCookies('http://host.example.org/path/');
         $this->assertArrayHasKey(
             'SID', $cookies,
-            "host.example.org should match host.example.org cookies"
+            'host.example.org should match host.example.org cookies'
         );
         $this->assertEquals(
             'thisisthesid', $cookies['SID'],
-            "host.example.org should match host.example.org cookies"
+            'host.example.org should match host.example.org cookies'
         );
 
         // Ensure the SID cookie is NOT available to a subdomain of the host
@@ -340,15 +316,15 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that our set with the host name explicitly will work
+     * Verify that our set with the host name explicitly will work.
      *
      * @return void
      */
     public function testPublicGetCookiesDomainHostDotted()
     {
-        $headers = array(
-            'Set-Cookie: SID="thisisthesid"; domain=".host.example.org"; path=/'
-        );
+        $headers = [
+            'Set-Cookie: SID="thisisthesid"; domain=".host.example.org"; path=/',
+        ];
         $url = 'http://host.example.org/path/to/somthing';
         $this->object->storeCookies($url, $headers);
 
@@ -363,11 +339,11 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
         $cookies = $this->object->getCookies('http://host.example.org/path/');
         $this->assertArrayHasKey(
             'SID', $cookies,
-            "host.example.org should match .host.example.org cookies"
+            'host.example.org should match .host.example.org cookies'
         );
         $this->assertEquals(
             'thisisthesid', $cookies['SID'],
-            "host.example.org should match host.example.org cookies"
+            'host.example.org should match host.example.org cookies'
         );
 
         // Ensure the SID cookie IS available to a subdomain of the host
@@ -375,7 +351,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
             ->getCookies('http://sub.host.example.org/path/');
         $this->assertArrayHasKey(
             'SID', $cookies,
-            "sub.host.example.org should match .host.example.org cookies"
+            'sub.host.example.org should match .host.example.org cookies'
         );
     }
 
@@ -386,8 +362,8 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     public function testPublicStoreCookies()
     {
-        $array = array();
-        $cookieJar = new CAS_CookieJar($array);
+        $array = [];
+        $cookieJar = new CookieJar($array);
         $this->assertEquals(0, count($array));
         $cookieJar->storeCookies($this->serviceUrl_1, $this->responseHeaders_1);
         $this->assertEquals(1, count($array));
@@ -407,7 +383,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
         );
 
         // Send set-cookie header to remove the cookie
-        $headers = array('Set-Cookie2: person="bob jones"; path=/; max-age=2');
+        $headers = ['Set-Cookie2: person="bob jones"; path=/; max-age=2'];
         $this->object->storeCookies($this->serviceUrl_1, $headers);
 
         // Ensure that the cookie exists after 1 second
@@ -425,7 +401,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Verify that cookie header with max-age=0 will remove the cookie.
      * Documented in RFC2965 section 3.2.2
-     * http://www.ietf.org/rfc/rfc2965.txt
+     * http://www.ietf.org/rfc/rfc2965.txt.
      *
      * @return void
      */
@@ -437,9 +413,9 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
         );
 
         // Send set-cookie header to remove the cookie
-        $headers = array(
-            'Set-Cookie2: SID=k1jut1r1bqrumpei837kk4jks0; path=/; max-age=0'
-        );
+        $headers = [
+            'Set-Cookie2: SID=k1jut1r1bqrumpei837kk4jks0; path=/; max-age=0',
+        ];
         $this->object->storeCookies($this->serviceUrl_1, $headers);
 
         $this->assertEquals(
@@ -450,7 +426,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     /**
      * Verify that cookie header with expires in the past will remove the cookie.
      * Documented in RFC2965 section 3.2.2
-     * http://www.ietf.org/rfc/rfc2965.txt
+     * http://www.ietf.org/rfc/rfc2965.txt.
      *
      * @return void
      */
@@ -462,9 +438,9 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
         );
 
         // Send set-cookie header to remove the cookie
-        $headers = array(
-            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; expires=Fri, 31-Dec-2009 23:59:59 GMT'
-        );
+        $headers = [
+            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; expires=Fri, 31-Dec-2009 23:59:59 GMT',
+        ];
         $this->object->storeCookies($this->serviceUrl_1, $headers);
 
         $this->assertEquals(
@@ -487,10 +463,10 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
         );
 
         // Send set-cookie header to remove the cookie
-        $headers = array(
+        $headers = [
             'Set-Cookie: bob=jones; path=/; expires='
-            . gmdate('D, d-M-Y H:i:s e', time() - 90000)
-        );
+            .gmdate('D, d-M-Y H:i:s e', time() - 90000),
+        ];
         $this->object->storeCookies($this->serviceUrl_1, $headers);
 
         $cookies = $this->object->getCookies($this->serviceUrl_1);
@@ -499,7 +475,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that cookie header that expires in the futre will not be removed.
+     * Verify that cookie header that expires in the future will not be removed.
      *
      * http://www.ietf.org/rfc/rfc2965.txt
      *
@@ -513,10 +489,10 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
         );
 
         // Send set-cookie header to remove the cookie
-        $headers = array(
+        $headers = [
             'Set-Cookie: bob=jones; path=/; expires='
-            . gmdate('D, d-M-Y H:i:s e', time() + 600)
-        );
+            .gmdate('D, d-M-Y H:i:s e', time() + 600),
+        ];
         $this->object->storeCookies($this->serviceUrl_1, $headers);
 
         $cookies = $this->object->getCookies($this->serviceUrl_1);
@@ -531,9 +507,9 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     public function testPublicStoreCookiesHttponly()
     {
-        $headers = array(
-            'Set-Cookie: SID="hello world"; path=/; domain=.example.com; HttpOnly'
-        );
+        $headers = [
+            'Set-Cookie: SID="hello world"; path=/; domain=.example.com; HttpOnly',
+        ];
         $this->object->storeCookies($this->serviceUrl_1, $headers);
 
         $cookies = $this->object->getCookies($this->serviceUrl_1b);
@@ -542,7 +518,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('hello world', $cookies['SID']);
         $this->assertEquals(
             1, count($cookies),
-            "Should only a single SID cookie, not a cookie for the HttpOnly attribute"
+            'Should only a single SID cookie, not a cookie for the HttpOnly attribute'
         );
     }
 
@@ -553,9 +529,9 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     public function testPublicStoreCookiesComment()
     {
-        $headers = array(
-            'Set-Cookie: SID="hello world"; path=/; domain=.example.com; HttpOnly; comment="A session cookie"'
-        );
+        $headers = [
+            'Set-Cookie: SID="hello world"; path=/; domain=.example.com; HttpOnly; comment="A session cookie"',
+        ];
         $this->object->storeCookies($this->serviceUrl_1, $headers);
 
         $cookies = $this->object->getCookies($this->serviceUrl_1b);
@@ -564,7 +540,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('hello world', $cookies['SID']);
         $this->assertEquals(
             1, count($cookies),
-            "Should only a single SID cookie, not a cookie for the comment attribute"
+            'Should only a single SID cookie, not a cookie for the comment attribute'
         );
     }
 
@@ -601,9 +577,9 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     public function testPublicStoreCookiesQuotedEquals()
     {
-        $headers = array(
-            'Set-Cookie: SID="hello=world"; path=/; domain=.example.com'
-        );
+        $headers = [
+            'Set-Cookie: SID="hello=world"; path=/; domain=.example.com',
+        ];
         $this->object->storeCookies($this->serviceUrl_1, $headers);
 
         $cookies = $this->object->getCookies($this->serviceUrl_1b);
@@ -623,9 +599,9 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     public function testPublicStoreCookiesQuotedEscapedQuote()
     {
-        $headers = array(
-            'Set-Cookie: SID="hello\"world"; path=/; domain=.example.com'
-        );
+        $headers = [
+            'Set-Cookie: SID="hello\"world"; path=/; domain=.example.com',
+        ];
         $this->object->storeCookies($this->serviceUrl_1, $headers);
 
         $cookies = $this->object->getCookies($this->serviceUrl_1b);
@@ -664,15 +640,15 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the addition of a domain to the parsing of cookie headers
+     * Test the addition of a domain to the parsing of cookie headers.
      *
      * @return void
      */
     public function testProtectedParseCookieHeadersWithDomain()
     {
-        $headers = array(
-            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; domain=.example.com'
-        );
+        $headers = [
+            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; domain=.example.com',
+        ];
         $cookies = $this->object
             ->parseCookieHeaders($headers, 'service.example.com');
 
@@ -686,15 +662,15 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the addition of a domain to the parsing of cookie headers
+     * Test the addition of a domain to the parsing of cookie headers.
      *
      * @return void
      */
     public function testProtectedParseCookieHeadersWithHostname()
     {
-        $headers = array(
-            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; domain=service.example.com'
-        );
+        $headers = [
+            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; domain=service.example.com',
+        ];
         $cookies = $this->object
             ->parseCookieHeaders($headers, 'service.example.com');
 
@@ -714,9 +690,9 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     public function testProtectedParseCookieHeadersNonDefaultHostname()
     {
-        $headers = array(
-            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; domain=service2.example.com'
-        );
+        $headers = [
+            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/; domain=service2.example.com',
+        ];
         $cookies = $this->object
             ->parseCookieHeaders($headers, 'service.example.com');
 
@@ -736,9 +712,9 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     public function testProtectedParseCookieHeadersWithPath()
     {
-        $headers = array(
-            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/something/; domain=service2.example.com'
-        );
+        $headers = [
+            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/something/; domain=service2.example.com',
+        ];
         $cookies = $this->object
             ->parseCookieHeaders($headers, 'service.example.com');
 
@@ -752,15 +728,15 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the addition of a 'Secure' parameter
+     * Test the addition of a 'Secure' parameter.
      *
      * @return void
      */
     public function testProtectedParseCookieHeadersSecure()
     {
-        $headers = array(
-            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; Secure; path=/something/; domain=service2.example.com'
-        );
+        $headers = [
+            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; Secure; path=/something/; domain=service2.example.com',
+        ];
         $cookies = $this->object
             ->parseCookieHeaders($headers, 'service.example.com');
 
@@ -774,15 +750,15 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the addition of a 'Secure' parameter that is lower-case
+     * Test the addition of a 'Secure' parameter that is lower-case.
      *
      * @return void
      */
     public function testProtectedParseCookieHeadersSecureLC()
     {
-        $headers = array(
-            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; secure; path=/something/; domain=service2.example.com'
-        );
+        $headers = [
+            'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; secure; path=/something/; domain=service2.example.com',
+        ];
         $cookies = $this->object
             ->parseCookieHeaders($headers, 'service.example.com');
 
@@ -796,13 +772,13 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the inclusion of a trailing semicolon
+     * Test the inclusion of a trailing semicolon.
      *
      * @return void
      */
     public function testProtectedParseCookieHeadersTrailingSemicolon()
     {
-        $headers = array('Set-Cookie: SID="hello world"; path=/;');
+        $headers = ['Set-Cookie: SID="hello world"; path=/;'];
         $cookies = $this->object
             ->parseCookieHeaders($headers, 'service.example.com');
 
@@ -816,7 +792,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test setting a single service cookie
+     * Test setting a single service cookie.
      *
      * @return void
      */
@@ -829,18 +805,18 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test setting a single service cookie
+     * Test setting a single service cookie.
      *
      * @return void
      */
     public function testProtectedStoreCookieWithDuplicates()
     {
-        $headers = array('Set-Cookie: SID="hello world"; path=/');
+        $headers = ['Set-Cookie: SID="hello world"; path=/'];
         $cookiesToSet = $this->object
             ->parseCookieHeaders($headers, 'service.example.com');
         $this->object->storeCookie($cookiesToSet[0]);
 
-        $headers = array('Set-Cookie: SID="goodbye world"; path=/');
+        $headers = ['Set-Cookie: SID="goodbye world"; path=/'];
         $cookiesToSet = $this->object
             ->parseCookieHeaders($headers, 'service.example.com');
         $this->object->storeCookie($cookiesToSet[0]);
@@ -852,14 +828,14 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test setting two service cookies
+     * Test setting two service cookies.
      *
      * @return void
      */
     public function testProtectedStoreCookieTwoCookies()
     {
         // Second cookie
-        $headers = array('Set-Cookie: message="hello world"; path=/');
+        $headers = ['Set-Cookie: message="hello world"; path=/'];
         $cookiesToSet = $this->object
             ->parseCookieHeaders($headers, 'service.example.com');
         $this->object->storeCookie($cookiesToSet[0]);
@@ -872,7 +848,7 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test setting two service cookies
+     * Test setting two service cookies.
      *
      * @return void
      */
@@ -880,9 +856,9 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
     {
 
         // Second cookie
-        $headers = array(
-            'Set-Cookie: message="hello world"; path=/; domain=.example.com'
-        );
+        $headers = [
+            'Set-Cookie: message="hello world"; path=/; domain=.example.com',
+        ];
         $cookiesToSet = $this->object
             ->parseCookieHeaders($headers, 'service.example.com');
         $this->object->storeCookie($cookiesToSet[0]);
@@ -901,9 +877,9 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
      */
     public function testProtectedCookieMatchesTargetDomainCookie()
     {
-        $headers = array(
-            'Set-Cookie: message="hello world"; path=/; domain=.example.com'
-        );
+        $headers = [
+            'Set-Cookie: message="hello world"; path=/; domain=.example.com',
+        ];
         $cookies = $this->object
             ->parseCookieHeaders($headers, 'otherhost.example.com');
 
@@ -914,6 +890,4 @@ class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
             )
         );
     }
-
 }
-?>

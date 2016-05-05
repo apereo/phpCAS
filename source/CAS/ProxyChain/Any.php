@@ -21,33 +21,33 @@
  *
  * @file     CAS/ProxyChain/Any.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace phpCAS\CAS\ProxyChain;
+
+use phpCAS\CAS;
+
 /**
  * A proxy-chain definition that will match any list of proxies.
  *
- * Use this class for quick testing or in certain production screnarios you
+ * Use this class for quick testing or in certain production scenarios you
  * might want to allow allow any other valid service to proxy your service.
  *
  * THIS CLASS IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY
  * IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER
  * ON THIS SERVICE.
  *
- * @class    CAS_ProxyChain_Any
+ * @class    Any
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_ProxyChain_Any
-implements CAS_ProxyChain_Interface
+class Any implements ProxyChainInterface
 {
-
     /**
      * Match a list of proxies.
      *
@@ -57,8 +57,8 @@ implements CAS_ProxyChain_Interface
      */
     public function matches(array $list)
     {
-        phpCAS::trace("Using CAS_ProxyChain_Any. No proxy validation is performed.");
+        CAS::trace('Using \phpCAS\CAS\ProxyChain\Any. No proxy validation is performed.');
+
         return true;
     }
-
 }

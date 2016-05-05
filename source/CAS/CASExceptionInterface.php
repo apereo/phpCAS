@@ -19,28 +19,38 @@
  *
  * PHP Version 5
  *
- * @file     CAS/ProxiedService/Exception.php
+ * @file     CAS/Exception.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS;
 
 /**
- * An Exception for problems communicating with a proxied service.
+ * A root exception interface for all exceptions in CAS.
  *
- * @class    CAS_ProxiedService_Exception
+ * All exceptions thrown in CAS should implement this interface to allow them
+ * to be caught as a category by clients. Each CAS exception should extend
+ * an appropriate SPL exception class that best fits its type.
+ *
+ * For example, an InvalidArgumentException in CAS should be defined as
+ *
+ *		class CAS_InvalidArgumentException
+ *			extends InvalidArgumentException
+ *			implements CAS_Exception
+ *		{ }
+ *
+ * This definition allows the CAS_InvalidArgumentException to be caught as either
+ * an InvalidArgumentException or as a CAS_Exception.
+ *
+ * @class    CASExceptionInterface
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_ProxiedService_Exception
-extends Exception
-implements CAS_Exception
+interface CASExceptionInterface
 {
-
 }
-?>

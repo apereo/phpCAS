@@ -21,26 +21,32 @@
  *
  * @file     CAS/Tests/Cas20AttributeTest.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace phpCAS\CAS\Tests;
+
+use phpCAS\CAS;
+use phpCAS\CAS\Client;
+use phpCAS\CAS\TestHarness\BasicResponse;
+use phpCAS\CAS\TestHarness\DummyRequest;
+use PHPUnit_Framework_TestCase;
+
 /**
  * Test class for verifying the operation of service tickets.
  *
- * @class    CAS_Tests_Cas20AttributeTest
+ * @class    Cas20AttributeTest
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
+class Cas20AttributesTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var CAS_Client
+     * @var Client
      */
     protected $object;
 
@@ -59,10 +65,10 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/';
         $_SERVER['SCRIPT_NAME'] = '/index.php';
         $_SERVER['PHP_SELF'] = '/index.php';
-        $_SESSION = array();
+        $_SESSION = [];
 
-        $this->object = new CAS_Client(
-            CAS_VERSION_2_0, // Server Version
+        $this->object = new Client(
+            CAS::CAS_VERSION_2_0, // Server Version
             false, // Proxy
             'cas.example.edu', // Server Hostname
             443, // Server port
@@ -70,10 +76,10 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
             false // Start Session
         );
 
-        $this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
+        $this->object->setRequestImplementation('\phpCAS\CAS\TestHarness\DummyRequest');
         $this->object->setCasServerCACert('/path/to/ca_cert.crt', true);
         $this->object->setNoClearTicketsFromUrl();
-        // 		phpCAS::setDebug(dirname(__FILE__).'/../test.log');
+        // 		CAS::setDebug(dirname(__FILE__).'/../test.log');
     }
 
     /**
@@ -84,29 +90,29 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        CAS_TestHarness_DummyRequest::clearResponses();
+        DummyRequest::clearResponses();
     }
 
     /**
-     * Verify that phpCAS will successfully fetch RubyCAS-style attributes:
+     * Verify that phpCAS will successfully fetch RubyCAS-style attributes:.
      *
      * @return void
      */
-    public function testRubycasAttributes()
+    public function testRubyCasAttributes()
     {
         // Set up our response.
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->setResponseHeaders(
-            array('HTTP/1.1 200 OK', 'Date: Wed, 29 Sep 2010 19:20:57 GMT',
+            ['HTTP/1.1 200 OK', 'Date: Wed, 29 Sep 2010 19:20:57 GMT',
                 'Server: Apache-Coyote/1.1', 'Pragma: no-cache',
                 'Expires: Thu, 01 Jan 1970 00:00:00 GMT',
                 'Cache-Control: no-cache, no-store',
                 'Content-Type: text/html;charset=UTF-8',
                 'Content-Language: en-US', 'Via: 1.1 cas.example.edu',
                 'Connection: close', 'Transfer-Encoding: chunked',
-            )
+            ]
         );
         $response->setResponseBody(
             "<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
@@ -124,7 +130,7 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
 </cas:serviceResponse>
 "
         );
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->isAuthenticated();
@@ -143,25 +149,25 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Verify that phpCAS will successfully fetch RubyCAS-style attributes:
+     * Verify that phpCAS will successfully fetch RubyCAS-style attributes:.
      *
      * @return void
      */
     public function testJasigAttributes()
     {
         // Set up our response.
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->setResponseHeaders(
-            array('HTTP/1.1 200 OK', 'Date: Wed, 29 Sep 2010 19:20:57 GMT',
+            ['HTTP/1.1 200 OK', 'Date: Wed, 29 Sep 2010 19:20:57 GMT',
                 'Server: Apache-Coyote/1.1', 'Pragma: no-cache',
                 'Expires: Thu, 01 Jan 1970 00:00:00 GMT',
                 'Cache-Control: no-cache, no-store',
                 'Content-Type: text/html;charset=UTF-8',
                 'Content-Language: en-US', 'Via: 1.1 cas.example.edu',
                 'Connection: close', 'Transfer-Encoding: chunked',
-            )
+            ]
         );
         $response->setResponseBody(
             "<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
@@ -181,7 +187,7 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
 </cas:serviceResponse>
 "
         );
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->isAuthenticated();
@@ -196,28 +202,27 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Jasig', $attras['attraStyle']);
 
         $this->validateUserAttributes();
-
     }
     /**
-     * Test Jasig Attributes with international characters
+     * Test Jasig Attributes with international characters.
      *
      * @return void
      */
     public function testJasigAttributesInternational()
     {
         // Set up our response.
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->setResponseHeaders(
-            array('HTTP/1.1 200 OK', 'Date: Wed, 29 Sep 2010 19:20:57 GMT',
+            ['HTTP/1.1 200 OK', 'Date: Wed, 29 Sep 2010 19:20:57 GMT',
                 'Server: Apache-Coyote/1.1', 'Pragma: no-cache',
                 'Expires: Thu, 01 Jan 1970 00:00:00 GMT',
                 'Cache-Control: no-cache, no-store',
                 'Content-Type: text/html;charset=UTF-8',
                 'Content-Language: en-US', 'Via: 1.1 cas.example.edu',
                 'Connection: close', 'Transfer-Encoding: chunked',
-            )
+            ]
         );
         $response->setResponseBody(
             "<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
@@ -232,7 +237,7 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
 </cas:serviceResponse>
 "
         );
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->isAuthenticated();
@@ -255,29 +260,28 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
         // array access
         $this->assertArrayHasKey('givenName', $attras);
         $this->assertEquals('Iñtërnâtiônàlizætiøn', $attras['givenName']);
-
     }
 
     /**
-     * Verify that phpCAS will successfully fetch name-value-style attributes:
+     * Verify that phpCAS will successfully fetch name-value-style attributes:.
      *
      * @return void
      */
     public function testNameValueAttributes()
     {
         // Set up our response.
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->setResponseHeaders(
-            array('HTTP/1.1 200 OK', 'Date: Wed, 29 Sep 2010 19:20:57 GMT',
+            ['HTTP/1.1 200 OK', 'Date: Wed, 29 Sep 2010 19:20:57 GMT',
                 'Server: Apache-Coyote/1.1', 'Pragma: no-cache',
                 'Expires: Thu, 01 Jan 1970 00:00:00 GMT',
                 'Cache-Control: no-cache, no-store',
                 'Content-Type: text/html;charset=UTF-8',
                 'Content-Language: en-US', 'Via: 1.1 cas.example.edu',
                 'Connection: close', 'Transfer-Encoding: chunked',
-            )
+            ]
         );
         $response->setResponseBody(
             "<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
@@ -295,7 +299,7 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
 </cas:serviceResponse>
 "
         );
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->isAuthenticated();
@@ -304,7 +308,7 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
         $attras = $this->object->getAttributes();
         $this->assertTrue(
             $this->object->hasAttribute('attraStyle'),
-            "Should have an attraStyle attribute"
+            'Should have an attraStyle attribute'
         );
         // direct access
         $this->assertEquals(
@@ -328,7 +332,7 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
         $attras = $this->object->getAttributes();
         $this->assertInternalType('array', $attras);
 
-        if (count($attras) != 4 || !is_array($attras['memberOf'])) {
+        if (count($attras) != 4 || ! is_array($attras['memberOf'])) {
             print "\n";
             print_r($attras);
         }
@@ -377,6 +381,4 @@ class CAS_Tests_Cas20AttributesTest extends PHPUnit_Framework_TestCase
             )
         );
     }
-
 }
-?>

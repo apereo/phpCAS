@@ -22,37 +22,33 @@
  *
  * @file     CAS/OutOfSequenceBeforeClientException.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS;
 
 /**
  * This class defines Exceptions that should be thrown when the sequence of
  * operations is invalid. In this case it should be thrown when the client() or
  *  proxy() call has not yet happened and no client or proxy object exists.
  *
- * @class    CAS_OutOfSequenceBeforeClientException
+ * @class    OutOfSequenceBeforeClientException
  * @category Authentication
- * @package  PhpCAS
  * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_OutOfSequenceBeforeClientException
-extends CAS_OutOfSequenceException
-implements CAS_Exception
+class OutOfSequenceBeforeClientException extends OutOfSequenceException implements CASExceptionInterface
 {
     /**
-     * Return standard error message
-     *
-     * @return void
+     * Return standard error message.
      */
-    public function __construct ()
+    public function __construct()
     {
         parent::__construct(
-            'this method cannot be called before phpCAS::client() or phpCAS::proxy()'
+            'this method cannot be called before CAS::client() or CAS::proxy()'
         );
     }
 }

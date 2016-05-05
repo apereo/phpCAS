@@ -21,18 +21,18 @@
  *
  * @file     CAS/Language/English.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace phpCAS\CAS\Languages;
+
 /**
- * English language class
+ * English language class.
  *
- * @class    CAS_Languages_English
+ * @class    English
  * @category Authentication
- * @package  PhpCAS
  * @author   Pascal Aubry <pascal.aubry@univ-rennes1.fr>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
@@ -40,10 +40,10 @@
  * @sa @link internalLang Internationalization @endlink
  * @ingroup internalLang
  */
-class CAS_Languages_English implements CAS_Languages_LanguageInterface
+class English implements LanguageInterface
 {
     /**
-     * Get the using server string
+     * Get the using server string.
      *
      * @return string using server
      */
@@ -53,7 +53,7 @@ class CAS_Languages_English implements CAS_Languages_LanguageInterface
     }
 
     /**
-     * Get authentication wanted string
+     * Get authentication wanted string.
      *
      * @return string authentication wanted
      */
@@ -63,7 +63,7 @@ class CAS_Languages_English implements CAS_Languages_LanguageInterface
     }
 
     /**
-     * Get logout string
+     * Get logout string.
      *
      * @return string logout
      */
@@ -73,7 +73,7 @@ class CAS_Languages_English implements CAS_Languages_LanguageInterface
     }
 
     /**
-     * Get the should have been redirected string
+     * Get the should have been redirected string.
      *
      * @return string should habe been redirected
      */
@@ -83,30 +83,30 @@ class CAS_Languages_English implements CAS_Languages_LanguageInterface
     }
 
     /**
-    * Get authentication failed string
-    *
-    * @return string authentication failed
-    */
+     * Get authentication failed string.
+     *
+     * @return string authentication failed
+     */
     public function getAuthenticationFailed()
     {
         return 'CAS Authentication failed!';
     }
 
     /**
-    * Get the your were not authenticated string
-    *
-    * @return string not authenticated
-    */
+     * Get the your were not authenticated string.
+     *
+     * @return string not authenticated
+     */
     public function getYouWereNotAuthenticated()
     {
         return '<p>You were not authenticated.</p><p>You may submit your request again by clicking <a href="%s">here</a>.</p><p>If the problem persists, you may contact <a href="mailto:%s">the administrator of this site</a>.</p>';
     }
 
     /**
-    * Get the service unavailable string
-    *
-    * @return string service unavailable
-    */
+     * Get the service unavailable string.
+     *
+     * @return string service unavailable
+     */
     public function getServiceUnavailable()
     {
         return 'The service `<b>%s</b>\' is not available (<b>%s</b>).';

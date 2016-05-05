@@ -21,27 +21,29 @@
  *
  * @file     CAS/Language/Japanese.php
  * @category Authentication
- * @package  PhpCAS
  * @author   fnorif <fnorif@yahoo.co.jp>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace phpCAS\CAS\Languages;
+
 /**
  * Japanese language class. Now Encoding is UTF-8.
  *
- * @class    CAS_Languages_Japanese
+ * @class    Japanese
  * @category Authentication
- * @package  PhpCAS
  * @author   fnorif <fnorif@yahoo.co.jp>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  *
+ * @sa @link internalLang Internationalization @endlink
+ * @ingroup internalLang
  **/
-class CAS_Languages_Japanese implements CAS_Languages_LanguageInterface
+class Japanese implements LanguageInterface
 {
     /**
-     * Get the using server string
+     * Get the using server string.
      *
      * @return string using server
      */
@@ -51,7 +53,7 @@ class CAS_Languages_Japanese implements CAS_Languages_LanguageInterface
     }
 
     /**
-     * Get authentication wanted string
+     * Get authentication wanted string.
      *
      * @return string authentication wanted
      */
@@ -61,7 +63,7 @@ class CAS_Languages_Japanese implements CAS_Languages_LanguageInterface
     }
 
     /**
-     * Get logout string
+     * Get logout string.
      *
      * @return string logout
      */
@@ -71,7 +73,7 @@ class CAS_Languages_Japanese implements CAS_Languages_LanguageInterface
     }
 
     /**
-     * Get the should have been redirected string
+     * Get the should have been redirected string.
      *
      * @return string should habe been redirected
      */
@@ -81,7 +83,7 @@ class CAS_Languages_Japanese implements CAS_Languages_LanguageInterface
     }
 
     /**
-     * Get authentication failed string
+     * Get authentication failed string.
      *
      * @return string authentication failed
      */
@@ -91,7 +93,7 @@ class CAS_Languages_Japanese implements CAS_Languages_LanguageInterface
     }
 
     /**
-     * Get the your were not authenticated string
+     * Get the your were not authenticated string.
      *
      * @return string not authenticated
      */
@@ -101,7 +103,7 @@ class CAS_Languages_Japanese implements CAS_Languages_LanguageInterface
     }
 
     /**
-     * Get the service unavailable string
+     * Get the service unavailable string.
      *
      * @return string service unavailable
      */
@@ -110,4 +112,3 @@ class CAS_Languages_Japanese implements CAS_Languages_LanguageInterface
         return 'サービス `<b>%s</b>\' は利用できません (<b>%s</b>)。';
     }
 }
-?>

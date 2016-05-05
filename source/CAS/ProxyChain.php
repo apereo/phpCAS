@@ -21,29 +21,29 @@
  *
  * @file     CAS/ProxyChain.php
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
+
+namespace phpCAS\CAS;
+
+use phpCAS\CAS;
+use phpCAS\CAS\ProxyChain\ProxyChainInterface;
 
 /**
  * A normal proxy-chain definition that lists each level of the chain as either
  * a string or regular expression.
  *
- * @class    CAS_ProxyChain
+ * @class    ProxyChain
  * @category Authentication
- * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-
-class CAS_ProxyChain
-implements CAS_ProxyChain_Interface
+class ProxyChain implements ProxyChainInterface
 {
-
-    protected $chain = array();
+    protected $chain = [];
 
     /**
      * A chain is an array of strings or regexp strings that will be matched
@@ -53,7 +53,7 @@ implements CAS_ProxyChain_Interface
      * down.
      * Proxies have to be defined in reverse from the service to the user. If a
      * user hits service A get proxied via B to service C the list of acceptable
-     * proxies on C would be array(B,A);
+     * proxies on C would be array(B,A);.
      *
      * @param array $chain A chain of proxies
      */
@@ -79,37 +79,39 @@ implements CAS_ProxyChain_Interface
                 $proxy_url = $list[$i];
                 if (preg_match('/^\/.*\/[ixASUXu]*$/s', $search)) {
                     if (preg_match($search, $proxy_url)) {
-                        phpCAS::trace(
-                            "Found regexp " .  $search . " matching " . $proxy_url
+                        CAS::trace(
+                            'Found regexp '.$search.' matching '.$proxy_url
                         );
                     } else {
-                        phpCAS::trace(
-                            "No regexp match " .  $search . " != " . $proxy_url
+                        CAS::trace(
+                            'No regexp match '.$search.' != '.$proxy_url
                         );
                         $mismatch = true;
                         break;
                     }
                 } else {
                     if (strncasecmp($search, $proxy_url, strlen($search)) == 0) {
-                        phpCAS::trace(
-                            "Found string " .  $search . " matching " . $proxy_url
+                        CAS::trace(
+                            'Found string '.$search.' matching '.$proxy_url
                         );
                     } else {
-                        phpCAS::trace(
-                            "No match " .  $search . " != " . $proxy_url
+                        CAS::trace(
+                            'No match '.$search.' != '.$proxy_url
                         );
                         $mismatch = true;
                         break;
                     }
                 }
             }
-            if (!$mismatch) {
-                phpCAS::trace("Proxy chain matches");
+            if (! $mismatch) {
+                CAS::trace('Proxy chain matches');
+
                 return true;
             }
         } else {
-            phpCAS::trace("Proxy chain skipped: size mismatch");
+            CAS::trace('Proxy chain skipped: size mismatch');
         }
+
         return false;
     }
 
@@ -120,7 +122,7 @@ implements CAS_ProxyChain_Interface
      *
      * @return bool
      */
-    protected function isSizeValid (array $list)
+    protected function isSizeValid(array $list)
     {
         return (sizeof($this->chain) == sizeof($list));
     }
