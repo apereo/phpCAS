@@ -4,3 +4,7 @@ utils/dist/
 utils/tmp/
 utils/starting_HEAD
 /.settings
+
+# Composer
+composer.lock
+/vendor/
