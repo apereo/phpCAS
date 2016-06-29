@@ -641,7 +641,33 @@ class CAS_Client
     }
 
     /**
-     * @var callback $_postAuthenticateCallbackFunction;
+     * @var callback $_attributeParserCallbackFunction;
+     */
+    private $_casAttributeParserCallbackFunction = null;
+
+    /**
+     * @var array $_attributeParserCallbackArgs;
+     */
+    private $_casAttributeParserCallbackArgs = array();
+
+    /**
+     * Set a callback function to be run when parsing CAS attributes
+     *
+     * The callback function will be passed a XMLNode as its first parameter,
+     * followed by any $additionalArgs you pass.
+     *
+     * @param string $function       callback function to call
+     * @param array  $additionalArgs optional array of arguments
+     *
+     * @return void
+     */
+    public function setCasAttributeParserCallback($function, array $additionalArgs = array())
+    {
+        $this->_casAttributeParserCallbackFunction = $function;
+        $this->_casAttributeParserCallbackArgs = $additionalArgs;
+    }
+
+    /** @var callback $_postAuthenticateCallbackFunction;
      */
     private $_postAuthenticateCallbackFunction = null;
 
@@ -3304,7 +3330,16 @@ class CAS_Client
         // 		</cas:authenticationSuccess>
         // 	</cas:serviceResponse>
         //
-        if ( $success_elements->item(0)->getElementsByTagName("attributes")->length != 0) {
+        if ($this->_casAttributeParserCallbackFunction !== null
+            && is_callable($this->_casAttributeParserCallbackFunction)
+        ) {
+            array_unshift($this->_casAttributeParserCallbackArgs, $success_elements->item(0));
+            phpCas :: trace("Calling attritubeParser callback");
+            $extra_attributes =  call_user_func_array(
+                $this->_casAttributeParserCallbackFunction,
+                $this->_casAttributeParserCallbackArgs
+            );
+        } elseif ( $success_elements->item(0)->getElementsByTagName("attributes")->length != 0) {
             $attr_nodes = $success_elements->item(0)
                 ->getElementsByTagName("attributes");
             phpCas :: trace("Found nested jasig style attributes");
