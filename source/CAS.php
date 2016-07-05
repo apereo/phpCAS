@@ -1801,6 +1801,16 @@ class phpCAS
             throw new CAS_OutOfSequenceBeforeProxyException();
         }
     }
+
+    /**
+     * For testing purposes, use this method to set the client to a test double
+     *
+     * @return void
+     */
+    public static function setCasClient(\CAS_Client $client)
+    {
+        self::$_PHPCAS_CLIENT = $client;
+    }
 }
 // ########################################################################
 // DOCUMENTATION
