@@ -40,10 +40,8 @@
 // hack by Vangelis Haniotakis to handle the absence of $_SERVER['REQUEST_URI']
 // in IIS
 //
-if (php_sapi_name() != 'cli') {
-    if (!isset($_SERVER['REQUEST_URI'])) {
-        $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
-    }
+if (!isset($_SERVER['REQUEST_URI']) && isset($_SERVER['SCRIPT_NAME']) && isset($_SERVER['QUERY_STRING'])) {
+    $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
 }
 
 // Add a E_USER_DEPRECATED for php versions <= 5.2
