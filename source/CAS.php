@@ -995,6 +995,25 @@ class phpCAS
         }
     }
 
+
+    /**
+     * Set a callback function to be run when receiving CAS attributes
+     *
+     * The callback function will be passed an $success_elements
+     * payload of the response (\DOMElement) as its first parameter.
+     *
+     * @param string $function       Callback function
+     * @param array  $additionalArgs optional array of arguments
+     *
+     * @return void
+     */
+    public static function setCasAttributeParserCallback($function, array $additionalArgs = array())
+    {
+        phpCAS::_validateClientExists();
+
+        self::$_PHPCAS_CLIENT->setCasAttributeParserCallback($function, $additionalArgs);
+    }
+
     /**
      * Set a callback function to be run when a user authenticates.
      *
