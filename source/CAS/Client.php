@@ -3552,6 +3552,22 @@ class CAS_Client
         return $this->_url;
     }
 
+    /**
+     * This method sets the base URL of the CAS server.
+     *
+     * @param string $url the base URL
+     *
+     * @return string base url
+     */
+    public function setBaseURL($url)
+    {
+    	// Argument Validation
+    	if (gettype($url) != 'string')
+        	throw new CAS_TypeMismatchException($url, '$url', 'string');
+
+        return $this->_server['base_url'] = $url;
+    }
+
 
     /**
      * Try to figure out the phpCas client URL with possible Proxys / Ports etc.
