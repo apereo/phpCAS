@@ -36,9 +36,11 @@ phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
 // VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL!
 phpCAS::setNoCasServerValidation();
 
-// Override the validation url for any (ST and PT) CAS 2.0 validation
+// Override the proxy validation url for any (ST and PT) any CAS 1.0, 2.0 and 3.0 validation
+// Example of the URL for the version of CAS 2.0 validation
 phpCAS::setServerProxyValidateURL('https://cas.example.org:1443/proxyValidate');
-// Override the validation url for any CAS 1.0 validation
+// Override the validation url for any CAS 1.0, 2.0 and 3.0 validation
+// Example of the URL for the version of CAS 2.0 validation
 //phpCAS::setServerServiceValidateURL('https://cas.example.org:1443/serviceValidate');
 //Override the validation url for any SAML11 validation
 //phpCAS::setServerSamlValidateURL('https://cas.example.org:1443/samlValidate');
