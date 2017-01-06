@@ -1312,7 +1312,11 @@ class phpCAS
 
     /**
      * Set the serviceValidate URL of the CAS server.
-     * Used only in CAS 1.0 validations
+     * Used for all CAS versions of URL validations.
+     * Examples:
+     * CAS 1.0 http://www.exemple.com/validate
+     * CAS 2.0 http://www.exemple.com/validateURL
+     * CAS 3.0 http://www.exemple.com/p3/serviceValidate
      *
      * @param string $url the serviceValidate URL
      *
@@ -1334,7 +1338,11 @@ class phpCAS
 
     /**
      * Set the proxyValidate URL of the CAS server.
-     * Used for all CAS 2.0 validations
+     * Used for all CAS versions of proxy URL validations
+     * Examples:
+     * CAS 1.0 http://www.exemple.com/
+     * CAS 2.0 http://www.exemple.com/proxyValidate
+     * CAS 3.0 http://www.exemple.com/p3/proxyValidate
      *
      * @param string $url the proxyValidate URL
      *
