@@ -3618,15 +3618,16 @@ class CAS_Client
     {
         if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             return ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
-        }
-        if ( isset($_SERVER['HTTPS'])
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) {
+            return ($_SERVER['HTTP_X_FORWARDED_PROTOCOL'] === 'https');
+        } elseif ( isset($_SERVER['HTTPS'])
             && !empty($_SERVER['HTTPS'])
             && strcasecmp($_SERVER['HTTPS'], 'off') !== 0
         ) {
             return true;
-        } else {
-            return false;
         }
+        return false;
+
     }
 
     /**
