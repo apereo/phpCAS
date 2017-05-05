@@ -253,7 +253,7 @@ class CAS_PGTStorage_Db extends CAS_PGTStorage_AbstractStorage
     protected function createTableSql()
     {
         return 'CREATE TABLE ' . $this->_getTable()
-            . ' (pgt_iou VARCHAR(255) NOT NULL PRIMARY KEY, pgt VARCHAR(255) NOT NULL)';
+            . ' (pgt_iou VARCHAR(200) NOT NULL PRIMARY KEY, pgt VARCHAR(255) NOT NULL)';
     }
 
     /**
