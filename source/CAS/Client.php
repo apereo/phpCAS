@@ -2545,7 +2545,7 @@ class CAS_Client
         $this->ensureIsProxy();
 
     	// Argument validation
-    	if ((is_object($dsn_or_pdo) && !($dsn_or_pdo instanceof PDO)) || gettype($dsn_or_pdo) != 'string')
+    	if (!(is_object($dsn_or_pdo) && $dsn_or_pdo instanceof PDO) && gettype($dsn_or_pdo) != 'string')
 			throw new CAS_TypeMismatchException($dsn_or_pdo, '$dsn_or_pdo', 'string or PDO object');
     	if (gettype($username) != 'string')
         	throw new CAS_TypeMismatchException($username, '$username', 'string');
