@@ -1686,6 +1686,27 @@ class phpCAS
     }
 
     /**
+     * Set a salt/seed for the session-id hash to make it harder to guess.
+     *
+     * When $changeSessionID = true phpCAS will create a session-id that is derived
+     * from the service ticket. Doing so allows phpCAS to look-up and destroy the
+     * proper session on single-log-out requests. While the service tickets
+     * provided by the CAS server may include enough data to generate a strong
+     * hash, clients may provide an additional salt to ensure that session ids
+     * are not guessable if the session tickets do not have enough entropy.
+     *
+     * @param string $salt The salt to combine with the session ticket.
+     *
+     * @return void
+     */
+     public static function setSessionIdSalt($salt) {
+       phpCAS :: traceBegin();
+       phpCAS::_validateClientExists();
+       self::$_PHPCAS_CLIENT->setSessionIdSalt($salt);
+       phpCAS :: traceEnd();
+     }
+
+    /**
      * If you want your service to be proxied you have to enable it (default
      * disabled) and define an accepable list of proxies that are allowed to
      * proxy your service.
