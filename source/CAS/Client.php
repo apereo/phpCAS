@@ -1808,7 +1808,7 @@ class CAS_Client
             // If phpCAS is managing the session_id, destroy session thanks to
             // session_id.
             if ($this->getChangeSessionID()) {
-                $session_id = preg_replace('/[^a-zA-Z0-9\-]/', '', $ticket2logout);
+                $session_id = $this->_sessionIdForTicket($ticket2logout);
                 phpCAS::trace("Session id: ".$session_id);
 
                 // destroy a possible application session created before phpcas
@@ -3682,7 +3682,7 @@ class CAS_Client
                 phpCAS :: trace("Killing session: ". session_id());
                 session_destroy();
                 // set up a new session, of name based on the ticket
-                $session_id = preg_replace('/[^a-zA-Z0-9\-]/', '', $ticket);
+                $session_id = $this->_sessionIdForTicket($ticket);
                 phpCAS :: trace("Starting session: ". $session_id);
                 session_id($session_id);
                 session_start();
@@ -3701,6 +3701,41 @@ class CAS_Client
         phpCAS::traceEnd();
     }
 
+    /**
+     * Answer a valid session-id given a CAS ticket.
+     *
+     * The output must be deterministic to allow single-log-out when presented with
+     * the ticket to log-out.
+     *
+     *
+     * @param string $ticket name of the ticket
+     *
+     * @return string
+     */
+    private function _sessionIdForTicket($ticket)
+    {
+      // Hash the ticket to ensure that the value meets the PHP 7.1 requirement
+      // that session-ids have a length between 22 and 256 characters.
+      return hash('sha256', $this->_sessionIdSalt . $ticket);
+    }
+
+    /**
+     * Set a salt/seed for the session-id hash to make it harder to guess.
+     *
+     * @var string $_sessionIdSalt
+     */
+    private $_sessionIdSalt = '';
+
+    /**
+     * Set a salt/seed for the session-id hash to make it harder to guess.
+     *
+     * @param string $salt
+     *
+     * @return void
+     */
+    public function setSessionIdSalt($salt) {
+      $this->_sessionIdSalt = (string)$salt;
+    }
 
     // ########################################################################
     //  AUTHENTICATION ERROR HANDLING
