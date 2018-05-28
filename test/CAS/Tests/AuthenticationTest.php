@@ -126,9 +126,9 @@ class CAS_Tests_AuthenticationTest extends TestCase
     }
 
     /**
-     * Test that the user is redirected to the CAS server
+     * Skip test for Risk
      *
-     * @return void
+     * @requires
      */
     public function testRedirect()
     {
@@ -138,7 +138,6 @@ class CAS_Tests_AuthenticationTest extends TestCase
             $this->assertTrue(
                 false, 'Should have thrown a CAS_GracefullTerminationException.'
             );
-
         } catch (CAS_GracefullTerminationException $e) {
             ob_end_clean();
             // It would be great to test for the existance of headers here, but

@@ -217,10 +217,11 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
     public function testInvalidTicketFailure()
     {
         $this->object->setTicket('ST-1856339-aA5Yuvrxzpv8Tau1cYQ7');
-        ob_start();
+        // Comment out for risky tests
+        // ob_start();
         $result = $this->object
             ->validateCAS20($url, $text_response, $tree_response);
-        ob_end_clean();
+        // ob_end_clean();
         $this->assertTrue($result);
         $this->assertEquals(
             "<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
