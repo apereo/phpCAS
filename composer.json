@@ -10,7 +10,7 @@
         {"name": "Adam Franco", "homepage": "https://wiki.jasig.org/display/~adamfranco"}
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": "^7.2",
         "ext-curl": "*"
     },
     "require-dev": {
@@ -23,7 +23,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.3.x-dev"
+            "dev-master": "0.1.x-dev"
         }
     }
 }
