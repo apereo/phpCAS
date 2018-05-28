@@ -15,7 +15,7 @@
  **/
 
 /**
- * AutoLoad class
+ * Autoload a class
  *
  * @param string $class Classname to load
  *
