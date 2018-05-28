@@ -37,7 +37,11 @@
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_AuthenticationTest extends PHPUnit_Framework_TestCase
+
+require_once dirname(__FILE__) ."/../../../vendor/autoload.php";
+use PHPUnit\Framework\TestCase;
+
+class CAS_Tests_AuthenticationTest extends TestCase
 {
     /**
      * @var CAS_Client
@@ -134,6 +138,7 @@ class CAS_Tests_AuthenticationTest extends PHPUnit_Framework_TestCase
             $this->assertTrue(
                 false, 'Should have thrown a CAS_GracefullTerminationException.'
             );
+
         } catch (CAS_GracefullTerminationException $e) {
             ob_end_clean();
             // It would be great to test for the existance of headers here, but

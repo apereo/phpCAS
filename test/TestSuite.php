@@ -27,7 +27,10 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+use PHPUnit\Framework\TestSuite as TestSuiteFramework;
+
 ob_start();
+require_once dirname(__FILE__) ."/../vendor/autoload.php";
 require_once dirname(__FILE__) . '/../source/CAS.php';
 
 /**
@@ -41,12 +44,10 @@ require_once dirname(__FILE__) . '/../source/CAS.php';
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
-class TestSuite extends PHPUnit_Framework_TestSuite
+class TestSuite extends TestSuiteFramework
 {
     /**
-     * Create a new testsuite
-     *
-     * @return PhpcasTestSuite
+     * @return TestSuite
      */
     public static function suite()
     {
@@ -77,17 +78,11 @@ class TestSuite extends PHPUnit_Framework_TestSuite
     }
 
     /**
-     * Recursively add test files in subdirectories
-     *
-     * @param PHPUnit_Framework_TestSuite $suite a test suite class
-     * @param string                      $dir   dir from which to add tests
-     *
-     * @return void
-     *
-     * @access protected
+     * @param TestSuite $suite
+     * @param $dir
      */
     protected static function recursiveAddTests(
-        PHPUnit_Framework_TestSuite $suite, $dir
+        TestSuite $suite, $dir
     ) {
         foreach (scandir($dir) as $file) {
             if (preg_match('/Test\.php$/', $file)) {

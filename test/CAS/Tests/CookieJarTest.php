@@ -70,7 +70,11 @@ class CAS_Tests_CookieJarExposed extends CAS_CookieJar
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
+require_once dirname(__FILE__) ."/../../../vendor/autoload.php";
+
+use PHPUnit\Framework\TestCase;
+
+class CAS_Tests_CookieJarTest extends TestCase
 {
     /**
      * @var CAS_Client

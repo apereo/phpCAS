@@ -1,5 +1,5 @@
 {
-    "name": "apereo/phpcas",
+    "name": "okashitay/phpcas",
     "description": "Provides a simple API for authenticating users against a CAS server",
     "keywords": ["cas", "jasig", "apereo"],
     "homepage": "https://wiki.jasig.org/display/CASC/phpCAS",
@@ -14,7 +14,7 @@
         "ext-curl": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "~3.7.10"
+        "phpunit/phpunit": "~6.5.7"
     },
     "autoload": {
         "classmap": [

@@ -37,7 +37,11 @@
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_ServiceWebTest extends PHPUnit_Framework_TestCase
+require_once dirname(__FILE__) ."/../../../vendor/autoload.php";
+
+use PHPUnit\Framework\TestCase;
+
+class CAS_Tests_ServiceWebTest extends TestCase
 {
     /**
      * @var CAS_Client
