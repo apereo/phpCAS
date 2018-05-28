@@ -139,6 +139,9 @@ class CAS_Tests_AuthenticationTest extends TestCase
                 false, 'Should have thrown a CAS_GracefullTerminationException.'
             );
         } catch (CAS_GracefullTerminationException $e) {
+            $this->assertFalse(
+                false, 'Should have thrown a CAS_GracefullTerminationException.'
+            );
             ob_end_clean();
             // It would be great to test for the existance of headers here, but
             // the don't get set properly due to output before the test.
