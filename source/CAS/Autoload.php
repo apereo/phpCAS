@@ -23,7 +23,7 @@
  */
 class Autoloader
 {
-    function CAS_autoload($class)
+    public static function CAS_autoload($class)
     {
         // Static to hold the Include Path to CAS
         static $include_path;
@@ -76,6 +76,6 @@ class Autoloader
     }
 }
 
-spl_autoload_register(array('Autoloader', 'loadClass'));
+spl_autoload_register(array('Autoloader', 'CAS_autoload'));
 
 ?>
