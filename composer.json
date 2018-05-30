@@ -1,5 +1,5 @@
 {
-    "name": "okashitay/phpcas",
+    "name": "apereo/phpcas",
     "description": "Provides a simple API for authenticating users against a CAS server",
     "keywords": ["cas", "jasig", "apereo"],
     "homepage": "https://wiki.jasig.org/display/CASC/phpCAS",
