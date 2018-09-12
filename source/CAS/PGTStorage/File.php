@@ -122,7 +122,7 @@ class CAS_PGTStorage_File extends CAS_PGTStorage_AbstractStorage
             $path = CAS_PGT_STORAGE_FILE_DEFAULT_PATH;
         }
         // check that the path is an absolute path
-        if (getenv("OS")=="Windows_NT") {
+        if (getenv("OS")=="Windows_NT" || strtoupper(substr(PHP_OS,0,3)) == 'WIN') {
 
             if (!preg_match('`^[a-zA-Z]:`', $path)) {
                 phpCAS::error('an absolute path is needed for PGT storage to file');
