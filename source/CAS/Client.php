@@ -131,7 +131,7 @@ class CAS_Client
         $lang = $this->getLangObj();
         $this->_htmlFilterOutput(
             empty($this->_output_footer)?
-            (phpcas::getVerbose())?
+            (phpCAS::getVerbose())?
                 '<hr><address>phpCAS __PHPCAS_VERSION__ '
                 .$lang->getUsingServer()
                 .' <a href="__SERVER_BASE_URL__">__SERVER_BASE_URL__</a> (CAS __CAS_VERSION__)</a></address></body></html>'
