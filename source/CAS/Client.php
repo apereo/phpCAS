@@ -2400,8 +2400,8 @@ class CAS_Client
     private function _callback()
     {
         phpCAS::traceBegin();
-        if (preg_match('/PGTIOU-[\.\-\w]/', $_GET['pgtIou'])) {
-            if (preg_match('/[PT]GT-[\.\-\w]/', $_GET['pgtId'])) {
+        if (preg_match('/^PGTIOU-[\.\-\w]+$/', $_GET['pgtIou'])) {
+            if (preg_match('/^[PT]GT-[\.\-\w]+$/', $_GET['pgtId'])) {
                 $this->printHTMLHeader('phpCAS callback');
                 $pgt_iou = $_GET['pgtIou'];
                 $pgt = $_GET['pgtId'];
@@ -2617,7 +2617,7 @@ class CAS_Client
             $pgt_iou = trim(
                 $tree_response->getElementsByTagName("proxyGrantingTicket")->item(0)->nodeValue
             );
-            if (preg_match('/PGTIOU-[\.\-\w]/', $pgt_iou)) {
+            if (preg_match('/^PGTIOU-[\.\-\w]+$/', $pgt_iou)) {
                 $pgt = $this->_loadPGT($pgt_iou);
                 if ( $pgt == false ) {
                     phpCAS::trace('could not load PGT');
