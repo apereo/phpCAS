@@ -9,7 +9,7 @@
  * @author   Brett Bieber <brett.bieber@gmail.com>
  * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @license  http://www1.unl.edu/wdn/wiki/Software_License New BSD License
- * @link     https://wiki.jasig.org/display/CASC/phpCAS
+ * @link     https://apereo.atlassian.net/wiki/spaces/CASC/pages/103252517/phpCAS
  *
  */
 error_reporting(E_ALL ^ E_DEPRECATED);
@@ -53,12 +53,12 @@ $pfm->setAPIStability('${phpcas.apiStability}');
 $pfm->setReleaseStability('${phpcas.releaseStability}');
 $pfm->setAPIVersion('${phpcas.version}');
 $pfm->setReleaseVersion('${phpcas.version}');
-$pfm->setNotes('see https://github.com/Jasig/phpCAS/blob/master/docs/ChangeLog');
+$pfm->setNotes('see https://github.com/Apereo/phpCAS/blob/master/docs/ChangeLog');
 
 $pfm->addMaintainer('lead', 'jfritschi', 'Joachim Fritschi', 'jfritschi@freenet.de');
 $pfm->addMaintainer('contributor', 'adamfranco', 'Adam Franco', 'afranco@middlebury.edu');
 
-$pfm->setLicense('Apache 2.0 License', 'https://github.com/Jasig/phpCAS/blob/master/LICENSE');
+$pfm->setLicense('Apache 2.0 License', 'https://github.com/Apereo/phpCAS/blob/master/LICENSE');
 $pfm->clearDeps();
 $pfm->setPhpDep('5.4.0');
 $pfm->setPearinstallerDep('1.4.3');
