@@ -61,7 +61,7 @@ if (!defined('E_USER_DEPRECATED')) {
 /**
  * phpCAS version. accessible for the user by phpCAS::getVersion().
  */
-define('PHPCAS_VERSION', '1.3.5');
+define('PHPCAS_VERSION', '1.3.6+');
 
 /**
  * @addtogroup public
@@ -1686,6 +1686,27 @@ class phpCAS
     }
 
     /**
+     * Set a salt/seed for the session-id hash to make it harder to guess.
+     *
+     * When $changeSessionID = true phpCAS will create a session-id that is derived
+     * from the service ticket. Doing so allows phpCAS to look-up and destroy the
+     * proper session on single-log-out requests. While the service tickets
+     * provided by the CAS server may include enough data to generate a strong
+     * hash, clients may provide an additional salt to ensure that session ids
+     * are not guessable if the session tickets do not have enough entropy.
+     *
+     * @param string $salt The salt to combine with the session ticket.
+     *
+     * @return void
+     */
+     public static function setSessionIdSalt($salt) {
+       phpCAS :: traceBegin();
+       phpCAS::_validateClientExists();
+       self::$_PHPCAS_CLIENT->setSessionIdSalt($salt);
+       phpCAS :: traceEnd();
+     }
+
+    /**
      * If you want your service to be proxied you have to enable it (default
      * disabled) and define an accepable list of proxies that are allowed to
      * proxy your service.
@@ -1711,7 +1732,7 @@ class phpCAS
      * For quick testing or in certain production screnarios you might want to
      * allow allow any other valid service to proxy your service. To do so, add
      * the "Any" chain:
-     *		phpcas::allowProxyChain(new CAS_ProxyChain_Any);
+     *		phpCAS::allowProxyChain(new CAS_ProxyChain_Any);
      * THIS SETTING IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY
      * IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER
      * ON THIS SERVICE.

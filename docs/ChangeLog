@@ -1,3 +1,18 @@
+Changes in version 1.3.6
+
+Security Fixes:
+   * Fix XSS in proxy mode [#271] (Joachim Fritschi)
+
+Bug Fixes:
+   * Fix bad condition [#252] (Brice Vercoustre)
+   * Hash ticket strings to generate valid-length session-ids [#224, #244, #248] (Adam Franco)
+   * Fix "phpCAS" class capitalization in code [#273, #277] (phy25)
+   
+Improvement:
+   * Remove fallback for __autoload [#247] (marinaglancy)
+   * More robust check for Windows OS in File.php [#275] (xamount)
+   * Fix continue statement within switch/case for php 7.3 compatibility [#278] (stonk7)
+
 Changes in version 1.3.5
 
 Security Fixes:

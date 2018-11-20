@@ -2,10 +2,10 @@
 ### Upgrading 1.3.3 -> 1.3.4 ###
 ################################
 
-For security hardening purposes the verbose error messages to the web browsers 
-are now masked. If you want to have the verbose messages you need to use: 
+For security hardening purposes the verbose error messages to the web browsers
+are now masked. If you want to have the verbose messages you need to use:
 phpCAS::setVerbose(true);
-This will set the configuration to the old verbose mode that helps during 
+This will set the configuration to the old verbose mode that helps during
 development and debugging.
 
 
@@ -68,7 +68,7 @@ For quick testing or in certain production screnarios you might want to
 allow allow any other valid service to proxy your service. To do so, add
 the "Any" chain:
 
-      phpcas::allowProxyChain(new CAS_ProxyChain_Any);
+      phpCAS::allowProxyChain(new CAS_ProxyChain_Any);
 
 THIS SETTING IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY
  IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER
