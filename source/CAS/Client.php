@@ -953,26 +953,21 @@ class CAS_Client
             );
         }
 
-        //check version
-        switch ($server_version) {
-        case CAS_VERSION_1_0:
-            if ( $this->isProxy() ) {
-                phpCAS::error(
-                    'CAS proxies are not supported in CAS '.$server_version
-                );
-            }
-            break;
-        case CAS_VERSION_2_0:
-        case CAS_VERSION_3_0:
-            break;
-        case SAML_VERSION_1_1:
-            break;
-        default:
+        // check version
+        $supportedProtocols = phpCAS::getSupportedProtocols();
+        if (isset($supportedProtocols[$server_version]) === false) {
             phpCAS::error(
                 'this version of CAS (`'.$server_version
                 .'\') is not supported by phpCAS '.phpCAS::getVersion()
             );
         }
+
+        if ($server_version === CAS_VERSION_1_0 && $this->isProxy()) {
+            phpCAS::error(
+                'CAS proxies are not supported in CAS '.$server_version
+            );
+        }
+
         $this->_server['version'] = $server_version;
 
         // check hostname
