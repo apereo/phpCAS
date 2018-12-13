@@ -3966,5 +3966,3 @@ class CAS_Client
 
     /** @} */
 }
-
-?>
