@@ -69,6 +69,10 @@ define('PHPCAS_VERSION', '1.3.6+');
  */
 
 /**
+ * phpCAS supported protocols. accessible for the user by phpCAS::getSupportedProtocols().
+ */
+
+/**
  * CAS version 1.0
  */
 define("CAS_VERSION_1_0", '1.0');
@@ -714,6 +718,22 @@ class phpCAS
     public static function getVersion()
     {
         return PHPCAS_VERSION;
+    }
+
+    /**
+     * This method returns supported protocols.
+     *
+     * @return an array of all supported protocols. Use internal protocol name as array key.
+     */
+    public static function getSupportedProtocols()
+    {
+        $supportedProtocols = array();
+        $supportedProtocols[CAS_VERSION_1_0] = 'CAS 1.0';
+        $supportedProtocols[CAS_VERSION_2_0] = 'CAS 2.0';
+        $supportedProtocols[CAS_VERSION_3_0] = 'CAS 3.0';
+        $supportedProtocols[SAML_VERSION_1_1] = 'SAML 1.1';
+
+        return $supportedProtocols;
     }
 
     /** @} */
