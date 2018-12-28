@@ -329,7 +329,7 @@ class phpCAS
      *
      * @param string $server_version  the version of the CAS server
      * @param string $server_hostname the hostname of the CAS server
-     * @param string $server_port     the port the CAS server is running on
+     * @param int    $server_port     the port the CAS server is running on
      * @param string $server_uri      the URI the CAS server is responding on
      * @param bool   $changeSessionID Allow phpCAS to change the session_id (Single
      * Sign Out/handleLogoutRequests is based on that change)
