@@ -1,9 +1,30 @@
 language: php
 php:
-  - "5.4"
-  - "5.5"
-  - "5.6"
+- '5.4'
+- '5.5'
+- '5.6'
+services:
+- docker
 script:
-  - cd test
-  - phpunit TestSuite.php
+- cd test
+- phpunit TestSuite.php
+matrix:
+  fast_finish: true
+  include:
+  - stage: GitHub Release
+    php: '7.2'
+    script:
+    - docker run --rm -it -v $PWD:/app centos:centos7 /app/utils/build.sh
+    deploy:
+      provider: releases
+      file_glob: true
+      file: utils/dist/CAS-*.tgz
+      skip_cleanup: true
+      api_key:
+        secure: SetupEncryptionKeyUsingTravisCLITool
+      on:
+        repo: apereo/phpCAS
+        tags: true
 sudo: false
+notifications:
+  email: false
