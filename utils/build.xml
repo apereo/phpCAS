@@ -2,8 +2,6 @@
 
   <property file="version.properties"/>
   <property file="build.properties"/>
-  <property name="upload.host" value="jasig01.managed.contegix.com" />
-  <property name="upload.remotedir" value="/var/www/domains/jasig.org/downloads/htdocs/cas-clients/php" />
 
   <taskdef name="doxygen"
            classname="org.doxygen.tools.DoxygenTask"
@@ -76,13 +74,6 @@
     <replaceregexp file="../source/CAS.php"
       match="define\('PHPCAS_VERSION', '[^']*'\);"
       replace="define('PHPCAS_VERSION', '${phpcas.version}');"
-      byline="true"
-    />
-
-    <!-- Update the doc url -->
-    <replaceregexp file="../docs/index.html"
-      match="http://downloads\.jasig\.org/cas-clients/php/[^/]+/docs/api/"
-      replace="http://downloads.jasig.org/cas-clients/php/${phpcas.version}/docs/api/"
       byline="true"
     />
 
@@ -255,51 +246,6 @@
 
   </target>
 
-      <!-- ==========================================================
-           Upload the distribution files to the download area
-      -->
-      <target name="upload"
-              description="Upload the distribution files to JA-SIG">
-        <!-- Check that all the properties used for archives upload are set -->
-        <fail message="please set ${upload.username} in build.properties" unless="upload.username"/>
-        <fail message="please set ${upload.password} in build.properties" unless="upload.password"/>
-        <scp
-            trust="true"
-            localFile="${basedir}/dist/CAS-${phpcas.version}.tgz"
-            remoteTodir="${upload.username}:${upload.password}@${upload.host}:${upload.remotedir}" />
-        <scp
-            trust="true"
-            localFile="${basedir}/dist/docs-${phpcas.version}.tgz"
-            remoteTodir="${upload.username}:${upload.password}@${upload.host}:${upload.remotedir}" />
-        <sshexec
-            host="${upload.host}"
-            username="${upload.username}"
-            command="cd ${upload.remotedir} &amp;&amp; rm -rf ${phpcas.version} docs &amp;&amp; mkdir ${phpcas.version} &amp;&amp; mv CAS-${phpcas.version}.tgz ${phpcas.version} &amp;&amp; gunzip docs-${phpcas.version}.tgz &amp;&amp; tar xf docs-${phpcas.version}.tar &amp;&amp; mv docs ${phpcas.version} &amp;&amp; rm docs-${phpcas.version}.tar &amp;&amp; echo 'done (you can kill the ant task)'"
-            password="${upload.password}"
-            trust="true" />
-      </target>
-
-      <!-- ==========================================================
-           Make a 'current' symlink to the current version
-      -->
-      <target name="makeCurrentSymlink"
-              description="Make a 'stable' symlink to the current version">
-        <!-- Check that all the properties used for archives upload are set -->
-        <fail message="please set ${upload.username} in build.properties" unless="upload.username"/>
-        <fail message="please set ${upload.password} in build.properties" unless="upload.password"/>
-        <sshexec
-            host="${upload.host}"
-            username="${upload.username}"
-            command="cd ${upload.remotedir} &amp;&amp; rm -f current &amp;&amp; ln -s ${phpcas.version} current &amp;&amp; echo 'done (you can kill the ant task)'"
-            password="${upload.password}"
-            trust="true" />
-        <sshexec
-            host="${upload.host}"
-            username="${upload.username}"
-            command="cd ${upload.remotedir} &amp;&amp; rm -f current.tgz &amp;&amp; ln -s ${phpcas.version}/CAS-${phpcas.version}.tgz current.tgz &amp;&amp; echo 'done (you can kill the ant task)'"
-            password="${upload.password}"
-            trust="true" />
-      </target>
 
   <!-- ==========================================================
     Push the release to the origin repository
