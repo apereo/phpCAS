@@ -21,7 +21,7 @@ matrix:
       file: utils/dist/CAS-*.tgz
       skip_cleanup: true
       api_key:
-        secure: SetupEncryptionKeyUsingTravisCLITool
+        secure: IQPP9ytdAxMQpXdfHsbnWaly7BiORVeCCfgKBPtQqtuakTBkNltPMmPHIhH2ihnQ0/fOUL4DpbiQdCIEVVIQgerdWK+WjMhGmyRyt8froqT1GOJfcKXMBxxaLWpQS53R/jWt4cWs9DNgkFXtbe5MlV/czaoFsMQowoEV+fnwYKg=
       on:
         repo: apereo/phpCAS
         tags: true
