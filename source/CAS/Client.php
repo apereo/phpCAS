@@ -316,6 +316,7 @@ class CAS_Client
         if ( empty($this->_server['base_url']) ) {
             $this->_server['base_url'] = 'https://' . $this->_getServerHostname();
             if ($this->_getServerPort()!=443) {
+		$this->_server['base_url'] = str_replace('https', 'http', $this->_server['base_url']);
                 $this->_server['base_url'] .= ':'
                 .$this->_getServerPort();
             }
