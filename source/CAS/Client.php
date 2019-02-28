@@ -1625,6 +1625,11 @@ class CAS_Client
                 }
 
                 $auth = true;
+
+                $ticket = $this->getTicket();
+                if (!empty($ticket)) {
+                    $this->_renameSession($ticket);
+                }
             } else {
                 phpCAS::trace('no user found');
             }
