@@ -22,8 +22,6 @@ ant dist      # create a local package
 ant clean     # clear local packages and temporary files
 ant prepare   # The default action, tags, packages, and commits to the local git repository
 ant push      # Push the new commits and tags to the origin repository (github)
-ant upload    # Upload to jasig
-ant makeCurrentSymlink # Set the symbolic link on the jasig site for the most current packages
 ant revert    # To revert any "ant prepare" actions before they are pushed to the github repo
 
 The ant prepare target is equivalent to ant tag && ant dist && ant markdev.
