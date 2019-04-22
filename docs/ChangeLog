@@ -1,3 +1,12 @@
+Changes in version 1.3.7
+
+Bug Fixes:
+   * Fix pear package [#297] (Phil Fenstermacher)
+
+Improvement:
+   * add method to get list of supported protocols (#293) Julien Boulen
+   
+  
 Changes in version 1.3.6
 
 Security Fixes:
