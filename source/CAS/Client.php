@@ -2450,14 +2450,6 @@ class CAS_Client
                     phpCAS::traceExit("HTML response sent");
                 }
                 phpCAS::traceExit("Successfull Callback");
-
-                $this->printHTMLHeader('phpCAS callback');
-                
-                phpCAS::trace('Storing PGT `'.$pgt.'\' (id=`'.$pgt_iou.'\')');
-                echo '<p>Storing PGT `'.$pgt.'\' (id=`'.$pgt_iou.'\').</p>';
-                $this->_storePGT($pgt, $pgt_iou);
-                $this->printHTMLFooter();
-                phpCAS::traceExit("Successfull Callback");
             } else {
                 phpCAS::error('PGT format invalid' . $pgtId);
                 phpCAS::traceExit('PGT format invalid' . $pgtId);
