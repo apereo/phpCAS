@@ -2357,7 +2357,7 @@ class CAS_Client
      */
     private function _setCallbackModeUsingPost($callback_mode_using_post)
     {
-        $this->_callback_mode_using_post = $_callback_mode_using_post;
+        $this->_callback_mode_using_post = $callback_mode_using_post;
     }
 
     /**
