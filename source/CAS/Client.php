@@ -2439,7 +2439,7 @@ class CAS_Client
             if (preg_match('/^[PT]GT-[\.\-\w]+$/', $pgtId)) {
                 phpCAS::trace('Storing PGT `'.$pgtId.'\' (id=`'.$pgtIou.'\')');
                 $this->_storePGT($pgtId, $pgtIou);
-                if ($this->_isCallbackModeUsingPost()) {
+                if (array_key_exists('HTTP_ACCEPT',$_SERVER) && $_SERVER['HTTP_ACCEPT'] == 'text/xml') {
                     echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n";
                     echo '<proxySuccess xmlns="http://www.yale.edu/tp/cas" />';
                     phpCAS::traceExit("XML response sent");
