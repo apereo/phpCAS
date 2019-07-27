@@ -2439,8 +2439,7 @@ class CAS_Client
             if (preg_match('/^[PT]GT-[\.\-\w]+$/', $pgtId)) {
                 phpCAS::trace('Storing PGT `'.$pgtId.'\' (id=`'.$pgtIou.'\')');
                 $this->_storePGT($pgtId, $pgtIou);
-                if (
-                    array_key_exists('HTTP_ACCEPT',$_SERVER) && 
+                if (array_key_exists('HTTP_ACCEPT', $_SERVER) &&
                     (   $_SERVER['HTTP_ACCEPT'] == 'application/xml' ||
                         $_SERVER['HTTP_ACCEPT'] == 'text/xml'
                     )
