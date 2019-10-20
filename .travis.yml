@@ -15,8 +15,7 @@ install:
 - if [[ $TRAVIS_PHP_VERSION == 'nightly' ]]; then composer --no-interaction config platform.php 7.4.0; fi
 - composer install
 script:
-- cd test
-- ../vendor/bin/phpunit TestSuite.php
+- cd test && ../vendor/bin/phpunit --verbose --stderr
 matrix:
   fast_finish: true
   allow_failures:
