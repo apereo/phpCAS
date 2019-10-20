@@ -12,10 +12,11 @@ php:
 services:
 - docker
 install:
+- if [[ $TRAVIS_PHP_VERSION == 'nightly' ]]; then composer --no-interaction config platform.php 7.4.0; fi
 - composer install
 script:
 - cd test
-- phpunit TestSuite.php
+- ../vendor/bin/phpunit TestSuite.php
 matrix:
   fast_finish: true
   allow_failures:

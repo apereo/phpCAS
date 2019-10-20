@@ -30,6 +30,19 @@
 ob_start();
 require_once dirname(__FILE__) . '/../source/CAS.php';
 
+if(!class_exists('PHPUnit_Framework_TestSuite')) {
+    /**
+     * phpunit 5-7 compatibility
+     */
+    class PHPUnit_Framework_TestSuite extends PHPUnit\Framework\TestSuite {
+
+    }
+
+    class PHPUnit_Framework_TestCase extends PHPUnit\Framework\TestCase {
+
+    }
+}
+
 /**
  * Suite of all tests
  *
@@ -46,7 +59,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite
     /**
      * Create a new testsuite
      *
-     * @return PhpcasTestSuite
+     * @return TestSuite
      */
     public static function suite()
     {
