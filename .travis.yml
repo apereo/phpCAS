@@ -11,6 +11,8 @@ php:
 - 'nightly'
 services:
 - docker
+install:
+- composer install
 script:
 - cd test
 - phpunit TestSuite.php
