@@ -28,10 +28,11 @@
  */
 
 ob_start();
-require_once dirname(__FILE__) . '/../source/CAS.php';
+require_once dirname(__FILE__) . '/bootstrap.php';
 
 /**
  * Suite of all tests
+ * Legacy; phpunit.xml should be used instead
  *
  * @class    TestSuite
  * @category Authentication
@@ -46,7 +47,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite
     /**
      * Create a new testsuite
      *
-     * @return PhpcasTestSuite
+     * @return TestSuite
      */
     public static function suite()
     {
