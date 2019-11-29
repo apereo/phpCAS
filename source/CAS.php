@@ -61,7 +61,7 @@ if (!defined('E_USER_DEPRECATED')) {
 /**
  * phpCAS version. accessible for the user by phpCAS::getVersion().
  */
-define('PHPCAS_VERSION', '1.3.8+');
+define('PHPCAS_VERSION', '1.3.8');
 
 /**
  * @addtogroup public
@@ -1308,6 +1308,17 @@ class phpCAS
         phpCAS::_validateClientExists();
 
         return self::$_PHPCAS_CLIENT->getServerLoginURL();
+    }
+    
+    /**
+     * This method sets additional login uri params
+     *
+     * @return true upon success, false otherwise
+     */
+    public static function setServerLoginURLParams($params) {
+        phpCAS::_validateClientExists();
+
+        return self::$_PHPCAS_CLIENT->setServerLoginURLParams($params);
     }
 
     /**

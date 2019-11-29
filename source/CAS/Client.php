@@ -263,7 +263,9 @@ class CAS_Client
         'version' => '',
         'hostname' => 'none',
         'port' => -1,
-        'uri' => 'none');
+        'uri' => 'none',
+        'loginparams' => array()
+    );
 
     /**
      * This method is used to retrieve the version of the CAS server.
@@ -351,8 +353,26 @@ class CAS_Client
             // value be "true"
             $url = $this->_buildQueryUrl($url, 'gateway=true');
         }
+        foreach($this->_server['loginparams'] as $val) $url=$this->_buildQueryUrl($url,$val);
         phpCAS::traceEnd($url);
         return $url;
+    }
+    
+    /**
+     * This method is used to set additional login uri params
+     *
+     * @param array $params key value params
+     *
+     * @return true upon success (maybe more checking needed), false otherwise
+     */
+    public function setServerLoginURLParams($params) {
+	if(is_array($params)) {
+	    $this->_server['loginparams']=array();
+	    foreach($params as $key=>$val) {
+		$this->_server['loginparams'][]=urlencode($key).'='.urlencode($val);
+	    }
+	    return true;
+	} else return false;
     }
 
     /**
@@ -972,7 +992,7 @@ class CAS_Client
 
         // check hostname
         if ( empty($server_hostname)
-            || !preg_match('/[\.\d\-a-z]*/', $server_hostname)
+            || !preg_match('/^[\.\d\-a-z]+$/', $server_hostname)
         ) {
             phpCAS::error('bad CAS server hostname (`'.$server_hostname.'\')');
         }
@@ -987,11 +1007,11 @@ class CAS_Client
         $this->_server['port'] = $server_port;
 
         // check URI
-        if ( !preg_match('/[\.\d\-_a-z\/]*/', $server_uri) ) {
+        if ( !preg_match('/^[\.\d\-_a-z\/]+$/', $server_uri) ) {
             phpCAS::error('bad CAS server URI (`'.$server_uri.'\')');
         }
         // add leading and trailing `/' and remove doubles
-        if(strstr($server_uri, '?') === false) $server_uri .= '/';
+        $server_uri .= '/';
         $server_uri = preg_replace('/\/\//', '/', '/'.$server_uri);
         $this->_server['uri'] = $server_uri;
 
