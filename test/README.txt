@@ -14,7 +14,7 @@ These unit tests currently only cover a small portion of the operation of phpCAS
 2. cd to the phpcas/test/ directory.
 
 3. Run the following command:
-	phpunit TestSuite.php
+	phpunit
 
 
 
