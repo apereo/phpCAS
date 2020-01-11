@@ -27,6 +27,8 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Test harness for the cookie Jar to allow us to test protected methods.
  *
@@ -70,7 +72,7 @@ class CAS_Tests_CookieJarExposed extends CAS_CookieJar
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_CookieJarTest extends PHPUnit_Framework_TestCase
+class CAS_Tests_CookieJarTest extends TestCase
 {
     /**
      * @var CAS_Client
