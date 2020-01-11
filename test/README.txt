@@ -8,13 +8,11 @@ These unit tests currently only cover a small portion of the operation of phpCAS
 **************************
 * Running tests
 **************************
-1. Install PHPUnit using instructions on this page:
-	http://pear.phpunit.de/
+1. Install PHPUnit using composer:
+	composer install
 
-2. cd to the phpcas/test/ directory.
-
-3. Run the following command:
-	phpunit
+2. Run the following command:
+	./vendor/bin/phpunit
 
 
 
