@@ -27,12 +27,16 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace PhpCas\TestHarness;
+
+use PhpCas\TestHarness\DummyRequest;
+
 /**
  * This interface defines a class library for performing multiple web requests
  * in batches. Implementations of this interface may perform requests serially
  * or in parallel.
  *
- * @class    CAS_TestHarness_DummyMultiRequest
+ * @class    DummyMultiRequest
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
@@ -40,8 +44,8 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
-class CAS_TestHarness_DummyMultiRequest implements
-CAS_Request_MultiRequestInterface
+class DummyMultiRequest implements
+\CAS_Request_MultiRequestInterface
 {
     private $_requests = array();
     private $_sent = false;
@@ -63,16 +67,16 @@ CAS_Request_MultiRequestInterface
      * @throws CAS_InvalidArgumentException If passed a Request of the wrong
      * implmentation.
      */
-    public function addRequest(CAS_Request_RequestInterface $request)
+    public function addRequest(\CAS_Request_RequestInterface $request)
     {
         if ($this->_sent) {
-            throw new CAS_OutOfSequenceException(
+            throw new \CAS_OutOfSequenceException(
                 'Request has already been sent cannot ' . __METHOD__
             );
         }
-        if (!$request instanceof CAS_TestHarness_DummyRequest) {
-            throw new CAS_InvalidArgumentException(
-                'As a CAS_TestHarness_DummyMultiRequest, I can only work with CAS_TestHarness_DummyRequest objects.'
+        if (!$request instanceof DummyRequest) {
+            throw new \CAS_InvalidArgumentException(
+                'As a DummyMultiRequest, I can only work with DummyRequest objects.'
             );
         }
 
@@ -94,12 +98,12 @@ CAS_Request_MultiRequestInterface
     public function send()
     {
         if ($this->_sent) {
-            throw new CAS_OutOfSequenceException(
+            throw new \CAS_OutOfSequenceException(
                 'Request has already been sent cannot send again.'
             );
         }
         if (!count($this->_requests)) {
-            throw new CAS_OutOfSequenceException(
+            throw new \CAS_OutOfSequenceException(
                 'At least one request must be added via addRequest() before the multi-request can be sent.'
             );
         }
@@ -119,7 +123,7 @@ CAS_Request_MultiRequestInterface
     public function getNumRequests()
     {
         if ($this->_sent) {
-            throw new CAS_OutOfSequenceException(
+            throw new \CAS_OutOfSequenceException(
                 'Request has already been sent cannot ' . __METHOD__
             );
         }

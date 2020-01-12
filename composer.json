@@ -24,9 +24,9 @@
         ]
     },
     "autoload-dev": {
-        "classmap": [
-            "test/"
-        ]
+        "psr-4": {
+            "PhpCas\\": "test/CAS/"
+        }
     },
     "extra": {
         "branch-alias": {

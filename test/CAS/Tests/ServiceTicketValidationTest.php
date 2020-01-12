@@ -27,19 +27,23 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace PhpCas\Tests;
+
+use PhpCas\TestHarness\BasicResponse;
+use PhpCas\TestHarness\DummyRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for verifying the operation of service tickets.
  *
- * @class    CAS_Tests_ServiceTicketValidationTest
+ * @class    ServiceTicketValidationTest
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_ServiceTicketValidationTest extends TestCase
+class ServiceTicketValidationTest extends TestCase
 {
     /**
      * @var CAS_Client
@@ -65,7 +69,7 @@ class CAS_Tests_ServiceTicketValidationTest extends TestCase
 
         // 		$_GET['ticket'] = 'ST-123456-asdfasdfasgww2323radf3';
 
-        $this->object = new CAS_Client(
+        $this->object = new \CAS_Client(
             CAS_VERSION_2_0, // Server Version
             false, // Proxy
             'cas.example.edu', // Server Hostname
@@ -74,14 +78,14 @@ class CAS_Tests_ServiceTicketValidationTest extends TestCase
             false // Start Session
         );
 
-        $this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
+        $this->object->setRequestImplementation('PhpCas\TestHarness\DummyRequest');
         $this->object->setCasServerCACert(__FILE__, true);
 
         /*********************************************************
          * Enumerate our responses
          *********************************************************/
         // Valid ticket response
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->matchQueryParameters(
@@ -109,10 +113,10 @@ class CAS_Tests_ServiceTicketValidationTest extends TestCase
 "
         );
         $response->ensureCaCertPathEquals(__FILE__);
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         // Invalid ticket response
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
         	'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->matchQueryParameters(
@@ -137,7 +141,7 @@ class CAS_Tests_ServiceTicketValidationTest extends TestCase
 "
         );
         $response->ensureCaCertPathEquals(__FILE__);
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
     }
 
     /**
@@ -148,7 +152,7 @@ class CAS_Tests_ServiceTicketValidationTest extends TestCase
      */
     protected function tearDown()
     {
-        CAS_TestHarness_DummyRequest::clearResponses();
+        DummyRequest::clearResponses();
     }
 
     /**
@@ -189,7 +193,7 @@ class CAS_Tests_ServiceTicketValidationTest extends TestCase
         ob_start();
         try {
             $this->object->validateCAS20($url, $text_response, $tree_response);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ob_end_clean();
             throw $e;
         }

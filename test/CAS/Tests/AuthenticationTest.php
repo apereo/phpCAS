@@ -27,19 +27,23 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace PhpCas\Tests;
+
+use PhpCas\TestHarness\BasicResponse;
+use PhpCas\TestHarness\DummyRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for verifying the operation of service tickets.
  *
- * @class    CAS_Tests_AuthenticationTest
+ * @class    AuthenticationTest
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_AuthenticationTest extends TestCase
+class AuthenticationTest extends TestCase
 {
     /**
      * @var CAS_Client
@@ -57,7 +61,7 @@ class CAS_Tests_AuthenticationTest extends TestCase
         //     	phpCAS::setDebug(dirname(__FILE__).'/../test.log');
         // 		error_reporting(E_ALL);
 
-        CAS_GracefullTerminationException::throwInsteadOfExiting();
+        \CAS_GracefullTerminationException::throwInsteadOfExiting();
 
         $_SERVER['SERVER_NAME'] = 'www.clientapp.com';
         $_SERVER['SERVER_PORT'] = '80';
@@ -68,7 +72,7 @@ class CAS_Tests_AuthenticationTest extends TestCase
         $_SERVER['PHP_SELF'] = '/index.php';
         $_SESSION = array();
 
-        $this->object = new CAS_Client(
+        $this->object = new \CAS_Client(
             CAS_VERSION_2_0, // Server Version
             true, // Proxy
             'cas.example.edu', // Server Hostname
@@ -77,7 +81,7 @@ class CAS_Tests_AuthenticationTest extends TestCase
             false // Start Session
         );
 
-        $this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
+        $this->object->setRequestImplementation('PhpCas\TestHarness\DummyRequest');
         $this->object->setCasServerCACert(__FILE__, true);
 
         /*********************************************************
@@ -85,7 +89,7 @@ class CAS_Tests_AuthenticationTest extends TestCase
          *********************************************************/
 
         // Set up our response.
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->setResponseHeaders(
@@ -107,7 +111,7 @@ class CAS_Tests_AuthenticationTest extends TestCase
 </cas:serviceResponse>
 "
             );
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
     }
 
@@ -119,7 +123,7 @@ class CAS_Tests_AuthenticationTest extends TestCase
      */
     protected function tearDown()
     {
-        CAS_TestHarness_DummyRequest::clearResponses();
+        DummyRequest::clearResponses();
         $_SESSION = array();
     }
 
@@ -135,7 +139,7 @@ class CAS_Tests_AuthenticationTest extends TestCase
         ob_start();
         try {
             $this->object->forceAuthentication();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ob_end_clean();
             throw $e;
         }
