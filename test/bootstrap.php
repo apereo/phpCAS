@@ -29,14 +29,7 @@
 
 require_once __DIR__ . '/../source/CAS.php';
 
-if(!class_exists('PHPUnit_Framework_TestSuite')) {
-    /**
-     * phpunit 5-7 compatibility
-     */
-    class PHPUnit_Framework_TestSuite extends PHPUnit\Framework\TestSuite {
-
-    }
-
+if(!class_exists('PHPUnit_Framework_TestCase')) {
     /**
      * phpunit 5-6 compatibility
      */
