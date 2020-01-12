@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-    bootstrap="bootstrap.php"
+    bootstrap="../source/CAS.php"
     convertNoticesToExceptions="false"
     colors="true"
     stderr="true"

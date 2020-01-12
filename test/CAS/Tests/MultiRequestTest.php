@@ -27,6 +27,8 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Test class for verifying the operation of service tickets.
  *
@@ -37,7 +39,7 @@
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_MultiRequestTest extends PHPUnit_Framework_TestCase
+class CAS_Tests_MultiRequestTest extends TestCase
 {
     /**
      * @var CAS_Client
