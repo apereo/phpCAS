@@ -28,7 +28,7 @@
  */
 
 ob_start();
-require_once dirname(__FILE__) . '/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 /**
  * Suite of all tests
@@ -53,7 +53,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite
     {
         $suite = new TestSuite('phpCAS Test Suite');
 
-        self::recursiveAddTests($suite, dirname(__FILE__) . '/CAS/Tests');
+        self::recursiveAddTests($suite, __DIR__ . '/CAS/Tests');
         return $suite;
     }
 

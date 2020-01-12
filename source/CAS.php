@@ -256,7 +256,7 @@ define('DEFAULT_DEBUG_DIR', gettmpdir()."/");
 /** @} */
 
 // include the class autoloader
-require_once dirname(__FILE__) . '/CAS/Autoload.php';
+require_once __DIR__ . '/CAS/Autoload.php';
 
 /**
  * The phpCAS class is a simple container for the phpCAS library. It provides CAS

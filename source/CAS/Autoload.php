@@ -31,7 +31,7 @@ function CAS_autoload($class)
     }
     // Setup the include path if it's not already set from a previous call
     if (empty($include_path)) {
-        $include_path = array(dirname(dirname(__FILE__)), dirname(dirname(__FILE__)) . '/../test/' );
+        $include_path = array(dirname(__DIR__), dirname(__DIR__) . '/../test/' );
     }
 
     // Declare local variable to store the expected full path to the file

@@ -27,4 +27,4 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
-require_once dirname(__FILE__).'/source/CAS.php';
+require_once __DIR__.'/source/CAS.php';
