@@ -15,7 +15,7 @@ script:
 # Composer is testing-only; vendor folder should not appear in releases
 - if [[ $TRAVIS_PHP_VERSION == 'nightly' ]]; then composer --no-interaction config platform.php 7.4.0; fi
 - composer install
-- cd test && ../vendor/bin/phpunit --verbose --stderr
+- ./vendor/bin/phpunit --verbose --stderr
 matrix:
   fast_finish: true
   allow_failures:
