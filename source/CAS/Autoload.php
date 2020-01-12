@@ -31,7 +31,7 @@ function CAS_autoload($class)
     }
     // Setup the include path if it's not already set from a previous call
     if (empty($include_path)) {
-        $include_path = array(dirname(__DIR__), dirname(__DIR__) . '/../test/' );
+        $include_path = array(dirname(__DIR__));
     }
 
     // Declare local variable to store the expected full path to the file
@@ -73,10 +73,10 @@ function CAS_autoload($class)
     die ((string) $e);
 }
 
-// set up __autoload
-if (!(spl_autoload_functions())
-    || !in_array('CAS_autoload', spl_autoload_functions())
-) {
+// Set up autoload if not already configured by composer.
+if (!class_exists('CAS_Client'))
+{
+    trigger_error('phpCAS autoloader is deprecated. Install phpCAS using composer instead.', E_USER_DEPRECATED);
     spl_autoload_register('CAS_autoload');
     if (function_exists('__autoload')
         && !in_array('__autoload', spl_autoload_functions())
