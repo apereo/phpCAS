@@ -35,6 +35,7 @@
  * @ingroup public
  */
 
+use Psr\Log\LoggerInterface;
 
 //
 // hack by Vangelis Haniotakis to handle the absence of $_SERVER['REQUEST_URI']
@@ -431,15 +432,37 @@ class phpCAS
      */
 
     /**
+     * Set/unset PSR-3 logger
+     *
+     * @param LoggerInterface $logger the PSR-3 logger used for logging, or
+     * null to stop logging.
+     *
+     * @return void
+     */
+    public static function setLogger($logger = null)
+    {
+        if (empty(self::$_PHPCAS_DEBUG['unique_id'])) {
+            self::$_PHPCAS_DEBUG['unique_id'] = substr(strtoupper(md5(uniqid(''))), 0, 4);
+        }
+        self::$_PHPCAS_DEBUG['logger'] = $logger;
+        self::$_PHPCAS_DEBUG['indent'] = 0;
+        phpCAS :: trace('START ('.date("Y-m-d H:i:s").') phpCAS-' . PHPCAS_VERSION . ' ******************');
+    }
+
+    /**
      * Set/unset debug mode
      *
      * @param string $filename the name of the file used for logging, or false
      * to stop debugging.
      *
      * @return void
+     *
+     * @deprecated
      */
     public static function setDebug($filename = '')
     {
+        trigger_error('phpCAS::setDebug() is deprecated in favor of phpCAS::setLogger().', E_USER_DEPRECATED);
+
         if ($filename != false && gettype($filename) != 'string') {
             phpCAS :: error('type mismatched for parameter $dbg (should be false or the name of the log file)');
         }
@@ -513,14 +536,7 @@ class phpCAS
         $indent_str = ".";
 
 
-        if (!empty(self::$_PHPCAS_DEBUG['filename'])) {
-            // Check if file exists and modifiy file permissions to be only
-            // readable by the webserver
-            if (!file_exists(self::$_PHPCAS_DEBUG['filename'])) {
-                touch(self::$_PHPCAS_DEBUG['filename']);
-                // Chmod will fail on windows
-                @chmod(self::$_PHPCAS_DEBUG['filename'], 0600);
-            }
+        if (isset(self::$_PHPCAS_DEBUG['logger']) || !empty(self::$_PHPCAS_DEBUG['filename'])) {
             for ($i = 0; $i < self::$_PHPCAS_DEBUG['indent']; $i++) {
 
                 $indent_str .= '|    ';
@@ -528,7 +544,20 @@ class phpCAS
             // allow for multiline output with proper identing. Usefull for
             // dumping cas answers etc.
             $str2 = str_replace("\n", "\n" . self::$_PHPCAS_DEBUG['unique_id'] . ' ' . $indent_str, $str);
-            error_log(self::$_PHPCAS_DEBUG['unique_id'] . ' ' . $indent_str . $str2 . "\n", 3, self::$_PHPCAS_DEBUG['filename']);
+            $str3 = self::$_PHPCAS_DEBUG['unique_id'] . ' ' . $indent_str . $str2;
+            if (isset(self::$_PHPCAS_DEBUG['logger'])) {
+                self::$_PHPCAS_DEBUG['logger']->info($str3);
+            }
+            if (!empty(self::$_PHPCAS_DEBUG['filename'])) {
+                // Check if file exists and modifiy file permissions to be only
+                // readable by the webserver
+                if (!file_exists(self::$_PHPCAS_DEBUG['filename'])) {
+                    touch(self::$_PHPCAS_DEBUG['filename']);
+                    // Chmod will fail on windows
+                    @chmod(self::$_PHPCAS_DEBUG['filename'], 0600);
+                }
+                error_log($str3 . "\n", 3, self::$_PHPCAS_DEBUG['filename']);
+            }
         }
 
     }

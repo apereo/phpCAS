@@ -11,9 +11,11 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "psr/log": "^1.0.0"
     },
     "require-dev": {
+        "monolog/monolog": "^1.0.0",
         "phpunit/phpunit": ">=4.8.35 <8"
     },
     "autoload": {
