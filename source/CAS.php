@@ -44,11 +44,6 @@ if (!isset($_SERVER['REQUEST_URI']) && isset($_SERVER['SCRIPT_NAME']) && isset($
     $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
 }
 
-// Add a E_USER_DEPRECATED for php versions <= 5.2
-if (!defined('E_USER_DEPRECATED')) {
-    define('E_USER_DEPRECATED', E_USER_NOTICE);
-}
-
 
 // ########################################################################
 //  CONSTANTS
