@@ -29,7 +29,7 @@ require_once 'PEAR/Frontend.php';
  * @var PEAR_PackageFileManager
  */
 PEAR::setErrorHandling(PEAR_ERROR_DIE);
-chdir(dirname(__FILE__));
+chdir(__DIR__);
 $pfm = new PEAR_PackageFileManager2();
 $pfm->setOptions(
     array(
