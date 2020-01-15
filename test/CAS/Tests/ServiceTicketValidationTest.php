@@ -75,7 +75,7 @@ class CAS_Tests_ServiceTicketValidationTest extends TestCase
         );
 
         $this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
-        $this->object->setCasServerCACert('/path/to/ca_cert.crt', true);
+        $this->object->setCasServerCACert(__FILE__, true);
 
         /*********************************************************
          * Enumerate our responses
@@ -108,7 +108,7 @@ class CAS_Tests_ServiceTicketValidationTest extends TestCase
 </cas:serviceResponse>
 "
         );
-        $response->ensureCaCertPathEquals('/path/to/ca_cert.crt');
+        $response->ensureCaCertPathEquals(__FILE__);
         CAS_TestHarness_DummyRequest::addResponse($response);
 
         // Invalid ticket response
@@ -136,7 +136,7 @@ class CAS_Tests_ServiceTicketValidationTest extends TestCase
 </cas:serviceResponse>
 "
         );
-        $response->ensureCaCertPathEquals('/path/to/ca_cert.crt');
+        $response->ensureCaCertPathEquals(__FILE__);
         CAS_TestHarness_DummyRequest::addResponse($response);
     }
 

@@ -76,7 +76,7 @@ class CAS_Tests_ServiceMailTest extends TestCase
         );
 
         $this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
-        $this->object->setCasServerCACert('/path/to/ca_cert.crt', true);
+        $this->object->setCasServerCACert(__FILE__, true);
 
         // Bypass PGT storage since CAS_Client->callback() will exit. Just build
         // up the session manually so that we are in a state from which we can
@@ -128,7 +128,7 @@ class CAS_Tests_ServiceMailTest extends TestCase
 </cas:serviceResponse>
 "
         );
-        $response->ensureCaCertPathEquals('/path/to/ca_cert.crt');
+        $response->ensureCaCertPathEquals(__FILE__);
         CAS_TestHarness_DummyRequest::addResponse($response);
 
         /*********************************************************
@@ -165,7 +165,7 @@ class CAS_Tests_ServiceMailTest extends TestCase
 "
         );
 
-        $response->ensureCaCertPathEquals('/path/to/ca_cert.crt');
+        $response->ensureCaCertPathEquals(__FILE__);
         CAS_TestHarness_DummyRequest::addResponse($response);
 
         /*********************************************************
