@@ -216,20 +216,13 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
     {
         $this->object->setTicket('ST-1856339-aA5Yuvrxzpv8Tau1cYQ7');
         ob_start();
-        $result = $this->object
-            ->validateCAS20($url, $text_response, $tree_response);
+        try {
+            $this->object->validateCAS20($url, $text_response, $tree_response);
+        } catch (Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
         ob_end_clean();
-        $this->assertTrue($result);
-        $this->assertEquals(
-            "<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
-    <cas:authenticationFailure code='INVALID_TICKET'>
-        Ticket ST-1856339-aA5Yuvrxzpv8Tau1cYQ7 not recognized
-    </cas:authenticationFailure>
-</cas:serviceResponse>
-",
-            $text_response
-        );
-        $this->assertInstanceOf('DOMElement', $tree_response);
     }
 
     /**
