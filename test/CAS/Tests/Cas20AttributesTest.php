@@ -73,7 +73,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
         );
 
         $this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
-        $this->object->setCasServerCACert('/path/to/ca_cert.crt', true);
+        $this->object->setCasServerCACert(__FILE__, true);
         $this->object->setNoClearTicketsFromUrl();
         // 		phpCAS::setDebug(dirname(__FILE__).'/../test.log');
     }

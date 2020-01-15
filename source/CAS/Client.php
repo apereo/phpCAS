@@ -1955,7 +1955,7 @@ class CAS_Client
         if (gettype($validate_cn) != 'boolean') {
             throw new CAS_TypeMismatchException($validate_cn, '$validate_cn', 'boolean');
         }
-        if ( !file_exists($cert) && $this->_requestImplementation !== 'CAS_TestHarness_DummyRequest'){
+        if (!file_exists($cert)) {
             throw new CAS_InvalidArgumentException("Certificate file does not exist " . $this->_requestImplementation);
         }
         $this->_cas_server_ca_cert = $cert;
