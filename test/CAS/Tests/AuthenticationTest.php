@@ -127,19 +127,18 @@ class CAS_Tests_AuthenticationTest extends TestCase
      * Test that the user is redirected to the CAS server
      *
      * @return void
+     *
+     * @expectedException CAS_GracefullTerminationException
      */
     public function testRedirect()
     {
+        ob_start();
         try {
-            ob_start();
             $this->object->forceAuthentication();
-            $this->assertTrue(
-                false, 'Should have thrown a CAS_GracefullTerminationException.'
-            );
-        } catch (CAS_GracefullTerminationException $e) {
+        } catch (Exception $e) {
             ob_end_clean();
-            // It would be great to test for the existance of headers here, but
-            // the don't get set properly due to output before the test.
+            throw $e;
         }
+        ob_end_clean();
     }
 }
