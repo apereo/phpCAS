@@ -27,6 +27,7 @@
  * @author   Brett Bieber <brett.bieber@gmail.com>
  * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @author   Adam Franco <afranco@middlebury.edu>
+ * @author   Tobias Schiebeck <tobias.schiebeck@manchester.ac.uk>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
@@ -43,6 +44,7 @@
  * @author   Brett Bieber <brett.bieber@gmail.com>
  * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @author   Adam Franco <afranco@middlebury.edu>
+ * @author   Tobias Schiebeck <tobias.schiebeck@manchester.ac.uk>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  *
@@ -149,9 +151,9 @@ class CAS_Client
      */
     public function setHTMLHeader($header)
     {
-    	// Argument Validation
-    	if (gettype($header) != 'string')
-        	throw new CAS_TypeMismatchException($header, '$header', 'string');
+        // Argument Validation
+        if (gettype($header) != 'string')
+            throw new CAS_TypeMismatchException($header, '$header', 'string');
 
         $this->_output_header = $header;
     }
@@ -165,9 +167,9 @@ class CAS_Client
      */
     public function setHTMLFooter($footer)
     {
-    	// Argument Validation
-    	if (gettype($footer) != 'string')
-        	throw new CAS_TypeMismatchException($footer, '$footer', 'string');
+        // Argument Validation
+        if (gettype($footer) != 'string')
+            throw new CAS_TypeMismatchException($footer, '$footer', 'string');
 
         $this->_output_footer = $footer;
     }
@@ -200,9 +202,9 @@ class CAS_Client
      */
     public function setLang($lang)
     {
-    	// Argument Validation
-    	if (gettype($lang) != 'string')
-        	throw new CAS_TypeMismatchException($lang, '$lang', 'string');
+        // Argument Validation
+        if (gettype($lang) != 'string')
+            throw new CAS_TypeMismatchException($lang, '$lang', 'string');
 
         phpCAS::traceBegin();
         $obj = new $lang();
@@ -364,9 +366,9 @@ class CAS_Client
      */
     public function setServerLoginURL($url)
     {
-    	// Argument Validation
-    	if (gettype($url) != 'string')
-        	throw new CAS_TypeMismatchException($url, '$url', 'string');
+        // Argument Validation
+        if (gettype($url) != 'string')
+            throw new CAS_TypeMismatchException($url, '$url', 'string');
 
         return $this->_server['login_url'] = $url;
     }
@@ -381,9 +383,9 @@ class CAS_Client
      */
     public function setServerServiceValidateURL($url)
     {
-    	// Argument Validation
-    	if (gettype($url) != 'string')
-        	throw new CAS_TypeMismatchException($url, '$url', 'string');
+        // Argument Validation
+        if (gettype($url) != 'string')
+            throw new CAS_TypeMismatchException($url, '$url', 'string');
 
         return $this->_server['service_validate_url'] = $url;
     }
@@ -398,9 +400,9 @@ class CAS_Client
      */
     public function setServerProxyValidateURL($url)
     {
-    	// Argument Validation
-    	if (gettype($url) != 'string')
-        	throw new CAS_TypeMismatchException($url, '$url', 'string');
+        // Argument Validation
+        if (gettype($url) != 'string')
+            throw new CAS_TypeMismatchException($url, '$url', 'string');
 
         return $this->_server['proxy_validate_url'] = $url;
     }
@@ -415,9 +417,9 @@ class CAS_Client
      */
     public function setServerSamlValidateURL($url)
     {
-    	// Argument Validation
-    	if (gettype($url) != 'string')
-        	throw new CAS_TypeMismatchException($url, '$url', 'string');
+        // Argument Validation
+        if (gettype($url) != 'string')
+            throw new CAS_TypeMismatchException($url, '$url', 'string');
 
         return $this->_server['saml_validate_url'] = $url;
     }
@@ -556,9 +558,9 @@ class CAS_Client
      */
     public function setServerLogoutURL($url)
     {
-    	// Argument Validation
-    	if (gettype($url) != 'string')
-        	throw new CAS_TypeMismatchException($url, '$url', 'string');
+        // Argument Validation
+        if (gettype($url) != 'string')
+            throw new CAS_TypeMismatchException($url, '$url', 'string');
 
         return $this->_server['logout_url'] = $url;
     }
@@ -907,19 +909,19 @@ class CAS_Client
         $server_uri,
         $changeSessionID = true
     ) {
-		// Argument validation
+        // Argument validation
         if (gettype($server_version) != 'string')
-        	throw new CAS_TypeMismatchException($server_version, '$server_version', 'string');
+            throw new CAS_TypeMismatchException($server_version, '$server_version', 'string');
         if (gettype($proxy) != 'boolean')
-        	throw new CAS_TypeMismatchException($proxy, '$proxy', 'boolean');
+            throw new CAS_TypeMismatchException($proxy, '$proxy', 'boolean');
         if (gettype($server_hostname) != 'string')
-        	throw new CAS_TypeMismatchException($server_hostname, '$server_hostname', 'string');
+            throw new CAS_TypeMismatchException($server_hostname, '$server_hostname', 'string');
         if (gettype($server_port) != 'integer')
-        	throw new CAS_TypeMismatchException($server_port, '$server_port', 'integer');
+            throw new CAS_TypeMismatchException($server_port, '$server_port', 'integer');
         if (gettype($server_uri) != 'string')
-        	throw new CAS_TypeMismatchException($server_uri, '$server_uri', 'string');
+            throw new CAS_TypeMismatchException($server_uri, '$server_uri', 'string');
         if (gettype($changeSessionID) != 'boolean')
-        	throw new CAS_TypeMismatchException($changeSessionID, '$changeSessionID', 'boolean');
+            throw new CAS_TypeMismatchException($changeSessionID, '$changeSessionID', 'boolean');
 
         phpCAS::traceBegin();
         // true : allow to change the session_id(), false session_id won't be
@@ -1123,10 +1125,10 @@ class CAS_Client
      */
     public function getUser()
     {
-    	// Sequence validation
-    	$this->ensureAuthenticationCallSuccessful();
+        // Sequence validation
+        $this->ensureAuthenticationCallSuccessful();
 
-    	return $this->_getUser();
+        return $this->_getUser();
     }
 
     /**
@@ -1139,7 +1141,7 @@ class CAS_Client
      */
     private function _getUser()
     {
-    	// This is likely a duplicate check that could be removed....
+        // This is likely a duplicate check that could be removed....
         if ( empty($this->_user) ) {
             phpCAS::error(
                 'this method should be used only after '.__CLASS__
@@ -1177,9 +1179,9 @@ class CAS_Client
      */
     public function getAttributes()
     {
-    	// Sequence validation
-    	$this->ensureAuthenticationCallSuccessful();
-    	// This is likely a duplicate check that could be removed....
+        // Sequence validation
+        $this->ensureAuthenticationCallSuccessful();
+        // This is likely a duplicate check that could be removed....
         if ( empty($this->_user) ) {
             // if no user is set, there shouldn't be any attributes also...
             phpCAS::error(
@@ -1197,8 +1199,8 @@ class CAS_Client
      */
     public function hasAttributes()
     {
-    	// Sequence validation
-    	$this->ensureAuthenticationCallSuccessful();
+        // Sequence validation
+        $this->ensureAuthenticationCallSuccessful();
 
         return !empty($this->_attributes);
     }
@@ -1211,8 +1213,8 @@ class CAS_Client
      */
     public function hasAttribute($key)
     {
-    	// Sequence validation
-    	$this->ensureAuthenticationCallSuccessful();
+        // Sequence validation
+        $this->ensureAuthenticationCallSuccessful();
 
         return $this->_hasAttribute($key);
     }
@@ -1239,8 +1241,8 @@ class CAS_Client
      */
     public function getAttribute($key)
     {
-    	// Sequence validation
-    	$this->ensureAuthenticationCallSuccessful();
+        // Sequence validation
+        $this->ensureAuthenticationCallSuccessful();
 
         if ($this->_hasAttribute($key)) {
             return $this->_attributes[$key];
@@ -1317,8 +1319,8 @@ class CAS_Client
      */
     public function setCacheTimesForAuthRecheck($n)
     {
-    	if (gettype($n) != 'integer')
-        	throw new CAS_TypeMismatchException($n, '$n', 'string');
+        if (gettype($n) != 'integer')
+            throw new CAS_TypeMismatchException($n, '$n', 'string');
 
         $this->_cache_times_for_auth_recheck = $n;
     }
@@ -2410,11 +2412,11 @@ class CAS_Client
      */
     public function setCallbackURL($url)
     {
-    	// Sequence validation
+        // Sequence validation
         $this->ensureIsProxy();
-    	// Argument Validation
-    	if (gettype($url) != 'string')
-        	throw new CAS_TypeMismatchException($url, '$url', 'string');
+        // Argument Validation
+        if (gettype($url) != 'string')
+            throw new CAS_TypeMismatchException($url, '$url', 'string');
 
         return $this->_callback_url = $url;
     }
@@ -2550,7 +2552,7 @@ class CAS_Client
      */
     public function setPGTStorage($storage)
     {
-    	// Sequence validation
+        // Sequence validation
         $this->ensureIsProxy();
 
         // check that the storage has not already been set
@@ -2586,18 +2588,18 @@ class CAS_Client
     public function setPGTStorageDb(
         $dsn_or_pdo, $username='', $password='', $table='', $driver_options=null
     ) {
-    	// Sequence validation
+        // Sequence validation
         $this->ensureIsProxy();
 
-    	// Argument validation
-    	if (!(is_object($dsn_or_pdo) && $dsn_or_pdo instanceof PDO) && !is_string($dsn_or_pdo))
-			throw new CAS_TypeMismatchException($dsn_or_pdo, '$dsn_or_pdo', 'string or PDO object');
-    	if (gettype($username) != 'string')
-        	throw new CAS_TypeMismatchException($username, '$username', 'string');
+        // Argument validation
+        if (!(is_object($dsn_or_pdo) && $dsn_or_pdo instanceof PDO) && !is_string($dsn_or_pdo))
+            throw new CAS_TypeMismatchException($dsn_or_pdo, '$dsn_or_pdo', 'string or PDO object');
+        if (gettype($username) != 'string')
+            throw new CAS_TypeMismatchException($username, '$username', 'string');
         if (gettype($password) != 'string')
-        	throw new CAS_TypeMismatchException($password, '$password', 'string');
+            throw new CAS_TypeMismatchException($password, '$password', 'string');
         if (gettype($table) != 'string')
-        	throw new CAS_TypeMismatchException($table, '$password', 'string');
+            throw new CAS_TypeMismatchException($table, '$password', 'string');
 
         // create the storage object
         $this->setPGTStorage(
@@ -2617,12 +2619,12 @@ class CAS_Client
      */
     public function setPGTStorageFile($path='')
     {
-    	// Sequence validation
+        // Sequence validation
         $this->ensureIsProxy();
 
-    	// Argument validation
-    	if (gettype($path) != 'string')
-        	throw new CAS_TypeMismatchException($path, '$path', 'string');
+        // Argument validation
+        if (gettype($path) != 'string')
+            throw new CAS_TypeMismatchException($path, '$path', 'string');
 
         // create the storage object
         $this->setPGTStorage(new CAS_PGTStorage_File($this, $path));
@@ -2704,9 +2706,9 @@ class CAS_Client
      */
     public function retrievePT($target_service,&$err_code,&$err_msg)
     {
-    	// Argument validation
-    	if (gettype($target_service) != 'string')
-        	throw new CAS_TypeMismatchException($target_service, '$target_service', 'string');
+        // Argument validation
+        if (gettype($target_service) != 'string')
+            throw new CAS_TypeMismatchException($target_service, '$target_service', 'string');
 
         phpCAS::traceBegin();
 
@@ -2926,13 +2928,13 @@ class CAS_Client
      */
     public function getProxiedService ($type)
     {
-    	// Sequence validation
+        // Sequence validation
         $this->ensureIsProxy();
-    	$this->ensureAuthenticationCallSuccessful();
+        $this->ensureAuthenticationCallSuccessful();
 
-    	// Argument validation
-    	if (gettype($type) != 'string')
-        	throw new CAS_TypeMismatchException($type, '$type', 'string');
+        // Argument validation
+        if (gettype($type) != 'string')
+            throw new CAS_TypeMismatchException($type, '$type', 'string');
 
         switch ($type) {
         case PHPCAS_PROXIED_SERVICE_HTTP_GET:
@@ -2977,9 +2979,9 @@ class CAS_Client
      */
     public function initializeProxiedService (CAS_ProxiedService $proxiedService)
     {
-    	// Sequence validation
+        // Sequence validation
         $this->ensureIsProxy();
-    	$this->ensureAuthenticationCallSuccessful();
+        $this->ensureAuthenticationCallSuccessful();
 
         $url = $proxiedService->getServiceUrl();
         if (!is_string($url)) {
@@ -3012,13 +3014,13 @@ class CAS_Client
      */
     public function serviceWeb($url,&$err_code,&$output)
     {
-    	// Sequence validation
+        // Sequence validation
         $this->ensureIsProxy();
-    	$this->ensureAuthenticationCallSuccessful();
+        $this->ensureAuthenticationCallSuccessful();
 
-    	// Argument validation
-    	if (gettype($url) != 'string')
-        	throw new CAS_TypeMismatchException($url, '$url', 'string');
+        // Argument validation
+        if (gettype($url) != 'string')
+            throw new CAS_TypeMismatchException($url, '$url', 'string');
 
         try {
             $service = $this->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
@@ -3062,17 +3064,17 @@ class CAS_Client
      */
     public function serviceMail($url,$serviceUrl,$flags,&$err_code,&$err_msg,&$pt)
     {
-    	// Sequence validation
+        // Sequence validation
         $this->ensureIsProxy();
-    	$this->ensureAuthenticationCallSuccessful();
+        $this->ensureAuthenticationCallSuccessful();
 
-    	// Argument validation
-    	if (gettype($url) != 'string')
-        	throw new CAS_TypeMismatchException($url, '$url', 'string');
+        // Argument validation
+        if (gettype($url) != 'string')
+            throw new CAS_TypeMismatchException($url, '$url', 'string');
         if (gettype($serviceUrl) != 'string')
-        	throw new CAS_TypeMismatchException($serviceUrl, '$serviceUrl', 'string');
+            throw new CAS_TypeMismatchException($serviceUrl, '$serviceUrl', 'string');
         if (gettype($flags) != 'integer')
-        	throw new CAS_TypeMismatchException($flags, '$flags', 'string');
+            throw new CAS_TypeMismatchException($flags, '$flags', 'string');
 
         try {
             $service = $this->getProxiedService(PHPCAS_PROXIED_SERVICE_IMAP);
@@ -3336,6 +3338,295 @@ class CAS_Client
         return $result;
     }
 
+    /**
+     * This method recursively parses the attribute XML. 
+     * It also collapses name-value pairs into a single 
+     * array entry. It parses all common formats of 
+     * attributes and well formed XML files.
+     *     
+     * @param string $root       the DOM root element to be parsed
+     * @param string $namespace  namespace of the elements
+     * 
+     * @return an array of the parsed XML elements
+     * 
+     * Formats tested: 
+     *
+     *  "Jasig Style" Attributes:
+     *
+     *      <cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+     *          <cas:authenticationSuccess>
+     *              <cas:user>jsmith</cas:user>
+     *              <cas:attributes>
+     *                  <cas:attraStyle>RubyCAS</cas:attraStyle>
+     *                  <cas:surname>Smith</cas:surname>
+     *                  <cas:givenName>John</cas:givenName>
+     *                  <cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
+     *                  <cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
+     *              </cas:attributes>
+     *              <cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+     *          </cas:authenticationSuccess>
+     *      </cas:serviceResponse>
+     * 
+     *  "Jasig Style" Attributes (longer version):
+     *
+     *      <cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+     *          <cas:authenticationSuccess>
+     *              <cas:user>jsmith</cas:user>
+     *              <cas:attributes>
+     *                  <cas:attribute>
+     *                      <cas:name>surname</cas:name>
+     *                      <cas:value>Smith</cas:value>
+     *                  </cas:attribute>
+     *                  <cas:attribute>
+     *                      <cas:name>givenName</cas:name>
+     *                      <cas:value>John</cas:value>
+     *                  </cas:attribute>
+     *                  <cas:attribute>
+     *                      <cas:name>memberOf</cas:name>
+     *                      <cas:value>['CN=Staff,OU=Groups,DC=example,DC=edu', 'CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu']</cas:value>
+     *                  </cas:attribute>
+     *              </cas:attributes>
+     *              <cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+     *          </cas:authenticationSuccess>
+     *      </cas:serviceResponse>
+     *
+     *  "RubyCAS Style" attributes
+     *
+     *      <cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+     *          <cas:authenticationSuccess>
+     *              <cas:user>jsmith</cas:user>
+     *
+     *              <cas:attraStyle>RubyCAS</cas:attraStyle>
+     *              <cas:surname>Smith</cas:surname>
+     *              <cas:givenName>John</cas:givenName>
+     *              <cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
+     *              <cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
+     *
+     *              <cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+     *          </cas:authenticationSuccess>
+     *      </cas:serviceResponse>
+     *
+     *  "Name-Value" attributes.
+     *
+     *  Attribute format from these mailing list thread:
+     *  http://jasig.275507.n4.nabble.com/CAS-attributes-and-how-they-appear-in-the-CAS-response-td264272.html
+     *  Note: This is a less widely used format, but in use by at least two institutions.
+     *
+     *      <cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+     *          <cas:authenticationSuccess>
+     *              <cas:user>jsmith</cas:user>
+     *
+     *              <cas:attribute name='attraStyle' value='Name-Value' />
+     *              <cas:attribute name='surname' value='Smith' />
+     *              <cas:attribute name='givenName' value='John' />
+     *              <cas:attribute name='memberOf' value='CN=Staff,OU=Groups,DC=example,DC=edu' />
+     *              <cas:attribute name='memberOf' value='CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu' />
+     *
+     *              <cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
+     *          </cas:authenticationSuccess>
+     *      </cas:serviceResponse>
+     * 
+     * result: 
+     * 
+     *      Array (
+     *          [surname] => Smith
+     *          [givenName] => John
+     *          [memberOf] => Array (
+     *              [0] => CN=Staff, OU=Groups, DC=example, DC=edu
+     *              [1] => CN=Spanish Department, OU=Departments, OU=Groups, DC=example, DC=edu
+     *          )
+     *      )
+     */
+    private function _xml_to_array($root, $namespace = "cas")
+    {
+        $result = array();
+        if ($root->hasAttributes()) {
+            $attrs = $root->attributes;
+            $pair = array();
+            foreach ($attrs as $attr) {
+                if ($attr->name === "name") {
+                    $pair['name'] = $attr->value;
+                } elseif ($attr->name === "value") {
+                    $pair['value'] = $attr->value;
+                } else {
+                    $result[$attr->name] = $attr->value;
+                }
+                if (array_key_exists('name', $pair) && array_key_exists('value', $pair)) {
+                    $result[$pair['name']] = $pair['value'];
+                }
+            }
+        }
+        if ($root->hasChildNodes()) {
+            $children = $root->childNodes;
+            if ($children->length == 1) {
+                $child = $children->item(0);
+                if ($child->nodeType == XML_TEXT_NODE) {
+                    $result['_value'] = $child->nodeValue;
+                    return (count($result) == 1) ? $result['_value'] : $result;
+                }
+            }
+            $groups = array();
+            foreach ($children as $child) {
+                $child_nodeName = str_ireplace($namespace . ":", "", $child->nodeName);
+                if (in_array($child_nodeName, array("user", "proxies", "proxyGrantingTicket"))) {
+                    continue;
+                }
+                if (!isset($result[$child_nodeName])) {
+                    $res = $this->_xml_to_array($child, $namespace);
+                    if (!empty($res)) {
+                        $result[$child_nodeName] = $this->_xml_to_array($child, $namespace);
+                    }
+                } else {
+                    if (!isset($groups[$child_nodeName])) {
+                        $result[$child_nodeName] = array($result[$child_nodeName]);
+                        $groups[$child_nodeName] = 1;
+                    }
+                    $result[$child_nodeName][] = $this->_xml_to_array($child, $namespace);
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * This method parses a "JSON-like array" of strings 
+     * into an array of strings
+     * 
+     * @param string $json_value  the json-like string:
+     *      e.g.:
+     *          ['CN=Staff,OU=Groups,DC=example,DC=edu', 'CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu']
+     * 
+     * @return array of strings Description
+     *      e.g.:
+     *          Array (
+     *              [0] => CN=Staff,OU=Groups,DC=example,DC=edu
+     *              [1] => CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu
+     *          )
+     */
+    private function _parse_json_like_array_value($json_value)
+    {
+        $parts = explode(",", trim($json_value, "[]"));
+        $out = array();
+        $quote = '';
+        foreach ($parts as $part) {
+            $part = trim($part);
+            if ($quote === '') {
+                $value = "";
+                if ($this->_startsWith($part, '\'')) {
+                    $quote = '\'';
+                } elseif ($this->_startsWith($part, '"')) {
+                    $quote = '"';
+                } else {
+                    $out[] = $part;
+                }
+                $part = ltrim($part, $quote);
+            }
+            if ($quote !== '') {
+                $value .= $part;
+                if ($this->_endsWith($part, $quote)) {
+                    $out[] = rtrim($value, $quote);
+                    $quote = '';
+                } else {
+                    $value .= ", ";
+                };
+            }
+        }
+        return $out;
+    }
+
+    /**
+     * This method recursively removes unneccessary hirarchy levels in array-trees. 
+     * into an array of strings
+     * 
+     * @param array $arr the array to flatten
+     *      e.g.:
+     *          Array (
+     *              [attributes] => Array (
+     *                  [attribute] => Array (
+     *                      [0] => Array (
+     *                          [name] => surname
+     *                          [value] => Smith
+     *                      )
+     *                      [1] => Array (
+     *                          [name] => givenName
+     *                          [value] => John
+     *                      )
+     *                      [2] => Array (
+     *                          [name] => memberOf
+     *                          [value] => ['CN=Staff,OU=Groups,DC=example,DC=edu', 'CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu']
+     *                      )
+     *                  )
+     *              )
+     *          )
+     * 
+     * @return array the flattened array
+     *      e.g.:
+     *          Array (
+     *              [attribute] => Array (
+     *                  [surname] => Smith
+     *                  [givenName] => John
+     *                  [memberOf] => Array (
+     *                      [0] => CN=Staff, OU=Groups, DC=example, DC=edu
+     *                      [1] => CN=Spanish Department, OU=Departments, OU=Groups, DC=example, DC=edu
+     *                  )
+     *              )
+     *          )
+     */
+    private function _flatten_array($arr)
+    {
+        if (!is_array($arr)) {
+            if ($this->_startsWith($arr, '[') && $this->_endsWith($arr, ']')) {
+                return $this->_parse_json_like_array_value($arr);
+            } else {
+                return $arr;
+            }
+        }
+        $out = array();
+        foreach ($arr as $key => $val) {
+            if (!is_array($val)) {
+                $out[$key] = $val;
+            } else {
+                switch (count($val)) {
+                case 1 : {
+                        $key = key($val);
+                        if (array_key_exists($key, $out)) {
+                            $value = $out[$key];
+                            if (!is_array($value)) {
+                                $out[$key] = array();
+                                $out[$key][] = $value;
+                            }
+                            $out[$key][] = $this->_flatten_array($val[$key]);
+                        } else {
+                            $out[$key] = $this->_flatten_array($val[$key]);
+                        };
+                        break;
+                    };
+                case 2 : {
+                        if (array_key_exists("name", $val) && array_key_exists("value", $val)) {
+                            $key = $val['name'];
+                            if (array_key_exists($key, $out)) {
+                                $value = $out[$key];
+                                if (!is_array($value)) {
+                                    $out[$key] = array();
+                                    $out[$key][] = $value;
+                                }
+                                $out[$key][] = $this->_flatten_array($val['value']);
+                            } else {
+                                $out[$key] = $this->_flatten_array($val['value']);
+                            };
+                        } else {
+                            $out[$key] = $this->_flatten_array($val);
+                        }
+                        break;
+                    };
+                default: {
+                        $out[$key] = $this->_flatten_array($val);
+                    }
+                }
+            }
+        }
+        return $out;
+    }
 
     /**
      * This method will parse the DOM and pull out the attributes from the XML
@@ -3351,23 +3642,6 @@ class CAS_Client
         phpCAS::traceBegin();
 
         $extra_attributes = array();
-
-        // "Jasig Style" Attributes:
-        //
-        // 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
-        // 		<cas:authenticationSuccess>
-        // 			<cas:user>jsmith</cas:user>
-        // 			<cas:attributes>
-        // 				<cas:attraStyle>RubyCAS</cas:attraStyle>
-        // 				<cas:surname>Smith</cas:surname>
-        // 				<cas:givenName>John</cas:givenName>
-        // 				<cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
-        // 				<cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
-        // 			</cas:attributes>
-        // 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
-        // 		</cas:authenticationSuccess>
-        // 	</cas:serviceResponse>
-        //
         if ($this->_casAttributeParserCallbackFunction !== null
             && is_callable($this->_casAttributeParserCallbackFunction)
         ) {
@@ -3377,111 +3651,19 @@ class CAS_Client
                 $this->_casAttributeParserCallbackFunction,
                 $this->_casAttributeParserCallbackArgs
             );
-        } elseif ( $success_elements->item(0)->getElementsByTagName("attributes")->length != 0) {
-            $attr_nodes = $success_elements->item(0)
-                ->getElementsByTagName("attributes");
-            phpCAS :: trace("Found nested jasig style attributes");
-            if ($attr_nodes->item(0)->hasChildNodes()) {
-                // Nested Attributes
-                foreach ($attr_nodes->item(0)->childNodes as $attr_child) {
-                    phpCAS :: trace(
-                        "Attribute [".$attr_child->localName."] = "
-                        .$attr_child->nodeValue
-                    );
-                    $this->_addAttributeToArray(
-                        $extra_attributes, $attr_child->localName,
-                        $attr_child->nodeValue
-                    );
-                }
-            }
         } else {
-            // "RubyCAS Style" attributes
-            //
-            // 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
-            // 		<cas:authenticationSuccess>
-            // 			<cas:user>jsmith</cas:user>
-            //
-            // 			<cas:attraStyle>RubyCAS</cas:attraStyle>
-            // 			<cas:surname>Smith</cas:surname>
-            // 			<cas:givenName>John</cas:givenName>
-            // 			<cas:memberOf>CN=Staff,OU=Groups,DC=example,DC=edu</cas:memberOf>
-            // 			<cas:memberOf>CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu</cas:memberOf>
-            //
-            // 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
-            // 		</cas:authenticationSuccess>
-            // 	</cas:serviceResponse>
-            //
-            phpCAS :: trace("Testing for rubycas style attributes");
-            $childnodes = $success_elements->item(0)->childNodes;
-            foreach ($childnodes as $attr_node) {
-                switch ($attr_node->localName) {
-                case 'user':
-                case 'proxies':
-                case 'proxyGrantingTicket':
-                    break;
-                default:
-                    if (strlen(trim($attr_node->nodeValue))) {
-                        phpCAS :: trace(
-                            "Attribute [".$attr_node->localName."] = ".$attr_node->nodeValue
-                        );
-                        $this->_addAttributeToArray(
-                            $extra_attributes, $attr_node->localName,
-                            $attr_node->nodeValue
-                        );
-                    }
-                }
-            }
+            phpCAS :: trace("Parse extra attributes:    ");
+            $attributes = $this->_xml_to_array($success_elements->item(0));
+            phpCAS :: trace(print_r($attributes,true). "\nFLATTEN Array:    ");
+            $extra_attributes = $this->_flatten_array($attributes);
+            phpCAS :: trace(print_r($extra_attributes, true)."\nFILTER :    ");
+            if (array_key_exists("attribute", $extra_attributes)) {
+                $extra_attributes = $extra_attributes["attribute"];
+            } elseif (array_key_exists("attributes", $extra_attributes)) {
+                $extra_attributes = $extra_attributes["attributes"];
+            };
+            phpCAS :: trace(print_r($extra_attributes, true)."return");
         }
-
-        // "Name-Value" attributes.
-        //
-        // Attribute format from these mailing list thread:
-        // http://jasig.275507.n4.nabble.com/CAS-attributes-and-how-they-appear-in-the-CAS-response-td264272.html
-        // Note: This is a less widely used format, but in use by at least two institutions.
-        //
-        // 	<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
-        // 		<cas:authenticationSuccess>
-        // 			<cas:user>jsmith</cas:user>
-        //
-        // 			<cas:attribute name='attraStyle' value='Name-Value' />
-        // 			<cas:attribute name='surname' value='Smith' />
-        // 			<cas:attribute name='givenName' value='John' />
-        // 			<cas:attribute name='memberOf' value='CN=Staff,OU=Groups,DC=example,DC=edu' />
-        // 			<cas:attribute name='memberOf' value='CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu' />
-        //
-        // 			<cas:proxyGrantingTicket>PGTIOU-84678-8a9d2sfa23casd</cas:proxyGrantingTicket>
-        // 		</cas:authenticationSuccess>
-        // 	</cas:serviceResponse>
-        //
-        if (!count($extra_attributes)
-            && $success_elements->item(0)->getElementsByTagName("attribute")->length != 0
-        ) {
-            $attr_nodes = $success_elements->item(0)
-                ->getElementsByTagName("attribute");
-            $firstAttr = $attr_nodes->item(0);
-            if (!$firstAttr->hasChildNodes()
-                && $firstAttr->hasAttribute('name')
-                && $firstAttr->hasAttribute('value')
-            ) {
-                phpCAS :: trace("Found Name-Value style attributes");
-                // Nested Attributes
-                foreach ($attr_nodes as $attr_node) {
-                    if ($attr_node->hasAttribute('name')
-                        && $attr_node->hasAttribute('value')
-                    ) {
-                        phpCAS :: trace(
-                            "Attribute [".$attr_node->getAttribute('name')
-                            ."] = ".$attr_node->getAttribute('value')
-                        );
-                        $this->_addAttributeToArray(
-                            $extra_attributes, $attr_node->getAttribute('name'),
-                            $attr_node->getAttribute('value')
-                        );
-                    }
-                }
-            }
-        }
-
         $this->setAttributes($extra_attributes);
         phpCAS::traceEnd();
         return true;
@@ -3546,9 +3728,9 @@ class CAS_Client
      */
     public function setURL($url)
     {
-    	// Argument Validation
-    	if (gettype($url) != 'string')
-        	throw new CAS_TypeMismatchException($url, '$url', 'string');
+        // Argument Validation
+        if (gettype($url) != 'string')
+            throw new CAS_TypeMismatchException($url, '$url', 'string');
 
         $this->_url = $url;
     }
@@ -3569,8 +3751,8 @@ class CAS_Client
             $final_uri .= '://';
 
             $final_uri .= $this->_getClientUrl();
-            $request_uri	= explode('?', $_SERVER['REQUEST_URI'], 2);
-            $final_uri		.= $request_uri[0];
+            $request_uri = explode('?', $_SERVER['REQUEST_URI'], 2);
+            $final_uri .= $request_uri[0];
 
             if (isset($request_uri[1]) && $request_uri[1]) {
                 $query_string= $this->_removeParameterFromQueryString('ticket', $request_uri[1]);
@@ -3578,7 +3760,7 @@ class CAS_Client
                 // If the query string still has anything left,
                 // append it to the final URI
                 if ($query_string !== '') {
-                    $final_uri	.= "?$query_string";
+                    $final_uri .= "?$query_string";
                 }
             }
 
@@ -3598,9 +3780,9 @@ class CAS_Client
      */
     public function setBaseURL($url)
     {
-    	// Argument Validation
-    	if (gettype($url) != 'string')
-        	throw new CAS_TypeMismatchException($url, '$url', 'string');
+        // Argument Validation
+        if (gettype($url) != 'string')
+            throw new CAS_TypeMismatchException($url, '$url', 'string');
 
         return $this->_server['base_url'] = $url;
     }
@@ -3735,6 +3917,32 @@ class CAS_Client
             );
         }
         phpCAS::traceEnd();
+    }
+
+    /**
+     * This method tests if a string starts with a given character.
+     * 
+     * @param string $text  text to test
+     * @param string $char  character to test for
+     * 
+     * @return bool          true if the $text starts with $char
+     */
+    private function _startsWith($text, $char)
+    {
+        return (strpos($text, $char) === 0);
+    }
+
+    /**
+     * This method tests if a string ends with a given character
+     * 
+     * @param string $text  text to test
+     * @param string $char  character to test for
+     * 
+     * @return bool         true if the $text ends with $char
+     */
+    private function _endsWith($text, $char)
+    {
+        return (strpos(strrev($text), $char) === 0);
     }
 
     /**
@@ -3885,9 +4093,9 @@ class CAS_Client
      */
     public function addRebroadcastNode($rebroadcastNodeUrl)
     {
-    	// Argument validation
-    	if ( !(bool)preg_match("/^(http|https):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i", $rebroadcastNodeUrl))
-        	throw new CAS_TypeMismatchException($rebroadcastNodeUrl, '$rebroadcastNodeUrl', 'url');
+        // Argument validation
+        if ( !(bool)preg_match("/^(http|https):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i", $rebroadcastNodeUrl))
+            throw new CAS_TypeMismatchException($rebroadcastNodeUrl, '$rebroadcastNodeUrl', 'url');
 
         // Store the rebroadcast node and set flag
         $this->_rebroadcast = true;
@@ -3909,8 +4117,8 @@ class CAS_Client
      */
     public function addRebroadcastHeader($header)
     {
-    	if (gettype($header) != 'string')
-        	throw new CAS_TypeMismatchException($header, '$header', 'string');
+        if (gettype($header) != 'string')
+            throw new CAS_TypeMismatchException($header, '$header', 'string');
 
         $this->_rebroadcast_headers[] = $header;
     }
