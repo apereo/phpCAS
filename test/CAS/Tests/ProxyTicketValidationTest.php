@@ -327,7 +327,6 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
      * @return void
      *
      * @expectedException CAS_AuthenticationException
-     * @outputBuffering enabled
      */
     public function testAllowedProxiesStringFailureMissingProxy()
     {
@@ -337,9 +336,14 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
                 array('https://anotherdomain.php')
             )
         );
-        $result = $this->object
-            ->validateCAS20($url, $text_response, $tree_response);
-        $this->assertFalse($result);
+        ob_start();
+        try {
+            $this->object->validateCAS20($url, $text_response, $tree_response);
+        } catch (\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
+        ob_end_clean();
     }
 
     /**
@@ -348,7 +352,6 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
      * @return void
      *
      * @expectedException CAS_AuthenticationException
-     * @outputBuffering enabled
      */
     public function testAllowedProxiesStringFailureWrongOrder()
     {
@@ -365,9 +368,14 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
                 array('https://anotherdomain.php')
             )
         );
-        $result = $this->object
-            ->validateCAS20($url, $text_response, $tree_response);
-        $this->assertFalse($result);
+        ob_start();
+        try {
+            $this->object->validateCAS20($url, $text_response, $tree_response);
+        } catch (\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
+        ob_end_clean();
     }
 
     /**
@@ -376,15 +384,19 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
      * @return void
      *
      * @expectedException CAS_AuthenticationException
-     * @outputBuffering enabled
      */
     public function testAllowedProxiesFailure()
     {
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
-        // By default no proxies are allowed.
-        $result = $this->object
-            ->validateCAS20($url, $text_response, $tree_response);
-        $this->assertFalse($result);
+        ob_start();
+        try {
+            // By default no proxies are allowed.
+            $this->object->validateCAS20($url, $text_response, $tree_response);
+        } catch (\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
+        ob_end_clean();
     }
 
     /**
@@ -416,7 +428,6 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
      * @return void
      *
      * @expectedException CAS_AuthenticationException
-     * @outputBuffering enabled
      */
     public function testAllowedProxiesRegexpFailureWrong()
     {
@@ -426,10 +437,14 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
                 array('/^http:\/\/secondproxy\.com/', '/^https.*$/')
             )
         );
-        $result = $this->object->validateCAS20(
-            $url, $text_response, $tree_response
-        );
-        $this->assertFalse($result);
+        ob_start();
+        try {
+            $this->object->validateCAS20($url, $text_response, $tree_response);
+        } catch (\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
+        ob_end_clean();
     }
 
     /**
@@ -438,7 +453,6 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
      * @return void
      *
      * @expectedException CAS_AuthenticationException
-     * @outputBuffering enabled
      */
     public function testAllowedProxiesRegexpFailureWrongOrder()
     {
@@ -450,10 +464,14 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
                 )
             )
         );
-        $result = $this->object->validateCAS20(
-            $url, $text_response, $tree_response
-        );
-        $this->assertFalse($result);
+        ob_start();
+        try {
+            $this->object->validateCAS20($url, $text_response, $tree_response);
+        } catch (\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
+        ob_end_clean();
     }
 }
 ?>
