@@ -209,27 +209,6 @@ class CAS_Tests_ServiceMailTest extends TestCase
     }
 
     /**
-     * Test that we can at least retrieve a proxy-ticket for the service.
-     *
-     * @return void
-     */
-    public function testServiceMail()
-    {
-        // Stop here and mark this test as incomplete.
-        $this->markTestIncomplete('This test has not been implemented yet.');
-
-        //      $stream = $this->object->serviceMail(
-        //          'mailbox_name',
-        //          'imap://mail.example.edu/path/to/something',
-        //          OP_READONLY, $err_code, $err_msg, $pt
-        //      );
-        //      $this->assertInternalType('resource', $stream);
-        //      $this->assertEquals(PHPCAS_SERVICE_OK, $err_code);
-        //      $this->assertEquals('', $err_msg);
-        //      $this->assertEquals('PT-asdfas-dfasgww2323radf3', $pt);
-    }
-
-    /**
      * Verify that proxy-ticket Exceptions are caught and converted to error
      * codes in serviceMail().
      *
@@ -250,55 +229,6 @@ class CAS_Tests_ServiceMailTest extends TestCase
     }
 
     /**
-     * Verify that proxied-service Exceptions are caught and converted to error
-     * codes in serviceMail().
-     *
-     * @return void
-     */
-    public function testServiceMailServiceError()
-    {
-        // Stop here and mark this test as incomplete.
-        $this->markTestIncomplete('This test has not been implemented yet.');
-
-        //      $stream = $this->object->serviceMail(
-        //          'mailbox_name', 'ssh://me.example.net', OP_READONLY,
-        //          $err_code, $err_msg, $pt
-        //      );
-        //      $this->assertFalse(
-        //          $stream,
-        //          "serviceMail() should have returned false on a service error."
-        //      );
-        //      $this->assertEquals(PHPCAS_SERVICE_NOT_AVAILABLE, $err_code);
-        //      $this->assertStringStartsWith("The service", $err_msg);
-        //      $this->assertFalse($pt, '$pt should be false.');
-    }
-
-    /**
-     * Direct usage of the Proxied Imap service.
-     *
-     * @return void
-     */
-    public function testImap()
-    {
-        // Stop here and mark this test as incomplete.
-        $this->markTestIncomplete('This test has not been implemented yet.');
-
-        //     	$service = $this->object->getProxiedService(
-        //          PHPCAS_PROXIED_SERVICE_IMAP
-        //      );
-        //     	$service->setServiceUrl('imap://mail.example.edu/path/to/something');
-        //     	$service->setMailbox('mailbox_name');
-        //     	$service->setOptions(OP_READONLY);
-        //     	$stream = $service->open();
-        //     	$this->assertInternalType('resource', $stream);
-        //     	$this->assertInternalType('resource', $service->getStream());
-        //     	$this->assertEquals(
-        //          'PT-asdfas-dfasgww2323radf3', $service->getImapProxyTicket()
-        //      );
-
-    }
-
-    /**
      * Verify that a CAS_ProxyTicketException is thrown if we try to access a service
      * that results in a proxy-ticket failure.
      *
@@ -315,28 +245,6 @@ class CAS_Tests_ServiceMailTest extends TestCase
         $service->setMailbox('mailbox_name');
         $service->setOptions(OP_READONLY);
         $stream = $service->open();
-    }
-
-    /**
-     * Verify that sending fails if we try to access a service
-     * that has a valid proxy ticket, but where the service has a sending error.
-     *
-     * @return void
-     *
-     * @expectedException CAS_ProxiedService_Exception
-     */
-    public function testHttpGetServiceFailure()
-    {
-        // Stop here and mark this test as incomplete.
-        $this->markTestIncomplete('This test has not been implemented yet.');
-
-        //     	$service = $this->object->getProxiedService(
-        //          PHPCAS_PROXIED_SERVICE_IMAP
-        //      );
-        //     	$service->setServiceUrl('ssh://me.example.net');
-        //     	$service->setMailbox('mailbox_name');
-        //     	$service->setOptions(OP_READONLY);
-        //     	$stream = $service->open();
     }
 }
 ?>
