@@ -27,11 +27,15 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace PhpCas\TestHarness;
+
+use PhpCas\TestHarness\ResponseInterface;
+
 /**
  * The BasicResponse allows tests to dynamically create a response that can be used
  * in unit tests.
  *
- * @class    CAS_TestHarness_BasicResponse
+ * @class    BasicResponse
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
@@ -39,7 +43,7 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
-class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
+class BasicResponse implements ResponseInterface
 {
     protected $scheme = 'http';
     protected $host = null;
@@ -304,7 +308,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
     public function getResponseStatusCode()
     {
         if (!$this->sent) {
-            throw new CAS_OutOfSequenceException(
+            throw new \CAS_OutOfSequenceException(
                 'Request has not been sent yet. Cannot ' . __METHOD__
             );
         }
@@ -313,7 +317,7 @@ class CAS_TestHarness_BasicResponse implements CAS_TestHarness_ResponseInterface
             $this->responseHeaders[0], $matches
         )
         ) {
-            throw new CAS_Request_Exception(
+            throw new \CAS_Request_Exception(
                 "Bad response, no status code was found in the first line."
             );
         }

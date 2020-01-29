@@ -27,19 +27,23 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace PhpCas\Tests;
+
+use PhpCas\TestHarness\BasicResponse;
+use PhpCas\TestHarness\DummyRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for verifying the operation of service tickets.
  *
- * @class    CAS_Tests_ServiceMailTest
+ * @class    ServiceMailTest
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_ServiceMailTest extends TestCase
+class ServiceMailTest extends TestCase
 {
     /**
      * @var CAS_Client
@@ -66,7 +70,7 @@ class CAS_Tests_ServiceMailTest extends TestCase
         $_SERVER['PHP_SELF'] = '/index.php';
         $_SESSION = array();
 
-        $this->object = new CAS_Client(
+        $this->object = new \CAS_Client(
             CAS_VERSION_2_0, // Server Version
             true, // Proxy
             'cas.example.edu', // Server Hostname
@@ -75,7 +79,7 @@ class CAS_Tests_ServiceMailTest extends TestCase
             false // Start Session
         );
 
-        $this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
+        $this->object->setRequestImplementation('PhpCas\TestHarness\DummyRequest');
         $this->object->setCasServerCACert(__FILE__, true);
 
         // Bypass PGT storage since CAS_Client->callback() will exit. Just build
@@ -100,7 +104,7 @@ class CAS_Tests_ServiceMailTest extends TestCase
          *********************************************************/
 
         // Proxy ticket Response
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/proxy'
         );
         $response->matchQueryParameters(
@@ -129,14 +133,14 @@ class CAS_Tests_ServiceMailTest extends TestCase
 "
         );
         $response->ensureCaCertPathEquals(__FILE__);
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         /*********************************************************
          * 2. Proxy Ticket Error
          *********************************************************/
 
         // Error Proxy ticket Response
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/proxy'
         );
         $response->matchQueryParameters(
@@ -166,7 +170,7 @@ class CAS_Tests_ServiceMailTest extends TestCase
         );
 
         $response->ensureCaCertPathEquals(__FILE__);
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         /*********************************************************
          * Ensure that IMAP constants are defined even if the IMAP
@@ -192,7 +196,7 @@ class CAS_Tests_ServiceMailTest extends TestCase
      */
     protected function tearDown()
     {
-        CAS_TestHarness_DummyRequest::clearResponses();
+        DummyRequest::clearResponses();
     }
 
     /**

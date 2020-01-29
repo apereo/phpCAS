@@ -27,30 +27,34 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace PhpCas\TestHarness;
+
+use PhpCas\TestHarness\ResponseInterface;
+
 /**
  * Provides support for performing dummy web-requests
  *
- * @class    CAS_TestHarness_DummyRequest
+ * @class    DummyRequest
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_TestHarness_DummyRequest extends CAS_Request_AbstractRequest
-implements CAS_Request_RequestInterface
+class DummyRequest extends \CAS_Request_AbstractRequest
+implements \CAS_Request_RequestInterface
 {
     private static $_responses = array();
 
     /**
      * Configure a URL/Response that the test harness will respond to.
      *
-     * @param CAS_TestHarness_ResponseInterface $response response interface
+     * @param ResponseInterface $response response interface
      *
      * @return void
      */
     public static function addResponse(
-        CAS_TestHarness_ResponseInterface $response
+        ResponseInterface $response
     ) {
         self::$_responses[] = $response;
     }

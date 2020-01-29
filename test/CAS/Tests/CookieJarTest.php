@@ -27,12 +27,14 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace PhpCas\Tests;
+
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test harness for the cookie Jar to allow us to test protected methods.
  *
- * @class    CAS_Tests_CookieJarExposed
+ * @class    CookieJarExposed
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
@@ -40,7 +42,7 @@ use PHPUnit\Framework\TestCase;
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
-class CAS_Tests_CookieJarExposed extends CAS_CookieJar
+class CookieJarExposed extends \CAS_CookieJar
 {
     /**
      * Wrapper to call protected methods
@@ -65,14 +67,14 @@ class CAS_Tests_CookieJarExposed extends CAS_CookieJar
  * Test class for verifying the operation of cookie handling methods used in
  * serviceWeb() proxy calls.
  *
- * @class    CAS_Tests_CookieJarTest
+ * @class    CookieJarTest
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_CookieJarTest extends TestCase
+class CookieJarTest extends TestCase
 {
     /**
      * @var CAS_Client
@@ -88,7 +90,7 @@ class CAS_Tests_CookieJarTest extends TestCase
     protected function setUp()
     {
         $this->cookieArray = array();
-        $this->object = new CAS_Tests_CookieJarExposed($this->cookieArray);
+        $this->object = new CookieJarExposed($this->cookieArray);
 
         $this->serviceUrl_1 = 'http://service.example.com/lookup/?action=search&query=username';
         $this->responseHeaders_1 = array('HTTP/1.1 302 Found',
@@ -389,7 +391,7 @@ class CAS_Tests_CookieJarTest extends TestCase
     public function testPublicStoreCookies()
     {
         $array = array();
-        $cookieJar = new CAS_CookieJar($array);
+        $cookieJar = new \CAS_CookieJar($array);
         $this->assertEquals(0, count($array));
         $cookieJar->storeCookies($this->serviceUrl_1, $this->responseHeaders_1);
         $this->assertEquals(1, count($array));

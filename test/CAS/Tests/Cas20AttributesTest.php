@@ -27,19 +27,23 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace PhpCas\Tests;
+
+use PhpCas\TestHarness\BasicResponse;
+use PhpCas\TestHarness\DummyRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for verifying the operation of service tickets.
  *
- * @class    CAS_Tests_Cas20AttributeTest
+ * @class    Cas20AttributeTest
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_Cas20AttributesTest extends TestCase
+class Cas20AttributesTest extends TestCase
 {
     /**
      * @var CAS_Client
@@ -63,7 +67,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
         $_SERVER['PHP_SELF'] = '/index.php';
         $_SESSION = array();
 
-        $this->object = new CAS_Client(
+        $this->object = new \CAS_Client(
             CAS_VERSION_2_0, // Server Version
             false, // Proxy
             'cas.example.edu', // Server Hostname
@@ -72,7 +76,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
             false // Start Session
         );
 
-        $this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
+        $this->object->setRequestImplementation('PhpCas\TestHarness\DummyRequest');
         $this->object->setCasServerCACert(__FILE__, true);
         $this->object->setNoClearTicketsFromUrl();
         // 		phpCAS::setDebug(dirname(__FILE__).'/../test.log');
@@ -86,7 +90,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
      */
     protected function tearDown()
     {
-        CAS_TestHarness_DummyRequest::clearResponses();
+        DummyRequest::clearResponses();
     }
 
     /**
@@ -97,7 +101,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
     public function testRubycasAttributes()
     {
         // Set up our response.
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->setResponseHeaders(
@@ -126,7 +130,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
 </cas:serviceResponse>
 "
         );
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->isAuthenticated();
@@ -152,7 +156,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
     public function testJasigAttributes()
     {
         // Set up our response.
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->setResponseHeaders(
@@ -183,7 +187,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
 </cas:serviceResponse>
 "
         );
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->isAuthenticated();
@@ -208,7 +212,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
     public function testJasigAttributesInternational()
     {
         // Set up our response.
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->setResponseHeaders(
@@ -234,7 +238,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
 </cas:serviceResponse>
 "
         );
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->isAuthenticated();
@@ -268,7 +272,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
     public function testNameValueAttributes()
     {
         // Set up our response.
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/serviceValidate'
         );
         $response->setResponseHeaders(
@@ -297,7 +301,7 @@ class CAS_Tests_Cas20AttributesTest extends TestCase
 </cas:serviceResponse>
 "
         );
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->isAuthenticated();

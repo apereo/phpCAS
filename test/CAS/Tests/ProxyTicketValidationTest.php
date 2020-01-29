@@ -27,19 +27,23 @@
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
+namespace PhpCas\Tests;
+
+use PhpCas\TestHarness\BasicResponse;
+use PhpCas\TestHarness\DummyRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for verifying the operation of service tickets.
  *
- * @class    CAS_Tests_ProxyTicketValidationTest
+ * @class    ProxyTicketValidationTest
  * @category Authentication
  * @package  PhpCAS
  * @author   Adam Franco <afranco@middlebury.edu>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
-class CAS_Tests_ProxyTicketValidationTest extends TestCase
+class ProxyTicketValidationTest extends TestCase
 {
     /**
      * @var CAS_Client
@@ -65,7 +69,7 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
 
         // 		$_GET['ticket'] = 'ST-123456-asdfasdfasgww2323radf3';
 
-        $this->object = new CAS_Client(
+        $this->object = new \CAS_Client(
             CAS_VERSION_2_0, // Server Version
             false, // Proxy
             'cas.example.edu', // Server Hostname
@@ -74,14 +78,14 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
             false // Start Session
         );
 
-        $this->object->setRequestImplementation('CAS_TestHarness_DummyRequest');
+        $this->object->setRequestImplementation('PhpCas\TestHarness\DummyRequest');
         $this->object->setCasServerCACert(__FILE__, true);
 
         /*********************************************************
          * Enumerate our responses
          *********************************************************/
         // Valid ticket response
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/proxyValidate'
         );
         $response->matchQueryParameters(
@@ -112,10 +116,10 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
 "
         );
         $response->ensureCaCertPathEquals(__FILE__);
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
 
         // Invalid ticket response
-        $response = new CAS_TestHarness_BasicResponse(
+        $response = new BasicResponse(
             'https', 'cas.example.edu', '/cas/proxyValidate'
         );
         $response->matchQueryParameters(
@@ -140,7 +144,7 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
 "
         );
         $response->ensureCaCertPathEquals(__FILE__);
-        CAS_TestHarness_DummyRequest::addResponse($response);
+        DummyRequest::addResponse($response);
     }
 
     /**
@@ -151,7 +155,7 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
      */
     protected function tearDown()
     {
-        CAS_TestHarness_DummyRequest::clearResponses();
+        DummyRequest::clearResponses();
     }
 
     /**
@@ -163,7 +167,7 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
     {
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->getAllowedProxyChains()
-            ->allowProxyChain(new CAS_ProxyChain_Any());
+            ->allowProxyChain(new \CAS_ProxyChain_Any());
         $result = $this->object
             ->validateCAS20($url, $text_response, $tree_response);
         $this->assertTrue($result);
@@ -191,7 +195,7 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
     {
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->getAllowedProxyChains()
-            ->allowProxyChain(new CAS_ProxyChain_Any());
+            ->allowProxyChain(new \CAS_ProxyChain_Any());
         $result = $this->object
             ->validateCAS20($url, $text_response, $tree_response);
         $this->assertTrue($result);
@@ -218,7 +222,7 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
         ob_start();
         try {
             $this->object->validateCAS20($url, $text_response, $tree_response);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ob_end_clean();
             throw $e;
         }
@@ -237,7 +241,7 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
         try {
             $result = $this->object
                 ->validateCAS20($url, $text_response, $tree_response);
-        } catch (CAS_AuthenticationException $e) {
+        } catch (\CAS_AuthenticationException $e) {
         }
         ob_end_clean();
         $this->assertEquals(
@@ -255,14 +259,14 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
     {
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->getAllowedProxyChains()->allowProxyChain(
-            new CAS_ProxyChain(
+            new \CAS_ProxyChain(
                 array('http://firstproxy.com',
                     'https://anotherdomain.org/mysite/test2'
                 )
             )
         );
         $this->object->getAllowedProxyChains()->allowProxyChain(
-            new CAS_ProxyChain(
+            new \CAS_ProxyChain(
                 array('https://anotherdomain.php')
             )
         );
@@ -293,12 +297,12 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
     {
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->getAllowedProxyChains()->allowProxyChain(
-            new CAS_ProxyChain_Trusted(
+            new \CAS_ProxyChain_Trusted(
                 array('http://firstproxy.com')
             )
         );
         $this->object->getAllowedProxyChains()->allowProxyChain(
-            new CAS_ProxyChain(
+            new \CAS_ProxyChain(
                 array('https://anotherdomain.php')
             )
         );
@@ -332,7 +336,7 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
     {
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->getAllowedProxyChains()->allowProxyChain(
-            new CAS_ProxyChain(
+            new \CAS_ProxyChain(
                 array('https://anotherdomain.php')
             )
         );
@@ -357,14 +361,14 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
     {
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->getAllowedProxyChains()->allowProxyChain(
-            new CAS_ProxyChain(
+            new \CAS_ProxyChain(
                 array('https://anotherdomain.org/mysite/test2',
                     'http://firstproxy.com'
                 )
             )
         );
         $this->object->getAllowedProxyChains()->allowProxyChain(
-            new CAS_ProxyChain(
+            new \CAS_ProxyChain(
                 array('https://anotherdomain.php')
             )
         );
@@ -408,10 +412,10 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
     {
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->getAllowedProxyChains()->allowProxyChain(
-            new CAS_ProxyChain(array('/badregexp/'))
+            new \CAS_ProxyChain(array('/badregexp/'))
         );
         $this->object->getAllowedProxyChains()->allowProxyChain(
-            new CAS_ProxyChain(
+            new \CAS_ProxyChain(
                 array('/http\:\/\/firstproxy\.com.*$/',
                     '/^https\:\/\/anotherdomain.org\/mysite\/test2$/'
                 )
@@ -433,7 +437,7 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
     {
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->getAllowedProxyChains()->allowProxyChain(
-            new CAS_ProxyChain(
+            new \CAS_ProxyChain(
                 array('/^http:\/\/secondproxy\.com/', '/^https.*$/')
             )
         );
@@ -458,7 +462,7 @@ class CAS_Tests_ProxyTicketValidationTest extends TestCase
     {
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         $this->object->getAllowedProxyChains()->allowProxyChain(
-            new CAS_ProxyChain(
+            new \CAS_ProxyChain(
                 array('/^https\:\/\/anotherdomain.org\/mysite\/test2$/',
                     '/http\:\/\/firstproxy\.com.*$/'
                 )

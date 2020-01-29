@@ -1,11 +1,13 @@
 <?php
 
+namespace PhpCas\Tests;
+
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 
-class CAS_Tests_LogTest extends TestCase
+class LogTest extends TestCase
 {
     /**
      * @var string
@@ -37,8 +39,8 @@ class CAS_Tests_LogTest extends TestCase
 
     public function testSetLogger()
     {
-        phpCAS::setLogger($this->logger);
-        $client = new CAS_Client(
+        \phpCAS::setLogger($this->logger);
+        $client = new \CAS_Client(
             CAS_VERSION_2_0, // Server Version
             false, // Proxy
             'cas.example.edu', // Server Hostname
@@ -59,9 +61,9 @@ class CAS_Tests_LogTest extends TestCase
 
     public function testSetLoggerNull()
     {
-        phpCAS::setLogger($this->logger);
-        phpCAS::setLogger(null);
-        $client = new CAS_Client(
+        \phpCAS::setLogger($this->logger);
+        \phpCAS::setLogger(null);
+        $client = new \CAS_Client(
             CAS_VERSION_2_0, // Server Version
             false, // Proxy
             'cas.example.edu', // Server Hostname
