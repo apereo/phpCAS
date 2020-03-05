@@ -1894,6 +1894,14 @@ class phpCAS
     }
 
     /**
+     * @return CAS_Client
+     */
+    public static function getCasClient()
+    {
+        return self::$_PHPCAS_CLIENT;
+    }
+
+    /**
      * For testing purposes, use this method to set the client to a test double
      *
      * @return void
