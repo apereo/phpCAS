@@ -29,6 +29,7 @@
 
 namespace PhpCas\Tests;
 
+use \CAS_Client;
 use PhpCas\TestHarness\BasicResponse;
 use PhpCas\TestHarness\DummyRequest;
 use PHPUnit\Framework\TestCase;
@@ -70,7 +71,7 @@ class ServiceWebTest extends TestCase
         $_SERVER['PHP_SELF'] = '/index.php';
         $_SESSION = array();
 
-        $this->object = new \CAS_Client(
+        $this->object = new CAS_Client(
             CAS_VERSION_2_0, // Server Version
             true, // Proxy
             'cas.example.edu', // Server Hostname
