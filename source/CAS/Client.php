@@ -890,15 +890,15 @@ class CAS_Client
     /**
      * CAS_Client constructor.
      *
-     * @param string                  $server_version  the version of the CAS server
-     * @param bool                    $proxy           true if the CAS client is a CAS proxy
-     * @param string                  $server_hostname the hostname of the CAS server
-     * @param int                     $server_port     the port the CAS server is running on
-     * @param string                  $server_uri      the URI the CAS server is responding on
-     * @param bool                    $changeSessionID Allow phpCAS to change the session_id
-     *                                                 (Single Sign Out/handleLogoutRequests
-     *                                                 is based on that change)
-     * @param SessionHandlerInterface $sessionHandler  the session handler
+     * @param string                   $server_version  the version of the CAS server
+     * @param bool                     $proxy           true if the CAS client is a CAS proxy
+     * @param string                   $server_hostname the hostname of the CAS server
+     * @param int                      $server_port     the port the CAS server is running on
+     * @param string                   $server_uri      the URI the CAS server is responding on
+     * @param bool                     $changeSessionID Allow phpCAS to change the session_id
+     *                                                  (Single Sign Out/handleLogoutRequests
+     *                                                  is based on that change)
+     * @param \SessionHandlerInterface $sessionHandler  the session handler
      *
      * @return self a newly created CAS_Client object
      */
@@ -909,7 +909,7 @@ class CAS_Client
         $server_port,
         $server_uri,
         $changeSessionID = true,
-        SessionHandlerInterface $sessionHandler = null
+        \SessionHandlerInterface $sessionHandler = null
     ) {
         // Argument validation
         if (gettype($server_version) != 'string')
@@ -925,7 +925,7 @@ class CAS_Client
         if (gettype($changeSessionID) != 'boolean')
             throw new CAS_TypeMismatchException($changeSessionID, '$changeSessionID', 'boolean');
 
-        if (!isset($sessionHandler)) {
+        if (empty($sessionHandler)) {
             $sessionHandler = new CAS_Session_PhpSession;
         }
 
@@ -1098,11 +1098,11 @@ class CAS_Client
     /**
      * Set the session handler.
      *
-     * @param SessionHandlerInterface $sessionHandler
+     * @param \SessionHandlerInterface $sessionHandler
      *
      * @return bool
      */
-    public function setSessionHandler(SessionHandlerInterface $sessionHandler)
+    public function setSessionHandler(\SessionHandlerInterface $sessionHandler)
     {
         $this->_sessionHandler = $sessionHandler;
         return session_set_save_handler($this->_sessionHandler, true);
@@ -1112,10 +1112,11 @@ class CAS_Client
      * Get a session value using the given key.
      *
      * @param string $key
+     * @param mixed  $default default value if the key is not set
      *
      * @return mixed
      */
-    public function getSessionValue($key)
+    public function getSessionValue($key, $default = null)
     {
         $this->validateSession($key);
 
@@ -1123,7 +1124,7 @@ class CAS_Client
             return $_SESSION[static::PHPCAS_SESSION_PREFIX][$key];
         }
 
-        return null;
+        return $default;
     }
 
     /**
@@ -1167,7 +1168,10 @@ class CAS_Client
 
         if (isset($_SESSION[static::PHPCAS_SESSION_PREFIX][$key])) {
             unset($_SESSION[static::PHPCAS_SESSION_PREFIX][$key]);
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -1206,7 +1210,7 @@ class CAS_Client
      *
      * @return void
      */
-    private function _renameSession($ticket)
+    protected function _renameSession($ticket)
     {
         phpCAS::traceBegin();
         if ($this->getChangeSessionID()) {
@@ -1412,9 +1416,7 @@ class CAS_Client
     {
         phpCAS::traceBegin();
         // Either way, the user is authenticated by CAS
-        if ($this->hasSessionValue('auth_checked')) {
-            $this->removeSessionValue('auth_checked');
-        }
+        $this->removeSessionValue('auth_checked');
         if ( $this->isAuthenticated(true) ) {
             phpCAS::trace('user already authenticated');
             $res = true;
@@ -1443,9 +1445,7 @@ class CAS_Client
             $res = true;
         } else {
             // the user is not authenticated, redirect to the CAS server
-            if ($this->getSessionValue('auth_checked')) {
-                $this->removeSessionValue('auth_checked');
-            }
+            $this->removeSessionValue('auth_checked');
             $this->redirectToCas(false/* no gateway */);
             // never reached
             $res = false;
@@ -1487,6 +1487,7 @@ class CAS_Client
     public function checkAuthentication()
     {
         phpCAS::traceBegin();
+        $res = false; // default
         if ( $this->isAuthenticated() ) {
             phpCAS::trace('user is authenticated');
             /* The 'auth_checked' variable is removed just in case it's set. */
@@ -1496,25 +1497,21 @@ class CAS_Client
             // the previous request has redirected the client to the CAS server
             // with gateway=true
             $this->removeSessionValue('auth_checked');
-            $res = false;
         } else {
             // avoid a check against CAS on every request
-            if (!$this->hasSessionValue('unauth_count')) {
-                $this->setSessionValue('unauth_count', -2); // uninitialized
-            }
+            // we need to write this back to session later
+            $unauth_count = $this->getSessionValue('unauth_count', -2);
 
-            if (($this->getSessionValue('unauth_count') != -2
+            if (($unauth_count != -2
                 && $this->_cache_times_for_auth_recheck == -1)
-                || ($this->getSessionValue('unauth_count') >= 0
-                && $this->getSessionValue('unauth_count') < $this->_cache_times_for_auth_recheck)
+                || ($unauth_count >= 0
+                && $unauth_count < $this->_cache_times_for_auth_recheck)
             ) {
-                $res = false;
-
                 if ($this->_cache_times_for_auth_recheck != -1) {
-                    $this->setSessionValue('unauth_count', $this->getSessionValue('unauth_count') + 1);
+                    $unauth_count++;
                     phpCAS::trace(
                         'user is not authenticated (cached for '
-                        .$this->getSessionValue('unauth_count').' times of '
+                        .$unauth_count.' times of '
                         .$this->_cache_times_for_auth_recheck.')'
                     );
                 } else {
@@ -1522,13 +1519,13 @@ class CAS_Client
                         'user is not authenticated (cached for until login pressed)'
                     );
                 }
+                $this->setSessionValue('unauth_count', $unauth_count);
             } else {
                 $this->setSessionValue('unauth_count', 0);
                 $this->setSessionValue('auth_checked', true);
                 phpCAS::trace('user is not authenticated (cache reset)');
                 $this->redirectToCas(true/* gateway */);
                 // never reached
-                $res = false;
             }
         }
         phpCAS::traceEnd($res);

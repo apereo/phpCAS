@@ -326,14 +326,14 @@ class phpCAS
     /**
      * phpCAS client initializer.
      *
-     * @param string                  $server_version  the version of the CAS server
-     * @param string                  $server_hostname the hostname of the CAS server
-     * @param string                  $server_port     the port the CAS server is running on
-     * @param string                  $server_uri      the URI the CAS server is responding on
-     * @param bool                    $changeSessionID Allow phpCAS to change the session_id
-     *                                                 (Single Sign Out/handleLogoutRequests
-     *                                                 is based on that change)
-     * @param SessionHandlerInterface $sessionHandler  the session handler
+     * @param string                   $server_version  the version of the CAS server
+     * @param string                   $server_hostname the hostname of the CAS server
+     * @param string                   $server_port     the port the CAS server is running on
+     * @param string                   $server_uri      the URI the CAS server is responding on
+     * @param bool                     $changeSessionID Allow phpCAS to change the session_id
+     *                                                  (Single Sign Out/handleLogoutRequests
+     *                                                  is based on that change)
+     * @param \SessionHandlerInterface $sessionHandler  the session handler
      *
      * @return void a newly created CAS_Client object
      * @note Only one of the phpCAS::client() and phpCAS::proxy functions should be
@@ -341,7 +341,7 @@ class phpCAS
      * and phpCAS::setDebug()).
      */
     public static function client($server_version, $server_hostname,
-        $server_port, $server_uri, $changeSessionID = true, SessionHandlerInterface $sessionHandler = null
+        $server_port, $server_uri, $changeSessionID = true, \SessionHandlerInterface $sessionHandler = null
     ) {
         phpCAS :: traceBegin();
         if (is_object(self::$_PHPCAS_CLIENT)) {
@@ -372,14 +372,14 @@ class phpCAS
     /**
      * phpCAS proxy initializer.
      *
-     * @param string                  $server_version  the version of the CAS server
-     * @param string                  $server_hostname the hostname of the CAS server
-     * @param string                  $server_port     the port the CAS server is running on
-     * @param string                  $server_uri      the URI the CAS server is responding on
-     * @param bool                    $changeSessionID Allow phpCAS to change the session_id
-     *                                                 (Single Sign Out/handleLogoutRequests
-     *                                                 is based on that change)
-     * @param SessionHandlerInterface $sessionHandler  the session handler
+     * @param string                   $server_version  the version of the CAS server
+     * @param string                   $server_hostname the hostname of the CAS server
+     * @param string                   $server_port     the port the CAS server is running on
+     * @param string                   $server_uri      the URI the CAS server is responding on
+     * @param bool                     $changeSessionID Allow phpCAS to change the session_id
+     *                                                  (Single Sign Out/handleLogoutRequests
+     *                                                  is based on that change)
+     * @param \SessionHandlerInterface $sessionHandler  the session handler
      *
      * @return void a newly created CAS_Client object
      * @note Only one of the phpCAS::client() and phpCAS::proxy functions should be
@@ -387,7 +387,7 @@ class phpCAS
      * and phpCAS::setDebug()).
      */
     public static function proxy($server_version, $server_hostname,
-        $server_port, $server_uri, $changeSessionID = true, SessionHandlerInterface $sessionHandler = null
+        $server_port, $server_uri, $changeSessionID = true, \SessionHandlerInterface $sessionHandler = null
     ) {
         phpCAS :: traceBegin();
         if (is_object(self::$_PHPCAS_CLIENT)) {
