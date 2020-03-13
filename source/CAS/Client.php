@@ -1124,7 +1124,7 @@ class CAS_Client
      *
      * @return mixed
      */
-    public function getSessionValue($key, $default = null)
+    protected function getSessionValue($key, $default = null)
     {
         $this->validateSession($key);
 
@@ -1142,7 +1142,7 @@ class CAS_Client
      *
      * @return bool
      */
-    public function hasSessionValue($key)
+    protected function hasSessionValue($key)
     {
         $this->validateSession($key);
 
@@ -1158,7 +1158,7 @@ class CAS_Client
      *
      * @return string
      */
-    public function setSessionValue($key, $value)
+    protected function setSessionValue($key, $value)
     {
         $this->validateSession($key);
 
@@ -1170,7 +1170,7 @@ class CAS_Client
      *
      * @param string $key
      */
-    public function removeSessionValue($key)
+    protected function removeSessionValue($key)
     {
         $this->validateSession($key);
 
@@ -1185,7 +1185,7 @@ class CAS_Client
     /**
      * Remove all phpCAS session values.
      */
-    public function clearSessionValues()
+    protected function clearSessionValues()
     {
         unset($_SESSION[static::PHPCAS_SESSION_PREFIX]);
     }
