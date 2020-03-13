@@ -931,16 +931,24 @@ class CAS_Client
 
         phpCAS::traceBegin();
         // true : allow to change the session_id(), false session_id won't be
-        // change and logout won't be handle because of that
+        // changed and logout won't be handled because of that
         $this->_setChangeSessionID($changeSessionID);
 
         $this->setSessionHandler($sessionHandler);
 
-        // skip Session Handling for logout requests and if don't want it'
-        if (session_id()=="" && !$this->_isLogoutRequest()) {
-            session_start();
-            phpCAS :: trace("Starting a new session " . session_id());
+        if (!$this->_isLogoutRequest()) {
+            if (session_id() === "") {
+                // skip Session Handling for logout requests and if don't want it
+                session_start();
+                phpCAS :: trace("Starting a new session " . session_id());
+            }
+            // init phpCAS session array
+            if (!isset($_SESSION[static::PHPCAS_SESSION_PREFIX])
+                || !is_array($_SESSION[static::PHPCAS_SESSION_PREFIX])) {
+                $_SESSION[static::PHPCAS_SESSION_PREFIX] = array();
+            }
         }
+
         // Only for debug purposes
         if ($this->isSessionAuthenticated()){
             phpCAS :: trace("Session is authenticated as: " . $this->getSessionValue('user'));
@@ -1183,7 +1191,7 @@ class CAS_Client
     }
 
     /**
-     * Ensure phpCAS session value is an array and ensure $key is a string.
+     * Ensure $key is a string for session utils input
      *
      * @param string $key
      *
@@ -1193,11 +1201,6 @@ class CAS_Client
     {
         if (!is_string($key)) {
             throw new InvalidArgumentException('Session key must be a string.');
-        }
-
-        if (!isset($_SESSION[static::PHPCAS_SESSION_PREFIX])
-        || !is_array($_SESSION[static::PHPCAS_SESSION_PREFIX])) {
-            $_SESSION[static::PHPCAS_SESSION_PREFIX] = array();
         }
 
         return true;
