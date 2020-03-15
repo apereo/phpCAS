@@ -1138,6 +1138,9 @@ class CAS_Client
     /**
      * Determine whether a session value is set or not.
      *
+     * To check if a session value is empty or not please use
+     * !empty(getSessionValue($key)).
+     *
      * @param string $key
      *
      * @return bool
@@ -1146,8 +1149,7 @@ class CAS_Client
     {
         $this->validateSession($key);
 
-        return (isset($_SESSION[static::PHPCAS_SESSION_PREFIX][$key])
-        && !empty($_SESSION[static::PHPCAS_SESSION_PREFIX][$key]));
+        return isset($_SESSION[static::PHPCAS_SESSION_PREFIX][$key]);
     }
 
     /**
@@ -1496,7 +1498,7 @@ class CAS_Client
             /* The 'auth_checked' variable is removed just in case it's set. */
             $this->removeSessionValue('auth_checked');
             $res = true;
-        } else if ($this->hasSessionValue('auth_checked')) {
+        } else if ($this->getSessionValue('auth_checked')) {
             // the previous request has redirected the client to the CAS server
             // with gateway=true
             $this->removeSessionValue('auth_checked');
@@ -1694,7 +1696,7 @@ class CAS_Client
      */
     public function isSessionAuthenticated ()
     {
-        return $this->hasSessionValue('user');
+        return !empty($this->getSessionValue('user'));
     }
 
     /**
@@ -1722,7 +1724,7 @@ class CAS_Client
         if ( $this->isProxy() ) {
             // CAS proxy: username and PGT must be present
             if ( $this->isSessionAuthenticated()
-                && $this->hasSessionValue('pgt')
+                && !empty($this->getSessionValue('pgt'))
             ) {
                 // authentication already done
                 $this->_setUser($this->getSessionValue('user'));
@@ -1746,7 +1748,7 @@ class CAS_Client
 
                 $auth = true;
             } elseif ( $this->isSessionAuthenticated()
-                && !$this->hasSessionValue('pgt')
+                && empty($this->getSessionValue('pgt'))
             ) {
                 // these two variables should be empty or not empty at the same time
                 phpCAS::trace(
@@ -1757,7 +1759,7 @@ class CAS_Client
                 $this->clearSessionValues();
                 $this->setTicket('');
             } elseif ( !$this->isSessionAuthenticated()
-                && $this->hasSessionValue('pgt')
+                && !empty($this->getSessionValue('pgt'))
             ) {
                 // these two variables should be empty or not empty at the same time
                 phpCAS::trace(
