@@ -1,4 +1,5 @@
 language: php
+os: linux
 dist: trusty
 php:
 - '5.4'
@@ -10,20 +11,22 @@ php:
 - '7.3'
 - '7.4'
 - 'nightly'
-services:
-- docker
 script:
 # Composer is testing-only; vendor folder should not appear in releases
 - if [[ $TRAVIS_PHP_VERSION == 'nightly' ]]; then composer --no-interaction config platform.php 7.4.0; fi
 - composer install
-- ./vendor/bin/phpunit --verbose --stderr
-matrix:
+- ./vendor/bin/phpunit --verbose --stderr --coverage-clover=coverage.xml
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+jobs:
   fast_finish: true
   allow_failures:
     - php: "nightly"
   include:
   - stage: GitHub Release
     php: '7.2'
+    services:
+    - docker
     script:
     - docker run --rm -it -v $PWD:/app centos:centos7 /app/utils/build.sh
     deploy:
@@ -31,7 +34,7 @@ matrix:
       file_glob: true
       file: utils/dist/CAS-*.tgz
       skip_cleanup: true
-      api_key:
+      token:
         secure: IQPP9ytdAxMQpXdfHsbnWaly7BiORVeCCfgKBPtQqtuakTBkNltPMmPHIhH2ihnQ0/fOUL4DpbiQdCIEVVIQgerdWK+WjMhGmyRyt8froqT1GOJfcKXMBxxaLWpQS53R/jWt4cWs9DNgkFXtbe5MlV/czaoFsMQowoEV+fnwYKg=
       on:
         repo: apereo/phpCAS
