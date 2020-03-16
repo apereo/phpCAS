@@ -1139,7 +1139,7 @@ class CAS_Client
      * Determine whether a session value is set or not.
      *
      * To check if a session value is empty or not please use
-     * !empty(getSessionValue($key)).
+     * !!(getSessionValue($key)).
      *
      * @param string $key
      *
@@ -1696,7 +1696,7 @@ class CAS_Client
      */
     public function isSessionAuthenticated ()
     {
-        return !empty($this->getSessionValue('user'));
+        return !!$this->getSessionValue('user');
     }
 
     /**
@@ -1724,7 +1724,7 @@ class CAS_Client
         if ( $this->isProxy() ) {
             // CAS proxy: username and PGT must be present
             if ( $this->isSessionAuthenticated()
-                && !empty($this->getSessionValue('pgt'))
+                && $this->getSessionValue('pgt')
             ) {
                 // authentication already done
                 $this->_setUser($this->getSessionValue('user'));
@@ -1748,7 +1748,7 @@ class CAS_Client
 
                 $auth = true;
             } elseif ( $this->isSessionAuthenticated()
-                && empty($this->getSessionValue('pgt'))
+                && !$this->getSessionValue('pgt')
             ) {
                 // these two variables should be empty or not empty at the same time
                 phpCAS::trace(
@@ -1759,7 +1759,7 @@ class CAS_Client
                 $this->clearSessionValues();
                 $this->setTicket('');
             } elseif ( !$this->isSessionAuthenticated()
-                && !empty($this->getSessionValue('pgt'))
+                && $this->getSessionValue('pgt')
             ) {
                 // these two variables should be empty or not empty at the same time
                 phpCAS::trace(
