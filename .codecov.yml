@@ -13,3 +13,5 @@ coverage:
       default:
         target: "70%"
         informational: true
+
+comment: false
