@@ -2595,7 +2595,7 @@ class CAS_Client
             if (preg_match('/^[PT]GT-[\.\-\w]+$/', $pgtId)) {
                 phpCAS::trace('Storing PGT `'.$pgtId.'\' (id=`'.$pgtIou.'\')');
                 $this->_storePGT($pgtId, $pgtIou);
-                if (array_key_exists('HTTP_ACCEPT', $_SERVER) && $this->isXmlResponse()) {
+                if ($this->isXmlResponse()) {
                     echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n";
                     echo '<proxySuccess xmlns="http://www.yale.edu/tp/cas" />';
                     phpCAS::traceExit("XML response sent");
@@ -2630,9 +2630,12 @@ class CAS_Client
      */
     private function isXmlResponse()
     {
-        if (str_replace('application/xml', '', $_SERVER['HTTP_ACCEPT']) != 'application/xml') {
+        if (!array_key_exists('HTTP_ACCEPT', $_SERVER)) {
+            return false;
+        }
+        if (str_replace('application/xml', '', $_SERVER['HTTP_ACCEPT']) != $_SERVER['HTTP_ACCEPT']) {
             return true;
-        } elseif (str_replace('text/xml', '', $_SERVER['HTTP_ACCEPT']) != 'text/xml') {
+        } elseif (str_replace('text/xml', '', $_SERVER['HTTP_ACCEPT']) != $_SERVER['HTTP_ACCEPT']) {
             return true;
         } else {
             return false;
