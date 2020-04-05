@@ -2633,13 +2633,11 @@ class CAS_Client
         if (!array_key_exists('HTTP_ACCEPT', $_SERVER)) {
             return false;
         }
-        if (str_replace('application/xml', '', $_SERVER['HTTP_ACCEPT']) != $_SERVER['HTTP_ACCEPT']) {
-            return true;
-        } elseif (str_replace('text/xml', '', $_SERVER['HTTP_ACCEPT']) != $_SERVER['HTTP_ACCEPT']) {
-            return true;
-        } else {
+        if (strpos('application/xml', $_SERVER['HTTP_ACCEPT']) === false and strpos('text/xml', $_SERVER['HTTP_ACCEPT']) === false) {
             return false;
         }
+        
+        return true;    
     }
 
     /** @} */
