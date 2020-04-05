@@ -2595,11 +2595,7 @@ class CAS_Client
             if (preg_match('/^[PT]GT-[\.\-\w]+$/', $pgtId)) {
                 phpCAS::trace('Storing PGT `'.$pgtId.'\' (id=`'.$pgtIou.'\')');
                 $this->_storePGT($pgtId, $pgtIou);
-                if (array_key_exists('HTTP_ACCEPT', $_SERVER) &&
-                    (   $_SERVER['HTTP_ACCEPT'] == 'application/xml' ||
-                        $_SERVER['HTTP_ACCEPT'] == 'text/xml'
-                    )
-                ) {
+                if ($this->isXmlResponse()) {
                     echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n";
                     echo '<proxySuccess xmlns="http://www.yale.edu/tp/cas" />';
                     phpCAS::traceExit("XML response sent");
@@ -2626,6 +2622,23 @@ class CAS_Client
         throw new CAS_GracefullTerminationException();
     }
 
+    /**
+     * Check if application/xml or text/xml is pressent in HTTP_ACCEPT header values
+     * when return value is complex and contains attached q parameters.
+     * Example:  HTTP_ACCEPT = text/html,application/xhtml+xml,application/xml;q=0.9
+     * @return bool
+     */
+    private function isXmlResponse()
+    {
+        if (!array_key_exists('HTTP_ACCEPT', $_SERVER)) {
+            return false;
+        }
+        if (strpos($_SERVER['HTTP_ACCEPT'], 'application/xml') === false && strpos($_SERVER['HTTP_ACCEPT'], 'text/xml') === false) {
+            return false;
+        }
+
+        return true;
+    }
 
     /** @} */
 
