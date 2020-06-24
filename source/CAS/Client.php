@@ -1224,7 +1224,7 @@ class CAS_Client
                 phpCAS :: trace("Killing session: ". session_id());
                 session_destroy();
                 // set up a new session, of name based on the ticket
-                $session_id = preg_replace('/[^a-zA-Z0-9\-]/', '', $ticket);
+                $session_id = $this->_sessionIdForTicket($ticket);
                 phpCAS :: trace("Starting session: ". $session_id);
                 session_id($session_id);
                 session_start();
