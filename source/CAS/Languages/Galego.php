@@ -22,18 +22,18 @@
  * @file     CAS/Language/Galego.php
  * @category Authentication
  * @package  PhpCAS
- * @author   Iván-Benjamín García Torà <ivaniclixx@gmail.com>
+ * @author   Enrique Uelva Rivero enrique.huelvarivero@plexus.es
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
 
 /**
- * Spanish language class
+ * Galego language class
  *
  * @class    CAS_Languages_Galego
  * @category Authentication
  * @package  PhpCAS
- * @author   Iván-Benjamín García Torà <ivaniclixx@gmail.com>
+ * @author   Enrique Uelva Rivero enrique.huelvarivero@plexus.es
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  *
