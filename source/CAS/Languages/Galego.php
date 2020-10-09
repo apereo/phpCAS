@@ -22,7 +22,7 @@
  * @file     CAS/Language/Galego.php
  * @category Authentication
  * @package  PhpCAS
- * @author   Enrique Uelva Rivero enrique.huelvarivero@plexus.es
+ * @author   Enrique Huelva Rivero enrique.huelvarivero@plexus.es
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  */
@@ -33,7 +33,7 @@
  * @class    CAS_Languages_Galego
  * @category Authentication
  * @package  PhpCAS
- * @author   Enrique Uelva Rivero enrique.huelvarivero@plexus.es
+ * @author   Enrique Huelva Rivero enrique.huelvarivero@plexus.es
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  *
