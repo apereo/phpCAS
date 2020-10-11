@@ -60,7 +60,7 @@ class CAS_Languages_Galego implements CAS_Languages_LanguageInterface
      */
     public function getAuthenticationWanted()
     {
-        return 'Autenticación  CAS necesaria!';
+        return 'Autenticación CAS necesaria!';
     }
 
     /**
@@ -70,7 +70,7 @@ class CAS_Languages_Galego implements CAS_Languages_LanguageInterface
      */
     public function getLogout()
     {
-        return 'Saída  CAS necesaria!';
+        return 'Saída CAS necesaria!';
     }
 
     /**
@@ -80,7 +80,7 @@ class CAS_Languages_Galego implements CAS_Languages_LanguageInterface
      */
     public function getShouldHaveBeenRedirected()
     {
-        return 'Xa debería ser  redireccionado ao servidor  CAS. Faga  click <a href="%s">aquí</a> para continuar';
+        return 'Xa debería ser redireccionado ao servidor CAS. Faga click <a href="%s">aquí</a> para continuar';
     }
 
     /**
@@ -90,7 +90,7 @@ class CAS_Languages_Galego implements CAS_Languages_LanguageInterface
      */
     public function getAuthenticationFailed()
     {
-        return 'Autenticación  CAS errada!';
+        return 'Autenticación CAS errada!';
     }
 
     /**
@@ -101,8 +101,7 @@ class CAS_Languages_Galego implements CAS_Languages_LanguageInterface
     public function getYouWereNotAuthenticated()
     {
         return '
-        <p>Non estás autenticado</p><p>Podes volver tentalo facendo  click <a href="%s">aquí</a>.</p>< p>Se o problema persiste debería contactar con el <a href="mailto:%s">administrador deste sitio</a>.</p>';
-    }
+        <p>Non estás autenticado</p><p>Podes volver tentalo facendo click <a href="%s">aquí</a>.</p><p>Se o problema persiste debería contactar con el <a href="mailto:%s">administrador deste sitio</a>.</p>';   }
 
     /**
      * Get the service unavailable string
@@ -111,7 +110,7 @@ class CAS_Languages_Galego implements CAS_Languages_LanguageInterface
      */
     public function getServiceUnavailable()
     {
-        return 'O servizo  `<b>%s</b>\' non está dispoñible (<b>%s</b>).';
+        return 'O servizo `<b>%s</b>\' non está dispoñible (<b>%s</b>).';
     }
 }
 ?>
