@@ -8,3 +8,5 @@ utils/starting_HEAD
 # Composer
 composer.lock
 /vendor/
+/.metals/
+/.vscode/
