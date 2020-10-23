@@ -220,6 +220,7 @@ define("PHPCAS_LANG_JAPANESE", 'CAS_Languages_Japanese');
 define("PHPCAS_LANG_SPANISH", 'CAS_Languages_Spanish');
 define("PHPCAS_LANG_CATALAN", 'CAS_Languages_Catalan');
 define("PHPCAS_LANG_CHINESE_SIMPLIFIED", 'CAS_Languages_ChineseSimplified');
+define("PHPCAS_LANG_PORTUGUESE", 'CAS_Languages_Portuguese');
 
 /** @} */
 
