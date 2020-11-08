@@ -79,7 +79,7 @@ class CAS_Languages_Portuguese implements CAS_Languages_LanguageInterface
      */
     public function getShouldHaveBeenRedirected()
     {
-        return 'Você já deve ter sido redirecionado para o servidor CAS. Clique <a href="%s"> aqui </a> para continuar';
+        return 'Você já deve ter sido redirecionado para o servidor CAS. Clique <a href="%s">aqui</a> para continuar';
     }
 
     /**
@@ -99,7 +99,7 @@ class CAS_Languages_Portuguese implements CAS_Languages_LanguageInterface
     */
     public function getYouWereNotAuthenticated()
     {
-        return '<p> Você não foi autenticado. </p> <p> Você pode enviar sua solicitação novamente clicando <a href="%s"> aqui </a>. </p> <p> Se o problema persistir, você pode entrar em contato com <a href="mailto:%s"> o administrador deste site </a>. </p>';
+        return '<p>Você não foi autenticado.</p><p>Você pode enviar sua solicitação novamente clicando <a href="%s">aqui</a>. </p><p>Se o problema persistir, você pode entrar em contato com <a href="mailto:%s">o administrador deste site</a>.</p>';
     }
 
     /**
@@ -109,6 +109,6 @@ class CAS_Languages_Portuguese implements CAS_Languages_LanguageInterface
     */
     public function getServiceUnavailable()
     {
-        return 'O serviço `<b>% s </b>\' não está disponível (<b>% s </b>).';
+        return 'O serviço `<b>%s</b>\' não está disponível (<b>%s</b>).';
     }
 }
