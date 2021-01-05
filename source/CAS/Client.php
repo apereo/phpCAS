@@ -45,6 +45,7 @@
  * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @author   Adam Franco <afranco@middlebury.edu>
  * @author   Tobias Schiebeck <tobias.schiebeck@manchester.ac.uk>
+ * @author   Davis Carlson <daviscarlson@uvic.ca>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  *
@@ -3885,6 +3886,24 @@ class CAS_Client
     */
     private $_url = '';
 
+    /**
+     * if this is true, _getClientUrl() will not append the server port to
+     * the client URL, regardless of the $_SERVER headers set
+     *
+     * @hideinitializer
+     */
+    private $_ignore_client_port = false;
+
+    /**
+     * Sets $_ignore_client_port to true, ignoring any sort of port forwarding
+     * when generating client URL
+     *
+     * @return void
+     */
+    public function setIgnoreClientPort()
+    {
+        $this->_ignore_client_port = true;
+    }
 
     /**
      * This method sets the URL of the current request
@@ -3976,7 +3995,7 @@ class CAS_Client
                 $server_url = $_SERVER['SERVER_NAME'];
             }
         }
-        if (!strpos($server_url, ':')) {
+        if (!strpos($server_url, ':') && $this->_ignore_client_port === false) {
             if (empty($_SERVER['HTTP_X_FORWARDED_PORT'])) {
                 $server_port = $_SERVER['SERVER_PORT'];
             } else {

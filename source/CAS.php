@@ -30,6 +30,7 @@
  * @author   Brett Bieber <brett.bieber@gmail.com>
  * @author   Joachim Fritschi <jfritschi@freenet.de>
  * @author   Adam Franco <afranco@middlebury.edu>
+ * @author   Davis Carlson <daviscarlson@uvic.ca>
  * @license  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  * @link     https://wiki.jasig.org/display/CASC/phpCAS
  * @ingroup public
@@ -1636,6 +1637,22 @@ class phpCAS
     {
         phpCAS::_validateProxyExists();
         return (self::$_PHPCAS_CLIENT->getURL());
+    }
+
+    /**
+     * Tells phpCAS to ignore any potential port forwarding based on
+     * $_SERVER variables and not append any port number to the client URL
+     *
+     * @return void
+     */
+    public static function setIgnoreClientPort() {
+        phpCAS::traceBegin();
+        phpCAS::_validateClientExists();
+
+        phpCAS :: trace('You have configured phpCAS to not append any port number to the client url. This may cause an issue on servers with port forwarding.');
+        self::$_PHPCAS_CLIENT->setIgnoreClientPort();
+
+        phpCAS::traceEnd();
     }
 
     /**
