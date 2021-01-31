@@ -1,3 +1,18 @@
+Changes in version 1.3.9
+
+Bug Fixes:
+   * Fix regression of #248: Support of longer session tickets (#349) (Alan Nelson)
+   * Fix private call generating php warning and no logout handling (#352) (Julien Gribonvald)
+   
+Improvement:
+   * Add support for logging via a PSR-3 logger [#329] (Jon Dufresne)
+   * Improve attribute handling [#317] (Tobias Schiebeck)
+   * Prefer composer autoload over Autoload.php (Jon Dufresne)
+   * Add Galego Language [#356] Sherwin Harris
+   * Add Portuges Language [#358] Sherwin Harris
+   * Accept callback with extended HTTP_ACCESS headers [#342] (Ivaylo Botyov Nikolov)
+   * Refactor session handling [#340] (Henry Pan, Andrew Miller)
+
 Changes in version 1.3.8
 
 Bug Fixes:
