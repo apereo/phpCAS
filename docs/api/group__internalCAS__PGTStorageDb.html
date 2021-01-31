@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">phpCAS
-   &#160;<span id="projectnumber">version 1.3.6</span>
+   &#160;<span id="projectnumber">version 1.3.9</span>
    </div>
   </td>
  </tr>
@@ -89,8 +89,8 @@ Variables</h2></td></tr>
 <tr class="separator:ga0cb86fcfcc709f502d6eac01389b2cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9e7f285d618bb73b8d91496ebf1e6e83"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCAS__PGTStorageDb.html#ga9e7f285d618bb73b8d91496ebf1e6e83">CAS_PGTStorage_Db::$_password</a></td></tr>
 <tr class="separator:ga9e7f285d618bb73b8d91496ebf1e6e83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeb3ecc301193541bd3aec19e9b71367b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCAS__PGTStorageDb.html#gaeb3ecc301193541bd3aec19e9b71367b">CAS_PGTStorage_Db::$_table_options</a></td></tr>
-<tr class="separator:gaeb3ecc301193541bd3aec19e9b71367b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa335c105dc490432009afe326f34f6e0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCAS__PGTStorageDb.html#gaa335c105dc490432009afe326f34f6e0">CAS_PGTStorage_Db::$_driver_options</a></td></tr>
+<tr class="separator:gaa335c105dc490432009afe326f34f6e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0d7548f5a7d2c6c5a91b044f89055641"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCAS__PGTStorageDb.html#ga0d7548f5a7d2c6c5a91b044f89055641">CAS_PGTStorage_Db::$_table</a></td></tr>
 <tr class="separator:ga0d7548f5a7d2c6c5a91b044f89055641"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3c6c1256599c435efbab44881c8ec88c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCAS__PGTStorageDb.html#ga3c6c1256599c435efbab44881c8ec88c">CAS_PGTStorage_Db::$_errMode</a></td></tr>
@@ -162,7 +162,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00138">138</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
-<p class="reference">References <a class="el" href="config_8example_8php_source.html#l00059">$driver_options</a>, <a class="el" href="Db_8php_source.html#l00030">CAS_PGT_STORAGE_DB_DEFAULT_TABLE</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="config_8example_8php_source.html#l00059">$driver_options</a>, <a class="el" href="Db_8php_source.html#l00030">CAS_PGT_STORAGE_DB_DEFAULT_TABLE</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
 </div>
 </div>
@@ -189,7 +189,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>This method returns the PDO object to use for database interactions.</p>
-<dl class="section return"><dt>Returns</dt><dd>the PDO object </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>PDO object </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00063">63</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
@@ -222,7 +222,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>This method returns the table to use when storing/retrieving PGT's</p>
-<dl class="section return"><dt>Returns</dt><dd>the name of the pgt storage table. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string the name of the pgt storage table. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00086">86</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
@@ -317,7 +317,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00303">303</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Db_8php_source.html#l00063">CAS_PGTStorage_Db\_getPdo()</a>, <a class="el" href="Db_8php_source.html#l00234">CAS_PGTStorage_Db\_resetErrorMode()</a>, <a class="el" href="Db_8php_source.html#l00221">CAS_PGTStorage_Db\_setErrorMode()</a>, <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>, <a class="el" href="Db_8php_source.html#l00179">CAS_PGTStorage_Db\init()</a>, <a class="el" href="AbstractStorage_8php_source.html#l00168">CAS_PGTStorage_AbstractStorage\isInitialized()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="Db_8php_source.html#l00063">CAS_PGTStorage_Db\_getPdo()</a>, <a class="el" href="Db_8php_source.html#l00234">CAS_PGTStorage_Db\_resetErrorMode()</a>, <a class="el" href="Db_8php_source.html#l00221">CAS_PGTStorage_Db\_setErrorMode()</a>, <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>, <a class="el" href="Db_8php_source.html#l00179">CAS_PGTStorage_Db\init()</a>, <a class="el" href="AbstractStorage_8php_source.html#l00168">CAS_PGTStorage_AbstractStorage\isInitialized()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
 </div>
 </div>
@@ -344,7 +344,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>This method returns the query used to create a pgt storage table</p>
-<dl class="section return"><dt>Returns</dt><dd>the create table SQL, no bind params in query </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string the create table SQL, no bind params in query </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00253">253</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
@@ -375,7 +375,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>This method returns the query used to delete a pgt.</p>
-<dl class="section return"><dt>Returns</dt><dd>the delete PGT SQL, :pgt_iou is the only bind param contained in the query </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string the delete PGT SQL, :pgt_iou is the only bind param contained in the query </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00289">289</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
@@ -400,7 +400,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>This method returns an informational string giving informations on the parameters of the storage.(used for debugging purposes).</p>
-<dl class="section return"><dt>Returns</dt><dd>an informational string. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string an informational string. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00113">113</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
@@ -421,7 +421,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>This method returns an informational string giving the type of storage used by the object (used for debugging purposes).</p>
-<dl class="section return"><dt>Returns</dt><dd>an informational string. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string an informational string. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00101">101</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
@@ -446,7 +446,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00179">179</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>, <a class="el" href="AbstractStorage_8php_source.html#l00168">CAS_PGTStorage_AbstractStorage\isInitialized()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>, <a class="el" href="AbstractStorage_8php_source.html#l00168">CAS_PGTStorage_AbstractStorage\isInitialized()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="Db_8php_source.html#l00303">CAS_PGTStorage_Db\createTable()</a>.</p>
 
@@ -474,11 +474,11 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the corresponding PGT, or FALSE on error </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string|false the corresponding PGT, or FALSE on error </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00392">392</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Db_8php_source.html#l00063">CAS_PGTStorage_Db\_getPdo()</a>, <a class="el" href="Db_8php_source.html#l00234">CAS_PGTStorage_Db\_resetErrorMode()</a>, <a class="el" href="Db_8php_source.html#l00221">CAS_PGTStorage_Db\_setErrorMode()</a>, <a class="el" href="Db_8php_source.html#l00289">CAS_PGTStorage_Db\deletePgtSql()</a>, <a class="el" href="Db_8php_source.html#l00278">CAS_PGTStorage_Db\retrievePgtSql()</a>, <a class="el" href="CAS_8php_source.html#l00579">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="Db_8php_source.html#l00063">CAS_PGTStorage_Db\_getPdo()</a>, <a class="el" href="Db_8php_source.html#l00234">CAS_PGTStorage_Db\_resetErrorMode()</a>, <a class="el" href="Db_8php_source.html#l00221">CAS_PGTStorage_Db\_setErrorMode()</a>, <a class="el" href="Db_8php_source.html#l00289">CAS_PGTStorage_Db\deletePgtSql()</a>, <a class="el" href="Db_8php_source.html#l00278">CAS_PGTStorage_Db\retrievePgtSql()</a>, <a class="el" href="CAS_8php_source.html#l00616">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
 </div>
 </div>
@@ -505,7 +505,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>This method returns the query used to retrieve a pgt. the first column of the first row should contain the pgt</p>
-<dl class="section return"><dt>Returns</dt><dd>the retrieve PGT SQL, :pgt_iou is the only bind param contained in the query </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string the retrieve PGT SQL, :pgt_iou is the only bind param contained in the query </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00278">278</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
@@ -538,7 +538,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>This method returns the query used to store a pgt</p>
-<dl class="section return"><dt>Returns</dt><dd>the store PGT SQL, :pgt and :pgt_iou are the bind params contained in the query </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string the store PGT SQL, :pgt and :pgt_iou are the bind params contained in the query </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00265">265</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
@@ -585,11 +585,35 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00349">349</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Db_8php_source.html#l00063">CAS_PGTStorage_Db\_getPdo()</a>, <a class="el" href="Db_8php_source.html#l00234">CAS_PGTStorage_Db\_resetErrorMode()</a>, <a class="el" href="Db_8php_source.html#l00221">CAS_PGTStorage_Db\_setErrorMode()</a>, <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>, <a class="el" href="Db_8php_source.html#l00265">CAS_PGTStorage_Db\storePgtSql()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="Db_8php_source.html#l00063">CAS_PGTStorage_Db\_getPdo()</a>, <a class="el" href="Db_8php_source.html#l00234">CAS_PGTStorage_Db\_resetErrorMode()</a>, <a class="el" href="Db_8php_source.html#l00221">CAS_PGTStorage_Db\_setErrorMode()</a>, <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>, <a class="el" href="Db_8php_source.html#l00265">CAS_PGTStorage_Db\storePgtSql()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="gaa335c105dc490432009afe326f34f6e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa335c105dc490432009afe326f34f6e0">&#9670;&nbsp;</a></span>$_driver_options</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CAS_PGTStorage_Db::$_driver_options</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00074">74</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
+
+</div>
+</div>
 <a id="gaf411a0dde3a26af1136ced781eda9ce4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaf411a0dde3a26af1136ced781eda9ce4">&#9670;&nbsp;</a></span>$_dsn</h2>
 
@@ -710,35 +734,10 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>the table to use for storing/retrieving pgt's </p>
 
 <p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00079">79</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="Db_8php_source.html#l00086">CAS_PGTStorage_Db\_getTable()</a>.</p>
-
-</div>
-</div>
-<a id="gaeb3ecc301193541bd3aec19e9b71367b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaeb3ecc301193541bd3aec19e9b71367b">&#9670;&nbsp;</a></span>$_table_options</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">CAS_PGTStorage_Db::$_table_options</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Db_8php_source.html#l00074">74</a> of file <a class="el" href="Db_8php_source.html">Db.php</a>.</p>
 
 </div>
 </div>

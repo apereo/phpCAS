@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">phpCAS
-   &#160;<span id="projectnumber">version 1.3.6</span>
+   &#160;<span id="projectnumber">version 1.3.9</span>
    </div>
   </td>
  </tr>
@@ -67,8 +67,8 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aa360d6a577719ebd63b4884b2b064d7b"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CAS_8php.html#aa360d6a577719ebd63b4884b2b064d7b">PHPCAS_VERSION</a> (!defined('E_USER_DEPRECATED')) '1.3.6'</td></tr>
-<tr class="separator:aa360d6a577719ebd63b4884b2b064d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae97980fbeef3e5ba327159fdbf6265b3"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CAS_8php.html#ae97980fbeef3e5ba327159fdbf6265b3">PHPCAS_VERSION</a> (!isset($_SERVER['REQUEST_URI']) &amp;&amp;isset($_SERVER['SCRIPT_NAME']) &amp;&amp;isset($_SERVER['QUERY_STRING'])) '1.3.8+'</td></tr>
+<tr class="separator:ae97980fbeef3e5ba327159fdbf6265b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga80ce2e20fbd8f16692c3b1fc39428711"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__public.html#ga80ce2e20fbd8f16692c3b1fc39428711">CAS_VERSION_1_0</a> '1.0'</td></tr>
 <tr class="separator:ga80ce2e20fbd8f16692c3b1fc39428711"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad2ba625001bd10c2a3386de8174941e7"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__public.html#gad2ba625001bd10c2a3386de8174941e7">CAS_VERSION_2_0</a> '2.0'</td></tr>
@@ -133,28 +133,32 @@ Variables</h2></td></tr>
 <tr class="separator:ga09991f8d187cf4ac5c5d969d3ddaaf47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8a14d252027803e4ffaf63f37b457577"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__publicLang.html#ga8a14d252027803e4ffaf63f37b457577">PHPCAS_LANG_CHINESE_SIMPLIFIED</a> '<a class="el" href="classCAS__Languages__ChineseSimplified.html">CAS_Languages_ChineseSimplified</a>'</td></tr>
 <tr class="separator:ga8a14d252027803e4ffaf63f37b457577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadeb252ebaa1f3bb2ada3e0e56c16d554"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__publicLang.html#gadeb252ebaa1f3bb2ada3e0e56c16d554">PHPCAS_LANG_GALEGO</a> '<a class="el" href="classCAS__Languages__Galego.html">CAS_Languages_Galego</a>'</td></tr>
+<tr class="separator:gadeb252ebaa1f3bb2ada3e0e56c16d554"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa7e126b889b6f69f8d4c2dcb0fce5ffb"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__publicLang.html#gaa7e126b889b6f69f8d4c2dcb0fce5ffb">PHPCAS_LANG_PORTUGUESE</a> '<a class="el" href="classCAS__Languages__Portuguese.html">CAS_Languages_Portuguese</a>'</td></tr>
+<tr class="separator:gaa7e126b889b6f69f8d4c2dcb0fce5ffb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4282377a0f692ad57be576991e255cc7"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalLang.html#ga4282377a0f692ad57be576991e255cc7">PHPCAS_LANG_DEFAULT</a> <a class="el" href="group__publicLang.html#gafd3724d315be9fbeb126c2038ee2db64">PHPCAS_LANG_ENGLISH</a></td></tr>
 <tr class="separator:ga4282377a0f692ad57be576991e255cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1e8e20ec5792030f38ea3706b6fd7c7d"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__publicDebug.html#ga1e8e20ec5792030f38ea3706b6fd7c7d">DEFAULT_DEBUG_DIR</a> <a class="el" href="group__publicDebug.html#ga8fa4d52002c5d578d3938d1ea2714f09">gettmpdir</a>().&quot;/&quot;</td></tr>
 <tr class="separator:ga1e8e20ec5792030f38ea3706b6fd7c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="aa360d6a577719ebd63b4884b2b064d7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa360d6a577719ebd63b4884b2b064d7b">&#9670;&nbsp;</a></span>PHPCAS_VERSION</h2>
+<a id="ae97980fbeef3e5ba327159fdbf6265b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae97980fbeef3e5ba327159fdbf6265b3">&#9670;&nbsp;</a></span>PHPCAS_VERSION</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const PHPCAS_VERSION(!defined( 'E_USER_DEPRECATED')) '1.3.6'</td>
+          <td class="memname">const PHPCAS_VERSION(!isset( $_SERVER[ 'REQUEST_URI']) &amp;&amp;isset( $_SERVER[ 'SCRIPT_NAME']) &amp;&amp;isset( $_SERVER[ 'QUERY_STRING'])) '1.3.8+'</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p><a class="el" href="classphpCAS.html">phpCAS</a> version. accessible for the user by <a class="el" href="group__public.html#ga5c971143e0c319b1268233907ca193b9">phpCAS::getVersion()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00064">64</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00060">60</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="CAS_8php_source.html#l00714">phpCAS\getVersion()</a>, and <a class="el" href="CAS_8php_source.html#l00439">phpCAS\setDebug()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="CAS_8php_source.html#l00750">phpCAS\getVersion()</a>, <a class="el" href="CAS_8php_source.html#l00468">phpCAS\setDebug()</a>, and <a class="el" href="CAS_8php_source.html#l00448">phpCAS\setLogger()</a>.</p>
 
 </div>
 </div>

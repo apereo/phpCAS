@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">phpCAS
-   &#160;<span id="projectnumber">version 1.3.6</span>
+   &#160;<span id="projectnumber">version 1.3.9</span>
    </div>
   </td>
  </tr>
@@ -99,7 +99,7 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:gad1f8471bde7999b0465c8f3f109a6aba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalPGTStorage.html#gad1f8471bde7999b0465c8f3f109a6aba">CAS_Client::$_pgt_storage</a></td></tr>
+<tr class="memitem:gad1f8471bde7999b0465c8f3f109a6aba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalPGTStorage.html#gad1f8471bde7999b0465c8f3f109a6aba">CAS_Client::$_pgt_storage</a> = null</td></tr>
 <tr class="separator:gad1f8471bde7999b0465c8f3f109a6aba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga90ed7dc15a9c24154900bccc2ea5925d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalPGTStorage.html#ga90ed7dc15a9c24154900bccc2ea5925d">CAS_PGTStorage_AbstractStorage::$_error_message</a></td></tr>
 <tr class="separator:ga90ed7dc15a9c24154900bccc2ea5925d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,7 +142,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="AbstractStorage_8php_source.html#l00067">67</a> of file <a class="el" href="AbstractStorage_8php_source.html">AbstractStorage.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
 </div>
 </div>
@@ -171,11 +171,11 @@ Variables</h2></td></tr>
 <p>This method is used to initialize the storage of PGT's. Halts on error.</p>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02455">2455</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02669">2669</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l02573">CAS_Client\setPGTStorageFile()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l02787">CAS_Client\setPGTStorageFile()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02490">CAS_Client\_loadPGT()</a>, and <a class="el" href="Client_8php_source.html#l02474">CAS_Client\_storePGT()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02704">CAS_Client\_loadPGT()</a>, and <a class="el" href="Client_8php_source.html#l02688">CAS_Client\_storePGT()</a>.</p>
 
 </div>
 </div>
@@ -209,13 +209,13 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>mul The PGT corresponding to the Iou, false when not found. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string mul The PGT corresponding to the Iou, false when not found. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02490">2490</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02704">2704</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l02455">CAS_Client\_initPGTStorage()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l02669">CAS_Client\_initPGTStorage()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02604">CAS_Client\_validatePGT()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02820">CAS_Client\_validatePGT()</a>.</p>
 
 </div>
 </div>
@@ -262,9 +262,9 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02474">2474</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02688">2688</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l02455">CAS_Client\_initPGTStorage()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l02669">CAS_Client\_initPGTStorage()</a>.</p>
 
 </div>
 </div>
@@ -312,17 +312,23 @@ Variables</h2></td></tr>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">&amp;$validate_url</td><td>the URL of the request to the <a class="el" href="classCAS.html">CAS</a> server. </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$text_response</td><td>the response of the <a class="el" href="classCAS.html">CAS</a> server, as is (XML text); result of <a class="el" href="group__internalBasic.html#ga7f7d617195a3047781525c1345625a7e">CAS_Client::validateCAS10()</a> or <a class="el" href="group__internalProxied.html#ga17d835365049c35771373e7772d6904f">CAS_Client::validateCAS20()</a>. </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$tree_response</td><td>the response of the <a class="el" href="classCAS.html">CAS</a> server, as a DOM XML tree; result of <a class="el" href="group__internalBasic.html#ga7f7d617195a3047781525c1345625a7e">CAS_Client::validateCAS10()</a> or <a class="el" href="group__internalProxied.html#ga17d835365049c35771373e7772d6904f">CAS_Client::validateCAS20()</a>.</td></tr>
+    <tr><td class="paramtype">DOMElement</td><td class="paramname">$tree_response</td><td>the response of the <a class="el" href="classCAS.html">CAS</a> server, as a DOM XML tree; result of <a class="el" href="group__internalBasic.html#ga7f7d617195a3047781525c1345625a7e">CAS_Client::validateCAS10()</a> or <a class="el" href="group__internalProxied.html#ga17d835365049c35771373e7772d6904f">CAS_Client::validateCAS20()</a>.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>bool true when successfull and issue a <a class="el" href="classCAS__AuthenticationException.html">CAS_AuthenticationException</a> and false on an error </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>bool true when successfull and issue a <a class="el" href="classCAS__AuthenticationException.html">CAS_AuthenticationException</a> and false on an error</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classCAS__AuthenticationException.html">CAS_AuthenticationException</a></td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02604">2604</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02820">2820</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l02490">CAS_Client\_loadPGT()</a>, <a class="el" href="Client_8php_source.html#l02283">CAS_Client\_setPGT()</a>, <a class="el" href="CAS_8php_source.html#l00579">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l02704">CAS_Client\_loadPGT()</a>, <a class="el" href="Client_8php_source.html#l02438">CAS_Client\_setPGT()</a>, <a class="el" href="CAS_8php_source.html#l00616">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l01388">CAS_Client\isAuthenticated()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l01549">CAS_Client\isAuthenticated()</a>.</p>
 
 </div>
 </div>
@@ -341,7 +347,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>This method returns an error message set by PGTStorage::setErrorMessage().</p>
-<dl class="section return"><dt>Returns</dt><dd>an error message when set by PGTStorage::setErrorMessage(), FALSE otherwise.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string an error message when set by PGTStorage::setErrorMessage(), FALSE otherwise.</dd></dl>
 <dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000003">Deprecated:</a></b></dt><dd>not used. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="AbstractStorage_8php_source.html#l00144">144</a> of file <a class="el" href="AbstractStorage_8php_source.html">AbstractStorage.php</a>.</p>
@@ -365,11 +371,11 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>This virtual method returns an informational string giving informations on the parameters of the storage.(used for debugging purposes).</p>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="AbstractStorage_8php_source.html#l00103">103</a> of file <a class="el" href="AbstractStorage_8php_source.html">AbstractStorage.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>.</p>
 
 </div>
 </div>
@@ -388,11 +394,11 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>This virtual method returns an informational string giving the type of storage used by the object (used for debugging purposes).</p>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="AbstractStorage_8php_source.html#l00090">90</a> of file <a class="el" href="AbstractStorage_8php_source.html">AbstractStorage.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>.</p>
 
 </div>
 </div>
@@ -440,7 +446,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>This method tells if the storage has already been intialized.</p>
-<dl class="section return"><dt>Returns</dt><dd>a boolean </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>bool </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="AbstractStorage_8php_source.html#l00168">168</a> of file <a class="el" href="AbstractStorage_8php_source.html">AbstractStorage.php</a>.</p>
 
@@ -472,12 +478,12 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Should never be called. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="AbstractStorage_8php_source.html#l00213">213</a> of file <a class="el" href="AbstractStorage_8php_source.html">AbstractStorage.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>.</p>
 
 </div>
 </div>
@@ -516,18 +522,18 @@ Variables</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$target_service</td><td>the service to ask for with the PT. </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">&amp;$err_code</td><td>an error code (PHPCAS_SERVICE_OK on success). </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">&amp;$err_code</td><td>an error code (PHPCAS_SERVICE_OK on success). </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">&amp;$err_msg</td><td>an error message (empty on success).</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a Proxy Ticket, or false on error. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string|false a Proxy Ticket, or false on error. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02658">2658</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02874">2874</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="config_8example_8php_source.html#l00089">$cas_url</a>, <a class="el" href="Client_8php_source.html#l02271">CAS_Client\_getPGT()</a>, <a class="el" href="Client_8php_source.html#l02790">CAS_Client\_readURL()</a>, <a class="el" href="Client_8php_source.html#l00519">CAS_Client\getServerProxyURL()</a>, <a class="el" href="CAS_8php_source.html#l00579">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="config_8example_8php_source.html#l00089">$cas_url</a>, <a class="el" href="Client_8php_source.html#l02426">CAS_Client\_getPGT()</a>, <a class="el" href="Client_8php_source.html#l03004">CAS_Client\_readURL()</a>, <a class="el" href="Client_8php_source.html#l00521">CAS_Client\getServerProxyURL()</a>, <a class="el" href="CAS_8php_source.html#l00616">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02933">CAS_Client\initializeProxiedService()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03147">CAS_Client\initializeProxiedService()</a>.</p>
 
 </div>
 </div>
@@ -584,11 +590,11 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02506">2506</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02720">2720</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l00745">CAS_Client\ensureIsProxy()</a>, and <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l00747">CAS_Client\ensureIsProxy()</a>, and <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02541">CAS_Client\setPGTStorageDb()</a>, and <a class="el" href="Client_8php_source.html#l02573">CAS_Client\setPGTStorageFile()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02755">CAS_Client\setPGTStorageDb()</a>, and <a class="el" href="Client_8php_source.html#l02787">CAS_Client\setPGTStorageFile()</a>.</p>
 
 </div>
 </div>
@@ -638,7 +644,7 @@ Variables</h2></td></tr>
 <p>This method is used to tell <a class="el" href="classphpCAS.html">phpCAS</a> to store the response of the <a class="el" href="classCAS.html">CAS</a> server to PGT requests in a database.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$dsn_or_pdo</td><td>a dsn string to use for creating a PDO object or a PDO object </td></tr>
+    <tr><td class="paramtype">string&#160;|&#160;PDO</td><td class="paramname">$dsn_or_pdo</td><td>a dsn string to use for creating a PDO object or a PDO object </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$username</td><td>the username to use when connecting to the database </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$password</td><td>the password to use when connecting to the database </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$table</td><td>the table to use for storing and retrieving PGTs </td></tr>
@@ -648,9 +654,9 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02541">2541</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02755">2755</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="config_8example_8php_source.html#l00059">$driver_options</a>, <a class="el" href="Client_8php_source.html#l00745">CAS_Client\ensureIsProxy()</a>, and <a class="el" href="Client_8php_source.html#l02506">CAS_Client\setPGTStorage()</a>.</p>
+<p class="reference">References <a class="el" href="config_8example_8php_source.html#l00059">$driver_options</a>, <a class="el" href="Client_8php_source.html#l00747">CAS_Client\ensureIsProxy()</a>, and <a class="el" href="Client_8php_source.html#l02720">CAS_Client\setPGTStorage()</a>.</p>
 
 </div>
 </div>
@@ -678,11 +684,11 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02573">2573</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02787">2787</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l00745">CAS_Client\ensureIsProxy()</a>, and <a class="el" href="Client_8php_source.html#l02506">CAS_Client\setPGTStorage()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l00747">CAS_Client\ensureIsProxy()</a>, and <a class="el" href="Client_8php_source.html#l02720">CAS_Client\setPGTStorage()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02455">CAS_Client\_initPGTStorage()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02669">CAS_Client\_initPGTStorage()</a>.</p>
 
 </div>
 </div>
@@ -724,7 +730,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="AbstractStorage_8php_source.html#l00198">198</a> of file <a class="el" href="AbstractStorage_8php_source.html">AbstractStorage.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>.</p>
 
 </div>
 </div>
@@ -778,7 +784,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CAS_Client::$_pgt_storage</td>
+          <td class="memname">CAS_Client::$_pgt_storage = null</td>
         </tr>
       </table>
   </td>
@@ -787,9 +793,8 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>an instance of a class inheriting of PGTStorage, used to deal with PGT storage. Created by <a class="el" href="group__internalPGTStorage.html#gac179a4316bd15cd498f90a6599c7df4c">CAS_Client::setPGTStorageFile()</a>, used by <a class="el" href="group__internalPGTStorage.html#gac179a4316bd15cd498f90a6599c7df4c">CAS_Client::setPGTStorageFile()</a> and <a class="el" href="group__internalPGTStorage.html#gab3da89084c4633138955b842b7deac52">CAS_Client::_initPGTStorage()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02447">2447</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02661">2661</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
 </div>
 </div>

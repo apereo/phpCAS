@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">phpCAS
-   &#160;<span id="projectnumber">version 1.3.6</span>
+   &#160;<span id="projectnumber">version 1.3.9</span>
    </div>
   </td>
  </tr>
@@ -49,6 +49,12 @@ $(function() {
 Functions</h2></td></tr>
 <tr class="memitem:ga17d835365049c35771373e7772d6904f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxied.html#ga17d835365049c35771373e7772d6904f">CAS_Client::validateCAS20</a> (&amp;$validate_url, &amp;$text_response, &amp;$tree_response, $renew=false)</td></tr>
 <tr class="separator:ga17d835365049c35771373e7772d6904f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga09de037cba47bc04158fd63c5387d46a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxied.html#ga09de037cba47bc04158fd63c5387d46a">CAS_Client::_xml_to_array</a> ($root, $namespace=&quot;cas&quot;)</td></tr>
+<tr class="separator:ga09de037cba47bc04158fd63c5387d46a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac68b68a6376a0b2ad4f4850f17150dbd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxied.html#gac68b68a6376a0b2ad4f4850f17150dbd">CAS_Client::_parse_json_like_array_value</a> ($json_value)</td></tr>
+<tr class="separator:gac68b68a6376a0b2ad4f4850f17150dbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80bdc2d46b358bc944544b86c087d951"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxied.html#ga80bdc2d46b358bc944544b86c087d951">CAS_Client::_flatten_array</a> ($arr)</td></tr>
+<tr class="separator:ga80bdc2d46b358bc944544b86c087d951"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9b8c874e3c35984d8c92a7120f41414f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxied.html#ga9b8c874e3c35984d8c92a7120f41414f">CAS_Client::_readExtraAttributesCas20</a> ($success_elements)</td></tr>
 <tr class="separator:ga9b8c874e3c35984d8c92a7120f41414f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacb7ff85ef1b5e40f504d8e8d0ea419d2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxied.html#gacb7ff85ef1b5e40f504d8e8d0ea419d2">CAS_Client::_addAttributeToArray</a> (array &amp;$attributeArray, $name, $value)</td></tr>
@@ -106,9 +112,87 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03461">3461</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03848">3848</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03311">CAS_Client\_readExtraAttributesCas20()</a>.</p>
+</div>
+</div>
+<a id="ga80bdc2d46b358bc944544b86c087d951"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga80bdc2d46b358bc944544b86c087d951">&#9670;&nbsp;</a></span>_flatten_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CAS_Client::_flatten_array </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$arr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method recursively removes unneccessary hirarchy levels in array-trees. into an array of strings</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$arr</td><td>the array to flatten e.g.: Array ( [attributes] =&gt; Array ( [attribute] =&gt; Array ( [0] =&gt; Array ( [name] =&gt; surname [value] =&gt; Smith ) [1] =&gt; Array ( [name] =&gt; givenName [value] =&gt; John ) [2] =&gt; Array ( [name] =&gt; memberOf [value] =&gt; ['CN=Staff,OU=Groups,DC=example,DC=edu', 'CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu'] ) ) ) )</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array the flattened array e.g.: Array ( [attribute] =&gt; Array ( [surname] =&gt; Smith [givenName] =&gt; John [memberOf] =&gt; Array ( [0] =&gt; CN=Staff, OU=Groups, DC=example, DC=edu [1] =&gt; CN=Spanish Department, OU=Departments, OU=Groups, DC=example, DC=edu ) ) ) </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03742">3742</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+
+<p class="reference">References <a class="el" href="Client_8php_source.html#l04075">CAS_Client\_endsWith()</a>, <a class="el" href="Client_8php_source.html#l03673">CAS_Client\_parse_json_like_array_value()</a>, and <a class="el" href="Client_8php_source.html#l04062">CAS_Client\_startsWith()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03807">CAS_Client\_readExtraAttributesCas20()</a>.</p>
+
+</div>
+</div>
+<a id="gac68b68a6376a0b2ad4f4850f17150dbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac68b68a6376a0b2ad4f4850f17150dbd">&#9670;&nbsp;</a></span>_parse_json_like_array_value()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CAS_Client::_parse_json_like_array_value </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$json_value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method parses a "JSON-like array" of strings into an array of strings</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$json_value</td><td>the json-like string: e.g.: ['CN=Staff,OU=Groups,DC=example,DC=edu', 'CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu']</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array of strings Description e.g.: Array ( [0] =&gt; CN=Staff,OU=Groups,DC=example,DC=edu [1] =&gt; CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu ) </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03673">3673</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+
+<p class="reference">References <a class="el" href="Client_8php_source.html#l04075">CAS_Client\_endsWith()</a>, and <a class="el" href="Client_8php_source.html#l04062">CAS_Client\_startsWith()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03742">CAS_Client\_flatten_array()</a>.</p>
 
 </div>
 </div>
@@ -138,15 +222,132 @@ Functions</h2></td></tr>
 <p>This method will parse the DOM and pull out the attributes from the XML payload and put them into an array, then put the array into the session.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$success_elements</td><td>payload of the response</td></tr>
+    <tr><td class="paramtype">DOMNodeList</td><td class="paramname">$success_elements</td><td>payload of the response</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>bool true when successfull, halt otherwise by calling <a class="el" href="group__internalMisc.html#ga5f98c69631ced6601bdff1d2341025be">CAS_Client::_authError()</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>bool true when successfull, halt otherwise by calling <a class="el" href="group__internalMisc.html#ga6b0e7787b326a7a63602def62b96c483">CAS_Client::_authError()</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03311">3311</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03807">3807</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l03461">CAS_Client\_addAttributeToArray()</a>, <a class="el" href="Client_8php_source.html#l01162">CAS_Client\setAttributes()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l03742">CAS_Client\_flatten_array()</a>, <a class="el" href="Client_8php_source.html#l03607">CAS_Client\_xml_to_array()</a>, <a class="el" href="Client_8php_source.html#l01331">CAS_Client\setAttributes()</a>, <a class="el" href="CAS_8php_source.html#l00616">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
+
+</div>
+</div>
+<a id="ga09de037cba47bc04158fd63c5387d46a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga09de037cba47bc04158fd63c5387d46a">&#9670;&nbsp;</a></span>_xml_to_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CAS_Client::_xml_to_array </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$root</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$namespace</em> = <code>&quot;cas&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method recursively parses the attribute XML. It also collapses name-value pairs into a single array entry. It parses all common formats of attributes and well formed XML files.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$root</td><td>the DOM root element to be parsed </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$namespace</td><td>namespace of the elements</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>an array of the parsed XML elements</dd></dl>
+<p>Formats tested:</p>
+<p>"Jasig Style" Attributes: </p><pre class="fragment">&lt;cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'&gt;
+    &lt;cas:authenticationSuccess&gt;
+        &lt;cas:user&gt;jsmith&lt;/cas:user&gt;
+        &lt;cas:attributes&gt;
+            &lt;cas:attraStyle&gt;RubyCAS&lt;/cas:attraStyle&gt;
+            &lt;cas:surname&gt;Smith&lt;/cas:surname&gt;
+            &lt;cas:givenName&gt;John&lt;/cas:givenName&gt;
+            &lt;cas:memberOf&gt;CN=Staff,OU=Groups,DC=example,DC=edu&lt;/cas:memberOf&gt;
+            &lt;cas:memberOf&gt;CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu&lt;/cas:memberOf&gt;
+        &lt;/cas:attributes&gt;
+        &lt;cas:proxyGrantingTicket&gt;PGTIOU-84678-8a9d2sfa23casd&lt;/cas:proxyGrantingTicket&gt;
+    &lt;/cas:authenticationSuccess&gt;
+&lt;/cas:serviceResponse&gt;
+</pre><p>"Jasig Style" Attributes (longer version): </p><pre class="fragment">&lt;cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'&gt;
+    &lt;cas:authenticationSuccess&gt;
+        &lt;cas:user&gt;jsmith&lt;/cas:user&gt;
+        &lt;cas:attributes&gt;
+            &lt;cas:attribute&gt;
+                &lt;cas:name&gt;surname&lt;/cas:name&gt;
+                &lt;cas:value&gt;Smith&lt;/cas:value&gt;
+            &lt;/cas:attribute&gt;
+            &lt;cas:attribute&gt;
+                &lt;cas:name&gt;givenName&lt;/cas:name&gt;
+                &lt;cas:value&gt;John&lt;/cas:value&gt;
+            &lt;/cas:attribute&gt;
+            &lt;cas:attribute&gt;
+                &lt;cas:name&gt;memberOf&lt;/cas:name&gt;
+                &lt;cas:value&gt;['CN=Staff,OU=Groups,DC=example,DC=edu', 'CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu']&lt;/cas:value&gt;
+            &lt;/cas:attribute&gt;
+        &lt;/cas:attributes&gt;
+        &lt;cas:proxyGrantingTicket&gt;PGTIOU-84678-8a9d2sfa23casd&lt;/cas:proxyGrantingTicket&gt;
+    &lt;/cas:authenticationSuccess&gt;
+&lt;/cas:serviceResponse&gt;
+</pre><p>"RubyCAS Style" attributes </p><pre class="fragment">&lt;cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'&gt;
+    &lt;cas:authenticationSuccess&gt;
+        &lt;cas:user&gt;jsmith&lt;/cas:user&gt;
+
+        &lt;cas:attraStyle&gt;RubyCAS&lt;/cas:attraStyle&gt;
+        &lt;cas:surname&gt;Smith&lt;/cas:surname&gt;
+        &lt;cas:givenName&gt;John&lt;/cas:givenName&gt;
+        &lt;cas:memberOf&gt;CN=Staff,OU=Groups,DC=example,DC=edu&lt;/cas:memberOf&gt;
+        &lt;cas:memberOf&gt;CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu&lt;/cas:memberOf&gt;
+
+        &lt;cas:proxyGrantingTicket&gt;PGTIOU-84678-8a9d2sfa23casd&lt;/cas:proxyGrantingTicket&gt;
+    &lt;/cas:authenticationSuccess&gt;
+&lt;/cas:serviceResponse&gt;
+</pre><p>"Name-Value" attributes.</p>
+<p>Attribute format from these mailing list thread: <a href="http://jasig.275507.n4.nabble.com/CAS-attributes-and-how-they-appear-in-the-CAS-response-td264272.html">http://jasig.275507.n4.nabble.com/CAS-attributes-and-how-they-appear-in-the-CAS-response-td264272.html</a> Note: This is a less widely used format, but in use by at least two institutions. </p><pre class="fragment">&lt;cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'&gt;
+    &lt;cas:authenticationSuccess&gt;
+        &lt;cas:user&gt;jsmith&lt;/cas:user&gt;
+
+        &lt;cas:attribute name='attraStyle' value='Name-Value' /&gt;
+        &lt;cas:attribute name='surname' value='Smith' /&gt;
+        &lt;cas:attribute name='givenName' value='John' /&gt;
+        &lt;cas:attribute name='memberOf' value='CN=Staff,OU=Groups,DC=example,DC=edu' /&gt;
+        &lt;cas:attribute name='memberOf' value='CN=Spanish Department,OU=Departments,OU=Groups,DC=example,DC=edu' /&gt;
+
+        &lt;cas:proxyGrantingTicket&gt;PGTIOU-84678-8a9d2sfa23casd&lt;/cas:proxyGrantingTicket&gt;
+    &lt;/cas:authenticationSuccess&gt;
+&lt;/cas:serviceResponse&gt;
+</pre><p>result: </p><pre class="fragment"> Array (
+     [surname] =&gt; Smith
+     [givenName] =&gt; John
+     [memberOf] =&gt; Array (
+         [0] =&gt; CN=Staff, OU=Groups, DC=example, DC=edu
+         [1] =&gt; CN=Spanish Department, OU=Departments, OU=Groups, DC=example, DC=edu
+     )
+ )</pre> 
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03607">3607</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03807">CAS_Client\_readExtraAttributesCas20()</a>.</p>
 
 </div>
 </div>
@@ -192,16 +393,22 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">&amp;$validate_url</td><td>the url of the reponse </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">&amp;$text_response</td><td>the text of the repsones </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">&amp;$tree_response</td><td>the domxml tree of the respones </td></tr>
+    <tr><td class="paramtype">DOMElement</td><td class="paramname">&amp;$tree_response</td><td>the domxml tree of the respones </td></tr>
     <tr><td class="paramtype">bool</td><td class="paramname">$renew</td><td>true to force the authentication with the <a class="el" href="classCAS.html">CAS</a> server</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>bool true when successfull and issue a <a class="el" href="classCAS__AuthenticationException.html">CAS_AuthenticationException</a> and false on an error </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>bool true when successfull and issue a <a class="el" href="classCAS__AuthenticationException.html">CAS_AuthenticationException</a> and false on an error</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classCAS__AuthenticationException.html">CAS_AuthenticationException</a></td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03166">3166</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03382">3382</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l02360">CAS_Client\_getCallbackURL()</a>, <a class="el" href="Client_8php_source.html#l02790">CAS_Client\_readURL()</a>, <a class="el" href="Client_8php_source.html#l03137">CAS_Client\getAllowedProxyChains()</a>, <a class="el" href="Client_8php_source.html#l00488">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00431">CAS_Client\getServerServiceValidateURL()</a>, <a class="el" href="Client_8php_source.html#l01870">CAS_Client\getTicket()</a>, <a class="el" href="Client_8php_source.html#l02242">CAS_Client\isProxy()</a>, <a class="el" href="CAS_8php_source.html#l00579">phpCAS\trace()</a>, and <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l02545">CAS_Client\_getCallbackURL()</a>, <a class="el" href="Client_8php_source.html#l03004">CAS_Client\_readURL()</a>, <a class="el" href="Client_8php_source.html#l03351">CAS_Client\getAllowedProxyChains()</a>, <a class="el" href="Client_8php_source.html#l00490">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00433">CAS_Client\getServerServiceValidateURL()</a>, <a class="el" href="Client_8php_source.html#l02031">CAS_Client\getTicket()</a>, <a class="el" href="Client_8php_source.html#l02397">CAS_Client\isProxy()</a>, <a class="el" href="CAS_8php_source.html#l00616">phpCAS\trace()</a>, and <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>.</p>
 
 </div>
 </div>

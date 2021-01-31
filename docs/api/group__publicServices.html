@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">phpCAS
-   &#160;<span id="projectnumber">version 1.3.6</span>
+   &#160;<span id="projectnumber">version 1.3.9</span>
    </div>
   </td>
  </tr>
@@ -116,9 +116,9 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00864">864</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00916">916</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l01845">phpCAS\_validateProxyExists()</a>, <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l01895">phpCAS\_validateProxyExists()</a>, <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
 </div>
 </div>
@@ -160,9 +160,9 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00891">891</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00943">943</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l01845">phpCAS\_validateProxyExists()</a>, and <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l01895">phpCAS\_validateProxyExists()</a>, and <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="Abstract_8php_source.html#l00133">CAS_ProxiedService_Abstract\initializeProxyTicket()</a>.</p>
 
@@ -231,17 +231,17 @@ Variables</h2></td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$url</td><td>a string giving the URL of the service, including the mailing box for IMAP URLs, as accepted by imap_open(). </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$service</td><td>a string giving for <a class="el" href="classCAS.html">CAS</a> retrieve Proxy ticket </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$flags</td><td>options given to imap_open(). </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">&amp;$err_code</td><td>an error code Possible values are PHPCAS_SERVICE_OK (on success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE, PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT_AVAILABLE. </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">&amp;$err_code</td><td>an error code Possible values are PHPCAS_SERVICE_OK (on success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE, PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT_AVAILABLE. </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">&amp;$err_msg</td><td>an error message on failure </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">&amp;$pt</td><td>the Proxy Ticket (PT) retrieved from the <a class="el" href="classCAS.html">CAS</a> server to access the URL on success, false on error).</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>object IMAP stream on success, false otherwise (in this later case, $err_code gives the reason why it failed and $err_msg contains an error message). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>object|false IMAP stream on success, false otherwise (in this later case, $err_code gives the reason why it failed and $err_msg contains an error message). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00951">951</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l01003">1003</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l01845">phpCAS\_validateProxyExists()</a>, <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l01895">phpCAS\_validateProxyExists()</a>, <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
 </div>
 </div>
@@ -288,16 +288,16 @@ Variables</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$url</td><td>the service to access. </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">&amp;$err_code</td><td>an error code Possible values are PHPCAS_SERVICE_OK (on success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE, PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT_AVAILABLE. </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">&amp;$err_code</td><td>an error code Possible values are PHPCAS_SERVICE_OK (on success), PHPCAS_SERVICE_PT_NO_SERVER_RESPONSE, PHPCAS_SERVICE_PT_BAD_SERVER_RESPONSE, PHPCAS_SERVICE_PT_FAILURE, PHPCAS_SERVICE_NOT_AVAILABLE. </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">&amp;$output</td><td>the output of the service (also used to give an error message on failure).</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>bool true on success, false otherwise (in this later case, $err_code gives the reason why it failed and $output contains an error message). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00917">917</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00969">969</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l01845">phpCAS\_validateProxyExists()</a>, <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l01895">phpCAS\_validateProxyExists()</a>, <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
 </div>
 </div>
@@ -317,7 +317,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00195">195</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02882">CAS_Client\getProxiedService()</a>, and <a class="el" href="Client_8php_source.html#l02968">CAS_Client\serviceWeb()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03096">CAS_Client\getProxiedService()</a>, and <a class="el" href="Client_8php_source.html#l03182">CAS_Client\serviceWeb()</a>.</p>
 
 </div>
 </div>
@@ -336,7 +336,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00199">199</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02882">CAS_Client\getProxiedService()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03096">CAS_Client\getProxiedService()</a>.</p>
 
 </div>
 </div>
@@ -355,7 +355,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00203">203</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02882">CAS_Client\getProxiedService()</a>, and <a class="el" href="Client_8php_source.html#l03018">CAS_Client\serviceMail()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03096">CAS_Client\getProxiedService()</a>, and <a class="el" href="Client_8php_source.html#l03232">CAS_Client\serviceMail()</a>.</p>
 
 </div>
 </div>
@@ -374,7 +374,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00187">187</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03018">CAS_Client\serviceMail()</a>, and <a class="el" href="Client_8php_source.html#l02968">CAS_Client\serviceWeb()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03232">CAS_Client\serviceMail()</a>, and <a class="el" href="Client_8php_source.html#l03182">CAS_Client\serviceWeb()</a>.</p>
 
 </div>
 </div>
@@ -393,7 +393,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00168">168</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03018">CAS_Client\serviceMail()</a>, and <a class="el" href="Client_8php_source.html#l02968">CAS_Client\serviceWeb()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03232">CAS_Client\serviceMail()</a>, and <a class="el" href="Client_8php_source.html#l03182">CAS_Client\serviceWeb()</a>.</p>
 
 </div>
 </div>

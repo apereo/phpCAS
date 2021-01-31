@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">phpCAS
-   &#160;<span id="projectnumber">version 1.3.6</span>
+   &#160;<span id="projectnumber">version 1.3.9</span>
    </div>
   </td>
  </tr>
@@ -76,6 +76,8 @@ Classes</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ga5c971143e0c319b1268233907ca193b9"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__public.html#ga5c971143e0c319b1268233907ca193b9">phpCAS::getVersion</a> ()</td></tr>
 <tr class="separator:ga5c971143e0c319b1268233907ca193b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadea9415f40b8d2afc39f140c9be83bbe"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__public.html#gadea9415f40b8d2afc39f140c9be83bbe">phpCAS::getSupportedProtocols</a> ()</td></tr>
+<tr class="separator:gadea9415f40b8d2afc39f140c9be83bbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -112,6 +114,39 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="gadea9415f40b8d2afc39f140c9be83bbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadea9415f40b8d2afc39f140c9be83bbe">&#9670;&nbsp;</a></span>getSupportedProtocols()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static phpCAS::getSupportedProtocols </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method returns supported protocols.</p>
+<dl class="section return"><dt>Returns</dt><dd>array an array of all supported protocols. Use internal protocol name as array key. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00760">760</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
+
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l00074">CAS_VERSION_1_0</a>, <a class="el" href="CAS_8php_source.html#l00078">CAS_VERSION_2_0</a>, <a class="el" href="CAS_8php_source.html#l00082">CAS_VERSION_3_0</a>, and <a class="el" href="CAS_8php_source.html#l00091">SAML_VERSION_1_1</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l00905">CAS_Client\__construct()</a>.</p>
+
+</div>
+</div>
 <a id="ga5c971143e0c319b1268233907ca193b9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga5c971143e0c319b1268233907ca193b9">&#9670;&nbsp;</a></span>getVersion()</h2>
 
@@ -135,14 +170,14 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>This method returns the <a class="el" href="classphpCAS.html">phpCAS</a> version.</p>
-<dl class="section return"><dt>Returns</dt><dd>the <a class="el" href="classphpCAS.html">phpCAS</a> version. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string the <a class="el" href="classphpCAS.html">phpCAS</a> version. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="example_lang_8php-example.html#a14">example_lang.php</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00714">714</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00750">750</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l00064">PHPCAS_VERSION</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l00060">PHPCAS_VERSION</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l00075">CAS_Client\_htmlFilterOutput()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l00077">CAS_Client\_htmlFilterOutput()</a>.</p>
 
 </div>
 </div>
@@ -158,11 +193,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="classCAS.html">CAS</a> version 1.0 </p>
+<p><a class="el" href="classphpCAS.html">phpCAS</a> supported protocols. accessible for the user by <a class="el" href="group__public.html#gadea9415f40b8d2afc39f140c9be83bbe">phpCAS::getSupportedProtocols()</a>. <a class="el" href="classCAS.html">CAS</a> version 1.0 </p>
 
 <p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00074">74</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="AuthenticationException_8php_source.html#l00068">CAS_AuthenticationException\__construct()</a>, <a class="el" href="Client_8php_source.html#l00902">CAS_Client\__construct()</a>, <a class="el" href="Client_8php_source.html#l03759">CAS_Client\_authError()</a>, <a class="el" href="Client_8php_source.html#l00519">CAS_Client\getServerProxyURL()</a>, <a class="el" href="Client_8php_source.html#l00488">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00431">CAS_Client\getServerServiceValidateURL()</a>, and <a class="el" href="Client_8php_source.html#l01388">CAS_Client\isAuthenticated()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="AuthenticationException_8php_source.html#l00068">CAS_AuthenticationException\__construct()</a>, <a class="el" href="Client_8php_source.html#l04135">CAS_Client\_authError()</a>, <a class="el" href="Client_8php_source.html#l00521">CAS_Client\getServerProxyURL()</a>, <a class="el" href="Client_8php_source.html#l00490">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00433">CAS_Client\getServerServiceValidateURL()</a>, <a class="el" href="CAS_8php_source.html#l00760">phpCAS\getSupportedProtocols()</a>, and <a class="el" href="Client_8php_source.html#l01549">CAS_Client\isAuthenticated()</a>.</p>
 
 </div>
 </div>
@@ -182,7 +217,7 @@ Variables</h2></td></tr>
 </dl>
 <p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00078">78</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="AuthenticationException_8php_source.html#l00068">CAS_AuthenticationException\__construct()</a>, <a class="el" href="Client_8php_source.html#l00902">CAS_Client\__construct()</a>, <a class="el" href="Client_8php_source.html#l03759">CAS_Client\_authError()</a>, <a class="el" href="CAS_8php_source.html#l01745">phpCAS\allowProxyChain()</a>, <a class="el" href="Client_8php_source.html#l00519">CAS_Client\getServerProxyURL()</a>, <a class="el" href="Client_8php_source.html#l00488">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00431">CAS_Client\getServerServiceValidateURL()</a>, and <a class="el" href="Client_8php_source.html#l01388">CAS_Client\isAuthenticated()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="AuthenticationException_8php_source.html#l00068">CAS_AuthenticationException\__construct()</a>, <a class="el" href="Client_8php_source.html#l04135">CAS_Client\_authError()</a>, <a class="el" href="CAS_8php_source.html#l01795">phpCAS\allowProxyChain()</a>, <a class="el" href="Client_8php_source.html#l00521">CAS_Client\getServerProxyURL()</a>, <a class="el" href="Client_8php_source.html#l00490">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00433">CAS_Client\getServerServiceValidateURL()</a>, <a class="el" href="CAS_8php_source.html#l00760">phpCAS\getSupportedProtocols()</a>, and <a class="el" href="Client_8php_source.html#l01549">CAS_Client\isAuthenticated()</a>.</p>
 
 </div>
 </div>
@@ -201,7 +236,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00082">82</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="AuthenticationException_8php_source.html#l00068">CAS_AuthenticationException\__construct()</a>, <a class="el" href="Client_8php_source.html#l00902">CAS_Client\__construct()</a>, <a class="el" href="Client_8php_source.html#l03759">CAS_Client\_authError()</a>, <a class="el" href="CAS_8php_source.html#l01745">phpCAS\allowProxyChain()</a>, <a class="el" href="Client_8php_source.html#l00519">CAS_Client\getServerProxyURL()</a>, <a class="el" href="Client_8php_source.html#l00488">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00431">CAS_Client\getServerServiceValidateURL()</a>, and <a class="el" href="Client_8php_source.html#l01388">CAS_Client\isAuthenticated()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="AuthenticationException_8php_source.html#l00068">CAS_AuthenticationException\__construct()</a>, <a class="el" href="Client_8php_source.html#l04135">CAS_Client\_authError()</a>, <a class="el" href="CAS_8php_source.html#l01795">phpCAS\allowProxyChain()</a>, <a class="el" href="Client_8php_source.html#l00521">CAS_Client\getServerProxyURL()</a>, <a class="el" href="Client_8php_source.html#l00490">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00433">CAS_Client\getServerServiceValidateURL()</a>, <a class="el" href="CAS_8php_source.html#l00760">phpCAS\getSupportedProtocols()</a>, and <a class="el" href="Client_8php_source.html#l01549">CAS_Client\isAuthenticated()</a>.</p>
 
 </div>
 </div>
@@ -220,7 +255,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00142">142</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>.</p>
 
 </div>
 </div>
@@ -324,7 +359,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00101">101</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02845">CAS_Client\_buildSAMLPayload()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03059">CAS_Client\_buildSAMLPayload()</a>.</p>
 
 </div>
 </div>
@@ -361,7 +396,7 @@ Variables</h2></td></tr>
 </dl>
 <p class="definition">Definition at line <a class="el" href="CAS_8php_source.html#l00091">91</a> of file <a class="el" href="CAS_8php_source.html">CAS.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l00902">CAS_Client\__construct()</a>, <a class="el" href="Client_8php_source.html#l02790">CAS_Client\_readURL()</a>, and <a class="el" href="Client_8php_source.html#l00463">CAS_Client\getServerSamlValidateURL()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03004">CAS_Client\_readURL()</a>, <a class="el" href="Client_8php_source.html#l00465">CAS_Client\getServerSamlValidateURL()</a>, and <a class="el" href="CAS_8php_source.html#l00760">phpCAS\getSupportedProtocols()</a>.</p>
 
 </div>
 </div>

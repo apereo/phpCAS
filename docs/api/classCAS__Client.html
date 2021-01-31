@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">phpCAS
-   &#160;<span id="projectnumber">version 1.3.6</span>
+   &#160;<span id="projectnumber">version 1.3.9</span>
    </div>
   </td>
  </tr>
@@ -41,6 +41,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classCAS__Client-members.html">List of all members</a>  </div>
@@ -115,10 +116,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:gace970e12e6aad4438e43868dca8dfd85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4637b244c4f9861247ae7ed02e5e502e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBehave.html#ga4637b244c4f9861247ae7ed02e5e502e">getAuthenticationCallerMethod</a> ()</td></tr>
 <tr class="separator:ga4637b244c4f9861247ae7ed02e5e502e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5a9bbe70b290a44d978a54bb132de11c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#ga5a9bbe70b290a44d978a54bb132de11c">__construct</a> ( $server_version, $proxy, $server_hostname, $server_port, $server_uri, $changeSessionID=true)</td></tr>
-<tr class="separator:ga5a9bbe70b290a44d978a54bb132de11c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga575065d68c5caec78befcf7258458821"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#ga575065d68c5caec78befcf7258458821">__construct</a> ( $server_version, $proxy, $server_hostname, $server_port, $server_uri, $changeSessionID=true, \SessionHandlerInterface $sessionHandler=null)</td></tr>
+<tr class="separator:ga575065d68c5caec78befcf7258458821"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2485ab2e8a8c8ff0dc0603f1992c6945"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#ga2485ab2e8a8c8ff0dc0603f1992c6945">getChangeSessionID</a> ()</td></tr>
 <tr class="separator:ga2485ab2e8a8c8ff0dc0603f1992c6945"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga33d3dfc5dc519fcff80f3d429b51be46"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#ga33d3dfc5dc519fcff80f3d429b51be46">setSessionHandler</a> (\SessionHandlerInterface $sessionHandler)</td></tr>
+<tr class="separator:ga33d3dfc5dc519fcff80f3d429b51be46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga18a943d6984497f7fcde795fb4e57372"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalAuthentication.html#ga18a943d6984497f7fcde795fb4e57372">getUser</a> ()</td></tr>
 <tr class="separator:ga18a943d6984497f7fcde795fb4e57372"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4f0c191193884b48a66a63c871dd660e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalAuthentication.html#ga4f0c191193884b48a66a63c871dd660e">setAttributes</a> ($attributes)</td></tr>
@@ -147,8 +150,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:gac116a7ff5b1424645c45abafbaf5b35f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac725f9fbb5de957bdd75a5334379b45d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalAuthentication.html#gac725f9fbb5de957bdd75a5334379b45d">logout</a> ($params)</td></tr>
 <tr class="separator:gac725f9fbb5de957bdd75a5334379b45d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae2f5c90e92e32f31dafeee19d338f1be"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalAuthentication.html#gae2f5c90e92e32f31dafeee19d338f1be">handleLogoutRequests</a> ($check_client=true, $allowed_clients=false)</td></tr>
-<tr class="separator:gae2f5c90e92e32f31dafeee19d338f1be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga19d3018e0e1500358a3828cd19ecc257"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalAuthentication.html#ga19d3018e0e1500358a3828cd19ecc257">handleLogoutRequests</a> ($check_client=true, $allowed_clients=array())</td></tr>
+<tr class="separator:ga19d3018e0e1500358a3828cd19ecc257"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3f02eb60587f3fc90bfd53ec14737992"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBasic.html#ga3f02eb60587f3fc90bfd53ec14737992">getTicket</a> ()</td></tr>
 <tr class="separator:ga3f02eb60587f3fc90bfd53ec14737992"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadffbb2702828c248db2dc03c23d4a853"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBasic.html#gadffbb2702828c248db2dc03c23d4a853">setTicket</a> ($st)</td></tr>
@@ -204,6 +207,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:ga97ed58900564404db90511f28162ae52"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#ga97ed58900564404db90511f28162ae52">PHPCAS_SESSION_PREFIX</a> = '<a class="el" href="classphpCAS.html">phpCAS</a>'</td></tr>
+<tr class="separator:ga97ed58900564404db90511f28162ae52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3b05317d3f0e180f73616399bf2f71c8"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga3b05317d3f0e180f73616399bf2f71c8">HOSTNAME</a> = 0</td></tr>
 <tr class="separator:ga3b05317d3f0e180f73616399bf2f71c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaefd0cc6108635140fc5147a45a9aade3"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#gaefd0cc6108635140fc5147a45a9aade3">IP</a> = 1</td></tr>
@@ -212,6 +217,23 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ga540d1691fb431355b0b36fbac9a2269c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabf220ce00a9bcd6f9d585ef4469c5077"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#gabf220ce00a9bcd6f9d585ef4469c5077">PGTIOU</a> = 1</td></tr>
 <tr class="separator:gabf220ce00a9bcd6f9d585ef4469c5077"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:ga7215efdf20386104b60a002172e1bac0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#ga7215efdf20386104b60a002172e1bac0">getSessionValue</a> ($key, $default=null)</td></tr>
+<tr class="separator:ga7215efdf20386104b60a002172e1bac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa455be6100f6a0464196fe6549e8c959"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#gaa455be6100f6a0464196fe6549e8c959">hasSessionValue</a> ($key)</td></tr>
+<tr class="separator:gaa455be6100f6a0464196fe6549e8c959"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga775a95c412049fcee6f65da295793f19"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#ga775a95c412049fcee6f65da295793f19">setSessionValue</a> ($key, $value)</td></tr>
+<tr class="separator:ga775a95c412049fcee6f65da295793f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6826f45ec77491cf640c014108e48b32"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#ga6826f45ec77491cf640c014108e48b32">removeSessionValue</a> ($key)</td></tr>
+<tr class="separator:ga6826f45ec77491cf640c014108e48b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa8fa03c283ee24557858d995d6d31cb9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#gaa8fa03c283ee24557858d995d6d31cb9">clearSessionValues</a> ()</td></tr>
+<tr class="separator:gaa8fa03c283ee24557858d995d6d31cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2a95f5c99ca32da3a84cd9acad529212"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#ga2a95f5c99ca32da3a84cd9acad529212">validateSession</a> ($key)</td></tr>
+<tr class="separator:ga2a95f5c99ca32da3a84cd9acad529212"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga165c199b74d43987f8af7213f72e7c9c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#ga165c199b74d43987f8af7213f72e7c9c">_renameSession</a> ($ticket)</td></tr>
+<tr class="separator:ga165c199b74d43987f8af7213f72e7c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -251,10 +273,16 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:ga04f99bdb3b31567498118170b7f47745"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf14ca1c0cca0fc5ee00cc5079ae20274"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCallback.html#gaf14ca1c0cca0fc5ee00cc5079ae20274">_isCallbackMode</a> ()</td></tr>
 <tr class="separator:gaf14ca1c0cca0fc5ee00cc5079ae20274"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga78604488df36e7ff828373a088197f4a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCallback.html#ga78604488df36e7ff828373a088197f4a">_setCallbackModeUsingPost</a> ($callback_mode_using_post)</td></tr>
+<tr class="separator:ga78604488df36e7ff828373a088197f4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6ce5c8c64753b13c4af2e62407cb024b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCallback.html#ga6ce5c8c64753b13c4af2e62407cb024b">_isCallbackModeUsingPost</a> ()</td></tr>
+<tr class="separator:ga6ce5c8c64753b13c4af2e62407cb024b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gada621d5c883e8a4df33bb59ba388fb57"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCallback.html#gada621d5c883e8a4df33bb59ba388fb57">_getCallbackURL</a> ()</td></tr>
 <tr class="separator:gada621d5c883e8a4df33bb59ba388fb57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga96bd311372bd31d268c316a720cf5a2c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCallback.html#ga96bd311372bd31d268c316a720cf5a2c">_callback</a> ()</td></tr>
 <tr class="separator:ga96bd311372bd31d268c316a720cf5a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad909be3ac4503d0762469e47376b6e45"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCallback.html#gad909be3ac4503d0762469e47376b6e45">isXmlResponse</a> ()</td></tr>
+<tr class="separator:gad909be3ac4503d0762469e47376b6e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab3da89084c4633138955b842b7deac52"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalPGTStorage.html#gab3da89084c4633138955b842b7deac52">_initPGTStorage</a> ()</td></tr>
 <tr class="separator:gab3da89084c4633138955b842b7deac52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaebe23b52f97ef1180917c2da08713c9a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalPGTStorage.html#gaebe23b52f97ef1180917c2da08713c9a">_storePGT</a> ($pgt, $pgt_iou)</td></tr>
@@ -269,6 +297,12 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:ga7746297c6033c1389b5bc2ee6bb3ee9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8b6b41ec67fb141f1af7d9ce01e00bef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalService.html#ga8b6b41ec67fb141f1af7d9ce01e00bef">_setProxies</a> ($proxies)</td></tr>
 <tr class="separator:ga8b6b41ec67fb141f1af7d9ce01e00bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga09de037cba47bc04158fd63c5387d46a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxied.html#ga09de037cba47bc04158fd63c5387d46a">_xml_to_array</a> ($root, $namespace=&quot;cas&quot;)</td></tr>
+<tr class="separator:ga09de037cba47bc04158fd63c5387d46a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac68b68a6376a0b2ad4f4850f17150dbd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxied.html#gac68b68a6376a0b2ad4f4850f17150dbd">_parse_json_like_array_value</a> ($json_value)</td></tr>
+<tr class="separator:gac68b68a6376a0b2ad4f4850f17150dbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga80bdc2d46b358bc944544b86c087d951"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxied.html#ga80bdc2d46b358bc944544b86c087d951">_flatten_array</a> ($arr)</td></tr>
+<tr class="separator:ga80bdc2d46b358bc944544b86c087d951"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9b8c874e3c35984d8c92a7120f41414f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxied.html#ga9b8c874e3c35984d8c92a7120f41414f">_readExtraAttributesCas20</a> ($success_elements)</td></tr>
 <tr class="separator:ga9b8c874e3c35984d8c92a7120f41414f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacb7ff85ef1b5e40f504d8e8d0ea419d2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxied.html#gacb7ff85ef1b5e40f504d8e8d0ea419d2">_addAttributeToArray</a> (array &amp;$attributeArray, $name, $value)</td></tr>
@@ -281,12 +315,14 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:gab9553908e37afe46cd3cee9b7eb422fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga21b345d5b10a88e145f71aa6e7b4a265"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga21b345d5b10a88e145f71aa6e7b4a265">_buildQueryUrl</a> ($url, $query)</td></tr>
 <tr class="separator:ga21b345d5b10a88e145f71aa6e7b4a265"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga165c199b74d43987f8af7213f72e7c9c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga165c199b74d43987f8af7213f72e7c9c">_renameSession</a> ($ticket)</td></tr>
-<tr class="separator:ga165c199b74d43987f8af7213f72e7c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad0879f2190d2353698d9b62a6611689d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#gad0879f2190d2353698d9b62a6611689d">_startsWith</a> ($text, $char)</td></tr>
+<tr class="separator:gad0879f2190d2353698d9b62a6611689d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga87db0615a069a201c1966d8d68d387c9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga87db0615a069a201c1966d8d68d387c9">_endsWith</a> ($text, $char)</td></tr>
+<tr class="separator:ga87db0615a069a201c1966d8d68d387c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa072388494d47d20435ca47d7214f413"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#gaa072388494d47d20435ca47d7214f413">_sessionIdForTicket</a> ($ticket)</td></tr>
 <tr class="separator:gaa072388494d47d20435ca47d7214f413"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5f98c69631ced6601bdff1d2341025be"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga5f98c69631ced6601bdff1d2341025be">_authError</a> ( $failure, $cas_url, $no_response, $bad_response='', $cas_response='', $err_code='', $err_msg='')</td></tr>
-<tr class="separator:ga5f98c69631ced6601bdff1d2341025be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6b0e7787b326a7a63602def62b96c483"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga6b0e7787b326a7a63602def62b96c483">_authError</a> ( $failure, $cas_url, $no_response=false, $bad_response=false, $cas_response='', $err_code=-1, $err_msg='')</td></tr>
+<tr class="separator:ga6b0e7787b326a7a63602def62b96c483"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7f4c0ac47dc6cdc909b34dec0ca37983"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga7f4c0ac47dc6cdc909b34dec0ca37983">_getNodeType</a> ($nodeURL)</td></tr>
 <tr class="separator:ga7f4c0ac47dc6cdc909b34dec0ca37983"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2276036418d32d024cab3df7b2ba05ae"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga2276036418d32d024cab3df7b2ba05ae">_rebroadcast</a> ($type)</td></tr>
@@ -312,18 +348,20 @@ Private Attributes</h2></td></tr>
 <tr class="separator:gaa854aac0e003b66390dfef1edf4d376c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0364955e6c2673dd56a7e7895a3b28a2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBehave.html#ga0364955e6c2673dd56a7e7895a3b28a2">$_casAttributeParserCallbackArgs</a> = array()</td></tr>
 <tr class="separator:ga0364955e6c2673dd56a7e7895a3b28a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaed60210e7c5d6d398dd3277ca95ac657"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBehave.html#gaed60210e7c5d6d398dd3277ca95ac657">$_postAuthenticateCallbackFunction</a> = null</td></tr>
-<tr class="separator:gaed60210e7c5d6d398dd3277ca95ac657"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga57eacb2322e9d1fb2546d3fa66918327"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBehave.html#ga57eacb2322e9d1fb2546d3fa66918327">$_postAuthenticateCallbackFunction</a> = null</td></tr>
+<tr class="separator:ga57eacb2322e9d1fb2546d3fa66918327"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga22b6717169f18156da150b60a59b2ded"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBehave.html#ga22b6717169f18156da150b60a59b2ded">$_postAuthenticateCallbackArgs</a> = array()</td></tr>
 <tr class="separator:ga22b6717169f18156da150b60a59b2ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga02105ca843402cbb747c693272dbec97"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBehave.html#ga02105ca843402cbb747c693272dbec97">$_signoutCallbackFunction</a> = null</td></tr>
-<tr class="separator:ga02105ca843402cbb747c693272dbec97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4b5491eee5b4320ad6246adb329c6a64"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBehave.html#ga4b5491eee5b4320ad6246adb329c6a64">$_signoutCallbackFunction</a> = null</td></tr>
+<tr class="separator:ga4b5491eee5b4320ad6246adb329c6a64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3e2359bc41599cca4a89f6a06a3318d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBehave.html#ga3e2359bc41599cca4a89f6a06a3318d9">$_signoutCallbackArgs</a> = array()</td></tr>
 <tr class="separator:ga3e2359bc41599cca4a89f6a06a3318d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1f28c2472b7830036d753472d46e4dd7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBehave.html#ga1f28c2472b7830036d753472d46e4dd7">$_authentication_caller</a></td></tr>
 <tr class="separator:ga1f28c2472b7830036d753472d46e4dd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf73b1f8448961bcc61ebef94c2d2fafc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#gaf73b1f8448961bcc61ebef94c2d2fafc">$_change_session_id</a></td></tr>
+<tr class="memitem:gaf73b1f8448961bcc61ebef94c2d2fafc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#gaf73b1f8448961bcc61ebef94c2d2fafc">$_change_session_id</a> = true</td></tr>
 <tr class="separator:gaf73b1f8448961bcc61ebef94c2d2fafc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga607eeb5adb514e36dcd3d0fb7c6cd8df"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalConfig.html#ga607eeb5adb514e36dcd3d0fb7c6cd8df">$_sessionHandler</a></td></tr>
+<tr class="separator:ga607eeb5adb514e36dcd3d0fb7c6cd8df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1edc9e777bc4dc2a5213f3000a85e019"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalAuthentication.html#ga1edc9e777bc4dc2a5213f3000a85e019">$_user</a></td></tr>
 <tr class="separator:ga1edc9e777bc4dc2a5213f3000a85e019"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab4713832a3000332ddb87a9689bc6a15"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalAuthentication.html#gab4713832a3000332ddb87a9689bc6a15">$_attributes</a></td></tr>
@@ -332,7 +370,7 @@ Private Attributes</h2></td></tr>
 <tr class="separator:ga478decd824592dcf1abd27002559452c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga53866b33f60ed6b81717f59430a31d62"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBasic.html#ga53866b33f60ed6b81717f59430a31d62">$_ticket</a></td></tr>
 <tr class="separator:ga53866b33f60ed6b81717f59430a31d62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga17f31ab4f36a637672e5f23c895c4acf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBasic.html#ga17f31ab4f36a637672e5f23c895c4acf">$_cas_server_ca_cert</a></td></tr>
+<tr class="memitem:ga17f31ab4f36a637672e5f23c895c4acf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBasic.html#ga17f31ab4f36a637672e5f23c895c4acf">$_cas_server_ca_cert</a> = null</td></tr>
 <tr class="separator:ga17f31ab4f36a637672e5f23c895c4acf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9b4e4eb54ee6a8d0a64d1dcb1c555603"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalBasic.html#ga9b4e4eb54ee6a8d0a64d1dcb1c555603">$_cas_server_cn_validate</a></td></tr>
 <tr class="separator:ga9b4e4eb54ee6a8d0a64d1dcb1c555603"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -344,11 +382,13 @@ Private Attributes</h2></td></tr>
 <tr class="separator:ga1f1bcaf4533a30cf236fc0b531aede62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2c3d4f2d4cb694f1687f561e8483a4c9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalProxy.html#ga2c3d4f2d4cb694f1687f561e8483a4c9">$_pgt</a></td></tr>
 <tr class="separator:ga2c3d4f2d4cb694f1687f561e8483a4c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaed4f8867a062dd1ece2e51e9ec31df58"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCallback.html#gaed4f8867a062dd1ece2e51e9ec31df58">$_callback_mode</a></td></tr>
+<tr class="memitem:gaed4f8867a062dd1ece2e51e9ec31df58"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCallback.html#gaed4f8867a062dd1ece2e51e9ec31df58">$_callback_mode</a> = false</td></tr>
 <tr class="separator:gaed4f8867a062dd1ece2e51e9ec31df58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac2c6d7900bd288f85641e7114a8e8e13"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCallback.html#gac2c6d7900bd288f85641e7114a8e8e13">$_callback_mode_using_post</a> = false</td></tr>
+<tr class="separator:gac2c6d7900bd288f85641e7114a8e8e13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4e021ea01bd0aebe95d458a5c7997747"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalCallback.html#ga4e021ea01bd0aebe95d458a5c7997747">$_callback_url</a></td></tr>
 <tr class="separator:ga4e021ea01bd0aebe95d458a5c7997747"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad1f8471bde7999b0465c8f3f109a6aba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalPGTStorage.html#gad1f8471bde7999b0465c8f3f109a6aba">$_pgt_storage</a></td></tr>
+<tr class="memitem:gad1f8471bde7999b0465c8f3f109a6aba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalPGTStorage.html#gad1f8471bde7999b0465c8f3f109a6aba">$_pgt_storage</a> = null</td></tr>
 <tr class="separator:gad1f8471bde7999b0465c8f3f109a6aba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga082ab34c6c2bf014314fe02504c4ad67"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalService.html#ga082ab34c6c2bf014314fe02504c4ad67">$_proxies</a> = array()</td></tr>
 <tr class="separator:ga082ab34c6c2bf014314fe02504c4ad67"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -368,7 +408,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="classCAS__Client.html">CAS_Client</a> class is a client interface that provides <a class="el" href="classCAS.html">CAS</a> authentication to PHP applications. </p>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l00051">51</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l00053">53</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

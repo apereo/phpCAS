@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">phpCAS
-   &#160;<span id="projectnumber">version 1.3.6</span>
+   &#160;<span id="projectnumber">version 1.3.9</span>
    </div>
   </td>
  </tr>
@@ -66,14 +66,16 @@ Functions</h2></td></tr>
 <tr class="separator:gab9553908e37afe46cd3cee9b7eb422fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga21b345d5b10a88e145f71aa6e7b4a265"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga21b345d5b10a88e145f71aa6e7b4a265">CAS_Client::_buildQueryUrl</a> ($url, $query)</td></tr>
 <tr class="separator:ga21b345d5b10a88e145f71aa6e7b4a265"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga165c199b74d43987f8af7213f72e7c9c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga165c199b74d43987f8af7213f72e7c9c">CAS_Client::_renameSession</a> ($ticket)</td></tr>
-<tr class="separator:ga165c199b74d43987f8af7213f72e7c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad0879f2190d2353698d9b62a6611689d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#gad0879f2190d2353698d9b62a6611689d">CAS_Client::_startsWith</a> ($text, $char)</td></tr>
+<tr class="separator:gad0879f2190d2353698d9b62a6611689d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga87db0615a069a201c1966d8d68d387c9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga87db0615a069a201c1966d8d68d387c9">CAS_Client::_endsWith</a> ($text, $char)</td></tr>
+<tr class="separator:ga87db0615a069a201c1966d8d68d387c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa072388494d47d20435ca47d7214f413"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#gaa072388494d47d20435ca47d7214f413">CAS_Client::_sessionIdForTicket</a> ($ticket)</td></tr>
 <tr class="separator:gaa072388494d47d20435ca47d7214f413"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga748555f49c123b969dff780c02d7cd52"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga748555f49c123b969dff780c02d7cd52">CAS_Client::setSessionIdSalt</a> ($salt)</td></tr>
 <tr class="separator:ga748555f49c123b969dff780c02d7cd52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5f98c69631ced6601bdff1d2341025be"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga5f98c69631ced6601bdff1d2341025be">CAS_Client::_authError</a> ( $failure, $cas_url, $no_response, $bad_response='', $cas_response='', $err_code='', $err_msg='')</td></tr>
-<tr class="separator:ga5f98c69631ced6601bdff1d2341025be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6b0e7787b326a7a63602def62b96c483"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga6b0e7787b326a7a63602def62b96c483">CAS_Client::_authError</a> ( $failure, $cas_url, $no_response=false, $bad_response=false, $cas_response='', $err_code=-1, $err_msg='')</td></tr>
+<tr class="separator:ga6b0e7787b326a7a63602def62b96c483"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7f4c0ac47dc6cdc909b34dec0ca37983"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga7f4c0ac47dc6cdc909b34dec0ca37983">CAS_Client::_getNodeType</a> ($nodeURL)</td></tr>
 <tr class="separator:ga7f4c0ac47dc6cdc909b34dec0ca37983"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9d4153a914725c55b5b4e77731678691"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__internalMisc.html#ga9d4153a914725c55b5b4e77731678691">CAS_Client::addRebroadcastNode</a> ($rebroadcastNodeUrl)</td></tr>
@@ -106,8 +108,8 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga5f98c69631ced6601bdff1d2341025be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5f98c69631ced6601bdff1d2341025be">&#9670;&nbsp;</a></span>_authError()</h2>
+<a id="ga6b0e7787b326a7a63602def62b96c483"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6b0e7787b326a7a63602def62b96c483">&#9670;&nbsp;</a></span>_authError()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -131,13 +133,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$no_response</em>, </td>
+          <td class="paramname"><em>$no_response</em> = <code>false</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$bad_response</em> = <code>''</code>, </td>
+          <td class="paramname"><em>$bad_response</em> = <code>false</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -149,7 +151,7 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$err_code</em> = <code>''</code>, </td>
+          <td class="paramname"><em>$err_code</em> = <code>-1</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -184,9 +186,9 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03759">3759</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04135">4135</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="config_8example_8php_source.html#l00089">$cas_url</a>, <a class="el" href="CAS_8php_source.html#l00074">CAS_VERSION_1_0</a>, <a class="el" href="CAS_8php_source.html#l00078">CAS_VERSION_2_0</a>, <a class="el" href="CAS_8php_source.html#l00082">CAS_VERSION_3_0</a>, <a class="el" href="Client_8php_source.html#l00222">CAS_Client\getLangObj()</a>, <a class="el" href="Client_8php_source.html#l00273">CAS_Client\getServerVersion()</a>, <a class="el" href="Client_8php_source.html#l03524">CAS_Client\getURL()</a>, <a class="el" href="Client_8php_source.html#l00129">CAS_Client\printHTMLFooter()</a>, <a class="el" href="Client_8php_source.html#l00101">CAS_Client\printHTMLHeader()</a>, <a class="el" href="CAS_8php_source.html#l00579">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00661">phpCAS\traceExit()</a>.</p>
+<p class="reference">References <a class="el" href="config_8example_8php_source.html#l00089">$cas_url</a>, <a class="el" href="CAS_8php_source.html#l00074">CAS_VERSION_1_0</a>, <a class="el" href="CAS_8php_source.html#l00078">CAS_VERSION_2_0</a>, <a class="el" href="CAS_8php_source.html#l00082">CAS_VERSION_3_0</a>, <a class="el" href="Client_8php_source.html#l00224">CAS_Client\getLangObj()</a>, <a class="el" href="Client_8php_source.html#l00275">CAS_Client\getServerVersion()</a>, <a class="el" href="Client_8php_source.html#l03911">CAS_Client\getURL()</a>, <a class="el" href="Client_8php_source.html#l00131">CAS_Client\printHTMLFooter()</a>, <a class="el" href="Client_8php_source.html#l00103">CAS_Client\printHTMLHeader()</a>, <a class="el" href="CAS_8php_source.html#l00616">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00697">phpCAS\traceExit()</a>.</p>
 
 </div>
 </div>
@@ -231,11 +233,11 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>url with query params </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string url with query params </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03662">3662</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04047">4047</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l00337">CAS_Client\getServerLoginURL()</a>, <a class="el" href="Client_8php_source.html#l00488">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00463">CAS_Client\getServerSamlValidateURL()</a>, and <a class="el" href="Client_8php_source.html#l00431">CAS_Client\getServerServiceValidateURL()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l00339">CAS_Client\getServerLoginURL()</a>, <a class="el" href="Client_8php_source.html#l00490">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00465">CAS_Client\getServerSamlValidateURL()</a>, and <a class="el" href="Client_8php_source.html#l00433">CAS_Client\getServerServiceValidateURL()</a>.</p>
 
 </div>
 </div>
@@ -262,13 +264,62 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>This method is used to build the SAML POST body sent to /samlValidate URL.</p>
-<dl class="section return"><dt>Returns</dt><dd>the SOAP-encased SAMLP artifact (the ticket). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string the SOAP-encased SAMLP artifact (the ticket). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02845">2845</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03059">3059</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l01870">CAS_Client\getTicket()</a>, <a class="el" href="CAS_8php_source.html#l00101">SAML_SOAP_ENV</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l02031">CAS_Client\getTicket()</a>, <a class="el" href="CAS_8php_source.html#l00101">SAML_SOAP_ENV</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02790">CAS_Client\_readURL()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03004">CAS_Client\_readURL()</a>.</p>
+
+</div>
+</div>
+<a id="ga87db0615a069a201c1966d8d68d387c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga87db0615a069a201c1966d8d68d387c9">&#9670;&nbsp;</a></span>_endsWith()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CAS_Client::_endsWith </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$char</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method tests if a string ends with a given character</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td>text to test </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$char</td><td>character to test for</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool true if the $text ends with $char </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04075">4075</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03742">CAS_Client\_flatten_array()</a>, and <a class="el" href="Client_8php_source.html#l03673">CAS_Client\_parse_json_like_array_value()</a>.</p>
 
 </div>
 </div>
@@ -294,14 +345,14 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Try to figure out the phpCas client URL with possible Proxys / Ports etc.</p>
+<p>Try to figure out the <a class="el" href="classphpCAS.html">phpCAS</a> client URL with possible Proxys / Ports etc.</p>
 <dl class="section return"><dt>Returns</dt><dd>string Server URL with domain:port </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03577">3577</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03963">3963</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l03617">CAS_Client\_isHttps()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l04002">CAS_Client\_isHttps()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02360">CAS_Client\_getCallbackURL()</a>, and <a class="el" href="Client_8php_source.html#l03524">CAS_Client\getURL()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02545">CAS_Client\_getCallbackURL()</a>, and <a class="el" href="Client_8php_source.html#l03911">CAS_Client\getURL()</a>.</p>
 
 </div>
 </div>
@@ -335,13 +386,13 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string hostname </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>int hostname </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03831">3831</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04207">4207</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03895">CAS_Client\_rebroadcast()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l04271">CAS_Client\_rebroadcast()</a>.</p>
 
 </div>
 </div>
@@ -370,9 +421,9 @@ Variables</h2></td></tr>
 <p>This method checks to see if the request is secured via HTTPS</p>
 <dl class="section return"><dt>Returns</dt><dd>bool true if https, false otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03617">3617</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04002">4002</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l00902">CAS_Client\__construct()</a>, <a class="el" href="Client_8php_source.html#l03577">CAS_Client\_getClientUrl()</a>, and <a class="el" href="Client_8php_source.html#l03524">CAS_Client\getURL()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l00905">CAS_Client\__construct()</a>, <a class="el" href="Client_8php_source.html#l03963">CAS_Client\_getClientUrl()</a>, and <a class="el" href="Client_8php_source.html#l03911">CAS_Client\getURL()</a>.</p>
 
 </div>
 </div>
@@ -431,13 +482,13 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true on success, false otherwise (in this later case, $err_msg contains an error message). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>bool true on success, false otherwise (in this later case, $err_msg contains an error message). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l02790">2790</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03004">3004</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l00601">CAS_Client\$_requestImplementation</a>, <a class="el" href="Client_8php_source.html#l02845">CAS_Client\_buildSAMLPayload()</a>, <a class="el" href="CAS_8php_source.html#l00543">phpCAS\error()</a>, <a class="el" href="Client_8php_source.html#l00273">CAS_Client\getServerVersion()</a>, <a class="el" href="CAS_8php_source.html#l00091">SAML_VERSION_1_1</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l00603">CAS_Client\$_requestImplementation</a>, <a class="el" href="Client_8php_source.html#l03059">CAS_Client\_buildSAMLPayload()</a>, <a class="el" href="CAS_8php_source.html#l00580">phpCAS\error()</a>, <a class="el" href="Client_8php_source.html#l00275">CAS_Client\getServerVersion()</a>, <a class="el" href="CAS_8php_source.html#l00091">SAML_VERSION_1_1</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02658">CAS_Client\retrievePT()</a>, <a class="el" href="Client_8php_source.html#l01985">CAS_Client\validateCAS10()</a>, and <a class="el" href="Client_8php_source.html#l03166">CAS_Client\validateCAS20()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02874">CAS_Client\retrievePT()</a>, <a class="el" href="Client_8php_source.html#l02147">CAS_Client\validateCAS10()</a>, and <a class="el" href="Client_8php_source.html#l03382">CAS_Client\validateCAS20()</a>.</p>
 
 </div>
 </div>
@@ -473,11 +524,11 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03895">3895</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04271">4271</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l03815">CAS_Client\$_rebroadcast_nodes</a>, <a class="el" href="Client_8php_source.html#l00601">CAS_Client\$_requestImplementation</a>, <a class="el" href="Client_8php_source.html#l03831">CAS_Client\_getNodeType()</a>, <a class="el" href="CAS_8php_source.html#l00579">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l04191">CAS_Client\$_rebroadcast_nodes</a>, <a class="el" href="Client_8php_source.html#l00603">CAS_Client\$_requestImplementation</a>, <a class="el" href="Client_8php_source.html#l04207">CAS_Client\_getNodeType()</a>, <a class="el" href="CAS_8php_source.html#l00616">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l01549">CAS_Client\_wasPreviouslyAuthenticated()</a>, <a class="el" href="Client_8php_source.html#l03850">CAS_Client\addRebroadcastNode()</a>, and <a class="el" href="Client_8php_source.html#l01735">CAS_Client\handleLogoutRequests()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l01710">CAS_Client\_wasPreviouslyAuthenticated()</a>, <a class="el" href="Client_8php_source.html#l04226">CAS_Client\addRebroadcastNode()</a>, and <a class="el" href="Client_8php_source.html#l01896">CAS_Client\handleLogoutRequests()</a>.</p>
 
 </div>
 </div>
@@ -525,49 +576,9 @@ Variables</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>string new query string</dd></dl>
 <p><a class="el" href="">http://stackoverflow.com/questions/1842681/regular-expression-to-remove-one-parameter-from-query-string</a></p>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03643">3643</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04028">4028</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03524">CAS_Client\getURL()</a>.</p>
-
-</div>
-</div>
-<a id="ga165c199b74d43987f8af7213f72e7c9c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga165c199b74d43987f8af7213f72e7c9c">&#9670;&nbsp;</a></span>_renameSession()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">CAS_Client::_renameSession </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$ticket</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Renaming the session</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$ticket</td><td>name of the ticket</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03676">3676</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
-
-<p class="reference">References <a class="el" href="Client_8php_source.html#l03715">CAS_Client\_sessionIdForTicket()</a>, <a class="el" href="Client_8php_source.html#l01072">CAS_Client\getChangeSessionID()</a>, <a class="el" href="CAS_8php_source.html#l00579">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l02065">CAS_Client\validateSA()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03911">CAS_Client\getURL()</a>.</p>
 
 </div>
 </div>
@@ -604,9 +615,58 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03715">3715</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04091">4091</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03676">CAS_Client\_renameSession()</a>, and <a class="el" href="Client_8php_source.html#l01735">CAS_Client\handleLogoutRequests()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l01218">CAS_Client\_renameSession()</a>, and <a class="el" href="Client_8php_source.html#l01896">CAS_Client\handleLogoutRequests()</a>.</p>
+
+</div>
+</div>
+<a id="gad0879f2190d2353698d9b62a6611689d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad0879f2190d2353698d9b62a6611689d">&#9670;&nbsp;</a></span>_startsWith()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CAS_Client::_startsWith </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$char</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method tests if a string starts with a given character.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td>text to test </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$char</td><td>character to test for</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool true if the $text starts with $char </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04062">4062</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03742">CAS_Client\_flatten_array()</a>, and <a class="el" href="Client_8php_source.html#l03673">CAS_Client\_parse_json_like_array_value()</a>.</p>
 
 </div>
 </div>
@@ -634,7 +694,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03874">3874</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04250">4250</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
 </div>
 </div>
@@ -662,9 +722,9 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03850">3850</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04226">4226</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l03895">CAS_Client\_rebroadcast()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l04271">CAS_Client\_rebroadcast()</a>.</p>
 
 </div>
 </div>
@@ -683,13 +743,13 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>This method returns the URL of the current request (without any ticket CGI parameter).</p>
-<dl class="section return"><dt>Returns</dt><dd>The URL </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string The URL </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03524">3524</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03911">3911</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">References <a class="el" href="Client_8php_source.html#l03499">CAS_Client\$_url</a>, <a class="el" href="Client_8php_source.html#l03577">CAS_Client\_getClientUrl()</a>, <a class="el" href="Client_8php_source.html#l03617">CAS_Client\_isHttps()</a>, <a class="el" href="Client_8php_source.html#l03643">CAS_Client\_removeParameterFromQueryString()</a>, <a class="el" href="Client_8php_source.html#l03509">CAS_Client\setURL()</a>, <a class="el" href="CAS_8php_source.html#l00579">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00591">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00638">phpCAS\traceEnd()</a>.</p>
+<p class="reference">References <a class="el" href="Client_8php_source.html#l03886">CAS_Client\$_url</a>, <a class="el" href="Client_8php_source.html#l03963">CAS_Client\_getClientUrl()</a>, <a class="el" href="Client_8php_source.html#l04002">CAS_Client\_isHttps()</a>, <a class="el" href="Client_8php_source.html#l04028">CAS_Client\_removeParameterFromQueryString()</a>, <a class="el" href="Client_8php_source.html#l03896">CAS_Client\setURL()</a>, <a class="el" href="CAS_8php_source.html#l00616">phpCAS\trace()</a>, <a class="el" href="CAS_8php_source.html#l00628">phpCAS\traceBegin()</a>, and <a class="el" href="CAS_8php_source.html#l00675">phpCAS\traceEnd()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03759">CAS_Client\_authError()</a>, <a class="el" href="Client_8php_source.html#l00337">CAS_Client\getServerLoginURL()</a>, <a class="el" href="Client_8php_source.html#l00488">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00463">CAS_Client\getServerSamlValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00431">CAS_Client\getServerServiceValidateURL()</a>, and <a class="el" href="Client_8php_source.html#l01388">CAS_Client\isAuthenticated()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l04135">CAS_Client\_authError()</a>, <a class="el" href="Client_8php_source.html#l00339">CAS_Client\getServerLoginURL()</a>, <a class="el" href="Client_8php_source.html#l00490">CAS_Client\getServerProxyValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00465">CAS_Client\getServerSamlValidateURL()</a>, <a class="el" href="Client_8php_source.html#l00433">CAS_Client\getServerServiceValidateURL()</a>, and <a class="el" href="Client_8php_source.html#l01549">CAS_Client\isAuthenticated()</a>.</p>
 
 </div>
 </div>
@@ -717,7 +777,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string base url </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03562">3562</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03948">3948</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
 </div>
 </div>
@@ -745,7 +805,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03736">3736</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04112">4112</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
 </div>
 </div>
@@ -773,9 +833,9 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03509">3509</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03896">3896</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03524">CAS_Client\getURL()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03911">CAS_Client\getURL()</a>.</p>
 
 </div>
 </div>
@@ -801,7 +861,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <p>Boolean of whether to rebroadcast pgtIou/pgtId and logoutRequest, and array of the nodes. </p>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03814">3814</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04190">4190</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
 </div>
 </div>
@@ -826,7 +886,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <p>An array to store extra rebroadcast curl options. </p>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03864">3864</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04240">4240</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
 </div>
 </div>
@@ -850,9 +910,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03815">3815</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04191">4191</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03895">CAS_Client\_rebroadcast()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l04271">CAS_Client\_rebroadcast()</a>.</p>
 
 </div>
 </div>
@@ -877,7 +937,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <p>Set a salt/seed for the session-id hash to make it harder to guess. </p>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03727">3727</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04103">4103</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
 </div>
 </div>
@@ -902,9 +962,9 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <p>the URL of the current request (without any ticket CGI parameter). Written and read by <a class="el" href="group__internalMisc.html#gaa7564ffa02c80ebf8ec2d7238a22f9e0">CAS_Client::getURL()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03499">3499</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03886">3886</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03524">CAS_Client\getURL()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Client_8php_source.html#l03911">CAS_Client\getURL()</a>.</p>
 
 </div>
 </div>
@@ -921,7 +981,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <p>Constants used for determining rebroadcast node type. </p>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03820">3820</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04196">4196</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
 </div>
 </div>
@@ -937,7 +997,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03821">3821</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04197">4197</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
 </div>
 </div>
@@ -954,7 +1014,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <p>Constants used for determining rebroadcast type (logout or pgtIou/pgtId). </p>
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03885">3885</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04261">4261</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
 </div>
 </div>
@@ -970,7 +1030,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l03886">3886</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Client_8php_source.html#l04262">4262</a> of file <a class="el" href="Client_8php_source.html">Client.php</a>.</p>
 
 </div>
 </div>
