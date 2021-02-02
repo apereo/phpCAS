@@ -1,6 +1,6 @@
 language: php
 os: linux
-dist: trusty
+dist: focal
 php:
 - '5.4'
 - '5.5'
@@ -24,7 +24,7 @@ jobs:
     - php: "nightly"
   include:
   - stage: GitHub Release
-    php: '7.2'
+    php: '7.4'
     services:
     - docker
     script:
