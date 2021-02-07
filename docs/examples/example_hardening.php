@@ -20,7 +20,7 @@ require_once 'config.php';
 require_once $phpcas_path . '/CAS.php';
 
 // Enable debugging
-phpCAS::setDebug();
+phpCAS::setLogger();
 // Enable verbose error messages. Disable in production!
 phpCAS::setVerbose(false);
 
