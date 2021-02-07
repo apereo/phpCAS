@@ -8,3 +8,4 @@ utils/starting_HEAD
 # Composer
 composer.lock
 /vendor/
+/.buildpath
