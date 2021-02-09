@@ -15,7 +15,7 @@ script:
 # Composer is testing-only; vendor folder should not appear in releases
 - if [[ $TRAVIS_PHP_VERSION == 'nightly' ]]; then composer --no-interaction config platform.php 7.4.0; fi
 - composer install
-- ./vendor/bin/phpunit --verbose --stderr --coverage-clover=coverage.xml
+- XDEBUG_MODE=coverage ./vendor/bin/phpunit --verbose --stderr --coverage-clover=coverage.xml
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 jobs:
