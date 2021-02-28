@@ -8,19 +8,17 @@ php:
 - '7.3'
 - '7.4'
 - '8.0'
-- 'nightly'
 script:
 # Composer is testing-only; vendor folder should not appear in releases
 - if [[ $TRAVIS_PHP_VERSION == 'nightly' ]]; then composer --no-interaction config platform.php 7.4.0; fi
 - composer install
-# Travis does not work with covergae on php 8.0
-- if [ "${TRAVIS_PHP_VERSION:0:3}" = "8.0" ]; then vendor/bin/phpunit -v --stderr; else XDEBUG_MODE=coverage vendor/bin/phpunit --stderr -v --coverage-clover=coverage.clover; fi
+- XDEBUG_MODE=coverage ./vendor/bin/phpunit --verbose --stderr --coverage-clover=coverage.xml
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 jobs:
   fast_finish: true
   allow_failures:
-    - php: "nightly"
+    - php: "8.0"
   include:
   - stage: GitHub Release
     php: '7.4'
