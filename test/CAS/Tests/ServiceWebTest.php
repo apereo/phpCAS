@@ -54,10 +54,8 @@ class ServiceWebTest extends TestCase
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
-     *
-     * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         //     	phpCAS::setDebug(dirname(__FILE__).'/../test.log');
         // 		error_reporting(E_ALL);
@@ -360,10 +358,8 @@ class ServiceWebTest extends TestCase
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
-     *
-     * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DummyRequest::clearResponses();
     }
@@ -456,14 +452,13 @@ class ServiceWebTest extends TestCase
      * that results in a proxy-ticket failure.
      *
      * @return void
-     *
-     * @expectedException CAS_ProxyTicketException
      */
     public function testPtException()
     {
         $service = $this->object
             ->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
         $service->setUrl('http://www.service.com/my_other_webservice');
+        $this->expectException(\CAS_ProxyTicketException::class);
         $this->assertFalse($service->send(), 'Sending should have failed');
     }
 
@@ -472,14 +467,13 @@ class ServiceWebTest extends TestCase
      * that has a valid proxy ticket, but where the service has a sending error.
      *
      * @return void
-     *
-     * @expectedException CAS_ProxiedService_Exception
      */
     public function testHttpGetServiceFailure()
     {
         $service = $this->object
             ->getProxiedService(PHPCAS_PROXIED_SERVICE_HTTP_GET);
         $service->setUrl('ssh://me.example.net');
+        $this->expectException(\CAS_ProxiedService_Exception::class);
         $service->send();
     }
 

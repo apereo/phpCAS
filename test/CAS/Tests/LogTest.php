@@ -19,7 +19,7 @@ class LogTest extends TestCase
      */
     private $logger;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->logPath = tempnam(sys_get_temp_dir(), 'phpCAS');
@@ -31,7 +31,7 @@ class LogTest extends TestCase
         $this->logger->pushHandler($handler);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unlink($this->logPath);
         parent::tearDown();
@@ -56,7 +56,7 @@ class LogTest extends TestCase
         // EOF
         $lines = explode("\n", $contents);
         $this->assertCount(5, $lines);
-        $this->assertContains('Session is not authenticated', $lines[2]);
+        $this->assertStringContainsString('Session is not authenticated', $lines[2]);
     }
 
     public function testSetLoggerNull()
