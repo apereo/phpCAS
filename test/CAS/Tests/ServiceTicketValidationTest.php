@@ -53,10 +53,8 @@ class ServiceTicketValidationTest extends TestCase
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
-     *
-     * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $_SERVER['SERVER_NAME'] = 'www.service.com';
         $_SERVER['SERVER_PORT'] = '80';
@@ -147,10 +145,8 @@ class ServiceTicketValidationTest extends TestCase
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
-     *
-     * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DummyRequest::clearResponses();
     }
@@ -184,12 +180,12 @@ class ServiceTicketValidationTest extends TestCase
      *
      * @return void
      *
-     * @expectedException CAS_AuthenticationException
      */
     public function testInvalidTicketFailure()
     {
         $this->object->setTicket('ST-1856339-aA5Yuvrxzpv8Tau1cYQ7');
         ob_start();
+        $this->expectException(\CAS_AuthenticationException::class);
         try {
             $this->object->validateCAS20($url, $text_response, $tree_response);
         } catch (\Exception $e) {

@@ -57,7 +57,7 @@ class ServiceMailTest extends TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         //     	phpCAS::setDebug(dirname(__FILE__).'/../test.log');
         // 		error_reporting(E_ALL);
@@ -192,10 +192,8 @@ class ServiceMailTest extends TestCase
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
-     *
-     * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DummyRequest::clearResponses();
     }
@@ -238,8 +236,6 @@ class ServiceMailTest extends TestCase
      * that results in a proxy-ticket failure.
      *
      * @return void
-     *
-     * @expectedException CAS_ProxyTicketException
      */
     public function testPtException()
     {
@@ -249,6 +245,7 @@ class ServiceMailTest extends TestCase
         );
         $service->setMailbox('mailbox_name');
         $service->setOptions(OP_READONLY);
+        $this->expectException(\CAS_ProxyTicketException::class);
         $stream = $service->open();
     }
 }
