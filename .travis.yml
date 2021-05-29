@@ -22,6 +22,10 @@ jobs:
   include:
   - stage: GitHub Release
     php: '7.4'
+    before_install:
+    - echo 'DOCKER_OPTS="$DOCKER_OPTS --debug --registry-mirror=https://mirror.gcr.io"'
+    - sudo service docker restart
+    - docker system info
     services:
     - docker
     script:
