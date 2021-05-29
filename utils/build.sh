@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-dnf -y update && dnf -y install dnf-plugins-core && dnf config-manager --set-enabled PowerTools && dnf -y install doxygen ant php-pear
+dnf -y update && dnf -y install dnf-plugins-core && dnf config-manager --set-enabled powertools && dnf -y install doxygen ant php-pear
 
 cd /app/utils \
 && pear channel-update pear \
