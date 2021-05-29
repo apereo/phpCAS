@@ -214,7 +214,6 @@ class ProxyTicketValidationTest extends TestCase
      * @return void
      *
      * @expectedException CAS_AuthenticationException
-     * @outputBuffering enabled
      */
     public function testInvalidTicketFailure()
     {
