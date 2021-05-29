@@ -1,6 +1,7 @@
 #!/bin/sh
 
-yum -y update && yum -y install ant doxygen php-pear
+
+dnf -y update && dnf config-manager --set-enabled PowerTools && dnf -y install doxygen ant php-pear
 
 cd /app/utils \
 && pear channel-update pear \
