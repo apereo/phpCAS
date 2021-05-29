@@ -29,7 +29,7 @@ jobs:
     services:
     - docker
     script:
-    - docker run --rm -it -v $PWD:/app centos:centos7 /app/utils/build.sh
+    - docker run --rm -it -v $PWD:/app centos:centos8 /app/utils/build.sh
     deploy:
       provider: releases
       file_glob: true
