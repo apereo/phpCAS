@@ -57,7 +57,7 @@ if (!isset($_SERVER['REQUEST_URI']) && isset($_SERVER['SCRIPT_NAME']) && isset($
 /**
  * phpCAS version. accessible for the user by phpCAS::getVersion().
  */
-define('PHPCAS_VERSION', '1.3.9+');
+define('PHPCAS_VERSION', '1.4.0');
 
 /**
  * @addtogroup public
