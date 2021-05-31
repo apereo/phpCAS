@@ -53,10 +53,8 @@ class Cas20AttributesTest extends TestCase
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
-     *
-     * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $_SERVER['SERVER_NAME'] = 'www.service.com';
         $_SERVER['SERVER_PORT'] = '80';
@@ -85,10 +83,8 @@ class Cas20AttributesTest extends TestCase
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
-     *
-     * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DummyRequest::clearResponses();
     }
@@ -332,7 +328,7 @@ class Cas20AttributesTest extends TestCase
     public function validateUserAttributes()
     {
         $attras = $this->object->getAttributes();
-        $this->assertInternalType('array', $attras);
+        $this->assertIsArray($attras);
 
         if (count($attras) != 4 || !is_array($attras['memberOf'])) {
             print "\n";
@@ -358,7 +354,7 @@ class Cas20AttributesTest extends TestCase
         $this->assertTrue($this->object->hasAttribute('memberOf'));
         // direct access
         $memberOf = $this->object->getAttribute('memberOf');
-        $this->assertInternalType('array', $memberOf);
+        $this->assertIsArray($memberOf);
         $this->assertEquals(2, count($memberOf));
         $this->assertTrue(
             in_array('CN=Staff,OU=Groups,DC=example,DC=edu', $memberOf)
@@ -371,7 +367,7 @@ class Cas20AttributesTest extends TestCase
         );
         // array access
         $this->assertArrayHasKey('memberOf', $attras);
-        $this->assertInternalType('array', $attras['memberOf']);
+        $this->assertIsArray($attras['memberOf']);
         $this->assertEquals(2, count($attras['memberOf']));
         $this->assertTrue(
             in_array('CN=Staff,OU=Groups,DC=example,DC=edu', $attras['memberOf'])

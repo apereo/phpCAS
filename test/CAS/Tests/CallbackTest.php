@@ -56,10 +56,8 @@ class CallbackTest extends TestCase
 
     /**
      * Set up CAS_Client ReflectionClass
-     *
-     * @return void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         \CAS_GracefullTerminationException::throwInsteadOfExiting();
 

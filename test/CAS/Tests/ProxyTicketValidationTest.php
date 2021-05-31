@@ -53,10 +53,8 @@ class ProxyTicketValidationTest extends TestCase
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
-     *
-     * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $_SERVER['SERVER_NAME'] = 'www.service.com';
         $_SERVER['SERVER_PORT'] = '80';
@@ -150,10 +148,8 @@ class ProxyTicketValidationTest extends TestCase
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
-     *
-     * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DummyRequest::clearResponses();
     }
@@ -213,12 +209,12 @@ class ProxyTicketValidationTest extends TestCase
      *
      * @return void
      *
-     * @expectedException CAS_AuthenticationException
      */
     public function testInvalidTicketFailure()
     {
         $this->object->setTicket('ST-1856339-aA5Yuvrxzpv8Tau1cYQ7');
         ob_start();
+        $this->expectException(\CAS_AuthenticationException::class);
         try {
             $this->object->validateCAS20($url, $text_response, $tree_response);
         } catch (\Exception $e) {
@@ -329,7 +325,6 @@ class ProxyTicketValidationTest extends TestCase
      *
      * @return void
      *
-     * @expectedException CAS_AuthenticationException
      */
     public function testAllowedProxiesStringFailureMissingProxy()
     {
@@ -340,6 +335,7 @@ class ProxyTicketValidationTest extends TestCase
             )
         );
         ob_start();
+        $this->expectException(\CAS_AuthenticationException::class);
         try {
             $this->object->validateCAS20($url, $text_response, $tree_response);
         } catch (\Exception $e) {
@@ -353,8 +349,6 @@ class ProxyTicketValidationTest extends TestCase
      * Test that proxies fail if in wrong order and definded as string
      *
      * @return void
-     *
-     * @expectedException CAS_AuthenticationException
      */
     public function testAllowedProxiesStringFailureWrongOrder()
     {
@@ -372,6 +366,7 @@ class ProxyTicketValidationTest extends TestCase
             )
         );
         ob_start();
+        $this->expectException(\CAS_AuthenticationException::class);
         try {
             $this->object->validateCAS20($url, $text_response, $tree_response);
         } catch (\Exception $e) {
@@ -385,13 +380,12 @@ class ProxyTicketValidationTest extends TestCase
      * Test that if proxies exist a response with proxies will fail unless allowed
      *
      * @return void
-     *
-     * @expectedException CAS_AuthenticationException
      */
     public function testAllowedProxiesFailure()
     {
         $this->object->setTicket('ST-123456-asdfasdfasgww2323radf3');
         ob_start();
+        $this->expectException(\CAS_AuthenticationException::class);
         try {
             // By default no proxies are allowed.
             $this->object->validateCAS20($url, $text_response, $tree_response);
@@ -429,8 +423,6 @@ class ProxyTicketValidationTest extends TestCase
      * Wrong regexp to mach proxies
      *
      * @return void
-     *
-     * @expectedException CAS_AuthenticationException
      */
     public function testAllowedProxiesRegexpFailureWrong()
     {
@@ -441,6 +433,7 @@ class ProxyTicketValidationTest extends TestCase
             )
         );
         ob_start();
+        $this->expectException(\CAS_AuthenticationException::class);
         try {
             $this->object->validateCAS20($url, $text_response, $tree_response);
         } catch (\Exception $e) {
@@ -454,8 +447,6 @@ class ProxyTicketValidationTest extends TestCase
      * Wrong order of valid regexp
      *
      * @return void
-     *
-     * @expectedException CAS_AuthenticationException
      */
     public function testAllowedProxiesRegexpFailureWrongOrder()
     {
@@ -468,6 +459,7 @@ class ProxyTicketValidationTest extends TestCase
             )
         );
         ob_start();
+        $this->expectException(\CAS_AuthenticationException::class);
         try {
             $this->object->validateCAS20($url, $text_response, $tree_response);
         } catch (\Exception $e) {

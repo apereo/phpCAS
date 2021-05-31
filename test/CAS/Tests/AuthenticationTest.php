@@ -53,10 +53,8 @@ class AuthenticationTest extends TestCase
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
-     *
-     * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         //     	phpCAS::setDebug(dirname(__FILE__).'/../test.log');
         // 		error_reporting(E_ALL);
@@ -118,10 +116,8 @@ class AuthenticationTest extends TestCase
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
-     *
-     * @return void
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         DummyRequest::clearResponses();
         $_SESSION = array();
@@ -131,12 +127,11 @@ class AuthenticationTest extends TestCase
      * Test that the user is redirected to the CAS server
      *
      * @return void
-     *
-     * @expectedException CAS_GracefullTerminationException
      */
     public function testRedirect()
     {
         ob_start();
+        $this->expectException(\CAS_GracefullTerminationException::class);
         try {
             $this->object->forceAuthentication();
         } catch (\Exception $e) {
