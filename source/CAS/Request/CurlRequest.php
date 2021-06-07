@@ -106,13 +106,8 @@ implements CAS_Request_RequestInterface
         *********************************************************/
         $ch = curl_init($this->url);
 
-        if (version_compare(PHP_VERSION, '5.1.3', '>=')) {
-            //only avaible in php5
-            curl_setopt_array($ch, $this->_curlOptions);
-        } else {
-            foreach ($this->_curlOptions as $key => $value) {
-                curl_setopt($ch, $key, $value);
-            }
+        foreach ($this->_curlOptions as $key => $value) {
+            curl_setopt($ch, $key, $value);
         }
 
         /*********************************************************
