@@ -60,7 +60,7 @@ $pfm->addMaintainer('contributor', 'adamfranco', 'Adam Franco', 'afranco@middleb
 
 $pfm->setLicense('Apache 2.0 License', 'https://github.com/Apereo/phpCAS/blob/master/LICENSE');
 $pfm->clearDeps();
-$pfm->setPhpDep('5.4.0');
+$pfm->setPhpDep('7.1.0');
 $pfm->setPearinstallerDep('1.4.3');
 
 $pfm->addExtensionDep('required', 'curl');
