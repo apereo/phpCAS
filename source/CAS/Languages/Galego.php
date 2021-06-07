@@ -101,7 +101,7 @@ class CAS_Languages_Galego implements CAS_Languages_LanguageInterface
     public function getYouWereNotAuthenticated()
     {
         return '
-        <p>Non estás autenticado</p><p>Podes volver tentalo facendo click <a href="%s">aquí</a>.</p><p>Se o problema persiste debería contactar con el <a href="mailto:%s">administrador deste sitio</a>.</p>';   
+        <p>Non estás autenticado</p><p>Podes volver tentalo facendo click <a href="%s">aquí</a>.</p><p>Se o problema persiste debería contactar con el <a href="mailto:%s">administrador deste sitio</a>.</p>';
     }
 
     /**
