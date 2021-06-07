@@ -3,7 +3,7 @@
 /**
  *  Example for handling logout requests
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_logout.php
  * @category Authentication

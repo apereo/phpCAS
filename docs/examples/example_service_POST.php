@@ -3,7 +3,7 @@
 /**
  *   Example for proxied service with session support and POST support
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_service_POST.php
  * @category Authentication
@@ -102,4 +102,3 @@ if (!isset($_SESSION['n'])) {
     $_SESSION['n'] = 0;
 }
 echo '<p>request #' . (++$_SESSION['n']) . '</p>';
-

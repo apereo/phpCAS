@@ -3,7 +3,7 @@
 /**
  *  Example for a proxy that makes a POST request.
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_proxy_POST.php
  * @category Authentication

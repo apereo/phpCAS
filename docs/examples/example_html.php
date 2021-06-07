@@ -3,7 +3,7 @@
 /**
  * Example that changes html of phpcas messages
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_html.php
  * @category Authentication

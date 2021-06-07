@@ -3,7 +3,7 @@
 /**
  *  Example that changes language of phpcas pages
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_lang.php
  * @category Authentication

@@ -3,7 +3,7 @@
 /**
  * Advanced example for SAML with attributes and single logout
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_advanced_saml11.php
  * @category Authentication

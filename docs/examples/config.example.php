@@ -6,7 +6,7 @@
  * Just configure all the items in this config according to your environment
  * and rename the file to config.php
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     config.php
  * @category Authentication

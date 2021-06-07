@@ -3,7 +3,7 @@
 /**
  *   Example for a simple cas 2.0 client
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_simple.php
  * @category Authentication

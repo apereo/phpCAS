@@ -3,7 +3,7 @@
 /**
  * Autoloader Class
  *
- *  PHP Version 5
+ *  PHP Version 7
  *
  * @file      CAS/Autoload.php
  * @category  Authentication

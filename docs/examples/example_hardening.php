@@ -3,7 +3,7 @@
 /**
  * Advanced example for hardening the phpcas client
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_hardening.php
  * @category Authentication
