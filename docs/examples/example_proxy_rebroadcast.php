@@ -4,7 +4,7 @@
  *  Example for a proxy that rebroadcasts all PGTs to different servers in the
  *  cluster
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_proxy_rebroadcast.php
  * @category Authentication

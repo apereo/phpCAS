@@ -3,7 +3,7 @@
 /**
  *  Example for a proxy that makes a GET request.
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_proxy_GET.php
  * @category Authentication

@@ -3,7 +3,7 @@
 /**
  *  Example for a proxied proxy
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_service_that_proxies.php
  * @category Authentication
@@ -103,4 +103,3 @@ if ( phpCAS::serviceWeb($serviceUrl, $err_code, $output) ) {
 ?>
   </body>
 </html>
-

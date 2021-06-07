@@ -3,7 +3,7 @@
 /**
  *  Example for a proxy with session usage
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_proxy_serviceWeb_chaining.php
  * @category Authentication

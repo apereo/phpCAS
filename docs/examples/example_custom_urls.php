@@ -3,7 +3,7 @@
 /**
  * Example for overriding validation urls
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_custom_urls.php
  * @category Authentication

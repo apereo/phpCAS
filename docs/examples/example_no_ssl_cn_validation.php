@@ -3,7 +3,7 @@
 /**
  *   Example for diabling SSL CN valdiation
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_simple.php
  * @category Authentication

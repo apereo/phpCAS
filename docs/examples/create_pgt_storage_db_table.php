@@ -10,7 +10,7 @@
  *  have to filled out directly. Option examples can be found in the
  *  config.example.php
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     create_pgt_storage_table.php
  * @category Authentication

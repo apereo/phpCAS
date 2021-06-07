@@ -3,7 +3,7 @@
  *  Small script to add some info about the example script that is running.
  *  Adds some info that makes it easier to distinguish different proxy sessions
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     script_info.php
  * @category Authentication

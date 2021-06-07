@@ -3,7 +3,7 @@
 /**
  * Example for proxied service with session support
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_service.php
  * @category Authentication

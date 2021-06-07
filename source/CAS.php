@@ -20,7 +20,7 @@
  *
  *
  * Interface class of the phpCAS library
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     CAS/CAS.php
  * @category Authentication

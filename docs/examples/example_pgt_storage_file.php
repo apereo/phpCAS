@@ -3,7 +3,7 @@
 /**
 *  Example that changes the storage of the pgt tickets to file
 *
-* PHP Version 5
+* PHP Version 7
 *
 * @file     example_pgt_storage_db.php
 * @category Authentication

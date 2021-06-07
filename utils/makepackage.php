@@ -2,7 +2,7 @@
 /**
  * Packaging File to create a pear package.xml
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @category Authentication
  * @package  PhpCAS
@@ -72,4 +72,3 @@ $pfm->addExtensionDep('required', 'pdo');
 
 $pfm->generateContents();
 $pfm->writePackageFile();
-

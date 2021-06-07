@@ -3,7 +3,7 @@
 /**
  * Example that uses the CAS gateway feature
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     example_gateway.php
  * @category Authentication
