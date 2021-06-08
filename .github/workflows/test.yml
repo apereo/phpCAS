@@ -25,11 +25,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: php-actions/composer@v5
+      - uses: php-actions/composer@v6
         with:
           php_version: "${{ matrix.php-version.php }}"
       - name: Run PHPUnit
-        uses: php-actions/phpunit@v2
+        uses: php-actions/phpunit@v3
         with:
           version: "${{ matrix.php-version.phpunit }}"
           php_version: "${{ matrix.php-version.php }}"
