@@ -35,6 +35,7 @@ jobs:
           php_version: "${{ matrix.php-version.php }}"
           php_extensions: xdebug
           args: --verbose --coverage-clover=coverage.xml
+          bootstrap: vendor/autoload.php
         env:
           XDEBUG_MODE: coverage
       - name: Report coverage
