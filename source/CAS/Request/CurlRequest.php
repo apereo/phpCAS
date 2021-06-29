@@ -106,9 +106,7 @@ implements CAS_Request_RequestInterface
         *********************************************************/
         $ch = curl_init($this->url);
 
-        foreach ($this->_curlOptions as $key => $value) {
-            curl_setopt($ch, $key, $value);
-        }
+        curl_setopt_array($ch, $this->_curlOptions);
 
         /*********************************************************
          * Set SSL configuration
