@@ -315,14 +315,6 @@ class phpCAS
      */
     private static $_PHPCAS_VERBOSE = false;
 
-    /**
-     * This variable is used to determine whether the PHPCas should
-     * write errors directly to the response.
-     *
-     * @var bool
-     */
-    private static $_PHPCAS_DISPLAY_ERRORS = true;
-
 
     // ########################################################################
     //  INITIALIZATION
@@ -603,15 +595,11 @@ class phpCAS
                 }
             }
         }
-
-        if (phpCAS::shouldDisplayErrors()) {
-            if (self::$_PHPCAS_VERBOSE) {
-                echo "<br />\n<b>phpCAS error</b>: <font color=\"FF0000\"><b>" . __CLASS__ . "::" . $function . '(): ' . htmlentities($msg) . "</b></font> in <b>" . $file . "</b> on line <b>" . $line . "</b><br />\n";
-            } else {
-                echo "<br />\n<b>Error</b>: <font color=\"FF0000\"><b>". DEFAULT_ERROR ."</b><br />\n";
-            }
+        if (self::$_PHPCAS_VERBOSE) {
+            echo "<br />\n<b>phpCAS error</b>: <font color=\"FF0000\"><b>" . __CLASS__ . "::" . $function . '(): ' . htmlentities($msg) . "</b></font> in <b>" . $file . "</b> on line <b>" . $line . "</b><br />\n";
+        } else {
+            echo "<br />\n<b>Error</b>: <font color=\"FF0000\"><b>". DEFAULT_ERROR ."</b><br />\n";
         }
-
         phpCAS :: trace($msg . ' in ' . $file . 'on line ' . $line );
         phpCAS :: traceEnd();
 
@@ -1927,34 +1915,6 @@ class phpCAS
     public static function setCasClient(\CAS_Client $client)
     {
         self::$_PHPCAS_CLIENT = $client;
-    }
-
-    /**
-     * Enable writing error messages directly to the response
-     *
-     * @return void
-     */
-    public static function displayErrors()
-    {
-        self::$_PHPCAS_DISPLAY_ERRORS = true;
-    }
-
-    /**
-     * Disable writing error messages directly to the response
-     *
-     * @return void
-     */
-    public static function doNotDisplayErrors()
-    {
-        self::$_PHPCAS_DISPLAY_ERRORS = false;
-    }
-
-    /**
-     * @return bool
-     */
-    public static function shouldDisplayErrors()
-    {
-        return self::$_PHPCAS_DISPLAY_ERRORS;
     }
 }
 // ########################################################################

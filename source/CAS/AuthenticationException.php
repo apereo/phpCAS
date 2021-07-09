@@ -71,16 +71,12 @@ implements CAS_Exception
         $messages = array();
         phpCAS::traceBegin();
         $lang = $client->getLangObj();
-
-        if (phpCAS::shouldDisplayErrors()) {
-            $client->printHTMLHeader($lang->getAuthenticationFailed());
-            printf(
-                $lang->getYouWereNotAuthenticated(),
-                htmlentities($client->getURL()),
-                isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN']:''
-            );
-        }
-
+        $client->printHTMLHeader($lang->getAuthenticationFailed());
+        printf(
+            $lang->getYouWereNotAuthenticated(),
+            htmlentities($client->getURL()),
+            isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN']:''
+        );
         phpCAS::trace($messages[] = 'CAS URL: '.$cas_url);
         phpCAS::trace($messages[] = 'Authentication failure: '.$failure);
         if ( $no_response ) {
