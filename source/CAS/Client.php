@@ -102,6 +102,10 @@ class CAS_Client
      */
     public function printHTMLHeader($title)
     {
+        if (!phpCAS::getVerbose()) {
+            return;
+        }
+
         $this->_htmlFilterOutput(
             str_replace(
                 '__TITLE__', $title,
@@ -130,16 +134,17 @@ class CAS_Client
      */
     public function printHTMLFooter()
     {
+        if (!phpCAS::getVerbose()) {
+            return;
+        }
+
         $lang = $this->getLangObj();
-        $this->_htmlFilterOutput(
-            empty($this->_output_footer)?
-            (phpCAS::getVerbose())?
-                '<hr><address>phpCAS __PHPCAS_VERSION__ '
-                .$lang->getUsingServer()
-                .' <a href="__SERVER_BASE_URL__">__SERVER_BASE_URL__</a> (CAS __CAS_VERSION__)</a></address></body></html>'
-                :'</body></html>'
-            :$this->_output_footer
-        );
+        $message = empty($this->_output_footer)
+            ? '<hr><address>phpCAS __PHPCAS_VERSION__ ' . $lang->getUsingServer() .
+              ' <a href="__SERVER_BASE_URL__">__SERVER_BASE_URL__</a> (CAS __CAS_VERSION__)</a></address></body></html>'
+            : $this->_output_footer;
+
+        $this->_htmlFilterOutput($message);
     }
 
     /**
