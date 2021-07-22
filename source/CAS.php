@@ -597,8 +597,6 @@ class phpCAS
         }
         if (self::$_PHPCAS_VERBOSE) {
             echo "<br />\n<b>phpCAS error</b>: <font color=\"FF0000\"><b>" . __CLASS__ . "::" . $function . '(): ' . htmlentities($msg) . "</b></font> in <b>" . $file . "</b> on line <b>" . $line . "</b><br />\n";
-        } else {
-            echo "<br />\n<b>Error</b>: <font color=\"FF0000\"><b>". DEFAULT_ERROR ."</b><br />\n";
         }
         phpCAS :: trace($msg . ' in ' . $file . 'on line ' . $line );
         phpCAS :: traceEnd();
