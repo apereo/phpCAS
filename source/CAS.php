@@ -136,11 +136,6 @@ define("SAML_SOAP_ENV_CLOSE", '</SOAP-ENV:Envelope>');
  */
 define("SAML_ATTRIBUTES", 'SAMLATTRIBS');
 
-/**
- * SAML Attributes
- */
-define("DEFAULT_ERROR", 'Internal script failure');
-
 /** @} */
 /**
  * @addtogroup publicPGTStorage
