@@ -4167,7 +4167,7 @@ class CAS_Client
         phpCAS::traceBegin();
         $lang = $this->getLangObj();
         $this->printHTMLHeader($lang->getAuthenticationFailed());
-        printf(
+        $this->printf(
             $lang->getYouWereNotAuthenticated(), htmlentities($this->getURL()),
             isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN']:''
         );
