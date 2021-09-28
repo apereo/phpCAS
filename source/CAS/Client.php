@@ -179,6 +179,21 @@ class CAS_Client
         $this->_output_footer = $footer;
     }
 
+    /**
+     * Simple wrapper for printf function, that respects
+     * phpCAS verbosity setting.
+     *
+     * @param string $format
+     * @param string|int|float ...$values
+     *
+     * @see printf()
+     */
+    private function printf(string $format, ...$values): void
+    {
+        if (phpCAS::getVerbose()) {
+            printf($format, ...$values);
+        }
+    }
 
     /** @} */
 
@@ -1832,7 +1847,7 @@ class CAS_Client
         phpCAS::trace("Redirect to : ".$cas_url);
         $lang = $this->getLangObj();
         $this->printHTMLHeader($lang->getAuthenticationWanted());
-        printf('<p>'. $lang->getShouldHaveBeenRedirected(). '</p>', $cas_url);
+        $this->printf('<p>'. $lang->getShouldHaveBeenRedirected(). '</p>', $cas_url);
         $this->printHTMLFooter();
         phpCAS::traceExit();
         throw new CAS_GracefullTerminationException();
@@ -1875,7 +1890,7 @@ class CAS_Client
         }
         $lang = $this->getLangObj();
         $this->printHTMLHeader($lang->getLogout());
-        printf('<p>'.$lang->getShouldHaveBeenRedirected(). '</p>', $cas_url);
+        $this->printf('<p>'.$lang->getShouldHaveBeenRedirected(). '</p>', $cas_url);
         $this->printHTMLFooter();
         phpCAS::traceExit();
         throw new CAS_GracefullTerminationException();
@@ -4152,7 +4167,7 @@ class CAS_Client
         phpCAS::traceBegin();
         $lang = $this->getLangObj();
         $this->printHTMLHeader($lang->getAuthenticationFailed());
-        printf(
+        $this->printf(
             $lang->getYouWereNotAuthenticated(), htmlentities($this->getURL()),
             isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN']:''
         );
