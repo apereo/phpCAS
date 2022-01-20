@@ -1057,7 +1057,7 @@ class CAS_Client
         } else {
             //normal mode: get ticket and remove it from CGI parameters for
             // developers
-            $ticket = (isset($_GET['ticket']) ? $_GET['ticket'] : null);
+            $ticket = (isset($_GET['ticket']) ? $_GET['ticket'] : '');
             if (preg_match('/^[SP]T-/', $ticket) ) {
                 phpCAS::trace('Ticket \''.$ticket.'\' found');
                 $this->setTicket($ticket);
