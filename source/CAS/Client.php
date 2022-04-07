@@ -1573,7 +1573,7 @@ class CAS_Client
     {
         phpCAS::traceBegin();
         $res = false;
-        $validate_url = '';
+
         if ( $this->_wasPreviouslyAuthenticated() ) {
             if ($this->hasTicket()) {
                 // User has a additional ticket but was already authenticated
@@ -1607,6 +1607,10 @@ class CAS_Client
             $this->markAuthenticationCall($res);
         } else {
             if ($this->hasTicket()) {
+                $validate_url = '';
+                $text_response = '';
+                $tree_response = '';
+
                 switch ($this->getServerVersion()) {
                 case CAS_VERSION_1_0:
                     // if a Service Ticket was given, validate it
@@ -1670,7 +1674,7 @@ class CAS_Client
                     $logoutTicket = $this->getTicket();
                     break;
                 default:
-                    phpCAS::trace('Protocoll error');
+                    phpCAS::trace('Protocol error');
                     break;
                 }
             } else {
@@ -2179,6 +2183,8 @@ class CAS_Client
             $validate_url .= '&renew=true';
         }
 
+        $headers = '';
+        $err_msg = '';
         // open and read the URL
         if ( !$this->_readURL($validate_url, $headers, $text_response, $err_msg) ) {
             phpCAS::trace(
@@ -2255,6 +2261,8 @@ class CAS_Client
             $validate_url .= '&renew=true';
         }
 
+        $headers = '';
+        $err_msg = '';
         // open and read the URL
         if ( !$this->_readURL($validate_url, $headers, $text_response, $err_msg) ) {
             phpCAS::trace(
@@ -2912,6 +2920,8 @@ class CAS_Client
         $cas_url = $this->getServerProxyURL().'?targetService='
             .urlencode($target_service).'&pgt='.$this->_getPGT();
 
+        $headers = '';
+        $cas_response = '';
         // open and read the URL
         if ( !$this->_readURL($cas_url, $headers, $cas_response, $err_msg) ) {
             phpCAS::trace(
