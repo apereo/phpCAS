@@ -12,30 +12,21 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - php: '7.1'
-            phpunit: '7.5'
-            composer: '1'
           - php: '7.2'
-            phpunit: '8'
-            composer: latest
+            phpunit: '8' 
           - php: '7.3'
-            phpunit: latest
-            composer: latest
+            phpunit: latest 
           - php: '7.4'
-            phpunit: latest
-            composer: latest
+            phpunit: latest 
           - php: '8.0'
-            phpunit: latest
-            composer: latest
+            phpunit: latest 
           - php: '8.1'
-            phpunit: latest
-            composer: latest
+            phpunit: latest 
     steps:
       - uses: actions/checkout@v2
       - uses: php-actions/composer@v6
         with:
           php_version: "${{ matrix.php-version.php }}"
-          version: "${{ matrix.php-version.composer }}"
       - name: Run PHPUnit
         uses: php-actions/phpunit@v3
         with:
