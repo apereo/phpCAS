@@ -12,17 +12,16 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - php: '7.1'
-            phpunit: '7.5'
           - php: '7.2'
-            phpunit: '8'
+            phpunit: '8' 
           - php: '7.3'
-            phpunit: latest
+            phpunit: latest 
           - php: '7.4'
-            phpunit: latest
+            phpunit: latest 
           - php: '8.0'
-            phpunit: latest
-
+            phpunit: latest 
+          - php: '8.1'
+            phpunit: latest 
     steps:
       - uses: actions/checkout@v2
       - uses: php-actions/composer@v6
