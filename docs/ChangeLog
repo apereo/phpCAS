@@ -1,3 +1,18 @@
+Changes in version 1.5.0
+
+Bug Fixes:
+ * Fix undefined variables [#417] (Dawid Polak)
+ * Fix client when getting ticket and it's null [#415] (Quentin Belot)
+ * Allow autoloader to detect trait_exists() [#394] (Jean-Luc Herren)
+ * Use curl_setopt_array instead of loop in CurlRequest [#391] (François Freitag)
+ 
+Improvement:
+ * Disable printf when verbosity flag is not set to true [#396] (Michał Kleszczyński)
+ * Disabling error printing based on verbosity flag [#393] (Michał Kleszczyński)
+ * Drop php5 compatibility [#385] (François Freitag)
+ * Upgrade phpunit [#378] (François Freitag)
+ * Drop support for outdate php versions[#380] (François Freitag)
+
 Changes in version 1.4.0
 
 Bug Fixes:
