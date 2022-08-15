@@ -163,7 +163,7 @@ implements CAS_Request_RequestInterface
         /*********************************************************
          * Set User Agent
          *********************************************************/
-        curl_setopt($ch, CURLOPT_USERAGENT, 'phpCAS');
+        curl_setopt($ch, CURLOPT_USERAGENT, 'phpCAS/' . phpCAS::getVersion());
 
         return $ch;
     }
