@@ -2,7 +2,7 @@ Changes in version 1.6.0
 
 Bug Fixes:
  * Introduce required service_name constructor argument to fix
-   service hostname discovery exploitation vulnerability (Henry Pan)
+   service hostname discovery exploitation vulnerability CVE-2022-39369 (Henry Pan)
  * Set user agent [#421] (Fydon)
 
 Changes in version 1.5.0
