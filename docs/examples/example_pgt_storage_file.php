@@ -25,7 +25,7 @@ phpCAS::setLogger();
 phpCAS::setVerbose(true);
 
 // Initialize phpCAS
-phpCAS::proxy(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
+phpCAS::proxy(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context, $client_service_name);
 
 // For production use set the CA certificate that is the issuer of the cert
 // on the CAS server and uncomment the line below

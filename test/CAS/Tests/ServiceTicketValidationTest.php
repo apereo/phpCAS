@@ -73,6 +73,7 @@ class ServiceTicketValidationTest extends TestCase
             'cas.example.edu', // Server Hostname
             443, // Server port
             '/cas/', // Server URI
+            'http://www.service.com', // Service Name
             false // Start Session
         );
 

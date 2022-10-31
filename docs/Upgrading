@@ -1,4 +1,38 @@
 ################################
+### Upgrading 1.5.0 -> 1.6.0 ###
+################################
+
+phpCAS now requires an additional service base URL argument when constructing
+the client class, similar to other CAS client's serverName config. It accepts
+any argument of:
+
+1. A service base URL string. The service URL discovery will always use this
+   server name (protocol, hostname and port number) without using any external
+   host names.
+2. An array of service base URL strings. The service URL discovery will check
+   against this list before using the auto discovered base URL. If there is no
+   match, the first base URL in the array will be used as the default. This
+   option is helpful if your PHP website is accessible through multiple domains
+   without a canonical name, or through both HTTP and HTTPS.
+3. A class that implements CAS_ServiceBaseUrl_Interface. If you need to
+   customize the base URL discovery behavior, you can pass in a class that
+   implements the interface.
+
+For option 1 and 2, protocol, hostname and port should all appear without a
+trailing slash, e.g. http://example.org:8080. You can omit the default port for
+the protocol, which means use https://example.org instead of
+https://example.org:443 (if you use HTTPS).
+
+For security reasons, we no longer allow service base URL discovery without an
+allowed list check by default. For more information, refer to the security
+advisory.
+
+This version also changed the CURL User Agent string that phpCAS uses when
+sending validation requests to the CAS server. It will appear as phpCAS/1.6.0
+with the version number reflecting the library version.
+
+
+################################
 ### Upgrading 1.3.3 -> 1.3.4 ###
 ################################
 

@@ -1,3 +1,10 @@
+Changes in version 1.6.0
+
+Bug Fixes:
+ * Introduce required service_name constructor argument to fix
+   service hostname discovery exploitation vulnerability (Henry Pan)
+ * Set user agent [#421] (Fydon)
+
 Changes in version 1.5.0
 
 Bug Fixes:
@@ -5,7 +12,7 @@ Bug Fixes:
  * Fix client when getting ticket and it's null [#415] (Quentin Belot)
  * Allow autoloader to detect trait_exists() [#394] (Jean-Luc Herren)
  * Use curl_setopt_array instead of loop in CurlRequest [#391] (François Freitag)
- 
+
 Improvement:
  * Disable printf when verbosity flag is not set to true [#396] (Michał Kleszczyński)
  * Disabling error printing based on verbosity flag [#393] (Michał Kleszczyński)
@@ -21,18 +28,18 @@ Bug Fixes:
    * Fix use of deprecated setDebug() in examples [#360] (Joachim Fritschi)
    * Fix session_set_save_handler error [#365] (Joachim Fritschi)
    * Fix wrong server_port documentation [#369] (Joachim Fritschi)
-      
+
 Improvement:
    * support samesite cookies attribute (#370) (Mickael)
    * Remove PHP5 support [#366] (Joachim Fritschi)
- 
- 
+
+
 Changes in version 1.3.9
 
 Bug Fixes:
    * Fix regression of #248: Support of longer session tickets (#349) (Alan Nelson)
    * Fix private call generating php warning and no logout handling (#352) (Julien Gribonvald)
-   
+
 Improvement:
    * Add support for logging via a PSR-3 logger [#329] (Jon Dufresne)
    * Improve attribute handling [#317] (Tobias Schiebeck)
@@ -46,7 +53,7 @@ Changes in version 1.3.8
 
 Bug Fixes:
    * Fix pear package [#297] (Phil Fenstermacher)
-   
+
 Improvement:
    * Adding support for PROXY CALLBACK using POST parameters instead of GET [#312]
 
@@ -57,8 +64,8 @@ Bug Fixes:
 
 Improvement:
    * add method to get list of supported protocols (#293) Julien Boulen
-   
-  
+
+
 Changes in version 1.3.6
 
 Security Fixes:
@@ -68,7 +75,7 @@ Bug Fixes:
    * Fix bad condition [#252] (Brice Vercoustre)
    * Hash ticket strings to generate valid-length session-ids [#224, #244, #248] (Adam Franco)
    * Fix "phpCAS" class capitalization in code [#273, #277] (phy25)
-   
+
 Improvement:
    * Remove fallback for __autoload [#247] (marinaglancy)
    * More robust check for Windows OS in File.php [#275] (xamount)
@@ -125,8 +132,8 @@ Improvement:
    * Add time to trace [#158] (cwsterling)
    * Add php5.6 tests, move to faster docker env [#169] (Florian Holzhauer)
    * Introduce a setVerbose() toggle to prevent debug info leaking in production [#152 #147] (Joachim Fritschi)
- 
- 
+
+
 Changes in version 1.3.3
 Security Fixes:
    * CVE-2014-4172 Urlencode all tickets [#125] (Marvin Addison)
@@ -140,7 +147,7 @@ Bug Fixes:
    * Fix missing Server_Admin variable for nginex [#121](arianf)
    * Fix error in TypeMismatchException [#123 ](Develle)
    * Fix bug in https test [#126] (Florent Baldino)
-   
+
 
 Improvement:
    * Fix grammar of documentation [#61] (frett)

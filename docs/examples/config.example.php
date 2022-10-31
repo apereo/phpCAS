@@ -43,6 +43,9 @@ $cas_server_ca_cert_path = '/path/to/cachain.pem';
 // Assumes the cas server is load balanced across multiple hosts
 $cas_real_hosts = array('cas-real-1.example.com', 'cas-real-2.example.com');
 
+// Client config for the required domain name, should be protocol, hostname and port
+$client_service_name = 'http://127.0.0.1';
+
 // Client config for cookie hardening
 $client_domain = '127.0.0.1';
 $client_path = 'phpcas';

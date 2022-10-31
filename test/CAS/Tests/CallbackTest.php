@@ -67,6 +67,7 @@ class CallbackTest extends TestCase
             'cas.example.edu', // Server Hostname
             443, // Server port
             '/cas/', // Server URI
+            'http://www.clientapp.com', // Service Name
             false // Start Session
         );
 

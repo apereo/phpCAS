@@ -28,7 +28,7 @@ phpCAS::setVerbose(false);
 session_set_cookie_params($client_lifetime, $client_path, $client_domain, $client_secure, $client_httpOnly);
 
 // Initialize phpCAS
-phpCAS::client(SAML_VERSION_1_1, $cas_host, $cas_port, $cas_context);
+phpCAS::client(SAML_VERSION_1_1, $cas_host, $cas_port, $cas_context, $client_service_name);
 
 // For production use set the CA certificate that is the issuer of the cert
 // on the CAS server and uncomment the line below
