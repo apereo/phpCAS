@@ -29,7 +29,7 @@
     },
 	"require-dev" : {
 		"monolog/monolog" : "^1.0.0 || ^2.0.0",
-		"phpunit/phpunit" : ">=7.5", 
+		"phpunit/phpunit" : ">=7.5 <10", 
 		"phpstan/phpstan" : "^1.5"
 	},
 	"autoload" : {
