@@ -1,3 +1,9 @@
+Changes in version 1.6.1
+
+Bug Fixes:
+ * Only initialize the session-storage array when values are populated (Adam Franco)
+ * Autoload source/CAS.php file [#422] (Pierrick Charron)
+
 Changes in version 1.6.0
 
 Bug Fixes:
