@@ -4,8 +4,6 @@ phpCAS
 phpCAS is an authentication library that allows PHP applications to easily authenticate
 users via a Central Authentication Service (CAS) server.
 
-As of June 2024 this library is not actively maintained and looking for active developers & maintainers. Please contact the CAS project management team if you are interested: https://apereo.github.io/cas/developer/Project-Commitee.html or through the public mailing lists: https://apereo.github.io/cas/Mailing-Lists.html
-
 Please see the wiki website for more information:
 
 https://apereo.github.io/phpCAS/
@@ -16,6 +14,13 @@ https://apereo.github.io/phpCAS/api/
 
 
 [![Test](https://github.com/apereo/phpCAS/actions/workflows/test.yml/badge.svg)](https://github.com/apereo/phpCAS/actions/workflows/test.yml)
+
+Project is not maintained currently
+-----------------------------------
+
+As of June 2024 this library is not actively maintained and looking for active developers & maintainers. The project is in an okay shape and in working order but needs a bit of steady maintenance or maybe even someone who wants to modernize it. We have also documented & automated a lot so I think it's nothing to worry about.
+
+Please contact the CAS project management team if you are interested: https://apereo.github.io/cas/developer/Project-Commitee.html or through the public mailing lists: https://apereo.github.io/cas/Mailing-Lists.html
 
 LICENSE
 -------
