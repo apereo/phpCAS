@@ -15,8 +15,8 @@ https://apereo.github.io/phpCAS/api/
 
 [![Test](https://github.com/apereo/phpCAS/actions/workflows/test.yml/badge.svg)](https://github.com/apereo/phpCAS/actions/workflows/test.yml)
 
-Project is not maintained currently
------------------------------------
+Project is unmaintained
+-----------------------
 
 As of June 2024 this library is not actively maintained and looking for active developers & maintainers. The project is in an okay shape and in working order but needs a bit of steady maintenance or maybe even someone who wants to modernize it. We have also documented & automated a lot so I think it's nothing to worry about.
 
