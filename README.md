@@ -4,7 +4,7 @@ phpCAS
 phpCAS is an authentication library that allows PHP applications to easily authenticate
 users via a Central Authentication Service (CAS) server.
 
-As of June 2024 this library is not actively maintained and looking for active developers/maintainers. Please contact the CAS project management team if you are interested: https://apereo.github.io/cas/developer/Project-Commitee.html
+As of June 2024 this library is not actively maintained and looking for active developers & maintainers. Please contact the CAS project management team if you are interested: https://apereo.github.io/cas/developer/Project-Commitee.html or through the public mailing lists: https://apereo.github.io/cas/Mailing-Lists.html
 
 Please see the wiki website for more information:
 
