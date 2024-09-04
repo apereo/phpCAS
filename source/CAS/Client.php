@@ -926,7 +926,7 @@ class CAS_Client
      *                                                  CAS_ServiceBaseUrl_Interface for custom
      *                                                  behavior. Added in 1.6.0. Similar to
      *                                                  serverName config in other CAS clients.
-     * @param \SessionHandlerInterface $sessionHandler  the session handler
+     * @param \SessionHandlerInterface|null $sessionHandler  the session handler
      *
      * @return self a newly created CAS_Client object
      */
@@ -938,7 +938,7 @@ class CAS_Client
         $server_uri,
         $service_base_url,
         $changeSessionID = true,
-        \SessionHandlerInterface $sessionHandler = null
+        ?\SessionHandlerInterface $sessionHandler = null
     ) {
         // Argument validation
         if (gettype($server_version) != 'string')

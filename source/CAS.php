@@ -338,7 +338,7 @@ class phpCAS
      * @param bool                     $changeSessionID Allow phpCAS to change the session_id
      *                                                  (Single Sign Out/handleLogoutRequests
      *                                                  is based on that change)
-     * @param \SessionHandlerInterface $sessionHandler  the session handler
+     * @param \SessionHandlerInterface|null $sessionHandler  the session handler
      *
      * @return void a newly created CAS_Client object
      * @note Only one of the phpCAS::client() and phpCAS::proxy functions should be
@@ -347,7 +347,7 @@ class phpCAS
      */
     public static function client($server_version, $server_hostname,
         $server_port, $server_uri, $service_base_url,
-        $changeSessionID = true, \SessionHandlerInterface $sessionHandler = null
+        $changeSessionID = true, ?\SessionHandlerInterface $sessionHandler = null
     ) {
         phpCAS :: traceBegin();
         if (is_object(self::$_PHPCAS_CLIENT)) {
@@ -393,7 +393,7 @@ class phpCAS
      * @param bool                     $changeSessionID Allow phpCAS to change the session_id
      *                                                  (Single Sign Out/handleLogoutRequests
      *                                                  is based on that change)
-     * @param \SessionHandlerInterface $sessionHandler  the session handler
+     * @param \SessionHandlerInterface|null $sessionHandler  the session handler
      *
      * @return void a newly created CAS_Client object
      * @note Only one of the phpCAS::client() and phpCAS::proxy functions should be
@@ -402,7 +402,7 @@ class phpCAS
      */
     public static function proxy($server_version, $server_hostname,
         $server_port, $server_uri, $service_base_url,
-        $changeSessionID = true, \SessionHandlerInterface $sessionHandler = null
+        $changeSessionID = true, ?\SessionHandlerInterface $sessionHandler = null
     ) {
         phpCAS :: traceBegin();
         if (is_object(self::$_PHPCAS_CLIENT)) {
