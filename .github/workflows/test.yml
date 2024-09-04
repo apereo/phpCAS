@@ -24,6 +24,10 @@ jobs:
             phpunit: '9'
           - php: '8.2'
             phpunit: '9'
+          - php: '8.3'
+            phpunit: '9'
+          - php: '8.4'
+            phpunit: '9'
     steps:
       - uses: actions/checkout@v2
       - uses: php-actions/composer@v6
