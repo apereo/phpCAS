@@ -81,19 +81,8 @@ class CookieJarTest extends TestCase
      */
     protected $object;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @return void
-     */
-    protected function setUp(): void
-    {
-        $this->cookieArray = array();
-        $this->object = new CookieJarExposed($this->cookieArray);
-
-        $this->serviceUrl_1 = 'http://service.example.com/lookup/?action=search&query=username';
-        $this->responseHeaders_1 = array('HTTP/1.1 302 Found',
+    protected $serviceUrl_1 = 'http://service.example.com/lookup/?action=search&query=username';
+    protected $responseHeaders_1 = array('HTTP/1.1 302 Found',
             'Date: Tue, 07 Sep 2010 17:51:54 GMT',
             'Server: Apache/2.2.3 (Red Hat)', 'X-Powered-By: PHP/5.1.6',
             'Set-Cookie: SID=k1jut1r1bqrumpei837kk4jks0; path=/',
@@ -104,8 +93,19 @@ class CookieJarTest extends TestCase
             'Content-Length: 525', 'Connection: close',
             'Content-Type: text/html; charset=UTF-8',
         );
-        $this->serviceUrl_1b = 'http://service.example.com/lookup/?action=search&query=another_username';
-        $this->serviceUrl_1c = 'http://service.example.com/make_changes.php';
+    protected $serviceUrl_1b = 'http://service.example.com/lookup/?action=search&query=another_username';
+    protected $serviceUrl_1c = 'http://service.example.com/make_changes.php';
+
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    protected function setUp(): void
+    {
+        $cookieArray = array();
+        $this->object = new CookieJarExposed($cookieArray);
 
         // Verify that there are no cookies to start.
         $this->assertEquals(

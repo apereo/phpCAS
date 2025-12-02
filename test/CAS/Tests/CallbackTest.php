@@ -73,7 +73,9 @@ class CallbackTest extends TestCase
 
         $class = new \ReflectionClass('\CAS_Client');
         $method = $class->getMethod('isXmlResponse');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
         self::$isXmlResponse = $method;
     }
 
@@ -94,7 +96,7 @@ class CallbackTest extends TestCase
         $this->assertEquals($expected, self::$isXmlResponse->invokeArgs(self::$client, array()), $accept);
     }
 
-    public function acceptXMLDataProvider()
+    public static function acceptXMLDataProvider()
     {
         return array(
             array(false, false),
