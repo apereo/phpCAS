@@ -48,6 +48,21 @@ class ProxyChainsTest extends TestCase
      */
     protected $object;
 
+    protected $list_size_0 = array();
+    protected $list_size_1 = array('https://service1.example.com/rest',);
+    protected $list_size_2 = array('https://service1.example.com/rest',
+            'http://service2.example.com/my/path',
+        );
+    protected $list_size_3 = array('https://service1.example.com/rest',
+            'http://service2.example.com/my/path',
+            'http://service3.example.com/other/',
+        );
+    protected $list_size_4 = array('https://service1.example.com/rest',
+            'http://service2.example.com/my/path',
+            'http://service3.example.com/other/',
+            'https://service4.example.com/',
+        );
+
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -55,20 +70,6 @@ class ProxyChainsTest extends TestCase
     protected function setUp(): void
     {
         $this->object = new \CAS_ProxyChain_AllowedList;
-        $this->list_size_0 = array();
-        $this->list_size_1 = array('https://service1.example.com/rest',);
-        $this->list_size_2 = array('https://service1.example.com/rest',
-            'http://service2.example.com/my/path',
-        );
-        $this->list_size_3 = array('https://service1.example.com/rest',
-            'http://service2.example.com/my/path',
-            'http://service3.example.com/other/',
-        );
-        $this->list_size_4 = array('https://service1.example.com/rest',
-            'http://service2.example.com/my/path',
-            'http://service3.example.com/other/',
-            'https://service4.example.com/',
-        );
     }
 
     /**
