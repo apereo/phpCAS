@@ -13,14 +13,7 @@ Api documentation can be found here:
 https://apereo.github.io/phpCAS/api/
 
 
-[![Test](https://github.com/apereo/phpCAS/actions/workflows/test.yml/badge.svg)](https://github.com/apereo/phpCAS/actions/workflows/test.yml)
-
-Project is unmaintained
------------------------
-
-As of June 2024 this library is not actively maintained and looking for active developers & maintainers. The project is in an okay shape and in working order but needs a bit of steady maintenance or maybe even someone who wants to modernize it. We have also documented & automated a lot so I think it's nothing to worry about.
-
-Please contact the CAS project management team if you are interested: https://apereo.github.io/cas/developer/Project-Commitee.html or through the public mailing lists: https://apereo.github.io/cas/Mailing-Lists.html
+[![Test](https://github.com/EsupPortail/phpCAS/actions/workflows/test.yml/badge.svg)](https://github.com/EsupPortail/phpCAS/actions/workflows/test.yml)
 
 LICENSE
 -------
