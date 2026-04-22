@@ -1,3 +1,10 @@
+Changes in version 1.6.2
+
+Bug Fixes:
+* Compatibility with PHP 8.4 and 8.5 (Cédric Anne, Pascal Rigaux)
+* CAS_PGTStorage_Db: call method with incorrect case: createTableSQL [#432] (Lars Moelleken)
+* Windows path fixes: ensure that the PGTStorage path has a trailing '/' [#435] (xamount)
+
 Changes in version 1.6.1
 
 Bug Fixes:
