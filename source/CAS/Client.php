@@ -1034,7 +1034,7 @@ class CAS_Client
         }
         // add leading and trailing `/' and remove doubles
         if(strstr($server_uri, '?') === false) $server_uri .= '/';
-        $server_uri = preg_replace('/\/\//', '/', '/'.$server_uri);
+        $server_uri = preg_replace('/\/{2,}/', '/', '/'.$server_uri);
         $this->_server['uri'] = $server_uri;
 
         // set to callback mode if PgtIou and PgtId CGI GET parameters are provided
