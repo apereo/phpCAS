@@ -18,7 +18,7 @@ https://apereo.github.io/phpCAS/api/
 LICENSE
 -------
 
-Copyright 2007-2020, Apereo Foundation.
+Copyright 2007-2026, Apereo Foundation.
 This project includes software developed by Apereo Foundation.
 http://www.apereo.org/
 
