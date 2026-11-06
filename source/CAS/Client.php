@@ -1963,6 +1963,12 @@ class CAS_Client
             }
             $client_ip = $_SERVER['REMOTE_ADDR'];
             $client = gethostbyaddr($client_ip);
+            // The PTR record is controlled by whoever owns the IP range, so only
+            // trust the reverse lookup if it resolves back to the client address.
+            $forward_ips = gethostbynamel($client);
+            if ($forward_ips === false || !in_array($client_ip, $forward_ips, true)) {
+                $client = $client_ip;
+            }
             phpCAS::trace("Client: ".$client."/".$client_ip);
             foreach ($allowed_clients as $allowed_client) {
                 if (($client == $allowed_client)
