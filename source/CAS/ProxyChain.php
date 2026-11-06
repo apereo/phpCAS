@@ -90,7 +90,9 @@ implements CAS_ProxyChain_Interface
                         break;
                     }
                 } else {
-                    if (strncasecmp($search, $proxy_url, strlen($search)) == 0) {
+                    if (strncasecmp($search, $proxy_url, strlen($search)) == 0
+                        && $this->_endsAtUrlBoundary($search, $proxy_url)
+                    ) {
                         phpCAS::trace(
                             "Found string " .  $search . " matching " . $proxy_url
                         );
@@ -111,6 +113,30 @@ implements CAS_ProxyChain_Interface
             phpCAS::trace("Proxy chain skipped: size mismatch");
         }
         return false;
+    }
+
+    /**
+     * Make sure a plain string entry does not end in the middle of the
+     * authority of the proxy url. Without this check an entry like
+     * 'https://app.example.com' would also match
+     * 'https://app.example.com.evil.org/' or 'https://app.example.com@evil.org/'.
+     *
+     * @param string $search    The string entry of the chain
+     * @param string $proxy_url The proxy url it was matched against
+     *
+     * @return bool
+     */
+    private function _endsAtUrlBoundary($search, $proxy_url)
+    {
+        if (strlen($search) == strlen($proxy_url)) {
+            return true;
+        }
+        $parts = parse_url($search);
+        if ($parts !== false && isset($parts['path']) && $parts['path'] !== '') {
+            // The entry already contains a path, so the host is fixed.
+            return true;
+        }
+        return in_array($proxy_url[strlen($search)], array('/', '?', '#'), true);
     }
 
     /**

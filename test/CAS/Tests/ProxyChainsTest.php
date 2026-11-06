@@ -409,4 +409,36 @@ class ProxyChainsTest extends TestCase
             'Should not allow inexact matches in length.'
         );
     }
+
+    /**
+     * Verify that a plain string entry does not match across the URL authority,
+     * so 'https://app.example.com' is not matched by a host that merely begins
+     * with it, such as '...com.evil.org' or '...com@evil.org'.
+     *
+     * @return void
+     */
+    public function testUrlAuthorityBoundary()
+    {
+        $this->object->allowProxyChain(
+            new \CAS_ProxyChain(
+                array('https://app.example.com')
+            )
+        );
+        $this->assertTrue(
+            $this->object->isProxyListAllowed(array('https://app.example.com')),
+            'Should allow an exact match.'
+        );
+        $this->assertTrue(
+            $this->object->isProxyListAllowed(array('https://app.example.com/')),
+            'Should allow a match that ends at a path boundary.'
+        );
+        $this->assertFalse(
+            $this->object->isProxyListAllowed(array('https://app.example.com.evil.org/')),
+            'Should not match a longer host suffix (.evil.org).'
+        );
+        $this->assertFalse(
+            $this->object->isProxyListAllowed(array('https://app.example.com@evil.org/')),
+            'Should not match a userinfo bypass (@evil.org).'
+        );
+    }
 }
