@@ -1965,8 +1965,34 @@ class CAS_Client
             $client = gethostbyaddr($client_ip);
             // The PTR record is controlled by whoever owns the IP range, so only
             // trust the reverse lookup if it resolves back to the client address.
+            // gethostbynamel() only returns IPv4 (A) records, so also resolve
+            // AAAA records, otherwise a legitimate IPv6 logout client would be
+            // rejected. Compare in packed form so equivalent IPv6 spellings match.
             $forward_ips = gethostbynamel($client);
-            if ($forward_ips === false || !in_array($client_ip, $forward_ips, true)) {
+            if (!is_array($forward_ips)) {
+                $forward_ips = array();
+            }
+            if (function_exists('dns_get_record')) {
+                $aaaa = @dns_get_record($client, DNS_AAAA);
+                if (is_array($aaaa)) {
+                    foreach ($aaaa as $rec) {
+                        if (!empty($rec['ipv6'])) {
+                            $forward_ips[] = $rec['ipv6'];
+                        }
+                    }
+                }
+            }
+            $client_packed = @inet_pton($client_ip);
+            $confirmed = false;
+            foreach ($forward_ips as $forward_ip) {
+                if ($client_packed !== false
+                    && @inet_pton($forward_ip) === $client_packed
+                ) {
+                    $confirmed = true;
+                    break;
+                }
+            }
+            if (!$confirmed) {
                 $client = $client_ip;
             }
             phpCAS::trace("Client: ".$client."/".$client_ip);
