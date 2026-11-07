@@ -1929,6 +1929,42 @@ class CAS_Client
     }
 
     /**
+     * Resolve a hostname to its IPv4 and IPv6 addresses using the system
+     * resolver (getaddrinfo via the sockets extension). gethostbynamel() only
+     * returns IPv4, and dns_get_record() bypasses the system resolver (for
+     * example /etc/hosts), so neither is sufficient on its own. Falls back to
+     * gethostbynamel() when the sockets extension is unavailable.
+     *
+     * @param string $host hostname to resolve
+     *
+     * @return array list of IP address strings (possibly empty)
+     */
+    private function _gethostbynamel46($host)
+    {
+        if (function_exists('socket_addrinfo_lookup')) {
+            $result = array();
+            // Forcing a socktype avoids duplicates (different
+            // ai_socktype/ai_protocol combinations for the same address).
+            $infos = @socket_addrinfo_lookup(
+                $host, null, array('ai_socktype' => SOCK_STREAM)
+            );
+            if (is_array($infos)) {
+                foreach ($infos as $info) {
+                    $addr = socket_addrinfo_explain($info);
+                    if (isset($addr['ai_addr']['sin_addr'])) {
+                        $result[] = $addr['ai_addr']['sin_addr'];
+                    } elseif (isset($addr['ai_addr']['sin6_addr'])) {
+                        $result[] = $addr['ai_addr']['sin6_addr'];
+                    }
+                }
+            }
+            return $result;
+        }
+        $forward_ips = gethostbynamel($host);
+        return is_array($forward_ips) ? $forward_ips : array();
+    }
+
+    /**
      * This method handles logout requests.
      *
      * @param bool $check_client    true to check the client bofore handling
@@ -1963,6 +1999,25 @@ class CAS_Client
             }
             $client_ip = $_SERVER['REMOTE_ADDR'];
             $client = gethostbyaddr($client_ip);
+            // The PTR record is controlled by whoever owns the IP range, so only
+            // trust the reverse lookup if it resolves back to the client address.
+            // Resolve both A and AAAA records via the system resolver so a
+            // legitimate IPv6 logout client is not rejected. Compare in packed
+            // form so equivalent IPv6 spellings match.
+            $forward_ips = $this->_gethostbynamel46($client);
+            $client_packed = @inet_pton($client_ip);
+            $confirmed = false;
+            foreach ($forward_ips as $forward_ip) {
+                if ($client_packed !== false
+                    && @inet_pton($forward_ip) === $client_packed
+                ) {
+                    $confirmed = true;
+                    break;
+                }
+            }
+            if (!$confirmed) {
+                $client = $client_ip;
+            }
             phpCAS::trace("Client: ".$client."/".$client_ip);
             foreach ($allowed_clients as $allowed_client) {
                 if (($client == $allowed_client)
