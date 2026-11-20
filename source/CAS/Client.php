@@ -1929,6 +1929,62 @@ class CAS_Client
     }
 
     /**
+     * Resolve a hostname to its IPv4 and IPv6 addresses using the system
+     * resolver (getaddrinfo via the sockets extension). gethostbynamel() only
+     * returns IPv4, and dns_get_record() bypasses the system resolver (for
+     * example /etc/hosts), so neither is sufficient on its own. Falls back to
+     * gethostbynamel() when the sockets extension is unavailable.
+     *
+     * @param string $host hostname to resolve
+     *
+     * @return array list of IP address strings (possibly empty)
+     */
+    function _gethostbynamel46(string $host) {      
+        $result = [];
+    
+        // forcing a socktype avoids duplicates (with different ai_socktype/ai_protocol combinaisons)
+        foreach (socket_addrinfo_lookup($host, null, [ 'ai_socktype' => SOCK_STREAM ]) ?: [] as $info) {
+            $addr = socket_addrinfo_explain($info);
+    
+            $ip = $addr['ai_addr']['sin_addr'] ?? ($addr['ai_addr']['sin6_addr'] ?? null);
+            if ($ip) {
+                $result[] = $ip;
+            }
+        }
+    
+        return $result;
+    }
+
+    /**
+     * Safe version of gethostbyaddr():
+     * 
+     * The PTR record is controlled by whoever owns the IP range, so only
+     * trust the reverse lookup if it resolves back to the client address.
+     */
+    function _safe_gethostbyaddr($client_ip) {
+        $client = gethostbyaddr($client_ip);
+
+        $forward_ips = $this->_gethostbynamel46($client);
+        phpCAS::trace("forward_ips for $client: " . implode(", ", $forward_ips));
+        // Compare in packed form so equivalent IPv6 spellings match.
+        $client_packed = @inet_pton($client_ip);
+        $confirmed = false;
+        foreach ($forward_ips as $forward_ip) {
+            if ($client_packed !== false
+                && @inet_pton($forward_ip) === $client_packed
+            ) {
+                $confirmed = true;
+                break;
+            }
+        }
+        if (!$confirmed) {
+            phpCAS::trace("not trusting DNS PTR record $client for $client_ip");
+            return $client_ip;
+        }
+        return $client;
+    }
+
+    /**
      * This method handles logout requests.
      *
      * @param bool $check_client    true to check the client bofore handling
@@ -1962,7 +2018,12 @@ class CAS_Client
                 $allowed_clients = array( $this->_getServerHostname() );
             }
             $client_ip = $_SERVER['REMOTE_ADDR'];
-            $client = gethostbyaddr($client_ip);
+            if (!function_exists('socket_addrinfo_lookup')) {
+                error_log("phpCAS::handleLogoutRequests: PHP sockets extension is needed to tightly check logoutRequests allowed_clients");
+                $client = gethostbyaddr($client_ip);
+            } else {
+                $client = $this->_safe_gethostbyaddr($client_ip);
+            }
             phpCAS::trace("Client: ".$client."/".$client_ip);
             foreach ($allowed_clients as $allowed_client) {
                 if (($client == $allowed_client)
